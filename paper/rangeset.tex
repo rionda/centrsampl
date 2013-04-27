@@ -1,51 +1,68 @@
 \section{A range set for shortest paths}\label{sec:rangeset}
-\XXX TBD
+We now define a range set for shortest paths of a graph $G=(V,E)$, and present 
+an upper bound to its VC-dimension. We show that this upper bound is strict. We
+use the range set and the bound in our algorithm for estimating the betweenness
+centrality of vertices of the graph.
 
-Our first goal is to define a range space for the graph and bound its VC-dimension.
-As a next step we will build a sample from which we can approximate the betweenness centrality of the vertices.
+The range set $\range_G$ is defined on the set $\mathbb{S}_G$ of all shortest
+paths between vertices of $G$. It contains, for each vertex $v\in V$, the set
+$\mathcal{T}_v$  of shortest paths that go through $v$:
+\[
+\range_G = \{T_v ~:~ v\in V\}\enspace.
+\]
 
-Let $G=(V,E)$ a directed graph, we define as $S=(X,R)$ the range space of $G$.
-We define as points $X$ the pairs of vertices $[v,w]\in V\times V$, where the size of $X$ is $|X|=n^2$.
-Each range is associated with a vertex $u$ of $G$, and it contains all the pairs of vertices $v,w$ for which vertex $u$ lies on the geodesic path from $v$ to $w$.
-Formally, for vertex $u$ we have $r_{u}=\{[v,w]\in X: n_{vw}^{u}=1\}$.
-The set $R$ is now defined as $R=\{r_{u}:u\in V\}$, where its size is $|R|=n$.
-
-\begin{theorem}
-Let $G=(V,E)$ be a directed graph with diameter $\Delta$. Then the range space $S=(X,R)$ associated with $G$ has VC-dimension at most $log(\Delta)+1$.
-\end{theorem}
+\begin{lemma}\label{lem:vcdimuppbound}
+  Given a graph $G=(V,E)$ with edge-diameter $\Delta_G$, the range set
+  $\range_G$ associated to the shortest paths in $G$ has VC-dimension
+  $\VC(\range_G)$ at most $\lfloor\log_2\Delta_G\rfloor+1$.
+\end{lemma}
 
 \begin{proof}
-Let $l>log(\Delta)+1$ and assume for the sake of contradiction that $S$ has VC-dimension $l$. 
-From the definition of the VC-dimension there is a set $Q\subseteq X$ that is shattered by $R$.
-Let also $\tau$ be the size of set $Q$, $|Q|=\tau$.
-Let $p^{*}=[v^{*},w{*}]$ be a pair of vertices  that is also contained in $Q$.
-Since $Q$ is shattered, the pair $p^{*}$ is a member of $2^{\tau-1}$ subsets of $Q$.
-We denote the subsets of $Q$ that contain $p^{*}$ as $S_{i},1\leq i \leq 2^{\tau-1}$, labeling them in an arbitrary order.
-Since $Q$ is shattered we have that
-\begin{displaymath}
-S_{i}\in P_{R}(Q), 1\leq i \leq 2^{\tau-1}
-\end{displaymath}
-From the above it follows that for each subset $S_{i}$ there is a vertex $v_{i}$ such that
-\begin{displaymath}
-r_{v_{i}}\cap Q = S_{i}\in P_{R}(Q)
-\end{displaymath}
+Let $k>\lfloor\log_2\Delta_G\rfloor+1$ and assume for the sake of contradiction
+that $\VC(\range_G)=k$. From the definition of the VC-dimension there is a set
+$Q\subseteq\mathbb{S}_G$ of size $k$ that is shattered by $\range_G$. Let $p$ be
+an element of $Q$. The path $p$ is contained in $2^{k-1}$ non-empty subsets of
+$Q$. Let us label this non-empty subsets of $Q$ containing $p$ as
+$S_1,\dotsc,S_{2^{k-1}}$, where the labelling is arbitrary.
+Given that $Q$ is shattered then, for each set $S_i$ there must be a range $R_i$ in
+$\range_G$ such that $S_i=Q\cap R_i$. Since all the $S_i$'s are
+different from each other, then all the $R_i$'s must be different from each
+other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
+$R_i$, that is, there are $2^{k-1}$ distinct ranges in $\range_G$ containing
+$p$. But $p$ belongs to the ranges corresponding to the vertices through which $p$
+passes, including the start and end nodes. This means that the number of ranges
+in $\range_G$ that $p$ belongs to is equal to $|p|+1$, viz.~to the number of
+edges in $p$ plus one. But $|p|\le\Delta_G$, by definition of $\Delta_G$, so $p$
+can belong to at most $\Delta_G+1$ ranges from $\range_G$. Given that
+$2^{k-1}>\Delta_G+1$, we reached a contradiction and there cannot be $2^{k-1}$
+distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
+$Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
+$\VC(\range_G)\le\lfloor\log_2\Delta_G\rfloor+1$.%\qed
+\end{proof}
 
-From the fact that all $S_{i}$ are different from each other we can derive that also all $r_{v_{i}}$ must be different from each other, for $1\leq i \leq 2^{\tau-1}$.
-This implies that we have $2^{\tau-1}$ distinct $r_{v_{i}}$ that identify the all the subsets of $Q$ for which $p^{*}$ is contained.
-Taking into consideration that all the distinct $2^{\tau-1}$ ranges can be translated as vertices that are contained in the geodesic path from $v^{*}$ to $w^{*}$, we can bound the number of $r_{v_{i}}$ ranges as follows
+In the restricted case when every pair of vertices has one or no shortest path
+between them, the upper bound can be improved.
+\begin{lemma}\label{lem:vcdimuppboundunique}
+  Given a graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all pairs
+  $(u,v)\in V\times V$, the range set $\range_G$ associated to the shortest
+  paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $2$.
+\end{lemma}
 
-\begin{displaymath}
-2^{\tau-1}\leq \Delta
-\end{displaymath}
-\begin{displaymath}
-\Rightarrow log(2^{\tau-1})\leq log(\Delta)
-\end{displaymath}
-\begin{displaymath}
-\Rightarrow \tau\leq log(\Delta)+1
-\end{displaymath}
+\begin{proof}
+  \XXX TBD \MR
+\end{proof}
 
-But since $Q$ is not necessarily the set with the maximum cardinality that can be shattered, we have $|\tau|\leq l$.
-This is contradicts the assumption $l>log(\Delta)+1$, therefore our assumption is false and $Q$ cannot be shattered by $R$.
-Therefore $VC(S)\leq log(\Delta)+1$.
+The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
+for each $d>0$ we can build a graph $G_d$ with edge-diameter $d$ and such
+that the range set associated to the set of shortest path of $G_d$ has
+VC-dimension exactly $\lfloor\log_2(d+1)\rfloor+1$.
+
+\begin{lemma}
+  Given $d>0$ there exists a graph $G$ with edge-diameter $d$ and such that
+  $\VC(\range_G)=\lfloor\log_2(d+1)\rfloor+1$.
+\end{lemma}
+
+\begin{proof}
+  \XXX TBD Remember to take care of the case $d=1$.
 \end{proof}
 
