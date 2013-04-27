@@ -30,7 +30,7 @@ different from each other, then all the $R_i$'s must be different from each
 other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
 $R_i$, that is, there are $2^{k-1}$ distinct ranges in $\range_G$ containing
 $p$. But $p$ belongs to the ranges corresponding to the vertices through which $p$
-passes, including the start and end nodes. This means that the number of ranges
+passes, including the start and end vertices. This means that the number of ranges
 in $\range_G$ that $p$ belongs to is equal to $|p|+1$, viz.~to the number of
 edges in $p$ plus one. But $|p|\le\Delta_G$, by definition of $\Delta_G$, so $p$
 can belong to at most $\Delta_G+1$ ranges from $\range_G$. Given that
@@ -40,16 +40,51 @@ $Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
 $\VC(\range_G)\le\lfloor\log_2\Delta_G\rfloor+1$.%\qed
 \end{proof}
 
-In the restricted case when every pair of vertices has one or no shortest path
-between them, the upper bound can be improved.
+In the restricted case when the graph is undirected and every pair of vertices
+has one or no shortest path between them, the upper bound can be improved.
 \begin{lemma}\label{lem:vcdimuppboundunique}
-  Given a graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all pairs
-  $(u,v)\in V\times V$, the range set $\range_G$ associated to the shortest
-  paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $2$.
+  Given an undirected graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
+  pairs $(u,v)\in V\times V$, the range set $\range_G$ associated to the
+  shortest paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $2$.
 \end{lemma}
 
 \begin{proof}
-  \XXX TBD \MR
+  Assume that $\VC(\range_G)>2$, then there must be a set $Q=\{p_1,p_2,p_3\}$ of three
+  shortest paths that can be shattered. Hence, there must be a vertex $z$ such that
+  $\mathcal{T}_{z}\cap Q=Q$, and three vertices $w,x,y$ such
+  that $\mathcal{T}_{w}\cap Q=\{p_1,p_2\}$, $\mathcal{T}_{x}\cap
+  Q=\{p_1,p_3\}$, and $\mathcal{T}_{y}\cap Q=\{p_2,p_3\}$. Let $\mu:V\rightarrow
+  [1,n]$ be an arbitrary bijection. We need to consider two
+  cases (all the other cases follow by simmetry): either
+  1.~$\mu(w)<\mu(x)<\mu(y)<\mu(z)$ or 2.~$\mu(w)<\mu(x)<\mu(z)<\mu(y)$.
+
+  Consider the first case. The path $p_1$ passes through $w$, then (not
+  necessarily consecutively) through $x$, and finally through $z$, without
+  passing through $y$. The path $p_2$ passes through $w$, then $y$ (without
+  passing through $x$), then $z$. The path $p_3$ passes through $x$ without
+  passing through $w$, then goes through $y$ and through $z$. This implies that
+  path $p_1$ and $p_3$ both pass through $x$ and through $z$, but while moving
+  from $x$ through $z$ they are not overlapping, given that $p_3$ passes through
+  $y$ and $p_1$ does not. Given that both $p_1$ and $p_3$ are shortest
+  paths, every subpath in them is a shortest path. But this would mean that
+  there are two shortest paths between $x$ and $z$, one going through $y$
+  (a subpath of $p_3$) and the other not going through $y$ (a subpath of $p_1$).
+  This is a contradiction, hence there cannot be such nodes $w,x,y,z$ and $Q$
+  cannot be shattered.
+
+  Consider now the second case. The path $p_1$ passes through $w$, then through
+  $x$, then through $z$, and it does not pass through $y$. Path $p_2$ goes
+  through $w$, then through $z$ without going through $x$, and then through $y$.
+  Path $p_3$ goes through $x$ without going through $w$, then goes through $z$,
+  and eventually through $y$. This implies that $p_1$ and $p_2$ both go through
+  $w$ and through $z$ but following different paths, given that $p_1$ goes
+  through $x$ and $p_2$ does not. We reached a contradiction, because these
+  two different paths between $w$ and $z$ cannot be both shortest paths, given
+  that by hypothesis there must be a single shortest path between $w$ and $z$.
+  Hence there cannot be such nodes $w,x,y,z$ and $Q$ cannot be shattered.  
+
+  Given that it is impossible to shatter a set of size $3$, then
+  $\VC(\range_G)\le 2$.
 \end{proof}
 
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
