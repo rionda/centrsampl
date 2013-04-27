@@ -10,11 +10,11 @@ that $G$ is connected and that there are no self-loops and no multiple edges
 between a pair of vertices. Given a pair of vertices $(u,v)\in V\times V$,
 $u\neq v$, a \emph{path $p_{uv}\subseteq E$ from $u$ to $v$} is a sequence of
 edges connecting $u$ to $v$. The \emph{length} $\ell(p_{uv})$ of a path $p_{uv}$
-from $v$ to $u$ is the sum of the weights of the edges composing the path:
+from $u$ to $v$ is the sum of the weights of the edges composing the path:
 $\ell(p_{uv})=\sum_{e\in p_{uv}} w_e$. We denote with $|p_{uv}|$ the number of
 edges composing the path and call this the \emph{size of the path $p_{uv}$}. Note
 that if the weights are not all unitary, the length and the size of a path are
-not necessarily the same. Given a node $v$ and a path $p$, we say  that $v$
+not necessarily the same. Given a vertex $v$ and a path $p$, we say that $v$
 \emph{belongs} to $p$ if $p$ contains an edge $(u,v)$ or $(v,u)$ for any $u\in V$.
 Overloading the notation a bit, we denote this fact with ``$v\in p$''.
 
@@ -27,19 +27,18 @@ multiple shortest paths between $u$ and $v$ and we denote the set of these paths
 as $\mathcal{S}_{uv}$. If $\sigma_{u,v}=0$, then $\mathcal{S}_{uv}=\emptyset$.
 We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$, for all
 $(u,v)\in V\times V$: 
-\[ \mathbb{S}_G=\cup_{(u,v,)\in V\times V}\mathcal{S}_{uv}\enspace.\]
+\[ \mathbb{S}_G=\bigcup_{(u,v)\in V\times V}\mathcal{S}_{uv}\enspace.\]
 
 We now define a characteristic quantity of a graph that we will use throughout
 the paper.
 \begin{definition}\label{def:edgediam}
-  Given a graph $G=(V,E)$, the \emph{edge-diameter of $G$} $\Delta_G$ is the
-  maximum size of a shortest path between a pair of nodes of $V$:
+  Given a graph $G=(V,E)$, the \emph{edge-diameter $\Delta_G$ of $G$} is the
+  maximum size of a shortest path between a pair of vertices of $V$:
   \[
-  \Delta_G = \max\{|p| ~:~ p\in \cup_{(u,v)\in V\times
-  V}\mathcal{S}_{uv}\}\enspace.\]
+  \Delta_G = \max\left\{|p| ~:~ p\in \mathbb{S}_G\right\}\enspace.\]
 \end{definition}
 
-Given a node $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
+Given a vertex $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
 shortest paths going through $v$:
 \[
 \mathcal{T}_v=\{p\in\mathbb{S}_G ~:~ v\in p\}\enspace.
@@ -51,7 +50,8 @@ vertices of a graph.
   Given a graph $G=(V,E)$, the \emph{betweenness centrality of a vertex $v\in
   V$} is defined as
   \[
-  \sum_{(u,w)\in V\times V}\sum_{p\in\mathcal{S}_{uw}}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}}\enspace.
+  \sum_{(u,w)\in V\times
+  V}\sum_{p\in\mathcal{S}_{uw}}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
   \]
 \end{definition} 
 
