@@ -1,53 +1,128 @@
 \section{Preliminaries}\label{sec:prelims}
-\textit{Geodesic distance} from $u$ to $v$ is the length of the shortest path that connects vertex $u$ with vertex $v$.
-We call a path from vertex $u$ to $v$ a \textit{geodesic path} if its length is equal to the geodesic distance from $u$ to $v$.
-A given pair of vertices can have more than one geodesic path.
-The \textit{diameter} $\Delta$ of a graph $G$ is the maximum geodesic distance among all pairs of nodes. 
+In this section we introduce the definitions and lemmas that we will use to
+develop and analyze our results in the remainder of the paper.
 
-\textbf{Assumption 1:} In this work we are considering the case where there is only one geodesic path between a pair of vertices.
+\subsection{Graphs and betweenness centrality}\label{sec:graphprelims}
+Let $G=(V,E)$ be a graph, with $n=|V|$ vertices and $m=|E|$ edges. Each edge
+$e\in E$ has a non-negative (\XXX necessary?
+\MR) weight $w_e$. The graph $G$ can be directed or undirected. We assume
+that $G$ is connected and that there are no self-loops and no multiple edges
+between a pair of vertices. Given a pair of vertices $(u,v)\in V\times V$,
+$u\neq v$, a \emph{path $p_{uv}\subseteq E$ from $u$ to $v$} is a sequence of
+edges connecting $u$ to $v$. The \emph{length} $\ell(p_{uv})$ of a path $p_{uv}$
+from $v$ to $u$ is the sum of the weights of the edges composing the path:
+$\ell(p_{uv})=\sum_{e\in p_{uv}} w_e$. We denote with $|p_{uv}|$ the number of
+edges composing the path and call this the \emph{size of the path $p_{uv}$}. Note
+that if the weights are not all unitary, the length and the size of a path are
+not necessarily the same. Given a node $v$ and a path $p$, we say  that $v$
+\emph{belongs} to $p$ if $p$ contains an edge $(u,v)$ or $(v,u)$ for any $u\in V$.
+Overloading the notation a bit, we denote this fact with ``$v\in p$''.
 
-Let $n_{st}^{u}$ be a variable that takes value 1 if vertex $u$ lies on a geodesic path from $s$ to $t$ and 0 otherwise.
-The intermediate as well as the source $s$ (resp. destination $t$) of a geodesic path from $s$ to $t$ is considered take value $n_{st}^{s}=1$ (resp. $n_{st}^{t}=1$).
-Based on the assumption 1 the betweenness centrality of node $u$ is defined as:
+Given two vertices $(u,v)\in V\times V$, the \emph{shortest path distance}
+$\sigma_{uv}$ between $u$ and $v$ is the length of a path with minimum length
+between $u$ and $v$, among all paths between $u$ and $v$. If there is no path
+between $u$ and $v$, $\sigma_{uv}=0$. We call a path between $u$ and $v$ with
+length $\sigma_{uv}$ a \emph{shortest path between $u$ and $v$}. There can be
+multiple shortest paths between $u$ and $v$ and we denote the set of these paths
+as $\mathcal{S}_{uv}$. If $\sigma_{u,v}=0$, then $\mathcal{S}_{uv}=\emptyset$.
+We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$, for all
+$(u,v)\in V\times V$: 
+\[ \mathbb{S}_G=\cup_{(u,v,)\in V\times V}\mathcal{S}_{uv}\enspace.\]
 
-\begin{displaymath}
-c_{u}=\sum_{s,t\in V}n_{st}^{u}
-\end{displaymath}
-
-In case there are more than one geodesic paths that connect a pair of vertices then the betweenness centrality is defined as:
-
-\begin{displaymath}
-c_{u}=\sum_{s,t\in V}\frac{n_{st}^{u}}{g_{st}}
-\end{displaymath}
-
-,where $g_{st}$ is the total number of geodesic paths from vertex $s$ to $t$.
-In this work we are studying the case where the is at most one geodesic path between a pair of vertices.
-
-A \textit{range space} is a pair $(X,R)$ such that $X$ is a set and $R$ is a family of subsets of $X$.
-The elements of $X$ are called \textit{points} and the elements of $R$ are called \textit{ranges}.
-Let $A$ be a subset of $X$ then $P_{R}(A)=\{r\cap A: r\in R\}$ is called the \textit{projection} of $R$ on $A$.
-If the projection contains all the members then we say that $A$ is \textit{shattered}.
-
-\begin{definition}
-Let $S=(X,R)$ be a range space. The \textit{Vapnik-Chervonenkis} dimension (or VC-dimension) of $S$, denoted as VC(S) is the maximum cardinality of a shattered subset of $X$. 
+We now define a characteristic quantity of a graph that we will use throughout
+the paper.
+\begin{definition}\label{def:edgediam}
+  Given a graph $G=(V,E)$, the \emph{edge-diameter of $G$} $\Delta_G$ is the
+  maximum size of a shortest path between a pair of nodes of $V$:
+  \[
+  \Delta_G = \max\{|p| ~:~ p\in \cup_{(u,v)\in V\times
+  V}\mathcal{S}_{uv}\}\enspace.\]
 \end{definition}
 
-\begin{definition}
-Let $(X,R)$ be a range space and let $A$ be a finite subset of $X$. For $0<\epsilon<1$, a subset $B\subset A$ is an $\epsilon$-approximation for $A$, if for all $r\in R$ we have:
-\begin{displaymath}
-\big| \frac{|A\cap r|}{|A|}-\frac{|B\cap r|}{|B|}\big|\leq \epsilon
-\end{displaymath}
+Given a node $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
+shortest paths going through $v$:
+\[
+\mathcal{T}_v=\{p\in\mathbb{S}_G ~:~ v\in p\}\enspace.
+\]
+
+In this work we are interested in the \emph{betweenness centrality} of the
+vertices of a graph.
+\begin{definition}\label{def:betwenness}
+  Given a graph $G=(V,E)$, the \emph{betweenness centrality of a vertex $v\in
+  V$} is defined as
+  \[
+  \sum_{(u,w)\in V\times V}\sum_{p\in\mathcal{S}_{uw}}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}}\enspace.
+  \]
+\end{definition} 
+
+\XXX reference \MR presented an algorithm to compute the betweenness centrality for
+all $v\in V$ in time $O(n^2)$. 
+
+\subsection{Vapnik-Chervonenkis dimension}\label{sec:prelvcdim}
+The Vapnik-Chernovenkis (VC) dimension of a class of subsets defined
+on a set of points is a measure of the complexity or expressiveness of such
+class~\citep{VapnikC71}. Given a probability distribution on the set of points,
+a finite bound on the VC-dimension of the class of subsets implies a bound on
+the number of random samples required to approximate the expectation of each
+indicator function associated to a subset with its empirical average. We outline
+here some basic definitions and results and refer the reader to the works
+of~\citet[Sect.~14.4]{AlonS08} and \citet[Sect.~3]{BoucheronBL05} for an
+introduction of VC-dimension and a survey of recent developments. 
+%~\citet[Sect.~12.4]{DevroyeGL96},
+%\citet[Sect.~3]{BoucheronBL05}, \citet[Sect.~14.4]{AlonS08}, and
+%\citet{Vapnik99} for more details on VC-dimension.
+
+Let $D$ be a domain and $\range$ be a collection of subsets from $D$. We call
+$\range$ a \emph{range set on $D$}.
+Given $B\subseteq D$, the \emph{projection of $\range$ on $B$} is the set 
+$P_\range(B)=\{ B\cap A ~:~ A\in\range\}$. We say that the set $B$ is
+\emph{shattered} by $\range$ if $P_\range(B)=2^B$.
+
+\begin{definition}\label{def:vcdim}
+  The \emph{Vapnik-Chervonenkis (VC) dimension of $\range$} is the cardinality
+  of the largest subset of $D$ that is shattered by $\range$.
 \end{definition}
 
-\begin{theorem}
-There is an absolute positive constant $c$ such that if (X,R) is a range space of VC-dimension at most $d$, $A\subset X$ is a finite subset and $0<\epsilon,\delta<1$, then a random subset $B\subset A$ of cardinality $m$, where
-\begin{displaymath}
-m\geq min\Big\{|A|,\frac{c}{\epsilon^2}\Big(d+\mbox{log}\frac{1}{\delta}\Big)\Big\}
-\end{displaymath}
-is an $\epsilon$-approximation for $A$ with probability at least $1-\delta$.
+The main application of VC-dimension in statistics and learning
+theory is in computing the number of samples needed to approximate the
+probabilities associated to the ranges through their empirical averages.
+Formally, let $X_1^k=(X_1,\dotsc,X_k)$ be a collection of independent
+identically distributed random variables taking values in $D$, sampled 
+according to some distribution $\nu$ on the elements of $D$.
+For a set $A\subseteq D$, let $\nu(A)$ be the probability that a sample from
+$\nu$ belongs to the set $A$, and let
+\[
+\nu_{X_1^k}(A)=\frac{1}{k}\sum_{j=1}^k\mathds{1}_A(X_j),\]
+where $\mathds{1}_A$ is the indicator function for the set $A$. The function
+$\nu_{X_1^k}(A)$ is the \emph{empirical average} of $\nu(A)$ on $X_1^k$.
+
+\begin{definition}\label{def:eapprox}
+  Let $\range$ be a range set on %a domain
+  $D$ and $\nu$ be a probability distribution on $D$. For $\varepsilon\in(0,1)$,
+  an \emph{$\varepsilon$-approximation to $(\range,\nu)$} is a bag $S$ of
+  elements of $D$ such that 
+  \[
+  \sup_{A\in\range}|\nu(A)-\nu_S(A)|\le\varepsilon\enspace.\]
+\end{definition}
+
+An $\varepsilon$-approximation can be constructed by sampling points of
+the domain according to the distribution $\nu$, provided an upper bound to the
+VC-dimension of $\range$ or to its empirical VC-dimension is known:
+
+\begin{theorem}[Thm.~2.12~\citep{HarPS11}]\label{thm:eapprox}
+  %\emph{(\citep[Thm.~2.12]{HarPS11}, see also~\citep{LiLS01})}
+  Let $\range$ be a range set on %a domain 
+  $D$ with $\VC(\range)\le d$, and let $\nu$ be a distribution on $D$. Given
+  $\delta\in(0,1)$ and a positive integer $\ell$, let
+  \begin{equation}\label{eq:vceapprox}
+    \varepsilon = \sqrt{\frac{c}{\ell}\left(d + \log\frac{1}{\delta}\right)}
+  \end{equation}
+  where $c$ is an universal positive constant. Then, a bag of $\ell$
+  %i.i.d.~random variables $X_1,\dotsc,X_\ell$ taking values in $D$ is an
+  elements of $D$ sampled independently according to $\nu$ is an
+  $\varepsilon$-approximation to $(\range,\nu)$ with probability at least
+  $1-\delta$.
 \end{theorem}
-
-
-\subsection{Vapnik-Chervonenkis Dimension}\label{sec:vcdim}
-\XXX TBD
+\citet{LofflerP09} showed experimentally that the constant $c$ is approximately
+$0.5$. We used this value in our experiments.
 

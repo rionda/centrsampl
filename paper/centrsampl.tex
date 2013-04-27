@@ -2,7 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 \usepackage[utf8x]{inputenc}
-%\usepackage[cm]{fullpage}
+\usepackage[cm]{fullpage}
 %\usepackage{mdwlist}
 %\usepackage[small]{caption}
 \usepackage[numbers,sort&compress,square]{natbib}
@@ -20,6 +20,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{dsfont}
 \usepackage{mathtools}
 \usepackage{graphicx}
 \usepackage{subfig}
@@ -28,7 +29,7 @@
 \usepackage{url}
 \usepackage[ruled,linesnumbered]{algorithm2e}
 \usepackage{mathptmx}      % use Times fonts in math if available on your TeX system
-%\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n} % Use standard fonts for calligraphic
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n} % Use standard fonts for calligraphic
 
 \newtheorem{corollary}{Corollary}
 \newtheorem{conj}{Conjecture}
@@ -42,6 +43,10 @@
 \def\XXX{{\bf XXX}}
 \def\MR{{\bf MR}}
 \def\EK{{\bf EK}}
+
+\def\prob{\pi}
+\def\range{\mathcal{R}}
+\def\VC{\mathsf{VC}}
 
 \title{Approximating Betweenness Centrality through Sampling with the
 VC-Dimension}
