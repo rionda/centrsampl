@@ -31,3 +31,5 @@
 *.xdy
 *.tdo
 *.tar.bz2
+*.swp
+*.old
