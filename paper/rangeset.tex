@@ -1,3 +1,51 @@
 \section{A range set for shortest paths}\label{sec:rangeset}
 \XXX TBD
 
+Our first goal is to define a range space for the graph and bound its VC-dimension.
+As a next step we will build a sample from which we can approximate the betweenness centrality of the vertices.
+
+Let $G=(V,E)$ a directed graph, we define as $S=(X,R)$ the range space of $G$.
+We define as points $X$ the pairs of vertices $[v,w]\in V\times V$, where the size of $X$ is $|X|=n^2$.
+Each range is associated with a vertex $u$ of $G$, and it contains all the pairs of vertices $v,w$ for which vertex $u$ lies on the geodesic path from $v$ to $w$.
+Formally, for vertex $u$ we have $r_{u}=\{[v,w]\in X: n_{vw}^{u}=1\}$.
+The set $R$ is now defined as $R=\{r_{u}:u\in V\}$, where its size is $|R|=n$.
+
+\begin{theorem}
+Let $G=(V,E)$ be a directed graph with diameter $\Delta$. Then the range space $S=(X,R)$ associated with $G$ has VC-dimension at most $log(\Delta)+1$.
+\end{theorem}
+
+\begin{proof}
+Let $l>log(\Delta)+1$ and assume for the sake of contradiction that $S$ has VC-dimension $l$. 
+From the definition of the VC-dimension there is a set $Q\subseteq X$ that is shattered by $R$.
+Let also $\tau$ be the size of set $Q$, $|Q|=\tau$.
+Let $p^{*}=[v^{*},w{*}]$ be a pair of vertices  that is also contained in $Q$.
+Since $Q$ is shattered, the pair $p^{*}$ is a member of $2^{\tau-1}$ subsets of $Q$.
+We denote the subsets of $Q$ that contain $p^{*}$ as $S_{i},1\leq i \leq 2^{\tau-1}$, labeling them in an arbitrary order.
+Since $Q$ is shattered we have that
+\begin{displaymath}
+S_{i}\in P_{R}(Q), 1\leq i \leq 2^{\tau-1}
+\end{displaymath}
+From the above it follows that for each subset $S_{i}$ there is a vertex $v_{i}$ such that
+\begin{displaymath}
+r_{v_{i}}\cap Q = S_{i}\in P_{R}(Q)
+\end{displaymath}
+
+From the fact that all $S_{i}$ are different from each other we can derive that also all $r_{v_{i}}$ must be different from each other, for $1\leq i \leq 2^{\tau-1}$.
+This implies that we have $2^{\tau-1}$ distinct $r_{v_{i}}$ that identify the all the subsets of $Q$ for which $p^{*}$ is contained.
+Taking into consideration that all the distinct $2^{\tau-1}$ ranges can be translated as vertices that are contained in the geodesic path from $v^{*}$ to $w^{*}$, we can bound the number of $r_{v_{i}}$ ranges as follows
+
+\begin{displaymath}
+2^{\tau-1}\leq \Delta
+\end{displaymath}
+\begin{displaymath}
+\Rightarrow log(2^{\tau-1})\leq log(\Delta)
+\end{displaymath}
+\begin{displaymath}
+\Rightarrow \tau\leq log(\Delta)+1
+\end{displaymath}
+
+But since $Q$ is not necessarily the set with the maximum cardinality that can be shattered, we have $|\tau|\leq l$.
+This is contradicts the assumption $l>log(\Delta)+1$, therefore our assumption is false and $Q$ cannot be shattered by $R$.
+Therefore $VC(S)\leq log(\Delta)+1$.
+\end{proof}
+

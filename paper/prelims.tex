@@ -1,5 +1,52 @@
 \section{Preliminaries}\label{sec:prelims}
-\XXX TBD
+\textit{Geodesic distance} from $u$ to $v$ is the length of the shortest path that connects vertex $u$ with vertex $v$.
+We call a path from vertex $u$ to $v$ a \textit{geodesic path} if its length is equal to the geodesic distance from $u$ to $v$.
+A given pair of vertices can have more than one geodesic path.
+The \textit{diameter} $\Delta$ of a graph $G$ is the maximum geodesic distance among all pairs of nodes. 
+
+\textbf{Assumption 1:} In this work we are considering the case where there is only one geodesic path between a pair of vertices.
+
+Let $n_{st}^{u}$ be a variable that takes value 1 if vertex $u$ lies on a geodesic path from $s$ to $t$ and 0 otherwise.
+The intermediate as well as the source $s$ (resp. destination $t$) of a geodesic path from $s$ to $t$ is considered take value $n_{st}^{s}=1$ (resp. $n_{st}^{t}=1$).
+Based on the assumption 1 the betweenness centrality of node $u$ is defined as:
+
+\begin{displaymath}
+c_{u}=\sum_{s,t\in V}n_{st}^{u}
+\end{displaymath}
+
+In case there are more than one geodesic paths that connect a pair of vertices then the betweenness centrality is defined as:
+
+\begin{displaymath}
+c_{u}=\sum_{s,t\in V}\frac{n_{st}^{u}}{g_{st}}
+\end{displaymath}
+
+,where $g_{st}$ is the total number of geodesic paths from vertex $s$ to $t$.
+In this work we are studying the case where the is at most one geodesic path between a pair of vertices.
+
+A \textit{range space} is a pair $(X,R)$ such that $X$ is a set and $R$ is a family of subsets of $X$.
+The elements of $X$ are called \textit{points} and the elements of $R$ are called \textit{ranges}.
+Let $A$ be a subset of $X$ then $P_{R}(A)=\{r\cap A: r\in R\}$ is called the \textit{projection} of $R$ on $A$.
+If the projection contains all the members then we say that $A$ is \textit{shattered}.
+
+\begin{definition}
+Let $S=(X,R)$ be a range space. The \textit{Vapnik-Chervonenkis} dimension (or VC-dimension) of $S$, denoted as VC(S) is the maximum cardinality of a shattered subset of $X$. 
+\end{definition}
+
+\begin{definition}
+Let $(X,R)$ be a range space and let $A$ be a finite subset of $X$. For $0<\epsilon<1$, a subset $B\subset A$ is an $\epsilon$-approximation for $A$, if for all $r\in R$ we have:
+\begin{displaymath}
+\big| \frac{|A\cap r|}{|A|}-\frac{|B\cap r|}{|B|}\big|\leq \epsilon
+\end{displaymath}
+\end{definition}
+
+\begin{theorem}
+There is an absolute positive constant $c$ such that if (X,R) is a range space of VC-dimension at most $d$, $A\subset X$ is a finite subset and $0<\epsilon,\delta<1$, then a random subset $B\subset A$ of cardinality $m$, where
+\begin{displaymath}
+m\geq min\Big\{|A|,\frac{c}{\epsilon^2}\Big(d+\mbox{log}\frac{1}{\delta}\Big)\Big\}
+\end{displaymath}
+is an $\epsilon$-approximation for $A$ with probability at least $1-\delta$.
+\end{theorem}
+
 
 \subsection{Vapnik-Chervonenkis Dimension}\label{sec:vcdim}
 \XXX TBD
