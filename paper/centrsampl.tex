@@ -1,0 +1,62 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage[utf8x]{inputenc}
+%\usepackage[cm]{fullpage}
+%\usepackage{mdwlist}
+%\usepackage[small]{caption}
+\usepackage[numbers,sort&compress,square]{natbib}
+\usepackage{ctable}
+%\makeatletter
+%\renewcommand\bibsection%
+%{
+%  \section*{\refname
+%    \@mkboth{\MakeUppercase{\refname}}{\MakeUppercase{\refname}}}
+%}
+\makeatother
+
+\usepackage{times}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{multirow}
+\usepackage{bigstrut}
+\usepackage{url}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{mathptmx}      % use Times fonts in math if available on your TeX system
+%\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n} % Use standard fonts for calligraphic
+
+\newtheorem{corollary}{Corollary}
+\newtheorem{conj}{Conjecture}
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{theorem}{Theorem}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\def\XXX{{\bf XXX}}
+\def\MR{{\bf MR}}
+\def\EK{{\bf EK}}
+
+\begin{document}
+
+\include{abstract}
+\include{intro}
+\include{prevwork}
+\include{prelims}
+\include{rangeset}
+\include{algo}
+\include{exper}
+\include{concl}
+
+\bibliographystyle{abbrvnat}
+\bibliography{vcmine,centrality}
+
+
+\end{document}
+
