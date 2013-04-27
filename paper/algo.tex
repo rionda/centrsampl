@@ -1,4 +1,20 @@
 \section{Algorithm}\label{sec:algo}
+In this section we present our algorithm to compute a set of approximations for the
+betweenness centrality of all vertices in a graph through sampling, with
+probabilistic guarantees on the quality of the approximations.
+
+The intuition behind the algorithm is the following. Given a graph $G=(V,E)$ and
+two parameters $\varepsilon,\delta\in(0,1)$ we first compute a \emph{sample
+size} $k$ as function of $\varepsilon$, $\delta$, and the edge-diameter
+$\Delta_G$, so that to ensure to achieve the desired accuracy (expressed through
+$\varepsilon$) with the desired confidence (expressed through $1-\delta$). Then,
+for $k$ iterations, the algorithm picks a pair of distinct vertices $(u,v)$
+uniformly at random, computes all the shortest paths between $u$ and $v$,
+and select one of these shortest paths uniformly at random. Let $\mathcal{S}$ be
+the set of the so-obtained $k$ shortest paths. The estimation of the betweenness
+centrality of each vertex $v\in V$ is obtained by counting the number of
+shortest paths from $\mathcal{S}$ going through $v$ and de-normalizing this
+count by multiplying it for $\binom{n}{2}/k$. Algorithm~\XXX %\ref{alg:algorithm}
+presents the pseudocode.
+
 \XXX TBD
-
-
