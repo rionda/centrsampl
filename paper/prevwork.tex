@@ -1,18 +1,18 @@
 \section{Related Work}\label{sec:prevwork}
 
 %% Betweenness centrality Approximations 
-The work of Eppstein et al. [] deployed sampling to approximate the closeness centrality.
+The work of~\citet{EppsteinW01} deployed sampling to approximate the closeness centrality.
 Specifically, the authors proposed an $O(\frac{\mbox{log}n}{\epsilon^2}(n\mbox{log}n+m))$ randomized algorithm with additive error of $\epsilon \Delta$ for approximating the inverse closeness centrality of weighted graphs, where $\Delta$ is the diameter of the graph.
 For bounding the sum of the independent random variables the authors used the following [] theorem:
 
-\begin{theorem}
-\cite{} If $x_{1},x_{2},\ldots,x_{k}$ are independent, $a_{i}\leq x_{i}\leq b_{i}$, and $\mu=E[\sum x_{i}/k]$ is the expected mean, then for $\xi > 0$
+\begin{theorem}[\citep{Hoeffding63}]
+If $x_{1},x_{2},\ldots,x_{k}$ are independent, $a_{i}\leq x_{i}\leq b_{i}$, and $\mu=E[\sum x_{i}/k]$ is the expected mean, then for $\xi > 0$
 \begin{displaymath}
 Pr\Big( |\frac{\sum_{i=1}^{k}x_{i}}{k}-\mu|\geq \xi\Big)\leq 2e^{-2k^2\xi^2/\sum_{i=1}^{k}(b_{i}-a_{i})^2}
 \end{displaymath}
 \end{theorem}
 
-In the work of Brandes et al.~\cite{brandes2007centrality} a similar approach is used in order to approximate not only the closeness but also the betweenness centrality measure.
+In the work of~citet{BrandesP07} a similar approach is used in order to approximate not only the closeness but also the betweenness centrality measure.
 This algorithm selects randomly $k$ pivot nodes and by and bounds the deviation of the empirical average of bounded random variables from its expectation.
 By using the following expression of random variables $X_{i}$ it can be shown that the expectation of the empirical average is the betweenness centrality of the node.
 
