@@ -12,7 +12,7 @@ $\mathcal{T}_v$  of shortest paths that go through $v$:
 \]
 
 \begin{lemma}\label{lem:vcdimuppbound}
-  Given a graph $G=(V,E)$ with edge-diameter $\Delta_G$, the range set
+  Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
   $\range_G$ associated to the shortest paths in $G$ has VC-dimension
   $\VC(\range_G)$ at most $\lfloor\log_2\Delta_G\rfloor+1$.
 \end{lemma}
@@ -29,12 +29,10 @@ $\range_G$ such that $S_i=Q\cap R_i$. Since all the $S_i$'s are
 different from each other, then all the $R_i$'s must be different from each
 other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
 $R_i$, that is, there are $2^{k-1}$ distinct ranges in $\range_G$ containing
-$p$. But $p$ belongs to the ranges corresponding to the vertices through which $p$
-passes, including the start and end vertices. This means that the number of ranges
-in $\range_G$ that $p$ belongs to is equal to $|p|+1$, viz.~to the number of
-edges in $p$ plus one. But $|p|\le\Delta_G$, by definition of $\Delta_G$, so $p$
-can belong to at most $\Delta_G+1$ ranges from $\range_G$. Given that
-$2^{k-1}>\Delta_G+1$, we reached a contradiction and there cannot be $2^{k-1}$
+$p$. But $p$ belongs to the ranges corresponding to the vertices in $p$. This means that the number of ranges
+in $\range_G$ that $p$ belongs to is equal to $|p|$. But $|p|\le\Delta_G$, by definition of $\Delta_G$, so $p$
+can belong to at most $\Delta_G$ ranges from $\range_G$. Given that
+$2^{k-1}>\Delta_G$, we reached a contradiction and there cannot be $2^{k-1}$
 distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
 $Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
 $\VC(\range_G)\le\lfloor\log_2\Delta_G\rfloor+1$.%\qed
@@ -88,13 +86,13 @@ has one or no shortest path between them, the upper bound can be improved.
 \end{proof}
 
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
-for each $d>0$ we can build a graph $G_d$ with edge-diameter $d$ and such
+for each $d>0$ we can build a graph $G_d$ with vertex-diameter $d$ and such
 that the range set associated to the set of shortest path of $G_d$ has
 VC-dimension exactly $\lfloor\log_2(d+1)\rfloor+1$.
 
 \begin{lemma}
   Given $d>0$ there exists a graph $G$ with edge-diameter $d$ and such that
-  $\VC(\range_G)=\lfloor\log_2(d+1)\rfloor+1$.
+  $\VC(\range_G)=\lfloor\log_2 d\rfloor+1$.
 \end{lemma}
 
 \begin{proof}
