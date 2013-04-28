@@ -1,3 +1,65 @@
 \section{Related Work}\label{sec:prevwork}
-\XXX TBD
+
+%% Betweenness centrality Approximations 
+The work of Eppstein et al. [] deployed sampling to approximate the closeness centrality.
+Specifically, the authors proposed an $O(\frac{\mbox{log}n}{\epsilon^2}(n\mbox{log}n+m))$ randomized algorithm with additive error of $\epsilon \Delta$ for approximating the inverse closeness centrality of weighted graphs, where $\Delta$ is the diameter of the graph.
+For bounding the sum of the independent random variables the authors used the following [] theorem:
+
+\begin{theorem}
+\cite{} If $x_{1},x_{2},\ldots,x_{k}$ are independent, $a_{i}\leq x_{i}\leq b_{i}$, and $\mu=E[\sum x_{i}/k]$ is the expected mean, then for $\xi > 0$
+\begin{displaymath}
+Pr\Big( |\frac{\sum_{i=1}^{k}x_{i}}{k}-\mu|\geq \xi\Big)\leq 2e^{-2k^2\xi^2/\sum_{i=1}^{k}(b_{i}-a_{i})^2}
+\end{displaymath}
+\end{theorem}
+
+In the work of Brandes et al.~\cite{brandes2007centrality} a similar approach is used in order to approximate not only the closeness but also the betweenness centrality measure.
+This algorithm selects randomly $k$ pivot nodes and by and bounds the deviation of the empirical average of bounded random variables from its expectation.
+By using the following expression of random variables $X_{i}$ it can be shown that the expectation of the empirical average is the betweenness centrality of the node.
+
+\begin{displaymath}
+X_{i}(v)=n\delta (p_{i}|v)=n\sum_{t\neq v}\delta (p_{i}t|v)
+\end{displaymath}
+
+The term $\delta (p_{i}t|v)$ is the fraction of the shortest paths from $p_{i}$ to $t$ that pass through $v$, over the total number of distinct shortest paths from 
+$p_{i}$ to $t$.
+Since there are no self-loops, the maximum value that $X_{i}(v)$ may take is:
+
+\begin{displaymath}
+M=n(n-2)
+\end{displaymath}
+
+The expected value of the average of the $X_{i}(v)$ variables is:
+
+\begin{displaymath}
+E\Big[\frac{\sum_{j=1}^{k}X_{j}(v)}{k}\Big]=n\sum_{i=1}^{n}\frac{E[Y_{i}\delta (p_{i}|v)]}{k}
+\end{displaymath}
+\begin{displaymath}
+=\frac{n}{k}\sum_{i=1}^{n}\delta(p_{i}|v)E[Y_{i}]=\frac{n}{k}\sum_{i=1}^{n}\delta(p_{i}|v)\frac{k}{n}=\sum_{i=1}^{n}\delta(p_{i}|v)=c_{v}
+\end{displaymath}
+
+,where $Y_{i}$ is a Bernoulli random variable that takes value 1 if vertex $i$ is among the vertices of the random sample, and 0 otherwise.
+We also set $\xi$ as:
+ 
+\begin{displaymath}
+\xi=\epsilon\binom{n}{2}
+\end{displaymath}
+
+ By applying the Hoeffding's theorem we have:
+ 
+\begin{displaymath}
+\mbox{Pr}(|c_{v}-\tilde{c_{v}}|)\leq 2e^{-2k^2\epsilon^2(\frac{n(n-1)}{2})/kn^2(n-2)^2}=2e^{-k\epsilon^2(n-1)^2/2(n-2)^2}
+\end{displaymath}
+
+In that case the number of samples that is needed to approximate the betweenness within $\epsilon$ with probability at least $1-\delta$ is: 
+
+\begin{displaymath}
+k\geq \frac{2(n-2)^2}{\epsilon^2(n-1)^2}(logn +log\frac{1}{\delta})-log{2}
+\end{displaymath}
+
+
+
+%% Single Shortest path
+
+
+%% Diameter
 
