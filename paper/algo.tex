@@ -3,18 +3,125 @@ In this section we present our algorithm to compute a set of approximations for 
 betweenness centrality of all vertices in a graph through sampling, with
 probabilistic guarantees on the quality of the approximations.
 
-The intuition behind the algorithm is the following. Given a graph $G=(V,E)$ and
-two parameters $\varepsilon,\delta\in(0,1)$ we first compute a \emph{sample
-size} $k$ as function of $\varepsilon$, $\delta$, and the edge-diameter
-$\Delta_G$, so that to ensure to achieve the desired accuracy (expressed through
-$\varepsilon$) with the desired confidence (expressed through $1-\delta$). Then,
-for $k$ iterations, the algorithm picks a pair of distinct vertices $(u,v)$
-uniformly at random, computes all the shortest paths between $u$ and $v$,
-and select one of these shortest paths uniformly at random. Let $\mathcal{S}$ be
-the set of the so-obtained $k$ shortest paths. The estimation of the betweenness
-centrality of each vertex $v\in V$ is obtained by counting the number of
-shortest paths from $\mathcal{S}$ going through $v$ and de-normalizing this
-count by multiplying it for $\binom{n}{2}/k$. Algorithm~\XXX %\ref{alg:algorithm}
-presents the pseudocode.
+The intuition behind the algorithm is the following. Given a graph $G=(V,E)$
+with vertex-diameter $\Delta_g$ and two parameters $\varepsilon,\delta\in(0,1)$ we first compute a sample
+size $k$ using~\eqref{eq:vceapprox} with
+$d=\lfloor\log_2\Delta_G\rfloor+1$:
+\begin{equation}\label{eq:samplesize}
+k=\frac{c}{\varepsilon^2}\left(\lfloor\log_2\Delta_G\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
+\end{equation}
+The sample size is sufficient to ensure
+to achieve the desired accuracy (expressed through $\varepsilon$) with the
+desired confidence (expressed through $1-\delta$). Then the algorithm builds a
+sample $S$ of $k$ shortest path from $\mathbb{S}_G$ by sampling them according to
+the probability distribution $\prob_G$ defined on $\mathbb{S}_G$ as follows:
+given a shortest path $p_{uv}\in\mathbb{S}_G$ between a pair of vertices
+$(u,v)\in V\times V$, 
+\[
+\prob_G(p_{uv})=\frac{1}{\binom{n}{2}|\mathcal{S}_{uv}|}\enspace.%=\frac{2}{n(n-1)|\mathcal{S}_{uv}|}\enspace.
+\]
+Sampling according to $\prob_G$ can be achieved by first picking a pair of distinct vertices $(u,v)$
+uniformly at random, computing the set $\mathcal{S}_{uv}$ of all the shortest
+paths between $u$ and $v$, and selecting one of these shortest paths uniformly
+at random. The estimation $\tilde\betw(v)$ of the betweenness centrality of each
+vertex $v\in V$ is obtained by computing the fraction of shortest paths in $S$
+that $v$ belongs to and de-normalizing it: 
+\[
+\tilde\betw(v) = \binom{n}{2}\frac{1}{k}\sum_{p\in S}
+\mathds{1}_{p}(v) = \binom{n}{2}\frac{1}{k}\sum_{p\in S}
+\mathds{1}_{\mathcal{T}_v}(p)\enspace.
+\]
+Algorithm \ref{alg:algorithm} presents the pseudocode.
+\begin{algorithm}[ht]
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{Output}{Output}
+  \SetKwFunction{VertexDiameter}{getVertexDiameter}
+  \SetKwFunction{SamplePair}{sampleVertexPair}
+  \SetKwFunction{SampleUniform}{sampleUniformPath}
+  \SetKwFunction{PairShortestPaths}{computeAllShortestPaths}
+   \DontPrintSemicolon
+  %\dontprintsemicolon
+  \Input{a graph $G=(V,E)$ with $|V|=n$, real values $\varepsilon,\delta\in(0,1)$}
+  \Output{A set of approximations }
+  $\Delta_G\leftarrow$\VertexDiameter{G}\label{alg:diamcomp}\; 
+  $k\leftarrow (c/\varepsilon^2)(\lfloor\log_2\Delta_G\rfloor+\ln(1/\delta))$\;
+  $S\leftarrow\emptyset$\;
+  \For{$i\leftarrow 1$ to $k$} {
+  $(u,v)\leftarrow$\SamplePair{$G$}\;
+  $\mathcal{S}_{uv}\leftarrow$\PairShortestPaths{$(u,v)$}\;
+  $s\leftarrow$\SampleUniform{$\mathcal{S}_{uv}$}\;
+  $S\leftarrow S\cup\{s\}$\;
+  }
+  \For{$v\in V$} {
+  $\tilde\betw(v)\leftarrow\binom{n}{2}\sum_{p\in S}\mathds{1}_{p}(v)$\;
+  }
+  \Return{$\{\tilde\betw(v), v\in V\}$}
+  \caption{Computes approximations $\tilde\betw(v)$ of the betweenness
+  centrality $\betw(v)$ for all vertices $v\in V$.}
+  \label{alg:algorithm}
+\end{algorithm}
 
-\XXX TBD
+The algorithm we describes offers probabilistic guarantees on the quality of all
+approximations of the betweenness centrality.
+\begin{lemma}\label{lem:correctness}
+  With probability at least $1-\delta$, all the approximations computed by the
+  algorithm are within $\varepsilon\binom{n}{2}$ from their real value:
+  %The algorithm computes a set of approximations $\tilde\betw(v)$ for each $v\in
+  %V$ such that
+  \[
+  \Pr\left(\exists v\in V \mbox{ s.t. }
+  |\betw(v)-\tilde\betw(v)|>\varepsilon\binom{n}{2}\right)<\delta\enspace .
+  \]
+\end{lemma}
+
+\begin{proof}
+  Consider the range set $\range_G$ and the probability distribution $\prob_G$.
+  For $k$ as in~\eqref{eq:samplesize}, the sample $S$ is a
+  $\varepsilon$-approximation to $(\range_G,\prob_G)$ with probability at least
+  $1-\delta$. Suppose that this is indeed the case, then from
+  Def.~\ref{def:eapprox} and the definition of $\range_G$ we have that
+  \[
+  \left|\prob_G(\mathcal{T}_v) - \frac{1}{k}\sum_{p\in
+  S}\mathds{1}_{\mathcal{T}_v}(p)\right|=\left|\prob_G(\mathcal{T}_v) -
+  \frac{1}{\binom{n}{2}}\tilde\betw(v)\right|\le\varepsilon, \forall v\in
+  V\enspace.
+  \]
+  From the definition of $\prob_G$ we have
+  \[
+  \prob_G(\mathcal{T}_v)=\frac{1}{\binom{n}{2}}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}=\frac{1}{\binom{n}{2}}\betw(v),
+  \]
+  which concludes the proof.
+\end{proof}
+
+\subsection{Approximating the diameter}\label{sec:diam}
+The algorithm presented in the previous section requires the knowledge (or the
+computation) of the vertex-diameter $\Delta_G$) of the graph $G$ (line
+\ref{alg:diamcomp} of Alg.~\ref{alg:algorithm}). Computing $\Delta_G$ exactly
+can be done by finding the shortest paths between all pair of vertices in $V$
+and computing the maximum size. This can be done in time \XXX. Such an exact
+computation would defeat our purposes, because once we have all the shortest
+paths, we can compute the betweenness of all the nodes exactly. Given that
+Thm.~\ref{thm:eapprox} only requires an upper bound to the VC-dimension of the
+range set, an upper bound to the vertex-diameter would be sufficient for our
+purposes, provided its computation is fast and it does not result in a much
+larger sample size than if we used the exact value for $\Delta_G$. There are
+known algorithms the diameter of a graph \XXX references, discussion \MR
+For our case, a $2$-approximation to $\Delta_G$ can be computed in time \XXX by selecting a
+vertex $v\in V$ uniformly at random, computing the shortest path from $v$ to all
+other vertices in $V$, and taking $\tilde\Delta_G$ to be the sum of the sizes of
+the two longest shortest paths from $u$ to two distinct other nodes. 
+
+\begin{lemma}
+  $\tilde\Delta_G\le 2\Delta_G$.
+\end{lemma}
+\begin{proof}
+  \XXX TBD but seems easy.
+\end{proof}
+
+The impact of using $\tilde\Delta_G$ when computing the sample size $k$ is that
+the sample will contain at most $c/\varepsilon^2$ more paths than if we used the
+exact value $\Delta_G$. 
+
+\subsection{Discussion}
+\XXX TBD: running time, worst case, comparison with best previous work.
+
