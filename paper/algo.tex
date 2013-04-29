@@ -107,12 +107,14 @@ range set, an upper bound to the vertex-diameter would be sufficient for our
 purposes, provided its computation is fast and it does not result in a much
 larger sample size than if we used the exact value for $\Delta_G$. There are
 known algorithms to approximate the diameter of a
-graph~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12} \XXX Discuss these.
+graph~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times
+and quality of approximations.
 \XXX Not sure about the correctness of the following. \MR For our case, a
-$2$-approximation to $\Delta_G$ can be computed in time \XXX by selecting a
-vertex $v\in V$ uniformly at random, computing the shortest path from $v$ to all
-other vertices in $V$, and taking $\tilde\Delta_G$ to be the sum of the sizes of
-the two longest shortest paths from $u$ to two distinct other nodes. 
+$2$-approximation to $\Delta_G$ is sufficient and can be computed in time \XXX
+by selecting a vertex $v\in V$ uniformly at random, computing the shortest paths
+from $v$ to all other vertices in $V$, and taking $\tilde\Delta_G$ to be the sum
+of the sizes of the two longest shortest paths from $u$ to two distinct other
+nodes. 
 
 \begin{lemma}\label{lem:diam}
   $\Delta_G\le\tilde\Delta_G\le 2\Delta_G$.
@@ -123,7 +125,11 @@ the two longest shortest paths from $u$ to two distinct other nodes.
 
 The impact of using $\tilde\Delta_G$ when computing the sample size $k$ is that
 the sample will contain at most $c/\varepsilon^2$ more paths than if we used the
-exact value $\Delta_G$. 
+exact value $\Delta_G$. The computation of $\tilde\Delta_G$ has no (\XXX or
+minimal) impact on the running time of our algorithm: once the $\Delta_G$ has
+been computed, we can sample another node $u\neq v$ and then sample one of the
+(already computed) shortest paths between $v$ and $v$ and use this path as first
+element of the sample.
 
 \subsection{Discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.
