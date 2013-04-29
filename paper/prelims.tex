@@ -5,13 +5,16 @@ develop and analyze our results in the remainder of the paper.
 \subsection{Graphs and betweenness centrality}\label{sec:graphprelims}
 Let $G=(V,E)$ be a graph, where $E\subseteq V\times V$, with $n=|V|$ vertices
 and $m=|E|$ edges. Each edge
-$e\in E$ has a non-negative (\XXX necessary?
-\MR) weight $\mathsf{w}(e)$. The graph $G$ can be directed or undirected. We assume
-that $G$ is connected and that there are no self-loops and no multiple edges
+$e\in E$ has a non-negative \XXX necessary? weight $\mathsf{w}(e)$. The graph
+$G$ can be directed or undirected. We assume
+that $G$ has a single connected component and that there are no self-loops and no multiple edges
 between a pair of vertices. Given a pair of vertices $(u,v)\in V\times V$,
 $u\neq v$, a \emph{path $p_{uv}\subseteq V$ from $u$ to $v$} is an ordered sequence of
 vertices $p_{uv}=(w_1,\dotsc,w_{|p_{uv}|})$ such that $w_1=u$, $w_{|p_{uv}|}=v$ and
-for each $1\le i < |p_{uv}|$, $(w_i,w_{i+1})\in E$. The \emph{length}
+for each $1\le i < |p_{uv}|$, $(w_i,w_{i+1})\in E$. The vertices $u$ and $v$ are
+called the \emph{end points} of $p_{uv}$ and the vertices in
+$\mathsf{Int}(p_{uv})=p_{uv}\setminus\{u,v\}$ are the \emph{internal vertices of
+$p_{uv}$}. The \emph{length}
 $\ell(p_{uv})$ of a path $p_{uv}$ from $u$ to $v$ is the sum of the weights of
 the edges composing the path:
 $\ell(p_{uv})=\sum_{i=1}^{|p_{uv}|-1}\mathsf{w}((w_i,w_{i+1}))$. We denote with
@@ -26,6 +29,7 @@ between $u$ and $v$, $\sigma_{uv}=0$. We call a path between $u$ and $v$ with
 length $\sigma_{uv}$ a \emph{shortest path between $u$ and $v$}. There can be
 multiple shortest paths between $u$ and $v$ and we denote the set of these paths
 as $\mathcal{S}_{uv}$. If $\sigma_{u,v}=0$, then $\mathcal{S}_{uv}=\emptyset$.
+By definition, $\mathcal{S}_{vv}=\emptyset$.
 We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$, for all
 $(u,v)\in V\times V$: 
 \[ \mathbb{S}_G=\bigcup_{(u,v)\in V\times V}\mathcal{S}_{uv}\enspace.\]
@@ -42,9 +46,9 @@ If all the edge weights are unitary, then $\Delta_G$ is equal to
 $\mathsf{diam}(G)+1$, where $\mathsf{diam}(G)$ is the number of edges composing the
 longest shortest path in $G$.
 Given a vertex $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
-shortest paths that $v$ belongs to:
+shortest paths that $v$ is \emph{internal} to:
 \[
-\mathcal{T}_v=\{p\in\mathbb{S}_G ~:~ v\in p\}\enspace.
+\mathcal{T}_v=\{p\in\mathbb{S}_G ~:~ v\in\mathsf{Int}(p)\}\enspace.
 \]
 In this work we are interested in the \emph{betweenness centrality} of the
 vertices of a graph.
@@ -57,11 +61,11 @@ vertices of a graph.
   %\betw(v)=\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
   \betw(v)=\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}=\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}\enspace.
   \]
-  It is easy to see that $n\le b(v)\le\binom{n}{2}$. \XXX Check original def \MR 
 \end{definition} 
 
-\XXX reference \MR presented an algorithm to compute the betweenness centrality for
-all $v\in V$ in time $O(n^2)$. 
+It is easy to see that $0\le b(v)\le (n-1)(n-2)$. \citet{Brandes01} presented an
+algorithm to compute the betweenness centrality for all $v\in V$ in time
+$O(n^2)$. 
 
 \subsection{Vapnik-Chervonenkis dimension}\label{sec:prelvcdim}
 The Vapnik-Chernovenkis (VC) dimension of a class of subsets defined

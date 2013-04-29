@@ -6,9 +6,9 @@ probabilistic guarantees on the quality of the approximations.
 The intuition behind the algorithm is the following. Given a graph $G=(V,E)$
 with vertex-diameter $\Delta_g$ and two parameters $\varepsilon,\delta\in(0,1)$ we first compute a sample
 size $k$ using~\eqref{eq:vceapprox} with
-$d=\lfloor\log_2\Delta_G\rfloor+1$:
+$d=\lfloor\log_2(\Delta_G-2)\rfloor+1$:
 \begin{equation}\label{eq:samplesize}
-k=\frac{c}{\varepsilon^2}\left(\lfloor\log_2\Delta_G\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
+k=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\Delta_G-2)\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
 \end{equation}
 The sample size is sufficient to ensure
 to achieve the desired accuracy (expressed through $\varepsilon$) with the
@@ -25,10 +25,10 @@ uniformly at random, computing the set $\mathcal{S}_{uv}$ of all the shortest
 paths between $u$ and $v$, and selecting one of these shortest paths uniformly
 at random. The estimation $\tilde\betw(v)$ of the betweenness centrality of each
 vertex $v\in V$ is obtained by computing the fraction of shortest paths in $S$
-that $v$ belongs to and de-normalizing it: 
+that $v$ is internal to and de-normalizing it: 
 \[
 \tilde\betw(v) = \binom{n}{2}\frac{1}{k}\sum_{p\in S}
-\mathds{1}_{p}(v) = \binom{n}{2}\frac{1}{k}\sum_{p\in S}
+\mathds{1}_{\mathsf{Int}(p)}(v) = \binom{n}{2}\frac{1}{k}\sum_{p\in S}
 \mathds{1}_{\mathcal{T}_v}(p)\enspace.
 \]
 Algorithm \ref{alg:algorithm} presents the pseudocode.
@@ -44,7 +44,7 @@ Algorithm \ref{alg:algorithm} presents the pseudocode.
   \Input{a graph $G=(V,E)$ with $|V|=n$, real values $\varepsilon,\delta\in(0,1)$}
   \Output{A set of approximations }
   $\Delta_G\leftarrow$\VertexDiameter{G}\label{alg:diamcomp}\; 
-  $k\leftarrow (c/\varepsilon^2)(\lfloor\log_2\Delta_G\rfloor+\ln(1/\delta))$\;
+  $k\leftarrow (c/\varepsilon^2)(\lfloor\log_2(\Delta_G-2)\rfloor+\ln(1/\delta))$\;
   $S\leftarrow\emptyset$\;
   \For{$i\leftarrow 1$ to $k$} {
   $(u,v)\leftarrow$\SamplePair{$G$}\;
@@ -53,7 +53,8 @@ Algorithm \ref{alg:algorithm} presents the pseudocode.
   $S\leftarrow S\cup\{s\}$\;
   }
   \For{$v\in V$} {
-  $\tilde\betw(v)\leftarrow\binom{n}{2}\sum_{p\in S}\mathds{1}_{p}(v)$\;
+  $\tilde\betw(v)\leftarrow\binom{n}{2}\sum_{p\in
+  S}\mathds{1}_{\mathsf{Int}(p)}(v)$\;
   }
   \Return{$\{\tilde\betw(v), v\in V\}$}
   \caption{Computes approximations $\tilde\betw(v)$ of the betweenness
@@ -105,8 +106,10 @@ Thm.~\ref{thm:eapprox} only requires an upper bound to the VC-dimension of the
 range set, an upper bound to the vertex-diameter would be sufficient for our
 purposes, provided its computation is fast and it does not result in a much
 larger sample size than if we used the exact value for $\Delta_G$. There are
-known algorithms the diameter of a graph \XXX references, discussion \MR
-For our case, a $2$-approximation to $\Delta_G$ can be computed in time \XXX by selecting a
+known algorithms to approximate the diameter of a
+graph~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12} \XXX Discuss these.
+\XXX Not sure about the correctness of the following. \MR For our case, a
+$2$-approximation to $\Delta_G$ can be computed in time \XXX by selecting a
 vertex $v\in V$ uniformly at random, computing the shortest path from $v$ to all
 other vertices in $V$, and taking $\tilde\Delta_G$ to be the sum of the sizes of
 the two longest shortest paths from $u$ to two distinct other nodes. 
@@ -133,7 +136,7 @@ the graph. The estimation $\tilde\betw'(u)$ for the betweenness centrality
 $\betw(u)$ is
 \[ 
 \tilde\betw'(u)= \frac{n}{k}\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
-u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_p(u)}{|\mathcal{S}_{v_iw}|},
+u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|},
 \]
 As it was for our algorithm, the key ingredient to ensure a correct
 approximation for the betweenness centrality is the computation of the sample
@@ -159,21 +162,21 @@ In their setting $\xi=\varepsilon\binom{n}{2}$ and there is a variable $X_i$ for
 each vertex $v_i$ in the sample:
 \[ 
 X_i=n\sum_{w\neq v_i,w\neq
-u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_p(u)}{|\mathcal{S}_{v_iw}|}\enspace
+u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace
 .
 \]
 It is easy to see that $0\le X_i\le n(n-2)$. Moreover,
 \begin{align*}
 \mathbf{E}\left[\frac{|X_1+\dotsb+X_k|}{k}\right] &=
 \frac{n}{k}\mathbf{E}\left[\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
-u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_p(u)}{|\mathcal{S}_{v_iw}|}\right]
+u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\right]
 =\frac{n}{k}\sum_{v\in V}\mathbf{E}\left[Y_v\sum_{w\neq v,w\neq
-u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_p(u)}{|\mathcal{S}_{vw}|}\right] =
+u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}\right] =
 \\
 &=\frac{n}{k}\sum_{v\in V}\mathbf{E}[Y_v]\sum_{w\neq v,w\neq
-u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_p(u)}{|\mathcal{S}_{vw}|}
+u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
 =\frac{n}{k}\sum_{v\in V}\frac{k}{n}\sum_{w\neq v,w\neq
-u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_p(u)}{|\mathcal{S}_{vw}|}
+u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
 = \betw(u),
 \end{align*}
 where $Y_v$ is a Bernoulli random variable taking value 1 if $v\in S$, and 0
