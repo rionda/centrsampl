@@ -94,6 +94,16 @@ approximations of the betweenness centrality.
   which concludes the proof.
 \end{proof}
 
+\paragraph{Unique shortest paths case.} When the graph $G$ is undirected and
+there is an unique shortest path between each pair of node, then one can apply
+Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
+\[ k= \frac{c}{\varepsilon^2}\left(2+\ln\frac{1}{\delta}\right)
+\]
+to approximate the betweenness centralities of all the vertices. Unique shortest
+paths are common in or even enforced in road networks~\citep{GeisbergerSS08} by
+slightly perturbing the edge weights or having a deterministic tie breaking
+policy.
+
 \subsection{Approximating the diameter}\label{sec:diam}
 The algorithm presented in the previous section requires the knowledge (or the
 computation) of the vertex-diameter $\Delta_G$) of the graph $G$ (line
