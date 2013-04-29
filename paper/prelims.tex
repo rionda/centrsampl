@@ -65,7 +65,7 @@ vertices of a graph.
 
 It is easy to see that $0\le b(v)\le (n-1)(n-2)$. \citet{Brandes01} presented an
 algorithm to compute the betweenness centrality for all $v\in V$ in time
-$O(n^2)$. 
+$O(nm)$ for unweighted graphs and $O(nm + n^2 \log n)$ for weighted graphs. 
 
 \subsection{Vapnik-Chervonenkis dimension}\label{sec:prelvcdim}
 The Vapnik-Chernovenkis (VC) dimension of a class of subsets defined
