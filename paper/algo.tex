@@ -119,18 +119,34 @@ larger sample size than if we used the exact value for $\Delta_G$. There are
 known algorithms to approximate the diameter of a
 graph~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times
 and quality of approximations.
-\XXX Not sure about the correctness of the following. \MR For our case, a
-$2$-approximation to $\Delta_G$ is sufficient and can be computed in time \XXX
-by selecting a vertex $v\in V$ uniformly at random, computing the shortest paths
-from $v$ to all other vertices in $V$, and taking $\tilde\Delta_G$ to be the sum
-of the sizes of the two longest shortest paths from $u$ to two distinct other
-nodes. 
+
+For our case, if $G$ is \emph{undirected} and \emph{all the weights are
+unitary}, a $2$-approximation to $\Delta_G$ is sufficient and can be computed in
+time \XXX by selecting a vertex $v\in V$ uniformly at random, computing the
+shortest paths from $v$ to all other vertices in $V$, and taking
+$\tilde\Delta_G$ to be the sum of the sizes of the two longest shortest paths
+from $v$ to two distinct other nodes $u$ and $w$. 
 
 \begin{lemma}\label{lem:diam}
   $\Delta_G\le\tilde\Delta_G\le 2\Delta_G$.
 \end{lemma}
 \begin{proof}
-  \XXX Right not I'm not sure this is true\ldots \MR
+  Let $p_{vu}$ be the shortest path between $v$ and $u$ and analogously
+  $p_{vw}$. We have $\tilde\Delta_G\le 2\Delta_G$ because
+  $|p_{vu}|,|p_{vw}|\le\Delta_G$, so $|p_{vu}|+|p_{vw}|\le 2\Delta_g$. To see
+  that $\tilde\Delta_G\ge\Delta_G$, consider a pair of nodes $x$ and $z$ such
+  that the size of a shortest path between $x$ and $z$ is equal to $\Delta_G$.
+  Let $p_{xv}$ be a shortest path between $x$ and $v$ and let $p_{vz}$ be a
+  shortest path between $v$ and $z$. 
+  Then (by the triangle inequality? \XXX)
+  \[
+  |p_{xv}|+|p_{vz}|=|p_{vx}|+|p_{vz}|\ge\Delta_G\enspace.
+  \]
+  It is easy to see that $|p_{vu}|+|p_{vw}|\ge|p_{vx}|+|p_{vz}|$ because the
+  vertices $u$ and $w$ are chosen so that to maximize this sum. Hence
+  \[
+  \tilde\Delta_G = |p_{vu}|+|p_{vw}| \ge\Delta_G\enspace.\qedhere
+  \]
 \end{proof}
 
 The impact of using $\tilde\Delta_G$ when computing the sample size $k$ is that
