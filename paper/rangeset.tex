@@ -46,46 +46,79 @@ has a unique shortest path between them, the upper bound can be improved.
 \begin{lemma}\label{lem:vcdimuppboundunique}
   Given an undirected graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
   pairs $(u,v)\in V\times V$, the range set $\range_G$ associated to the
-  shortest paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $2$.
+  shortest paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $3$.
 \end{lemma}
 
 \begin{proof}
-  Assume that $\VC(\range_G)>2$, then there must be a set $Q=\{p_1,p_2,p_3\}$ of three
-  shortest paths that can be shattered. Hence, there must be a vertex $z$ such that
-  $\mathcal{T}_{z}\cap Q=Q$, and three vertices $w,x,y$ such
-  that $\mathcal{T}_{w}\cap Q=\{p_1,p_2\}$, $\mathcal{T}_{x}\cap
-  Q=\{p_1,p_3\}$, and $\mathcal{T}_{y}\cap Q=\{p_2,p_3\}$. Let $\mu:V\rightarrow
-  [1,n]$ be an arbitrary bijection. We need to consider two
-  cases (all the other cases follow by simmetry): either
-  1.~$\mu(w)<\mu(x)<\mu(y)<\mu(z)$ or 2.~$\mu(w)<\mu(x)<\mu(z)<\mu(y)$.
+  First of all, notice that in this restricted setting, if two different paths
+  $p_1$ and $p_2$ meet at a vertex $u$, then they either go on together or at a
+  certain point they separate never to meet again at any other vertex $v=\neq u$.
+  This is easy to see: if they could separate and then meet again, then there
+  would be two distinct shortest paths between $u$ and $v$, which is a
+  contradiction of the hypothesis. Let us denote this fact as $\mathsf{F}$.
 
-  Consider the first case. The path $p_1$ passes through $w$, then (not
-  necessarily consecutively) through $x$, and finally through $z$, without
-  passing through $y$. The path $p_2$ passes through $w$, then $y$ (without
-  passing through $x$), then $z$. The path $p_3$ passes through $x$ without
-  passing through $w$, then goes through $y$ and through $z$. This implies that
-  path $p_1$ and $p_3$ both pass through $x$ and through $z$, but while moving
-  from $x$ through $z$ they are not overlapping, given that $p_3$ passes through
-  $y$ and $p_1$ does not. Given that both $p_1$ and $p_3$ are shortest
-  paths, every subpath in them is a shortest path. But this would mean that
-  there are two shortest paths between $x$ and $z$, one going through $y$
-  (a subpath of $p_3$) and the other not going through $y$ (a subpath of $p_1$).
-  This is a contradiction, hence there cannot be such nodes $w,x,y,z$ and $Q$
-  cannot be shattered.
+  Assume now that $\VC(\range_G)>3$, then there must be a set
+  $Q=\{p_1,p_2,p_3,p_4\}$ of four shortest paths that can be shattered by
+  $\range_G$. Hence there must be a vertex $w$ such that $\mathcal{T}_{w}\cap
+  Q=Q$. Note that $w$ can not be an end point for any of the paths in $Q$, by
+  definition of $\mathcal{T}_w$. Hence all the paths in $Q$ must \emph{enter}
+  and \emph{exit} $w$. We can assume to label some of the edges incident to $w$
+  as ``entrance'' edges and the rest as ``exit'' edges, so that each path in $Q$
+  enters $w$ through an entrance edge and exit through an exit edge. Given that
+  the graph is undirected, we can always find such a labeling by appropriately
+  reversing some of the paths in $Q$. In the following we will examine how the
+  four paths ``enter'' and ``exit'' $w$, and show that all possible cases would
+  result in a contradiction of $\mathsf{F}$. 
 
-  Consider now the second case. The path $p_1$ passes through $w$, then through
-  $x$, then through $z$, and it does not pass through $y$. Path $p_2$ goes
-  through $w$, then through $z$ without going through $x$, and then through $y$.
-  Path $p_3$ goes through $x$ without going through $w$, then goes through $z$,
-  and eventually through $y$. This implies that $p_1$ and $p_2$ both go through
-  $w$ and through $z$ but following different paths, given that $p_1$ goes
-  through $x$ and $p_2$ does not. We reached a contradiction, because these
-  two different paths between $w$ and $z$ cannot be both shortest paths, given
-  that by hypothesis there must be a single shortest path between $w$ and $z$.
-  Hence there cannot be such nodes $w,x,y,z$ and $Q$ cannot be shattered.  
+  \begin{description}
+    \item[Case 1] The four paths in $Q$ enter $w$ through any combination of
+      edges (e.g., three through the same edge and one from a different edge,
+      two from the same edge and the other two from a single different edge, all four
+      through four different edges, two from the same edge and the other two
+      each from a different edge), except all four through the same edge. The four paths
+      exit $w$ through any combination of edges, except all four through the
+      same edge. Then it is always possible to find a pair $(p',p'')$ of paths
+      in $Q$ such that $p'$ and $p''$ enter $w$ through different edges and exit
+      $w$ through different edges. These two paths can not have met before
+      entering $w$ as this would lead to a contradiction of $\mathsf{F}$ and
+      analogously can not meet again after exiting $w$. Then it is not possible
+      to find a vertex $z$ such that $\mathcal{T}_z\cap Q=\{p',p''\}$, which
+      implies that $Q$ cannot be shattered by $\range_G$, contraddicting the
+      hypothesis.
+    %\item[Case 1] The four paths in $Q$ enter $w$ through four distinct edges
+    %  and do not exit $w$ all through the same edge (we will analyze this
+    %  situation in Case X). There there is a pair $(p',p'')$ of paths in $Q$ which exit $w$
+    %  through two distinct edges. These two paths can not have met before
+    %  entering $w$, as this would imply that they met, separate, and then met
+    %  again in $w$, which would contraddict $\mathsf{F}$. Analogously, they can
+    %  not meet after exiting $w$. Then there is no vertex $z$ such that
+    %  $\mathcal{T}_z\cap Q=\{p',p''\}$, which implies that $Q$ cannot be
+    %  shattered by $\range_G$, contraddicting the hypothesis.
+    %\item[Case 2] 
 
-  Given that it is impossible to shatter a set of size $3$, then
-  $\VC(\range_G)\le 2$.
+
+    %\item[Case X-1] Three of the paths in $Q$ enter $w$ through the same edge
+    %  and one through a different edge. Three paths exit $w$ through the same
+    %  edge and one through a different edge. It is always possible to find a
+    %  pair $(p',p'')$ such that $p'$ and $p''$ enter $w$ through different
+    %  edges and exit $w$ through different edges. Then these two paths cannot
+    %  have met before entering $w$ as this would lead to a contradiction of
+    %  $\mathsf{F}$ and analogously can not meet again after exiting $w$. Then it
+    %  is not possible to find a vertex $z$ such that $\mathcal{T}_z\cap
+    %  Q=\{p',p''\}$, which implies that $Q$ cannot be shattered by $\range_G$,
+    %  contraddicting the hypothesis.
+    \item[Case 2] Suppose the four paths from $Q$ enter $w$ in any way
+      (including all through the same edge) and all exit $w$ through the same
+      edge. We can virtually contract all the edges belonging to all the four
+      paths. It is easy to see that after this
+      virtual contraction, there will be a (virtual) vertex $z$ that the paths
+      enter (not all together) and exit (not all togheter). The way that they
+      enter and exit $z$ falls in the previous case, for which we reached the  
+      conclusion that $Q$ can not be shattered by $\range_G$, hence the same
+      holds for this case. The case for when the four paths enter $w$ through
+      the same edge and exit $w$ in any way can be obtained by simmetry by
+      reversing all paths.
+  \end{description}
 \end{proof}
 
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
