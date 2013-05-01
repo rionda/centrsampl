@@ -1,0 +1,11 @@
+Download graph data from snap.stanford.edu/data (Matteo should already have them
+somewhere on his laptop)
+Implement converter to convert them from the native format (list of edges?) to an igraph
+(http://igraph.sourceforge.net) graph
+Convert graphs to igraph format
+Implement Dijkstra's algorithm for shortest path to take into account the
+possibility of multiple shortest paths
+Implement diameter approximation algorithm for undirected, unweighted graphs
+Implement sampling procedures
+Implement Brandes exact algorithm for betweenness centrality
+
