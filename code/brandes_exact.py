@@ -44,7 +44,8 @@ def main():
     elapsed_time = end_time - start_time
     logging.info("Betweenness computed in %s seconds", elapsed_time)
 
-    # If specified write
+    # If specified, write betweenness as vertex attributes, and time as graph
+    # attribute
     if args.write:
         logging.info("Writing betweenness as vertex attributes and time as graph attribute")
         G.vs["betw"] = betweenness
