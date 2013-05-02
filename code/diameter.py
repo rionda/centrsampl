@@ -32,7 +32,8 @@ def main():
 
     # Compute the diameter
     logging.info("Computing diameter")
-    # XXX I'm not sure process_time is the right function to use
+    # time.process_time() does not account for sleeping time. Seems the right
+    # function to use. Alternative could be time.perf_counter()
     start_time = time.process_time()
     # XXX What exactly does this compute? Especially for directed graphs
     diameter = G.diameter() # This is not the vertex-diameter !!! 
