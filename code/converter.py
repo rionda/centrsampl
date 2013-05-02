@@ -50,8 +50,8 @@ def convert(input_path, is_directed):
                 G.add_edge(from_vertex, to_vertex)
                 edges_num +=1
     except OSError as E:
-        sys.stderr.write("Error: Cannot read input file {}: {}\n".format(input_path,
-            os.strerror(E.errno)))
+        logging.critical("Cannot read input file %s: %s", input_path,
+                os.strerror(E.errno))
         sys.exit(2)
 
     logging.info("Conversion complete: %d vertices, %d edges", vertices_num, edges_num)
