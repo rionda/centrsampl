@@ -59,66 +59,35 @@ has a unique shortest path between them, the upper bound can be improved.
 
   Assume now that $\VC(\range_G)>3$, then there must be a set
   $Q=\{p_1,p_2,p_3,p_4\}$ of four shortest paths that can be shattered by
-  $\range_G$. Hence there must be a vertex $w$ such that $\mathcal{T}_{w}\cap
-  Q=Q$. Note that $w$ can not be an end point for any of the paths in $Q$, by
-  definition of $\mathcal{T}_w$. Hence all the paths in $Q$ must \emph{enter}
-  and \emph{exit} $w$. We can assume to label some of the edges incident to $w$
-  as ``entrance'' edges and the rest as ``exit'' edges, so that each path in $Q$
-  enters $w$ through an entrance edge and exit through an exit edge. Given that
-  the graph is undirected, we can always find such a labeling by appropriately
-  reversing some of the paths in $Q$. In the following we will examine how the
-  four paths ``enter'' and ``exit'' $w$, and show that all possible cases would
-  result in a contradiction of $\mathsf{F}$. 
+  $\range_G$. Then there is a node $w$ such that $\mathcal{T}_w\cap Q=Q$, i.e.,
+  all paths in $Q$ go through $w$. Let $x$ be the farthest predecessor of $w$
+  along $p_1$ that $p_1$ shares with some other path from $Q$, and let $y$ be
+  the farthest successor of $w$ along $p_1$ that $p_1$ shares with some other
+  path from $Q$. Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
+  Because of fact $\mathsf{F}$, all paths in $Q_x$ go through the same vertices
+  between $x$ and $w$ and all paths in $Q_y$ go through the same vertices
+  between $w$ and $y$. This also means that all paths in $Q_x\cap Q_y$ go
+  through the same vertices between $x$ and $y$.
+  If $Q_x\cup Q_y\neq Q$, let $p^*\in Q\setminus\{Q_x\cup Q_y\}$ then from the
+  definition of $x$ and $y$ we have that there is no vertex $v$ such that
+  $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, which implies that $Q$ can not be shattered.
+  
+  Suppose from now on that $Q_x\cup Q_y=Q$.
+  If $Q_x\cap Q_y=Q$, then from this and the definition of $x$ and $y$ we have
+  that there is no vertex $v$ such that $\mathcal{T}_v\cap Q=\{p_1,p_2\}$, hence
+  $Q$ cannot be shattered. Suppose instead that $Q_x\cap Q_y\neq Q$ and let
+  $S=(Q_x\cap Q_y)\setminus\{p_1\}$. If $S\neq\emptyset$ then, given that
+  $Q_x\cap Q_y\neq Q$, there must be a path $p^*\in Q$ different from $p_1$ such
+  that $p^*\notin S$. Then, from the definition of $x$, $y$, and $S$, there is no
+  vertex $v$ such that $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, hence $Q$ cannot be
+  shattered. Assume now that $S=\emptyset$ and consider the case
+  $Q_x=\{p_1,p_2,p_3\}$, $Q_y=\{p_1,p_4\}$. Consider the set $\{p_1,p_3\}$. From
+  the definition of $x$ we have that there can not be a vertex $v$ between the
+  end point of $p_1$ before $x$ and $w$ such that $\mathcal{T}_v\cap
+  Q=\{p_1,p_3\}$. At the same time, from the definition of $y$, we have that
+  such a $v$ can not be between $w$ and the end point of $p_1$ after $w$. This
+  implies that $Q$ cannot be shattered.
 
-  \begin{description}
-    \item[Case 1] The four paths in $Q$ enter $w$ through any combination of
-      edges (e.g., three through the same edge and one from a different edge,
-      two from the same edge and the other two from a single different edge, all four
-      through four different edges, two from the same edge and the other two
-      each from a different edge), except all four through the same edge. The four paths
-      exit $w$ through any combination of edges, except all four through the
-      same edge. Then it is always possible to find a pair $(p',p'')$ of paths
-      in $Q$ such that $p'$ and $p''$ enter $w$ through different edges and exit
-      $w$ through different edges. These two paths can not have met before
-      entering $w$ as this would lead to a contradiction of $\mathsf{F}$ and
-      analogously can not meet again after exiting $w$. Then it is not possible
-      to find a vertex $z$ such that $\mathcal{T}_z\cap Q=\{p',p''\}$, which
-      implies that $Q$ cannot be shattered by $\range_G$, contraddicting the
-      hypothesis.
-    %\item[Case 1] The four paths in $Q$ enter $w$ through four distinct edges
-    %  and do not exit $w$ all through the same edge (we will analyze this
-    %  situation in Case X). There there is a pair $(p',p'')$ of paths in $Q$ which exit $w$
-    %  through two distinct edges. These two paths can not have met before
-    %  entering $w$, as this would imply that they met, separate, and then met
-    %  again in $w$, which would contraddict $\mathsf{F}$. Analogously, they can
-    %  not meet after exiting $w$. Then there is no vertex $z$ such that
-    %  $\mathcal{T}_z\cap Q=\{p',p''\}$, which implies that $Q$ cannot be
-    %  shattered by $\range_G$, contraddicting the hypothesis.
-    %\item[Case 2] 
-
-
-    %\item[Case X-1] Three of the paths in $Q$ enter $w$ through the same edge
-    %  and one through a different edge. Three paths exit $w$ through the same
-    %  edge and one through a different edge. It is always possible to find a
-    %  pair $(p',p'')$ such that $p'$ and $p''$ enter $w$ through different
-    %  edges and exit $w$ through different edges. Then these two paths cannot
-    %  have met before entering $w$ as this would lead to a contradiction of
-    %  $\mathsf{F}$ and analogously can not meet again after exiting $w$. Then it
-    %  is not possible to find a vertex $z$ such that $\mathcal{T}_z\cap
-    %  Q=\{p',p''\}$, which implies that $Q$ cannot be shattered by $\range_G$,
-    %  contraddicting the hypothesis.
-    \item[Case 2] Suppose the four paths from $Q$ enter $w$ in any way
-      (including all through the same edge) and all exit $w$ through the same
-      edge. We can virtually contract all the edges belonging to all the four
-      paths. It is easy to see that after this
-      virtual contraction, there will be a (virtual) vertex $z$ that the paths
-      enter (not all together) and exit (not all togheter). The way that they
-      enter and exit $z$ falls in the previous case, for which we reached the  
-      conclusion that $Q$ can not be shattered by $\range_G$, hence the same
-      holds for this case. The case for when the four paths enter $w$ through
-      the same edge and exit $w$ in any way can be obtained by simmetry by
-      reversing all paths.
-  \end{description}
 \end{proof}
 
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
