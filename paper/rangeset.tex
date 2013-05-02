@@ -73,20 +73,24 @@ has a unique shortest path between them, the upper bound can be improved.
   $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, which implies that $Q$ can not be shattered.
   
   Suppose from now on that $Q_x\cup Q_y=Q$.
-  If $Q_x\cap Q_y=Q$, then from this and the definition of $x$ and $y$ we have
-  that there is no vertex $v$ such that $\mathcal{T}_v\cap Q=\{p_1,p_2\}$, hence
+  If $Q_x\cap Q_y=Q$, then all the paths in $Q$ go through the same vertices
+  between $x$ and $y$. From this and the definition of $x$ and $y$ we have
+  that there is no vertex $v$ such that, for example, $\mathcal{T}_v\cap Q=\{p_1,p_2\}$, hence
   $Q$ cannot be shattered. Suppose instead that $Q_x\cap Q_y\neq Q$ and let
-  $S=(Q_x\cap Q_y)\setminus\{p_1\}$. If $S\neq\emptyset$ then, given that
+  $S=(Q_x\cap Q_y)\setminus\{p_1\}$. If $S\neq\emptyset$ then there is at least
+  a path $p'\in S$ which, from the definition of $S$ and fact $\mathsf{F}$, must
+  go through all the same vertices as $p_1$ between $x$ and $y$. Moreover, given that
   $Q_x\cap Q_y\neq Q$, there must be a path $p^*\in Q$ different from $p_1$ such
-  that $p^*\notin S$. Then, from the definition of $x$, $y$, and $S$, there is no
-  vertex $v$ such that $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, hence $Q$ cannot be
-  shattered. Assume now that $S=\emptyset$ and consider the case
-  $Q_x=\{p_1,p_2,p_3\}$, $Q_y=\{p_1,p_4\}$. Consider the set $\{p_1,p_3\}$. From
-  the definition of $x$ we have that there can not be a vertex $v$ between the
-  end point of $p_1$ before $x$ and $w$ such that $\mathcal{T}_v\cap
-  Q=\{p_1,p_3\}$. At the same time, from the definition of $y$, we have that
-  such a $v$ can not be between $w$ and the end point of $p_1$ after $w$. This
-  implies that $Q$ cannot be shattered.
+  that $p^*\notin S$. Then, from the definition of $x$, $y$, and $S$, and from
+  the existence of $p'$, there can be no vertex $v$ such that $\mathcal{T}_v\cap
+  Q=\{p_1,p^*\}$, hence $Q$ cannot be shattered. Assume now that $S=\emptyset$
+  and consider the case $Q_x=\{p_1,p_2,p_3\}$, $Q_y=\{p_1,p_4\}$ (all other
+  cases follow by symmetry with this case). Consider the set $\{p_1,p_3\}$. From
+  the definition of $x$ and $Q_x$ we have that there can not be a vertex $v$ between the
+  end point of $p_1$ before $x$ and $w$ such that
+  $\mathcal{T}_v\cap Q=\{p_1,p_3\}$. At the same time, from the definition of
+  $y$, we have that such a $v$ can not be between $w$ and the end point of $p_1$
+  after $y$. This implies that $Q$ cannot be shattered.
 
 \end{proof}
 
