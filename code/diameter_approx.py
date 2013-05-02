@@ -6,6 +6,15 @@ import random
 import time
 import igraph as ig
 
+def diameter_approx(graph):
+    """ Return an approximation (upper bound) of the diameter of the graph"""
+    sampled_vertex = graph.vs[random.randint(0, len(G.vs)-1)]
+    # We convert the list to a set to remove duplicates
+    shortest_path_lengths = set(G.shortest_paths_dijkstra([sampled_vertex])[0]) - set([float('inf')])
+    diameter = max(shortest_path_lengths)
+    diameter += max(shortest_path_lengths - set([diameter]))
+    return diameter
+
 def main():
     """Compute an approximation of diameter of the graph and the time needed to compute it, and
     write these info as  graph attributes.
@@ -43,14 +52,11 @@ def main():
 
     # Compute the diameter
     logging.info("Computing diameter")
-    # XXX I'm not sure process_time is the right function to use
+    # time.process_time() does not account for sleeping time. Seems the right
+    # function to use. Alternative could be time.perf_counter()
     start_time = time.process_time()
     # sample a vertex uniformly at random
-    sampled_vertex = G.vs[random.randint(0, len(G.vs)-1)]
-    # We convert the list to a set to remove duplicates
-    shortest_path_lengths = set(G.shortest_paths_dijkstra([sampled_vertex])[0]) - set([float('inf')])
-    diameter = max(shortest_path_lengths)
-    diameter += max(shortest_path_lengths - set([diameter]))
+    diameter = diameter_approx(G)
     end_time = time.process_time()
     elapsed_time = end_time - start_time
 
