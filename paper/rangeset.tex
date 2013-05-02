@@ -64,42 +64,64 @@ has a unique shortest path between them, the upper bound can be improved.
   along $p_1$ that $p_1$ shares with some other path from $Q$, and let $y$ be
   the farthest successor of $w$ along $p_1$ that $p_1$ shares with some other
   path from $Q$. Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
-  Because of fact $\mathsf{F}$, all paths in $Q_x$ go through the same vertices
-  between $x$ and $w$ and all paths in $Q_y$ go through the same vertices
-  between $w$ and $y$. This also means that all paths in $Q_x\cap Q_y$ go
-  through the same vertices between $x$ and $y$.
-  If $Q_x\cup Q_y\neq Q$, let $p^*\in Q\setminus\{Q_x\cup Q_y\}$ then from the
-  definition of $x$ and $y$ we have that there is no vertex $v$ such that
-  $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, which implies that $Q$ can not be shattered.
-  
-  Suppose from now on that $Q_x\cup Q_y=Q$.
-  If $Q_x\cap Q_y=Q$, then all the paths in $Q$ go through the same vertices
-  between $x$ and $y$. From this and the definition of $x$ and $y$ we have
-  that there is no vertex $v$ such that, for example, $\mathcal{T}_v\cap Q=\{p_1,p_2\}$, hence
-  $Q$ cannot be shattered. Suppose instead that $Q_x\cap Q_y\neq Q$ and let
-  $S=(Q_x\cap Q_y)\setminus\{p_1\}$. If $S\neq\emptyset$ then there is at least
-  a path $p'\in S$ which, from the definition of $S$ and fact $\mathsf{F}$, must
-  go through all the same vertices as $p_1$ between $x$ and $y$. Moreover, given that
-  $Q_x\cap Q_y\neq Q$, there must be a path $p^*\in Q$ different from $p_1$ such
-  that $p^*\notin S$. Then, from the definition of $x$, $y$, and $S$, and from
-  the existence of $p'$, there can be no vertex $v$ such that $\mathcal{T}_v\cap
-  Q=\{p_1,p^*\}$, hence $Q$ cannot be shattered. Assume now that $S=\emptyset$
-  and consider the case $Q_x=\{p_1,p_2,p_3\}$, $Q_y=\{p_1,p_4\}$ (all other
-  cases follow by symmetry with this case). Consider the set $\{p_1,p_3\}$. From
-  the definition of $x$ and $Q_x$ we have that there can not be a vertex $v$ between the
-  end point of $p_1$ before $x$ and $w$ such that
-  $\mathcal{T}_v\cap Q=\{p_1,p_3\}$. At the same time, from the definition of
-  $y$, we have that such a $v$ can not be between $w$ and the end point of $p_1$
-  after $y$. This implies that $Q$ cannot be shattered.
+  Because of fact $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
+  between $x$ and $w$ and all paths in $Q_y$ must go through the same vertices
+  between $w$ and $y$. This also means that all paths in $Q_x\cap Q_y$ must go
+  through the same vertices between $x$ and $y$. If $Q_x\cup Q_y\neq Q$, let
+  $p^*\in Q\setminus(Q_x\cup Q_y)$ then from the definition of $x$ and $y$ and
+  from fact $\mathsf{F}$ we have that there is no vertex $v$ such that
+  $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, which implies that $Q$ can not be
+  shattered. Suppose from now on that $Q_x\cup Q_y=Q$.  If $Q_x\cap Q_y=Q$, then
+  all the paths in $Q$ go through the same vertices between $x$ and $y$. From
+  this and the definition of $x$ and $y$ we have that there is no vertex $v$
+  such that, for example, $\mathcal{T}_v\cap Q=\{p_1,p_2\}$, hence $Q$ cannot be
+  shattered. Suppose instead that $Q_x\cap Q_y\neq Q$ and let $S=(Q_x\cap
+  Q_y)\setminus\{p_1\}$. If $S\neq\emptyset$ then there is at least a path
+  $p'\in S$ which, from the definition of $S$ and fact $\mathsf{F}$, must go
+  through all the same vertices as $p_1$ between $x$ and $y$. Moreover, given
+  that $Q_x\cap Q_y\neq Q$, there must be a path $p^*\in Q\setminus\{p_1\}$
+  different from $p_1$ such that $p^*\notin S$. Then, from the definition of
+  $x$, $y$, and $S$, and from the existence of $p'$, there can be no vertex $v$
+  such that $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, hence $Q$ cannot be shattered.
+  Assume now that $S=\emptyset$ and consider the case $Q_x=\{p_1,p_2,p_3\}$,
+  $Q_y=\{p_1,p_4\}$ (all other cases follow by symmetry with this case).
+  Consider the set $\{p_1,p_3\}$. From the definition of $x$ and $Q_x$, and from
+  fact $\mathsf{F}$ we have that there can not be a vertex $v$ between the end
+  point of $p_1$ before $x$ and $w$ such that $\mathcal{T}_v\cap Q=\{p_1,p_3\}$.
+  At the same time, from the definition of $y$ and from fact $\mathsf{F}$, we
+  have that such a $v$ can not be between $w$ and the end point of $p_1$ after
+  $y$. This implies that $Q$ can not be shattered.
 
+  We showed that in all possible cases, we reached a contradiction and $Q$,
+  which has size $4$ can not be shattered by $\range_G$, hence $\VC(\range_G)\le
+  3$.
 \end{proof}
+
+\begin{lemma}\label{lem:vcdimlowboundunique}
+  There is an graph $G=(V,E)$ with $|\mathcal{S}_{uv}|\le1$ for all
+  pairs $(u,v)\in V\times V$ such that the range set $\range_G$ associated to the
+  shortest paths in $G$ has VC-Dimension exactly $3$.
+\end{lemma}
+
+\begin{proof}
+  Let $V=\{a,b,c,d,e,f,g,h,j,k,l\}$, and let $p_1=()$, $p_2=()$, $p_3=()$, \XXX
+  TBD
+
+  We now show that $Q=\{p_1,p_2,p_3\}$ can be shattered by $\range_G$, which
+  implies $\VC(\range_G)\ge 3$. \XXX TBD
+
+  Lemma~\ref{lem:vcdimuppboundunique} gives us an upper bound $\VC(\range_G)\le3$,
+  so we can conclude that $\VC(\range_G)=3$.
+\end{proof}
+
+
 
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
 for each $d>2$ we can build a graph $G_d$ with vertex-diameter $d$ and such
 that the range set associated to the set of shortest path of $G_d$ has
 VC-dimension exactly $\lfloor\log_2(d-2)\rfloor+1$.
 
-\begin{lemma}
+\begin{lemma}\label{lem:vcdimlowbound}
   Given $d>2$ there exists a graph $G$ with vertex-diameter $d$ and such that
   $\VC(\range_G)=\lfloor\log_2(d-2)\rfloor+1$.
 \end{lemma}
