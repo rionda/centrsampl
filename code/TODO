@@ -4,8 +4,8 @@ We are going to implement our code in Python3.3.1, using the igraph library
 Download graph data from snap.stanford.edu/data (Matteo should already have them
 somewhere on his laptop)
 
-Implement converter to convert them from the native format (list of edges?) to an igraph
-(http://igraph.sourceforge.net) graph
+# DONE! Implement converter to convert them from the native format (list of
+# edges?) to an igraph (http://igraph.sourceforge.net) graph
 
 Convert graphs to igraph format
 
