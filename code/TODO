@@ -12,7 +12,7 @@ Convert graphs to igraph format
 Implement Dijkstra's algorithm for shortest path to take into account the
 possibility of multiple shortest paths
 
-Implement diameter approximation algorithm for undirected, unweighted graphs
+# DONE! Implement diameter approximation algorithm for undirected, unweighted graphs
 
 Implement sampling procedures
 
