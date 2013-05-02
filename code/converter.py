@@ -69,9 +69,10 @@ def main():
     parser.add_argument("-z", "--compress", action="store_true", default=False, help="compress the output file")
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-u", "--undirected", action="store_true",
-            help="consider the graph as undirected (default)", default=True)
-    group.add_argument("-d", "--directed", action="store_true", help="consider the graph as directed", default=False)
+    group.add_argument("-u", "--undirected", action="store_true", default=True,
+            help="consider the graph as undirected (default)")
+    group.add_argument("-d", "--directed", action="store_true", default=False,
+            help="consider the graph as directed")
     args = parser.parse_args()
 
     # Set the desired level of logging
