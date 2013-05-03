@@ -13,6 +13,8 @@ import os.path
 import sys
 import igraph as ig
 
+import util
+
 def convert(input_path, is_directed):
     """Convert an edge list file to an igraph.Graph."""
 
@@ -82,11 +84,7 @@ def main():
     args = parser.parse_args()
 
     # Set the desired level of logging
-    log_format='%(levelname)s: %(message)s'
-    if args.verbose == 1:
-        logging.basicConfig(format=log_format, level=logging.INFO)
-    elif args.verbose >= 2:
-        logging.basicConfig(format=log_format, level=logging.DEBUG)
+    util.set_verbosity(args.verbose)
 
     # Convert the file
     G = convert(args.input, args.directed)

@@ -20,6 +20,15 @@ def read_graph(path):
         sys.exit(2)
     return G
 
+def set_verbosity(level):
+     """Set the desired level of logging."""
+
+     log_format='%(levelname)s: %(message)s'
+     if level == 1:
+         logging.basicConfig(format=log_format, level=logging.INFO)
+     elif level >= 2:
+         logging.basicConfig(format=log_format, level=logging.DEBUG)
+
 def valid_interval_float(string):
     """Check validity of string as float between 0 and 1 (extremes excluded).
     

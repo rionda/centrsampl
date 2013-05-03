@@ -23,11 +23,7 @@ def main():
     args = parser.parse_args()
 
     # Set the desired level of logging
-    log_format='%(levelname)s: %(message)s'
-    if args.verbose == 1:
-        logging.basicConfig(format=log_format, level=logging.INFO)
-    elif args.verbose >= 2:
-        logging.basicConfig(format=log_format, level=logging.DEBUG)
+    util.set_verbosity(args.verbose)
 
     # Read graph from file
     G = util.read_graph(args.graph)
