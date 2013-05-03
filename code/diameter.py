@@ -49,7 +49,7 @@ def main():
     # If requested, add graph attributes and write graph back to original file
     if args.write:
         logging.info("Writing diameter and time to graph")
-        G["diameter"] = diameter
+        G["diam"] = diameter
         G["diam_time"] = elapsed_time
         # We use format auto-detection, which should work given that it worked
         # when we read the file
