@@ -9,23 +9,25 @@ http://www.tandfonline.com/doi/abs/10.1080/0022250X.2001.9990249 .
 
 """
 import argparse
+import itertools
 import logging
-import os
 import time
 
 import util
 
-def betweenness(graph, set_attributes=True):
-    """Compute exact betweenness of vertices in graph.
-    
+def betweenness_igraph(graph, set_attributes=True):
+    """Compute exact betweenness of vertices in graph and time needed.
+
     Return a tuple with the time needed to compute the betweenness and the list
     of betweenness values (one for each vertex in the graph).
     If set_attributes is True (default), then set the values of the betweenness
     as vertex attributes, and the time as a graph attribute.
-    
+
+    igraph version using igraph.Graph.betweenness()
+
     """
-    # We do not use logging from here to the end of the computation to avoid
-    # wasting time (XXX right?)
+    # We minimize the use of logging from here to the end of the computation to avoid
+    # wasting time 
     logging.info("Computing betweenness")
     start_time = time.process_time()
     betw = graph.betweenness()
@@ -39,11 +41,86 @@ def betweenness(graph, set_attributes=True):
     if not graph.is_directed():
         logging.debug("Adjusting betweenness values for undirectness")
         betw = list(map(lambda x: x * 2, graph.betweenness()))
-
+    
+    # Write attributes to graph, if specified
     if set_attributes:
         graph["betw_time"] = elapsed_time
         graph.vs["betw"] = betw
+        graph.vs["betw_type"] = "igraph"
+
     return (elapsed_time, betw)
+
+def vertex_betweenness_contribution(graph, vertex):
+    """Compute the contribution of the given vertex to the betweenness of the
+    vertices in the graph.
+    
+    Return a list containing the contribution of this vertex to the betweenness
+    of each vertex of the graph.
+    
+    """
+    contrib = [0] * graph.vcount()
+    # get_all_shortest_paths returns a list of shortest paths
+    shortest_paths = graph.get_all_shortest_paths(vertex) 
+    # Group shortest paths by destination vertex, which is stored as the
+    # last element of the list representing the path
+    shortest_paths_by_destination = itertools.groupby(shortest_paths, lambda x : x[-1])
+    for destination, group in shortest_paths_by_destination:
+        paths = list(group)
+        # addend: 1 / number of shortest paths between source and destination
+        addend = 1 / len(paths)
+        for path in paths:
+            # Update betweenness counters for vertices internal to the path
+                for vertex in path[1:-1]:
+                    contrib[vertex] += addend
+    return contrib
+
+def betweenness_noigraph(graph, set_attributes=True):
+    """Compute exact betweenness of vertices in graph and time needed.
+
+    Return a tuple with the time needed to compute the betweenness and the list
+    of betweenness values (one for each vertex in the graph).
+    If set_attributes is True (default), then set the values of the betweenness
+    as vertex attributes, and the time as a graph attribute.
+
+    Homegrown (non-igraph) version.
+
+    """
+    # We minimize the use of logging from here to the end of the computation to avoid
+    # wasting time 
+    logging.info("Computing betweenness")
+    betw = [0] * graph.vcount()
+    start_time = time.process_time()
+    # Add the contribution of each vertex
+    for vertex in graph.vs:
+        betw = [ a + b for a,b in zip(betw, vertex_betweenness_contribution(graph, vertex))]
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    logging.info("Betweenness computation complete, took %s seconds",
+            elapsed_time)
+    
+    # Write attributes to graph, if specified
+    if set_attributes:
+        graph["betw_time"] = elapsed_time
+        graph.vs["betw"] = betw
+        graph.vs["betw_type"] = "noigraph"
+    
+    return (elapsed_time, betw)
+
+def betweenness(graph, use_igraph=True, set_attributes=True):
+    """Compute exact betweenness of vertices in graph and time needed.
+    
+    Return a tuple with the time needed to compute the betweenness and the list
+    of betweenness values (one for each vertex in the graph).
+    If use_igraph is True, use igraph.Graph.betweenness() method to compute the
+    betweenness, otherwise use a homegrown version.
+    If set_attributes is True (default), then set the values of the betweenness
+    as vertex attributes, and the time as a graph attribute.
+    
+    """
+    if use_igraph:
+        return betweenness_igraph(graph, set_attributes)
+    else:
+        return betweenness_noigraph(graph, set_attributes)
 
 def main():
     """Parse arguments and perform the computation."""
@@ -52,6 +129,11 @@ def main():
     parser.description = "Compute the exact betweenness centrality of all vertices in a graph using Brandes' algorithm, and the time to compute them, and write them to file"
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-i", "--igraph", action="store_true",
+            default=True, help="use igraph algorithm (default)")
+    group.add_argument("-n", "--noigraph", action="store_true", default=False,
+            help="use homegrown algorithm")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
             help="store the betweenness as an attribute of each vertex the graph and the computation time as attribute of the graph, and write these to the graph file")
@@ -64,7 +146,7 @@ def main():
     G = util.read_graph(args.graph)
 
     # Compute betweenness
-    (elapsed_time, betw) = betweenness(G, True)
+    (elapsed_time, betw) = betweenness(G, not args.noigraph, True)
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file.
