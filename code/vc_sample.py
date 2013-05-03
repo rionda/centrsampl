@@ -1,5 +1,11 @@
 #! /usr/bin/env python3
+"""vc_sample.py
 
+Compute approximations of the betweenness centrality of all the vertices in
+the graph using random sampling and the VC-dimension, and the time needed to
+compute them. These values are then written to an output file.
+
+"""
 import argparse
 import logging
 import math
@@ -12,16 +18,19 @@ import igraph as ig
 import diameter_approx
 
 def get_sample_size(epsilon, delta, vcdim_upper_bound, c=0.5):
-    """ Compute the sample size to achieve an epsilon-approximation of a range
-    set with VC-dimension at most vcdim_upper_bound with probability at least 1-delta
+    """Compute sample size.
+
+    Compute the sample size to achieve an epsilon-approximation of a range
+    set with VC-dimension at most vcdim_upper_bound with probability at least
+    1-delta.
+
     """
     return int(math.ceil((c / math.pow(epsilon, 2)) * ( vcdim_upper_bound +
         math.log(1 / delta) )))
 
 def main():
-    """Compute approximations of the betweenness centrality of all the vertices  
-    in the graph using random sampling and the VC-dimension
-    """
+    """Parse arguments, perform computation, write to file."""
+
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Compute approximate betweenness centrality of all vertices in a graph using sampling and VC-dimension, and the time to compute them, and write them to file"

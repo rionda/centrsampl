@@ -1,4 +1,11 @@
 #! /usr/bin/env python3
+"""converter.py
+
+Convert an edge list file to an igraph graph and write it to file in pickle
+format. The edge list file contains one edge per line as
+'from_vertex\tto_vertex'. Lines starting with '#' are treated as comments.  
+
+"""
 import argparse
 import logging
 import os
@@ -7,7 +14,7 @@ import sys
 import igraph as ig
 
 def convert(input_path, is_directed):
-    """ Convert a text file to an igraph"""
+    """Convert an edge list file to an igraph.Graph."""
 
     G = ig.Graph(directed=is_directed)
     G["rawfile"] = os.path.basename(input_path)
@@ -58,8 +65,7 @@ def convert(input_path, is_directed):
     return G
 
 def main():
-    """ Parse arguments, call convert, write to file."""
-
+    """Parse arguments, call convert, write to file."""
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Convert an edge list file to an igraph graph and write it to file in pickle format. The edge list file contains one edge per line as 'from_vertex\tto_vertex'. Lines starting with '#' are treated as comments."

@@ -1,16 +1,18 @@
 #! /usr/bin/env python3
+"""diameter.py
 
+Compute the diameter of a graph and the time needed to compute it, and write
+these info as graph attributes.
+
+"""
 import argparse
 import logging
 import sys
 import time
 import igraph as ig
 
-def main():
-    """Compute the diameter of the graph and the time needed to compute it, and
-    write these info as  graph attributes.
-    
-    """
+def main():  
+    """Parse arguments, perform the computation, write to file."""
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Compute the diameter of a graph and the time needed to compute it, and (if specified) write these info as a graph attributes"

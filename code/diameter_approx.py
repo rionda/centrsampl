@@ -1,5 +1,12 @@
 #! /usr/bin/env python3
+"""diameter_approx.py
 
+Compute an approximation of the diameter of a graph (upper bound, at most 2
+times the exact value) and the time needed to compute it, and write these info
+as graph attributes. The graph should be undirected and have unitary edge
+weights.
+
+"""
 import argparse
 import logging
 import random
@@ -7,7 +14,15 @@ import time
 import igraph as ig
 
 def diameter_approx(graph):
-    """ Return an approximation (upper bound) of the diameter of the graph"""
+    """Compute diameter approximation.
+
+    To compute the approximation, we sample a vertex uniformly at random,
+    compute the shortest paths from this vertex to all other vertices, and sum
+    the lengths of the two longest paths we found.
+    The returned value is an upper bound to the diameter of the graph and is at
+    most 2 times the exact value.
+    
+    """
     # sample a vertex uniformly at random
     sampled_vertex = graph.vs[random.randint(0, len(G.vs)-1)]
     # We convert the list to a set to remove duplicates
@@ -17,10 +32,8 @@ def diameter_approx(graph):
     return diameter
 
 def main():
-    """Compute an approximation of diameter of the graph and the time needed to compute it, and
-    write these info as  graph attributes.
-    
-    """
+    """Parse arguments, call the approximation, write it to file."""
+
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Compute an approximation of the diameter of a graph and the time needed to compute it, and (if specified) write these info as a graph attributes"

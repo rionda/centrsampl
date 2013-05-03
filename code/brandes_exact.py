@@ -1,5 +1,13 @@
 #! /usr/bin/env python3
+"""brandes_exact.py
 
+Compute the exact betweenness centrality of all vertices in a graph using
+Brandes' algorithm and write it to a file, and the time needed to
+compute the betweenness. These values are then written to an output file. For
+Brandes' algorithm see
+http://www.tandfonline.com/doi/abs/10.1080/0022250X.2001.9990249 .
+
+"""
 import argparse
 import logging
 import os
@@ -8,13 +16,7 @@ import time
 import igraph as ig
 
 def main():
-    """Compute the exact betweenness centrality of all vertices in a graph using
-    Brandes' algorithm and write it to a file. Also compute the time needed to
-    compute the betweenness.
-
-    For Brandes' algorithm see
-    http://www.tandfonline.com/doi/abs/10.1080/0022250X.2001.9990249
-    """
+    """Parse arguments and perform the computation."""
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Compute the exact betweenness centrality of all vertices in a graph using Brandes' algorithm, and the time to compute them, and write them to file"

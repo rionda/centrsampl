@@ -1,5 +1,12 @@
 #! /usr/bin/env python3
+"""brandespich_sample.py
 
+Compute approximations of the betweenness centrality of all the vertices
+in the graph using the algorithm by Brandes and Pich, and the time needed to
+compute them. These values are then written to an output file. For the
+algorihm, see http://www.worldscientific.com/doi/abs/10.1142/S0218127407018403 .
+
+"""
 import argparse
 import itertools
 import logging
@@ -11,18 +18,20 @@ import time
 import igraph as ig
 
 def get_sample_size(epsilon, delta, vertices_num):
-    """ Compute the sample size to achieve an epsilon-approximation of for the
+    """Compute sample size.
+    
+    Compute the sample size to achieve an epsilon-approximation of for the
     betweenness centralities of the vertices of a graph with vertices_num
-    vertices, with probability at least 1-delta
+    vertices, with probability at least 1-delta. The formula is taken by
+    applying an Hoeffding bound.
+
     """
     return int(math.ceil((2 * math.pow((vertices_num - 2) / (epsilon *
         (vertices_num -1)), 2) * math.log(2 * vertices_num / delta))))
 
 def main():
-    """Compute approximations of the betweenness centrality of all the vertices
-    in the graph using the algorithm by Brandes and Pich
-    http://www.worldscientific.com/doi/abs/10.1142/S0218127407018403  
-    """
+    """Parse arguments and perform the computation."""
+
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Compute approximate betweenness centrality of all vertices in a graph using the algorihm by Brandes and Pich, and the time to compute them, and write them to file"
@@ -107,9 +116,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-if __name__ == "__main__":
-    main()
-
 
