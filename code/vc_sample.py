@@ -8,6 +8,8 @@ import random
 import time
 import igraph as ig
 
+import diameter_approx
+
 def get_sample_size(epsilon, delta, vcdim_upper_bound, c=0.5):
     """ Compute the sample size to achieve an epsilon-approximation of a range
     set with VC-dimension at most vcdim_upper_bound with probability at least 1-delta
@@ -53,13 +55,25 @@ def main():
     # Compute betweenness
     logging.info("Computing betweenness")
     start_time = time.process_time()
+    # Use desired diameter
     if args.approximate:
-        # TODO compute / use approx diameter 
-        pass
-    else:
-        # TODO compute / use exact diameter 
-        pass
-    vcdim_upp_bound = 0 # XXX
+        # Compute approx diameter if needed
+        if not G.has_key("approx_diam"):
+            start_time_diam_approx = time.process_time()
+            G["approx_diam"] = diameter_approx.diameter_approx(G)
+            end_time_diam_approx = time.process_time()
+            G["approx_diam_time"] = end_time_diam_approx - start_time_diam_approx
+        # Compute VC-dimension upper bound using the approximate diameter
+        vcdim_upp_bound = math.floor(math.log2(G["approx_diam"] -1)) # XXX Check
+    else: # Use exact diameter
+        # Compute exact diameter if needed
+        if not G.has_key("diam"):
+            start_time_diam = time.process_time()
+            # XXX What exactly does this compute? Especially for directed graphs
+            G["diam"] = G.diameter() # This is not the vertex-diameter !!! 
+            end_time_diam = time.process_time()
+            G["diam_time"] = end_time_diam - start_time_diam
+        vcdim_upp_bound = math.floor(math.log2(G["diam"] -1)) # XXX Check
     sample_size = get_sample_size(args.epsilon, args.delta, vcdim_upp_bound)
     for i in range(sample_size):
         # Sample a pair of different vertices uniformly at random
