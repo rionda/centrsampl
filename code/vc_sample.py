@@ -79,7 +79,7 @@ def main():
     sample_size = get_sample_size(args.epsilon, args.delta, vcdim_upp_bound)
     for i in range(sample_size):
         # Sample a pair of different vertices uniformly at random
-        sampled_pair = random.sample(G.vs, 2)
+        sampled_pair = random.sample(range(G.vcount()), 2)
         # get_all_shortest_paths returns a list of shortest paths
         shortest_paths = G.get_all_shortest_paths(sampled_pair[0], sampled_pair[1]) 
         # Sample a shortest path uniformly at random
