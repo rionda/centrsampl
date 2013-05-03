@@ -105,19 +105,21 @@ def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Compute approximate betweenness centrality of all vertices in a graph using sampling and VC-dimension, and the time to compute them, and write them to file"
-    parser.add_argument("epsilon", type=util.valid_interval_float, help="graph file")
-    parser.add_argument("delta", type=util.valid_interval_float, help="graph file")
+    parser.add_argument("epsilon", type=util.valid_interval_float,
+            help="accuracy parameter")
+    parser.add_argument("delta", type=util.valid_interval_float,
+            help="confidence parameter")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-a", "--approximate", action="store_true",
+            default=False, help="use approximate diameter")
+    group.add_argument("-e", "--exact", action="store_true", default=False,
+            help="Use exact diameter (default)")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
             help="store the approximate betweenness as an attribute of each vertex the graph and the computation time as attribute of the graph, and write these to the graph file")
 
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("-e", "--exact", action="store_true", default=False,
-            help="Use exact diameter (default)")
-    group.add_argument("-a", "--approximate", action="store_true",
-            default=False, help="Use approximate diameter")
     args = parser.parse_args()
 
     # Set the desired level of logging

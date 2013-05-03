@@ -70,17 +70,17 @@ def main():
     """Parse arguments, call convert, write to file."""
     # Parse arguments
     parser = argparse.ArgumentParser()
+
     parser.description = "Convert an edge list file to an igraph graph and write it to file in pickle format. The edge list file contains one edge per line as 'from_vertex\tto_vertex'. Lines starting with '#' are treated as comments."
     parser.add_argument("input", help="input file")
     parser.add_argument("output", help="output file (pickle format)")
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
-    parser.add_argument("-z", "--compress", action="store_true", default=False, help="compress the output file")
-
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-u", "--undirected", action="store_true", default=True,
-            help="consider the graph as undirected (default)")
     group.add_argument("-d", "--directed", action="store_true", default=False,
             help="consider the graph as directed")
+    group.add_argument("-u", "--undirected", action="store_true", default=True,
+            help="consider the graph as undirected (default)")
+    parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
+    parser.add_argument("-z", "--compress", action="store_true", default=False, help="compress the output file")
     args = parser.parse_args()
 
     # Set the desired level of logging

@@ -91,8 +91,10 @@ def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
     parser.description = "Compute approximate betweenness centrality of all vertices in a graph using the algorihm by Brandes and Pich, and the time to compute them, and write them to file"
-    parser.add_argument("epsilon", type=util.valid_interval_float, help="graph file")
-    parser.add_argument("delta", type=util.valid_interval_float, help="graph file")
+    parser.add_argument("epsilon", type=util.valid_interval_float,
+            help="accuracy parameter")
+    parser.add_argument("delta", type=util.valid_interval_float,
+            help="confidence parameter")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")

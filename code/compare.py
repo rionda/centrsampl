@@ -17,20 +17,20 @@ import vc_sample
 def main():
     """Parse arguments, do the comparison, write to output."""
     parser = argparse.ArgumentParser()
-    parser.description = "Compare estimation of betweenness centralities to exact values"
-    parser.add_argument("epsilon", type=util.valid_interval_float, help="graph file")
-    parser.add_argument("delta", type=util.valid_interval_float, help="graph file")
+    parser.description = "compare estimation of betweenness centralities to exact values"
+    parser.add_argument("epsilon", type=util.valid_interval_float, help="accuracy parameter")
+    parser.add_argument("delta", type=util.valid_interval_float, help="confidence parameter")
     parser.add_argument("graph", help="graph file")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-a", "--approximate", action="store_true",
+            default=False, help="use approximate diameter when computing approximation of betweenness using VC-Dimension")
+    group.add_argument("-e", "--exact", action="store_true", default=False,
+            help="use exact diameter when computing approximation of betweenness using VC-Dimension (default)")
     parser.add_argument("-i", "--ignore", action="store_true", default=False,
-            help="ignore values of betweenness that may already be present. All betweenness values, exact and approximate will be recomputed")
+            help="Ignore existing values for betweenness, if any. Force recomputation of all betweenness values, exact and approximate.")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
     help="write the betweenness and the time taken to compute them (if needed) back to file")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("-e", "--exact", action="store_true", default=False,
-            help="Use exact diameter when computing approx. betweenness using VC-Dimension (default)")
-    group.add_argument("-a", "--approximate", action="store_true",
-            default=False, help="Use approximate diameter when computing approx. betweenness using VC-Dimension")
     args = parser.parse_args()
 
     # Set the desired level of logging
