@@ -5,12 +5,13 @@ import logging
 import math
 import igraph as ig
 
-def sample_size(epsilon, delta, vertices_num):
+def get_sample_size(epsilon, delta, vertices_num):
     """ Compute the sample size to achieve an epsilon-approximation of for the
     betweenness centralities of the vertices of a graph with vertices_num
     vertices, with probability at least 1-delta
     """
-    return (2 * math.pow((vertices_num - 2) / (epsilon * (vertices_num -1)), 2) * math.log(2 * vertices_num / delta)
+    return int(math.ceil((2 * math.pow((vertices_num - 2) / (epsilon *
+        (vertices_num -1)), 2) * math.log(2 * vertices_num / delta))))
 
 def main():
     """Compute approximations of the betweenness centrality of all the vertices
