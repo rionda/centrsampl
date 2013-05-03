@@ -16,6 +16,78 @@ import time
 import diameter_approx
 import util
 
+def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=True):
+    """Compute approx. betweenness using VC-Dimension.
+    
+    Compute approximations of the betweenness centrality of all the vertices in
+    the graph using sampling and the VC-Dimension, and the time needed to
+    compute them. 
+
+    Return a tuple with the time needed to compute the betweenness and the list
+    of betweenness values (one for each vertex in the graph).
+    If set_attributes is True (default), then set the values of the betweenness
+    as vertex attributes, and the time as a graph attribute.
+    
+    """
+    # We do not use logging from here to the end of the computation to avoid
+    # wasting time (XXX right?)
+    logging.info("Computing betweenness")
+    # Seed the random number generator
+    random.seed()
+    betw = [0] * graph.vcount()
+    start_time = time.process_time()
+    # Use desired diameter
+    if use_approx_diameter: # Use approximate diameter
+        # Compute approx diameter if needed
+        if not "approx_diam" in graph.attributes():
+            start_time_diam_approx = time.process_time()
+            graph["approx_diam"] = diameter_approx.diameter_approx(graph)
+            end_time_diam_approx = time.process_time()
+            graph["approx_diam_time"] = end_time_diam_approx - start_time_diam_approx
+        # Compute VC-dimension upper bound using the approximate diameter
+        vcdim_upp_bound = math.floor(math.log2(graph["approx_diam"] -1)) # XXX Check
+    else: # Use exact diameter
+        # Compute exact diameter if needed
+        if not "diam" in graph.attributes():
+            start_time_diam = time.process_time()
+            # XXX What exactly does this compute? Especially for directed graphs
+            graph["diam"] = graph.diameter() # This is not the vertex-diameter !!! 
+            end_time_diam = time.process_time()
+            graph["diam_time"] = end_time_diam - start_time_diam
+        vcdim_upp_bound = math.floor(math.log2(graph["diam"] -1)) # XXX Check
+    sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
+    sampled_paths = 0
+    while sampled_paths < sample_size:
+        # Sample a pair of different vertices uniformly at random
+        sampled_pair = random.sample(range(graph.vcount()), 2)
+        # get_all_shortest_paths returns a list of shortest paths
+        shortest_paths = graph.get_all_shortest_paths(sampled_pair[0], sampled_pair[1]) 
+        if shortest_paths:
+            # Sample a shortest path uniformly at random
+            sampled_path = random.sample(shortest_paths, 1)[0]
+            # Update betweenness counters for vertices on the sampled path
+            for vertex in sampled_path:
+                betw[vertex] += 1
+            # Increase number of sampled paths
+            sampled_paths += 1
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    logging.info("Betweenness computation complete, took %s seconds",
+            elapsed_time)
+
+    # Denormalize betweenness counters by (n choose 2) / k
+    normalization = graph.vcount() * (graph.vcount() - 1) / (2 * sample_size)
+    betw = list(map(lambda x : x * normalization, betw))
+
+    # Write attributes to graph, if specified
+    if set_attributes:
+        graph["vc_betw_time"] = elapsed_time
+        graph["vc_delta"] = delta
+        graph["vc_eps"] = epsilon
+        graph.vs["vc_betw"] = betw
+
+    return (elapsed_time, betw)
+
 def get_sample_size(epsilon, delta, vcdim_upper_bound, c=0.5):
     """Compute sample size.
 
@@ -28,7 +100,7 @@ def get_sample_size(epsilon, delta, vcdim_upper_bound, c=0.5):
         math.log(1 / delta) )))
 
 def main():
-    """Parse arguments, perform computation, write to file."""
+    """Parse arguments, call betwenness(), write to file."""
 
     # Parse arguments
     parser = argparse.ArgumentParser()
@@ -43,9 +115,9 @@ def main():
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-e", "--exact", action="store_true", default=False,
-            help="Use exact computation for the diameter (default)")
+            help="Use exact diameter (default)")
     group.add_argument("-a", "--approximate", action="store_true",
-            default=False, help="Use approximate computation for the diameter")
+            default=False, help="Use approximate diameter")
     args = parser.parse_args()
 
     # Set the desired level of logging
@@ -54,72 +126,20 @@ def main():
     # Read graph
     G = util.read_graph(args.graph)
 
-    # Seed the random number generator
-    random.seed()
-
-    # Compute betweenness. We do not use logging from here to the end of the
-    # computation to avoid wasting time (XXX right?)
-    logging.info("Computing betweenness")
-    betweenness = [0] * G.vcount()
-    start_time = time.process_time()
-    # Use desired diameter
-    if args.approximate: # Use approximate diameter
-        # Compute approx diameter if needed
-        if not "approx_diam" in G.attributes():
-            start_time_diam_approx = time.process_time()
-            G["approx_diam"] = diameter_approx.diameter_approx(G)
-            end_time_diam_approx = time.process_time()
-            G["approx_diam_time"] = end_time_diam_approx - start_time_diam_approx
-        # Compute VC-dimension upper bound using the approximate diameter
-        vcdim_upp_bound = math.floor(math.log2(G["approx_diam"] -1)) # XXX Check
-    else: # Use exact diameter
-        # Compute exact diameter if needed
-        if not "diam" in G.attributes():
-            start_time_diam = time.process_time()
-            # XXX What exactly does this compute? Especially for directed graphs
-            G["diam"] = G.diameter() # This is not the vertex-diameter !!! 
-            end_time_diam = time.process_time()
-            G["diam_time"] = end_time_diam - start_time_diam
-        vcdim_upp_bound = math.floor(math.log2(G["diam"] -1)) # XXX Check
-    sample_size = get_sample_size(args.epsilon, args.delta, vcdim_upp_bound)
-    sampled_paths = 0
-    while sampled_paths < sample_size:
-        # Sample a pair of different vertices uniformly at random
-        sampled_pair = random.sample(range(G.vcount()), 2)
-        # get_all_shortest_paths returns a list of shortest paths
-        shortest_paths = G.get_all_shortest_paths(sampled_pair[0], sampled_pair[1]) 
-        if shortest_paths:
-            # Sample a shortest path uniformly at random
-            sampled_path = random.sample(shortest_paths, 1)[0]
-            # Update betweenness counters for vertices on the sampled path
-            for vertex in sampled_path:
-                betweenness[vertex] += 1
-            # Increase number of sampled paths
-            sampled_paths += 1
-    end_time = time.process_time()
-    elapsed_time = end_time - start_time
-    logging.info("Betweenness computation complete, took %s seconds",
-            elapsed_time)
-
-    # Denormalize betweenness counters by (n choose 2) / k
-    normalization = G.vcount() * (G.vcount() - 1) / (2 * sample_size)
-    betweenness = list(map(lambda x : x * normalization, betweenness))
+    # Compute betweenness
+    (elapsed_time, betw) = betweenness(args.graph, args.epsilon, args.delta, args.approximate, True)
 
     # If specified, write betweenness as vertex attributes, and time as graph
-    # attribute
+    # attribute back to file
     if args.write:
         logging.info("Writing betweenness as vertex attributes and time as graph attribute")
-        G.vs["vc_eps"] = args.epsilon
-        G.vs["vc_delta"] = args.delta
-        G.vs["vc_betw"] = betweenness
-        G["vc_betw_time"] = elapsed_time
         G.write(args.graph)
 
     # Write betweenness and time to output
     try:
         with open(args.output, 'wt') as output:
             logging.info("Writing betweenness and time to output file")
-            output.write("({}, {})\n".format(betweenness, elapsed_time))
+            output.write("({}, {})\n".format(betw, elapsed_time))
     except OSError as E:
         logging.critical("Cannot write betweenness to %s: %s", args.output,
                 os.strerror(E.errno))

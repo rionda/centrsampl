@@ -15,6 +15,30 @@ import time
 
 import util
 
+def betweenness(graph, set_attributes=True):
+    """Compute exact betweenness of vertices in graph.
+    
+    Return a tuple with the time needed to compute the betweenness and the list
+    of betweenness values (one for each vertex in the graph).
+    If set_attributes is True (default), then set the values of the betweenness
+    as vertex attributes, and the time as a graph attribute.
+    
+    """
+    # We do not use logging from here to the end of the computation to avoid
+    # wasting time (XXX right?)
+    logging.info("Computing betweenness")
+    start_time = time.process_time()
+    # XXX TODO Check whether multiple shortest paths are handled correctly!
+    betw = graph.betweenness()
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    logging.info("Betweenness computed in %s seconds", elapsed_time)
+
+    if set_attributes:
+        graph["betw_time"] = elapsed_time
+        graph.vs["betw"] = betw
+    return (elapsed_time, betw)
+
 def main():
     """Parse arguments and perform the computation."""
     # Parse arguments
@@ -34,27 +58,19 @@ def main():
     G = util.read_graph(args.graph)
 
     # Compute betweenness
-    logging.info("Computing betweenness")
-    start_time = time.process_time()
-    # XXX TODO Check whether multiple shortest paths are handled correctly!
-    betweenness = G.betweenness()
-    end_time = time.process_time()
-    elapsed_time = end_time - start_time
-    logging.info("Betweenness computed in %s seconds", elapsed_time)
+    (elapsed_time, betw) = betweenness(G, True)
 
     # If specified, write betweenness as vertex attributes, and time as graph
-    # attribute
+    # attribute back to file.
     if args.write:
         logging.info("Writing betweenness as vertex attributes and time as graph attribute")
-        G.vs["betw"] = betweenness
-        G["betw_time"] = elapsed_time
         G.write(args.graph)
 
     # Write betweenness and time to output
     try:
         with open(args.output, 'wt') as output:
             logging.info("Writing betweenness and time to output file")
-            output.write("({}, {})\n".format(betweenness, elapsed_time))
+            output.write("({}, {})\n".format(betw, elapsed_time))
     except OSError as E:
         logging.critical("Cannot write betweenness to %s: %s", args.output,
                 os.strerror(E.errno))
