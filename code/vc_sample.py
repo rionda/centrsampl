@@ -56,7 +56,7 @@ def main():
     logging.info("Computing betweenness")
     start_time = time.process_time()
     # Use desired diameter
-    if args.approximate:
+    if args.approximate: # Use approximate diameter
         # Compute approx diameter if needed
         if not G.has_key("approx_diam"):
             start_time_diam_approx = time.process_time()
