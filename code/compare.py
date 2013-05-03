@@ -78,10 +78,10 @@ def main():
     # Print statistics to output as CSV
     logging.info("Printing error statistics")
     print("exact, {}, 0, 0".format(G["betw_time"]))
-    print("vc, {}, {}, {}".format(G["vc_betw_time"], vc_wrong_eps, vc_err_max,
-        vc_err_min, vc_err_avg, vc_err_stddev))
-    print("bp, {}, {}, {}".format(G["bp_betw_time"], bp_wrong_eps, bp_err_max,
-        bp_err_min, bp_err_avg, bp_err_stddev))
+    print("vc, {}".format(", ".join([str(x) for x in [G["vc_betw_time"], vc_wrong_eps, vc_err_max,
+        vc_err_min, vc_err_avg, vc_err_stddev]])))
+    print("bp, {}".format(", ".join([str(x) for x in [G["bp_betw_time"], bp_wrong_eps, bp_err_max,
+        bp_err_min, bp_err_avg, bp_err_stddev]])))
     
 if __name__ == "__main__":
     main()
