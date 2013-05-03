@@ -105,7 +105,7 @@ def main():
     group.add_argument("-a", "--approximate", action="store_true",
             default=False, help="use approximate diameter")
     group.add_argument("-e", "--exact", action="store_true", default=False,
-            help="Use exact diameter (default)")
+            help="use exact diameter (default)")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
             help="store the approximate betweenness as an attribute of each vertex the graph and the computation time as attribute of the graph, and write these to the graph file")
