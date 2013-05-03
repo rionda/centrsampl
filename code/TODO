@@ -14,7 +14,15 @@ possibility of multiple shortest paths
 
 # DONE! Implement diameter approximation algorithm for undirected, unweighted graphs
 
-Implement sampling procedures
+# DONE! Implement VC sampling algorithm
+
+Implement Brandes and Pich sampling algorithm
+
+Implement ALENEX paper sampling algorithm
 
 # DONE! Implement Brandes exact algorithm for betweenness centrality
+
+Implement code to compare results
+
+Implement code to automatize experiments and reports
 
