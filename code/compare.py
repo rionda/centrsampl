@@ -5,7 +5,9 @@ Compare estimations of betweenness centralities to exact values.
 
 """
 import argparse
+import itertools
 import logging
+import math
 import util
 
 import brandes_exact
@@ -35,6 +37,7 @@ def main():
 
     # If the graph does not have the attributes for the betweenness or has the
     # wrong ones, (re-)compute them
+    logging.info("Recomputing betweenness if needed")
     if not "betw_time" in G.attributes():
         brandes_exact.betweenness(G, True)
     if not "vc_betw_time" in G.attributes() or G["vc_eps"] != args.epsilon or G["vc_delta"] != args.delta:
@@ -42,19 +45,26 @@ def main():
     if not "bp_betw_time" in G.attributes() or G["bp_eps"] != args.epsilon or G["bp_delta"] != args.delta:
         brandespich_sample.betweenness(G, args.epsilon, args.delta, True)
 
-    # TODO Compute error statistics
-    vc_wrong_eps = 0
-    vc_err_max = 0
-    vc_err_min = 0
-    vc_err_avg = 0
-    vc_err_stddev = 0
-    bp_wrong_eps = 0
-    bp_err_max = 0
-    bp_err_min = 0
-    bp_err_avg = 0
-    bp_err_stddev = 0
+    # Compute error statistics
+    # It is not a problem to sort the error by value because we only compute
+    # aggregates.
+    logging.info("Computing error statistics")
+    vc_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["vc_betw"])])
+    vc_err_avg = sum(vc_errs) / G.vcount()
+    vc_err_max = vc_errs[-1]
+    vc_err_min = itertools.filterfalse(lambda x: x == 0, vc_errs)[0]
+    vc_err_stddev = math.sqrt(sum([math.pow(err - vc_err_avg, 2) for err in vc_errs]) / (G.vcount() -1))
+    vc_wrong_eps = len(itertools.filterfalse(lambda x: x > args.epsilon, vc_errs))
+
+    bp_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["bp_betw"])])
+    bp_err_avg = sum(bp_errs) / G.vcount()
+    bp_err_max = max(bp_errs)
+    bp_err_min = itertools.filterfalse(lambda x: x == 0, bp_errs)[0]
+    bp_err_stddev = math.sqrt(sum([math.pow(err - bp_err_avg, 2) for err in bp_errs]) / (G.vcount() -1))
+    bp_wrong_eps = len(itertools.filterfalse(lambda x: x > args.epsilon, bp_errs))
 
     # Print statistics to output as CSV
+    logging.info("Printing error statistics")
     print("exact, {}, 0, 0".format(G["betw_time"]))
     print("vc, {}, {}, {}".format(G["vc_betw_time"], vc_wrong_eps, vc_err_max,
         vc_err_min, vc_err_avg, vc_err_stddev))
