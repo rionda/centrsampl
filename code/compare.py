@@ -8,11 +8,14 @@ import argparse
 import logging
 import sys
 import igraph as ig
+import util
 
 def main():
     """Parse arguments, do the comparison, write to output."""
     parser = argparse.ArgumentParser()
     parser.description = "Compare estimation of betweenness centralities to exact values"
+    parser.add_argument("epsilon", type=util.valid_interval_float, help="graph file")
+    parser.add_argument("delta", type=util.valid_interval_float, help="graph file")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     args = parser.parse_args()
