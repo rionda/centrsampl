@@ -16,7 +16,7 @@ possibility of multiple shortest paths
 
 # DONE! Implement VC sampling algorithm
 
-Implement Brandes and Pich sampling algorithm
+# DONE! Implement Brandes and Pich sampling algorithm
 
 Implement ALENEX paper sampling algorithm
 
