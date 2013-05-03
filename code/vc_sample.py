@@ -77,22 +77,26 @@ def main():
             G["diam_time"] = end_time_diam - start_time_diam
         vcdim_upp_bound = math.floor(math.log2(G["diam"] -1)) # XXX Check
     sample_size = get_sample_size(args.epsilon, args.delta, vcdim_upp_bound)
-    for i in range(sample_size):
+    sampled_paths = 0
+    while sampled_paths < sample_size:
         # Sample a pair of different vertices uniformly at random
         sampled_pair = random.sample(range(G.vcount()), 2)
         # get_all_shortest_paths returns a list of shortest paths
         shortest_paths = G.get_all_shortest_paths(sampled_pair[0], sampled_pair[1]) 
-        # Sample a shortest path uniformly at random
-        sampled_path = random.sample(shortest_paths, 1)
-        # Update betweenness counters for vertices on the sampled path
-        for vertex in sampled_path:
-            betweenness[vertex] += 1
+        if shortest_paths:
+            # Sample a shortest path uniformly at random
+            sampled_path = random.sample(shortest_paths, 1)[0]
+            # Update betweenness counters for vertices on the sampled path
+            for vertex in sampled_path:
+                betweenness[vertex] += 1
+            # Increase number of sampled paths
+            sampled_paths += 1
     end_time = time.process_time()
     elapsed_time = end_time - start_time
 
     # Denormalize betweenness counter by (n choose 2) / k
-    betweenness = betweenness * ( G.vcount() * (G.vcount() -1) / (2 * sample_size))
-
+    normalization = G.vcount() * (G.vcount() - 1) / (2 * sample_size)
+    betweenness = list(map(lambda x : x * normalization, betweenness))
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute
     if args.write:
