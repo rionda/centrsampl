@@ -45,7 +45,7 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
             end_time_diam_approx = time.process_time()
             graph["approx_diam_time"] = end_time_diam_approx - start_time_diam_approx
         # Compute VC-dimension upper bound using the approximate diameter
-        vcdim_upp_bound = math.floor(math.log2(graph["approx_diam"] -1)) # XXX Check
+        vcdim_upp_bound = math.floor(math.log2(graph["approx_diam"] -1))
     else: # Use exact diameter
         # Compute exact diameter if needed
         if not "diam" in graph.attributes():
@@ -54,8 +54,8 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
             graph["diam"] = graph.diameter() # This is not the vertex-diameter !!! 
             end_time_diam = time.process_time()
             graph["diam_time"] = end_time_diam - start_time_diam
-        vcdim_upp_bound = math.floor(math.log2(graph["diam"] -1)) # XXX Check
-    sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
+        vcdim_upp_bound = math.floor(math.log2(graph["diam"] -1))
+        sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
     sampled_paths = 0
     while sampled_paths < sample_size:
         # Sample a pair of different vertices uniformly at random
@@ -100,7 +100,7 @@ def get_sample_size(epsilon, delta, vcdim_upper_bound, c=0.5):
         math.log(1 / delta) )))
 
 def main():
-    """Parse arguments, call betwenness(), write to file."""
+    """Parse arguments, call betweenness(), write to file."""
 
     # Parse arguments
     parser = argparse.ArgumentParser()
