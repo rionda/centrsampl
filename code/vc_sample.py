@@ -105,7 +105,7 @@ def main():
     logging.info("Betweenness computation complete, took %s seconds",
             elapsed_time)
 
-    # Denormalize betweenness counter by (n choose 2) / k
+    # Denormalize betweenness counters by (n choose 2) / k
     normalization = G.vcount() * (G.vcount() - 1) / (2 * sample_size)
     betweenness = list(map(lambda x : x * normalization, betweenness))
 
