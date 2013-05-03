@@ -68,7 +68,8 @@ def main():
         sampled_vertex = random.randrange(G.vcount())
         # get_all_shortest_paths returns a list of shortest paths
         shortest_paths = G.get_all_shortest_paths(sampled_vertex) 
-        # Group shortest paths by destination vertex
+        # Group shortest paths by destination vertex, which is stored as the
+        # last element of the list representing the path
         grouped_shortest_paths = itertools.groupby(shortest_paths, lambda x : x[-1])
         for destination, group in grouped_shortest_paths:
             paths = list(group)
