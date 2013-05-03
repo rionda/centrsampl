@@ -8,6 +8,10 @@ import argparse
 import logging
 import util
 
+import brandes_exact
+import brandespich_sample
+import vc_sample
+
 def main():
     """Parse arguments, do the comparison, write to output."""
     parser = argparse.ArgumentParser()
@@ -16,6 +20,11 @@ def main():
     parser.add_argument("delta", type=util.valid_interval_float, help="graph file")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-e", "--exact", action="store_true", default=False,
+            help="Use exact diameter when computing approx. betweenness using VC-Dimension (default)")
+    group.add_argument("-a", "--approximate", action="store_true",
+            default=False, help="Use approximate diameter when computing approx. betweenness using VC-Dimension")
     args = parser.parse_args()
 
     # Set the desired level of logging
@@ -24,15 +33,14 @@ def main():
     # Read graph
     G = util.read_graph(args.graph)
 
+    # If the graph does not have the attributes for the betweenness or has the
+    # wrong ones, (re-)compute them
     if not "betw_time" in G.attributes():
-        # TODO compute exact betweenness
-        pass
-    if not "vc_betw_time" in G.attributes():
-        # TODO compute approx betweenness with VC-dim algorithm
-        pass
-    if not "bp_betw_time" in G.attributes():
-        # TODO compute approx betweenness with Brandes and Pich algorithm 
-        pass
+        brandes_exact.betweenness(G, True)
+    if not "vc_betw_time" in G.attributes() or G["vc_eps"] != args.epsilon or G["vc_delta"] != args.delta:
+        vc_sample.betweenness(G, args.epsilon, args.delta, args.approximate, True)
+    if not "bp_betw_time" in G.attributes() or G["bp_eps"] != args.epsilon or G["bp_delta"] != args.delta:
+        brandespich_sample.betweenness(G, args.epsilon, args.delta, True)
 
     # TODO Compute error statistics
     vc_wrong_eps = 0
@@ -40,6 +48,7 @@ def main():
     vc_err_min = 0
     vc_err_avg = 0
     vc_err_stddev = 0
+    bp_wrong_eps = 0
     bp_err_max = 0
     bp_err_min = 0
     bp_err_avg = 0
