@@ -16,7 +16,7 @@ def read_graph(path):
         # XXX There seems to be some problem in the propagation of E.strerror,
         # so the following actually print None at the end. Not our fault. We
         # leave it here as perhaps it will be fixed upstream at some point.
-        logging.critical("Cannot read graph file %s: %s", E.strerror)
+        logging.critical("Cannot read graph file %s: %s", path, E.strerror)
         sys.exit(2)
     return G
 
