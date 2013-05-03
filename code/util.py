@@ -3,6 +3,22 @@
 Various useful functions.
 """
 import argparse
+import logging
+import sys
+import igraph as ig
+
+def read_graph(path):
+    """Read an igraph.Graph from the file path. Return graph."""
+    logging.info("Reading graph from %s", path) 
+    try:
+        G = ig.Graph.Read(path)
+    except OSError as E:
+        # XXX There seems to be some problem in the propagation of E.strerror,
+        # so the following actually print None at the end. Not our fault. We
+        # leave it here as perhaps it will be fixed upstream at some point.
+        logging.critical("Cannot read graph file %s: %s", E.strerror)
+        sys.exit(2)
+    return G
 
 def valid_interval_float(string):
     """Check validity of string as float between 0 and 1 (extremes excluded).
@@ -21,6 +37,4 @@ def valid_interval_float(string):
            msg = "{} is not a valid float".format(string) 
            raise argparse.ArgumentTypeError(msg)
     return value
-
-
 

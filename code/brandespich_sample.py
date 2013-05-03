@@ -55,15 +55,7 @@ def main():
         logging.basicConfig(format=log_format, level=logging.DEBUG)
 
     # Read graph
-    logging.info("Reading graph from %s", args.graph)
-    try:
-        G = ig.Graph.Read(args.graph)
-    except OSError as E:
-        # XXX There seems to be some problem in the propagation of E.strerror,
-        # so the following actually print None at the end. Not our fault. We
-        # leave it here as perhaps it will be fixed upstream at some point.
-        logging.critical("Cannot read graph file %s: %s", E.strerror)
-        sys.exit(2)
+    G = util.read_graph(args.graph)
 
     # Seed the random number generator
     random.seed()
