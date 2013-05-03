@@ -22,6 +22,8 @@ def main():
     parser.add_argument("delta", type=util.valid_interval_float, help="graph file")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
+    parser.add_argument("-w", "--write", action="store_true", default=False,
+    help="write the betweenness and the time taken to compute them (if needed) back to file")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-e", "--exact", action="store_true", default=False,
             help="Use exact diameter when computing approx. betweenness using VC-Dimension (default)")
@@ -45,6 +47,12 @@ def main():
     if not "bp_betw_time" in G.attributes() or G["bp_eps"] != args.epsilon or G["bp_delta"] != args.delta:
         brandespich_sample.betweenness(G, args.epsilon, args.delta, True)
 
+    # If specified, write betweenness as vertex attributes, and time as graph
+    # attribute back to file
+    if args.write:
+        logging.info("Writing betweenness as vertex attributes and time as graph attribute")
+        G.write(args.graph)
+
     # Compute error statistics
     # It is not a problem to sort the error by value because we only compute
     # aggregates.
@@ -52,16 +60,16 @@ def main():
     vc_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["vc_betw"])])
     vc_err_avg = sum(vc_errs) / G.vcount()
     vc_err_max = vc_errs[-1]
-    vc_err_min = itertools.filterfalse(lambda x: x == 0, vc_errs)[0]
+    vc_err_min = list(itertools.filterfalse(lambda x: x == 0, vc_errs))[0]
     vc_err_stddev = math.sqrt(sum([math.pow(err - vc_err_avg, 2) for err in vc_errs]) / (G.vcount() -1))
-    vc_wrong_eps = len(itertools.filterfalse(lambda x: x > args.epsilon, vc_errs))
+    vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x > args.epsilon, vc_errs)))
 
     bp_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["bp_betw"])])
     bp_err_avg = sum(bp_errs) / G.vcount()
     bp_err_max = max(bp_errs)
-    bp_err_min = itertools.filterfalse(lambda x: x == 0, bp_errs)[0]
+    bp_err_min = list(itertools.filterfalse(lambda x: x == 0, bp_errs))[0]
     bp_err_stddev = math.sqrt(sum([math.pow(err - bp_err_avg, 2) for err in bp_errs]) / (G.vcount() -1))
-    bp_wrong_eps = len(itertools.filterfalse(lambda x: x > args.epsilon, bp_errs))
+    bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x > args.epsilon, bp_errs)))
 
     # Print statistics to output as CSV
     logging.info("Printing error statistics")
