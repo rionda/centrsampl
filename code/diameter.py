@@ -22,7 +22,8 @@ def diameter(graph):
     # time.process_time() does not account for sleeping time. Seems the right
     # function to use. Alternative could be time.perf_counter()
     start_time = time.process_time()
-    # XXX What exactly does this compute? Especially for directed graphs
+    # Compute the diameter of the graph, i.e. the longest geodesic path within
+    # a component.
     diam = graph.diameter() # This is not the vertex-diameter !!! 
     end_time = time.process_time()
     elapsed_time = end_time - start_time
