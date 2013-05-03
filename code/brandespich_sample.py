@@ -69,7 +69,7 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
         graph["bp_betw_time"] = elapsed_time
         graph["bp_delta"] = delta
         graph["bp_eps"] = epsilon
-        graph.vs["bp_betw"] = betweenness
+        graph.vs["bp_betw"] = betw
 
     return (elapsed_time, betw)
 
