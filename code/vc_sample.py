@@ -122,6 +122,8 @@ def main():
     # attribute
     if args.write:
         logging.info("Writing betweenness as vertex attributes and time as graph attribute")
+        G.vs["vc_eps"] = args.epsilon
+        G.vs["vc_delta"] = args.delta
         G.vs["vc_betw"] = betweenness
         G["vc_betw_time"] = elapsed_time
         G.write(args.graph)
