@@ -47,7 +47,7 @@ def valid_interval_float(string):
            raise argparse.ArgumentTypeError(msg)
     return value
 
-def write_to_output(elapsedtime, betw, output_path):
+def write_to_output(elapsed_time, betw, output_path):
     """ Write time and betweenness to output file."""
     try:
         with open(output_path, 'wt') as output:
