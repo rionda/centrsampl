@@ -55,6 +55,7 @@ def main():
 
     # Compute betweenness
     logging.info("Computing betweenness")
+    betweenness = [0] * G.vcount()
     start_time = time.process_time()
     # Use desired diameter
     if args.approximate: # Use approximate diameter
@@ -79,14 +80,18 @@ def main():
     for i in range(sample_size):
         # Sample a pair of different vertices uniformly at random
         sampled_pair = random.sample(G.vs, 2)
-        # XXX Need to check what this does
-        shortest_paths = G.get_all_shortest_paths(sampled_pair[u], sampled_pair[v]) 
-        # TODO Finish computation
-
-    betweenness = []
+        # get_all_shortest_paths returns a list of shortest paths
+        shortest_paths = G.get_all_shortest_paths(sampled_pair[0], sampled_pair[1]) 
+        # Sample a shortest path uniformly at random
+        sampled_path = random.sample(shortest_paths, 1)
+        # Update betweenness counters for vertices on the sampled path
+        for vertex in sampled_path:
+            betweenness[vertex] += 1
     end_time = time.process_time()
     elapsed_time = end_time - start_time
 
+    # Denormalize betweenness counter by (n choose 2) / k
+    betweenness = betweenness * ( G.vcount() * (G.vcount() -1) / (2 * sample_size))
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute
