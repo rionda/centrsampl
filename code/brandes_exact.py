@@ -28,11 +28,17 @@ def betweenness(graph, set_attributes=True):
     # wasting time (XXX right?)
     logging.info("Computing betweenness")
     start_time = time.process_time()
-    # XXX TODO Check whether multiple shortest paths are handled correctly!
     betw = graph.betweenness()
     end_time = time.process_time()
     elapsed_time = end_time - start_time
     logging.info("Betweenness computed in %s seconds", elapsed_time)
+
+    # If the graph is undirected, it seems that igraph only counts paths once
+    # in one direction, so multiply betweenness values by 2. 
+    # XXX Needs more checking
+    if not graph.is_directed():
+        logging.debug("Adjusting betweenness values for undirectness")
+        betw = list(map(lambda x: x * 2, graph.betweenness()))
 
     if set_attributes:
         graph["betw_time"] = elapsed_time
