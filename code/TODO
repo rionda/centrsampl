@@ -5,7 +5,7 @@ Download graph data from snap.stanford.edu/data (Matteo should already have them
 somewhere on his laptop)
 
 # DONE! Implement converter to convert them from the native format (list of
-# edges?) to an igraph (http://igraph.sourceforge.net) graph
+# edges?) to an igraph graph
 
 Convert graphs to igraph format
 
