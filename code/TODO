@@ -9,7 +9,7 @@ somewhere on his laptop)
 
 Convert graphs to igraph format
 
-Implement Dijkstra's algorithm for shortest path to take into account the
+# DONE! Implement Dijkstra's algorithm for shortest path to take into account the
 possibility of multiple shortest paths
 
 # DONE! Implement diameter approximation algorithm for undirected, unweighted graphs
