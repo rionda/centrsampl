@@ -26,9 +26,9 @@ def diameter_approx(graph):
     
     """
     # sample a vertex uniformly at random
-    sampled_vertex = graph.vs[random.randint(0, len(G.vs)-1)]
+    sampled_vertex = graph.vs[random.randint(0, len(graph.vs)-1)]
     # We convert the list to a set to remove duplicates
-    shortest_path_lengths = set(G.shortest_paths_dijkstra([sampled_vertex])[0]) - set([float('inf')])
+    shortest_path_lengths = set(graph.shortest_paths_dijkstra([sampled_vertex])[0]) - set([float('inf')])
     diameter = max(shortest_path_lengths)
     diameter += max(shortest_path_lengths - set([diameter]))
     return diameter
