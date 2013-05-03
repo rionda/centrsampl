@@ -14,7 +14,8 @@ def get_sample_size(epsilon, delta, vcdim_upper_bound, c=0.5):
     """ Compute the sample size to achieve an epsilon-approximation of a range
     set with VC-dimension at most vcdim_upper_bound with probability at least 1-delta
     """
-    return (c / math.pow(epsilon, 2)) * ( vcdim_upper_bound + math.log(1 / delta) )
+    return int(math.ceil((c / math.pow(epsilon, 2)) * ( vcdim_upper_bound +
+        math.log(1 / delta) )))
 
 def main():
     """Compute approximations of the betweenness centrality of all the vertices  
@@ -58,7 +59,7 @@ def main():
     # Use desired diameter
     if args.approximate: # Use approximate diameter
         # Compute approx diameter if needed
-        if not G.has_key("approx_diam"):
+        if not "approx_diam" in G.attributes():
             start_time_diam_approx = time.process_time()
             G["approx_diam"] = diameter_approx.diameter_approx(G)
             end_time_diam_approx = time.process_time()
@@ -67,7 +68,7 @@ def main():
         vcdim_upp_bound = math.floor(math.log2(G["approx_diam"] -1)) # XXX Check
     else: # Use exact diameter
         # Compute exact diameter if needed
-        if not G.has_key("diam"):
+        if not "diam" in G.attributes():
             start_time_diam = time.process_time()
             # XXX What exactly does this compute? Especially for directed graphs
             G["diam"] = G.diameter() # This is not the vertex-diameter !!! 
