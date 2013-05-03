@@ -1,6 +1,7 @@
 #! /bin/env python3
 
 import argparse
+import itertools
 import logging
 import math
 import os
@@ -63,11 +64,20 @@ def main():
     start_time = time.process_time()
     sample_size = get_sample_size(args.epsilon, args.delta, G.vcount())
     for i in range(sample_size):
-        # Sample a vertex uniformly at random
+        # Sample a source vertex uniformly at random
         sampled_vertex = random.randrange(G.vcount())
         # get_all_shortest_paths returns a list of shortest paths
         shortest_paths = G.get_all_shortest_paths(sampled_vertex) 
-        # TODO Update betweenness counters for vertices 
+        # Group shortest paths by destination vertex
+        grouped_shortest_paths = itertools.groupby(shortest_paths, lambda x : x[-1])
+        for destination, group in grouped_shortest_paths:
+            paths = list(group)
+            # addend: 1 / number of shortest paths between source and destination
+            addend = 1 / len(paths)
+            for path in paths:
+                # Update betweenness counters for vertices internal to the path
+                for vertex in path[1:-1]:
+                    betweenness[vertex] += addend
     end_time = time.process_time()
     elapsed_time = end_time - start_time
     logging.info("Betweenness computation complete, took %s seconds",
