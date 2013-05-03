@@ -5,6 +5,7 @@ import logging
 import math
 import os
 import random
+import sys
 import time
 import igraph as ig
 
@@ -48,12 +49,20 @@ def main():
 
     # Read graph
     logging.info("Reading graph from %s", args.graph)
-    G = ig.Graph.Read(args.graph)
+    try:
+        G = ig.Graph.Read(args.graph)
+    except OSError as E:
+        # XXX There seems to be some problem in the propagation of E.strerror,
+        # so the following actually print None at the end. Not our fault. We
+        # leave it here as perhaps it will be fixed upstream at some point.
+        logging.critical("Cannot read graph file %s: %s", E.strerror)
+        sys.exit(2)
 
     # Seed the random number generator
     random.seed()
 
-    # Compute betweenness
+    # Compute betweenness. We do not use logging from here to the end of the
+    # computation to avoid wasting time (XXX right?)
     logging.info("Computing betweenness")
     betweenness = [0] * G.vcount()
     start_time = time.process_time()
@@ -93,10 +102,13 @@ def main():
             sampled_paths += 1
     end_time = time.process_time()
     elapsed_time = end_time - start_time
+    logging.info("Betweenness computation complete, took %s seconds",
+            elapsed_time)
 
     # Denormalize betweenness counter by (n choose 2) / k
     normalization = G.vcount() * (G.vcount() - 1) / (2 * sample_size)
     betweenness = list(map(lambda x : x * normalization, betweenness))
+
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute
     if args.write:
