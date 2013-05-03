@@ -15,23 +15,39 @@ import igraph as ig
 
 import util
 
-def diameter_approx(graph):
-    """Compute diameter approximation.
+def diameter(graph):
+    """Compute diameter approximation and time needed to compute it.
+
+    Return a tuple (elapsed_time, diam), where elapsed_time is the time (in
+    fractional seconds) needed to compute the approximation to the diameter of
+    the graph.
 
     To compute the approximation, we sample a vertex uniformly at random,
     compute the shortest paths from this vertex to all other vertices, and sum
-    the lengths of the two longest paths we found.
-    The returned value is an upper bound to the diameter of the graph and is at
-    most 2 times the exact value.
+    the lengths of the two longest paths we found. The returned value is an
+    upper bound to the diameter of the graph and is at most 2 times the exact
+    value.
     
     """
+    logging.info("Computing diameter")
+    # Seed the random number generator
+    random.seed()
+    # time.process_time() does not account for sleeping time. Seems the right
+    # function to use. Alternative could be time.perf_counter()
+    start_time = time.process_time()
     # sample a vertex uniformly at random
     sampled_vertex = graph.vs[random.randint(0, len(graph.vs)-1)]
     # We convert the list to a set to remove duplicates
     shortest_path_lengths = set(graph.shortest_paths_dijkstra([sampled_vertex])[0]) - set([float('inf')])
-    diameter = max(shortest_path_lengths)
-    diameter += max(shortest_path_lengths - set([diameter]))
-    return diameter
+    diam = max(shortest_path_lengths)
+    diam += max(shortest_path_lengths - set([diam]))
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+
+    logging.info("Diameter approximation is %d, computed in %f seconds", diam, elapsed_time)
+    graph["approx_diam"] = diam
+    graph["approx_diam_time"] = elapsed_time
+    return (elapsed_time, diam)
 
 def main():
     """Parse arguments, call the approximation, write it to file."""
@@ -58,23 +74,11 @@ def main():
         G.to_undirected()
         was_directed = True
 
-    # Seed the random number generator
-    random.seed()
-
     # Compute the diameter
-    logging.info("Computing diameter")
-    # time.process_time() does not account for sleeping time. Seems the right
-    # function to use. Alternative could be time.perf_counter()
-    start_time = time.process_time()
-    diameter = diameter_approx(G)
-    end_time = time.process_time()
-    elapsed_time = end_time - start_time
+    (elapsed_time, diam) = diameter(G)
 
     # Print info
-    logging.info("Diameter approximation is %d, computed in %f seconds", diameter,
-            elapsed_time)
-    print("{}, diameter={}, time={}".format(args.graph, diameter,
-        elapsed_time))
+    print("{}, diameter={}, time={}".format(args.graph, diam, elapsed_time))
 
     # If requested, add graph attributes and write graph back to original file
     if args.write:
@@ -82,7 +86,7 @@ def main():
         # If the graph was directed and we converted it, re-read it
         if was_directed:
             G = ig.Graph.Read(args.graph)
-        G["approx_diameter"] = diameter
+        G["approx_diam"] = diam
         G["approx_diam_time"] = elapsed_time
         # We use format auto-detection, which should work given that it worked
         # when we read the file

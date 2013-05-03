@@ -11,6 +11,26 @@ import time
 
 import util
 
+def diameter(graph):
+    """Compute exact diameter of the graph and time needed to compute it.
+
+    Return a tuple (elapsed_time, diam), where elapsed_time is the time (in
+    fractional seconds) needed to compute the diameter of the graph.
+
+    """
+    logging.info("Computing diameter")
+    # time.process_time() does not account for sleeping time. Seems the right
+    # function to use. Alternative could be time.perf_counter()
+    start_time = time.process_time()
+    # XXX What exactly does this compute? Especially for directed graphs
+    diam = graph.diameter() # This is not the vertex-diameter !!! 
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    graph["diam"] = diam
+    graph["diam_time"] = elapsed_time
+    logging.info("Diameter is %d, computed in %f seconds", diam, elapsed_time)
+    return (elapsed_time, diam)
+
 def main():  
     """Parse arguments, perform the computation, write to file."""
     # Parse arguments
@@ -29,26 +49,15 @@ def main():
     G = util.read_graph(args.graph)
 
     # Compute the diameter
-    logging.info("Computing diameter")
-    # time.process_time() does not account for sleeping time. Seems the right
-    # function to use. Alternative could be time.perf_counter()
-    start_time = time.process_time()
-    # XXX What exactly does this compute? Especially for directed graphs
-    diameter = G.diameter() # This is not the vertex-diameter !!! 
-    end_time = time.process_time()
-    elapsed_time = end_time - start_time
+    (elapsed_time, diam) = diameter(G)
 
     # Print info
-    logging.info("Diameter is %d, computed in %f seconds", diameter,
-            elapsed_time)
-    print("{}, diameter={}, time={}".format(args.graph, diameter,
+    print("{}, diameter={}, time={}".format(args.graph, diam,
         elapsed_time))
 
     # If requested, add graph attributes and write graph back to original file
     if args.write:
         logging.info("Writing diameter and time to graph")
-        G["diam"] = diameter
-        G["diam_time"] = elapsed_time
         # We use format auto-detection, which should work given that it worked
         # when we read the file
         G.write(args.graph) 

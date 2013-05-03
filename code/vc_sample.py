@@ -9,10 +9,10 @@ compute them. These values are then written to an output file.
 import argparse
 import logging
 import math
-import os
 import random
 import time
 
+import diameter
 import diameter_approx
 import util
 
@@ -40,22 +40,17 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
     if use_approx_diameter: # Use approximate diameter
         # Compute approx diameter if needed
         if not "approx_diam" in graph.attributes():
-            start_time_diam_approx = time.process_time()
-            graph["approx_diam"] = diameter_approx.diameter_approx(graph)
-            end_time_diam_approx = time.process_time()
-            graph["approx_diam_time"] = end_time_diam_approx - start_time_diam_approx
+            diameter_approx.diameter(graph)
+            assert "approx_diam" in graph.attributes()
         # Compute VC-dimension upper bound using the approximate diameter
-        vcdim_upp_bound = math.floor(math.log2(graph["approx_diam"] -1))
+        vcdim_upp_bound = math.floor(math.log2(graph["approx_diam"] - 1))
     else: # Use exact diameter
         # Compute exact diameter if needed
         if not "diam" in graph.attributes():
-            start_time_diam = time.process_time()
-            # XXX What exactly does this compute? Especially for directed graphs
-            graph["diam"] = graph.diameter() # This is not the vertex-diameter !!! 
-            end_time_diam = time.process_time()
-            graph["diam_time"] = end_time_diam - start_time_diam
-        vcdim_upp_bound = math.floor(math.log2(graph["diam"] -1))
-        sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
+            diameter.diameter(graph) 
+            assert "diam" in graph.attributes()
+        vcdim_upp_bound = math.floor(math.log2(graph["diam"] - 1))
+    sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
     sampled_paths = 0
     while sampled_paths < sample_size:
         # Sample a pair of different vertices uniformly at random
@@ -84,6 +79,7 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
         graph["vc_betw_time"] = elapsed_time
         graph["vc_delta"] = delta
         graph["vc_eps"] = epsilon
+        graph["vc_type"] = "approx" if use_approx_diameter else "exact"
         graph.vs["vc_betw"] = betw
 
     return (elapsed_time, betw)
