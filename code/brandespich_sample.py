@@ -83,7 +83,7 @@ def get_sample_size(epsilon, delta, vertices_num):
 
     """
     return int(math.ceil((2 * math.pow((vertices_num - 2) / (epsilon *
-        (vertices_num -1)), 2) * math.log(2 * vertices_num / delta))))
+        (vertices_num - 1)), 2) * math.log(2 * vertices_num / delta))))
 
 def main():
     """Parse arguments and perform the computation."""
