@@ -45,20 +45,19 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
         diameter.diameter(graph) 
         vcdim_upp_bound = math.floor(math.log2(graph["diam"] - 1))
     sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
-    sampled_paths = 0
-    while sampled_paths < sample_size:
+    for i in range(sample_size):
         # Sample a pair of different vertices uniformly at random
         sampled_pair = random.sample(range(graph.vcount()), 2)
         # get_all_shortest_paths returns a list of shortest paths
         shortest_paths = graph.get_all_shortest_paths(sampled_pair[0], sampled_pair[1]) 
+        # Only sample path and increment counter if there actually is at least
+        # a paths between the two nodes. Otherwise, do nothing.
         if shortest_paths:
             # Sample a shortest path uniformly at random
             sampled_path = random.sample(shortest_paths, 1)[0]
             # Update betweenness counters for vertices on the sampled path
             for vertex in sampled_path:
                 betw[vertex] += 1
-            # Increase number of sampled paths
-            sampled_paths += 1
     end_time = time.process_time()
     elapsed_time = end_time - start_time
     logging.info("Betweenness computation complete, took %s seconds",
