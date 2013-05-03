@@ -29,8 +29,8 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
     as vertex attributes, and the time as a graph attribute.
     
     """
-    # We do not use logging from here to the end of the computation to avoid
-    # wasting time (XXX right?)
+    # We minimize the use of logging from here to the end of the computation to avoid
+    # wasting time 
     logging.info("Computing betweenness")
     # Seed the random number generator
     random.seed()
@@ -38,17 +38,11 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
     start_time = time.process_time()
     # Use desired diameter
     if use_approx_diameter: # Use approximate diameter
-        # Compute approx diameter if needed
-        if not "approx_diam" in graph.attributes():
-            diameter_approx.diameter(graph)
-            assert "approx_diam" in graph.attributes()
+        diameter_approx.diameter(graph)
         # Compute VC-dimension upper bound using the approximate diameter
         vcdim_upp_bound = math.floor(math.log2(graph["approx_diam"] - 1))
     else: # Use exact diameter
-        # Compute exact diameter if needed
-        if not "diam" in graph.attributes():
-            diameter.diameter(graph) 
-            assert "diam" in graph.attributes()
+        diameter.diameter(graph) 
         vcdim_upp_bound = math.floor(math.log2(graph["diam"] - 1))
     sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
     sampled_paths = 0
