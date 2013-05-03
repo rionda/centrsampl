@@ -69,7 +69,7 @@ def main():
     vc_err_max = vc_errs[-1]
     vc_err_min = list(itertools.filterfalse(lambda x: x == 0, vc_errs))[0]
     vc_err_stddev = math.sqrt(sum([math.pow(err - vc_err_avg, 2) for err in vc_errs]) / (G.vcount() -1))
-    vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x > args.epsilon *
+    vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
         G.vcount() * (G.vcount() - 1) / 2, vc_errs)))
 
     bp_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["bp_betw"])])
@@ -77,7 +77,7 @@ def main():
     bp_err_max = max(bp_errs)
     bp_err_min = list(itertools.filterfalse(lambda x: x == 0, bp_errs))[0]
     bp_err_stddev = math.sqrt(sum([math.pow(err - bp_err_avg, 2) for err in bp_errs]) / (G.vcount() -1))
-    bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x > args.epsilon *
+    bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
         G.vcount() * (G.vcount() - 1) / 2, bp_errs)))
 
     # Print statistics to output as CSV
