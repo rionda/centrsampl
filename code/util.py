@@ -47,3 +47,13 @@ def valid_interval_float(string):
            raise argparse.ArgumentTypeError(msg)
     return value
 
+def write_to_output(elapsedtime, betw, output_path):
+    """ Write time and betweenness to output file."""
+    try:
+        with open(output_path, 'wt') as output:
+            logging.info("Writing time and betweenness to output file")
+            output.write("({}, {})\n".format(betw, elapsed_time))
+    except OSError as E:
+        logging.critical("Cannot write betweenness to %s: %s", output_path,
+                E.strerror)
+

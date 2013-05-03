@@ -117,13 +117,7 @@ def main():
         G.write(args.graph)
 
     # Write betweenness and time to output
-    try:
-        with open(args.output, 'wt') as output:
-            logging.info("Writing betweenness and time to output file")
-            output.write("({}, {})\n".format(betweenness, elapsed_time))
-    except OSError as E:
-        logging.critical("Cannot write betweenness to %s: %s", args.output,
-                os.strerror(E.errno))
+    util.write_to_output(elapsed_time, betw, args.output)
 
 if __name__ == "__main__":
     main()
