@@ -74,7 +74,8 @@ def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=Non
     Return a list of vertices sorted by non-increasing distance from the
     source.
 
-    """  
+    """ 
+    logging.info("Computing shortest paths from %d", source)
     # Initialization
     # list of predecessors
     graph.vs["preds"] = [[]] * graph.vcount()
