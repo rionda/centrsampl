@@ -14,6 +14,9 @@ Implement adaptive sampling algorithm
 
 Implement code to automatize experiments and reports
 
+Implement code to count how many edges are touched during the computation of
+betweenness. This can be play an important factor in large networks.
+
 # DONE! Implement converter to convert them from the native format (list of
 edges?) to an igraph graph
 
