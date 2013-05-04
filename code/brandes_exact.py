@@ -90,7 +90,7 @@ def betweenness_homegrown(graph, set_attributes=True):
     if set_attributes:
         graph["betw_time"] = elapsed_time
         graph.vs["betw"] = betw
-        graph.vs["betw_type"] = "noigraph"
+        graph.vs["betw_type"] = "homegrown"
     
     return (elapsed_time, betw)
 
