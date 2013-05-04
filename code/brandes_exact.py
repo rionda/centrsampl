@@ -51,6 +51,30 @@ def betweenness_igraph(graph, set_attributes=True):
 
     return (elapsed_time, betw)
 
+def update_betweenness(graph, source, betw):
+    """Update the betweenness using the contribution of the source.
+    
+    Update the betweenness of all vertices in the graph by adding the
+    contribution of the specified source. The computation follows the
+    description in Brandes's original paper, see
+    http://dx.doi.org/10.1080/0022250X.2001.9990249 .
+
+    Return the update betweenness.
+
+    """ 
+    deltas = [0] * graph.vcount()
+    # Compute shortest paths
+    vertices_stack = util.compute_shortest_paths_dijkstra(graph, source.index)
+    while vertices_stack:
+        vertex_index = vertices_stack.pop(-1)
+        vertex = graph.vs[vertex_index]
+        for pred_index in vertex["preds"]:
+            deltas[pred_index] += (graph.vs[pred_index]["paths"] /
+                    vertex["paths"]) * (1 + deltas[vertex_index])
+        if vertex_index != source.index:
+            betw[vertex_index] += deltas[vertex_index]
+    return betw
+
 def betweenness_homegrown(graph, set_attributes=True):
     """Compute exact betweenness of vertices in graph and time needed.
 
@@ -68,19 +92,8 @@ def betweenness_homegrown(graph, set_attributes=True):
     betw = [0] * graph.vcount()
     start_time = time.process_time()
     # Compute betweenness.
-    # This is taken from the pseudocode in Brandes's paper.
     for source in graph.vs:
-        deltas = [0] * graph.vcount()
-        # Compute shortest paths
-        vertices_stack = util.compute_shortest_paths_dijkstra(graph, source.index)
-        while vertices_stack:
-            vertex_index = vertices_stack.pop(-1)
-            vertex = graph.vs[vertex_index]
-            for pred_index in vertex["preds"]:
-                deltas[pred_index] += (graph.vs[pred_index]["paths"] /
-                        vertex["paths"]) * (1 + deltas[vertex_index])
-            if vertex_index != source.index:
-                betw[vertex_index] += deltas[vertex_index]
+       betw = update_betweenness(graph, source, betw) 
     end_time = time.process_time()
     elapsed_time = end_time - start_time
     logging.info("Betweenness computation complete, took %s seconds",
