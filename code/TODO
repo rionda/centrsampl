@@ -8,6 +8,9 @@ paper.
 
 Convert graphs to igraph format
 
+Make sure our implementations of Brandes, Brandes and Pachi, and the ALENEX paper
+are the best possible.
+
 Implement ALENEX paper sampling algorithm
 
 Implement adaptive sampling algorithm
