@@ -8,8 +8,8 @@ import argparse
 import itertools
 import logging
 import math
-import util
 
+import util
 import brandes_exact
 import brandespich_sample
 import vc_sample
@@ -24,6 +24,7 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-a", "--approximate", action="store_true",
             default=False, help="use approximate diameter when computing approximation of betweenness using VC-Dimension")
+    group.add_argument("-d", "--diameter", type=util.positive_int, default=0, help="value to use for the diameter")
     group.add_argument("-e", "--exact", action="store_true", default=False,
             help="use exact diameter when computing approximation of betweenness using VC-Dimension (default)")
     parser.add_argument("-f", "--force", action="store_true", default=False,
@@ -50,7 +51,10 @@ def main():
     if args.force or not "betw_time" in G.attributes():
         brandes_exact.betweenness(G, not args.noigraph, True)
     if args.force or not "vc_betw_time" in G.attributes() or G["vc_eps"] != args.epsilon or G["vc_delta"] != args.delta:
-        vc_sample.betweenness(G, args.epsilon, args.delta, args.approximate, True)
+        if args.diameter > 0:
+            vc_sample.betweenness(G, args.epsilon, args.delta, args.diameter, True)
+        else:
+            vc_sample.betweenness(G, args.epsilon, args.delta, args.approximate, True)
     if args.force or not "bp_betw_time" in G.attributes() or G["bp_eps"] != args.epsilon or G["bp_delta"] != args.delta:
         brandespich_sample.betweenness(G, args.epsilon, args.delta, True)
 

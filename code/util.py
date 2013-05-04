@@ -7,6 +7,24 @@ import logging
 import sys
 import igraph as ig
 
+def positive_int(string):
+    """Check validity of string as positive integer. Return value if it is.
+    
+    To be used as the value for "type" argument in argparse.add_argument().
+    If string is valid, return int value of the string. Otherwise raise an
+    argparse Error.
+
+    """
+    try:
+        value = int(string)
+        if value < 1:
+            msg = "{} is not positive".format(string)
+            raise argparse.ArgumentTypeError(msg)
+    except ValueError:
+           msg = "{} is not a valid int".format(string) 
+           raise argparse.ArgumentTypeError(msg)
+    return value
+
 def read_graph(path):
     """Read an igraph.Graph from the file path. Return graph."""
     logging.info("Reading graph from %s", path) 
