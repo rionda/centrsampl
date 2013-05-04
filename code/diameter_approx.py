@@ -10,12 +10,48 @@ weights.
 import argparse
 import logging
 import random
+import sys
 import time
 import igraph as ig
 
 import util
 
-def diameter(graph, sample_path=False):
+def diameter_homegrown(graph):
+    """Compute diameter approximation and time needed to compute it.
+
+    Return a tuple (elapsed_time, diam), where elapsed_time is the time (in
+    fractional seconds) needed to compute the approximation to the diameter of
+    the graph.
+
+    To compute the approximation, we sample a vertex uniformly at random,
+    compute the shortest paths from this vertex to all other vertices, and sum
+    the lengths of the two longest paths we found. The returned value is an
+    upper bound to the diameter of the graph and is at most 2 times the exact
+    value.
+
+    homegrown version
+
+    """
+    logging.info("Computing diameter approximation with homegrown implementation")
+    # time.process_time() does not account for sleeping time. Seems the right
+    # function to use. Alternative could be time.perf_counter()
+    start_time = time.process_time()
+    # sample a source uniformly at random
+    sampled_source_index = random.randrange(len(graph.vs))
+    util.compute_shortest_paths_dijkstra(graph, sampled_source_index)
+    distances = frozenset(graph.vs["dist"])
+    diam = max(distances)
+    diam += max(distances - frozenset([diam]))
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+
+    logging.info("Diameter approximation is %d, computed in %f seconds", diam, elapsed_time)
+    graph["approx_diam"] = diam
+    graph["approx_diam_time"] = elapsed_time
+
+    return (elapsed_time, diam)
+
+def diameter_igraph(graph, sample_path=False):
     """Compute diameter approximation and time needed to compute it.
 
     Return a tuple (elapsed_time, diam), where elapsed_time is the time (in
@@ -30,11 +66,11 @@ def diameter(graph, sample_path=False):
 
     If sample_path is True, sample one of the shortest paths computed for the
     approximation, and set it as graph attribute.
+
+    igraph version
     
     """
-    logging.info("Computing diameter")
-    # Seed the random number generator
-    random.seed()
+    logging.info("Computing diameter approximation with igraph implementation")
     # time.process_time() does not account for sleeping time. Seems the right
     # function to use. Alternative could be time.perf_counter()
     start_time = time.process_time()
@@ -60,6 +96,36 @@ def diameter(graph, sample_path=False):
 
     return (elapsed_time, diam)
 
+def diameter(graph, implementation="igraph", sampled_path=True):
+    """Compute diameter approximation and time needed to compute it.
+
+    Return a tuple (elapsed_time, diam), where elapsed_time is the time (in
+    fractional seconds) needed to compute the approximation to the diameter of
+    the graph.
+
+    To compute the approximation, we sample a vertex uniformly at random,
+    compute the shortest paths from this vertex to all other vertices, and sum
+    the lengths of the two longest paths we found. The returned value is an
+    upper bound to the diameter of the graph and is at most 2 times the exact
+    value.
+
+    Use the specified implementation to compute the approximation (available:
+    igraph, homegrown)
+
+    (only igraph implementation) If sample_path is True, sample one of the
+    shortest paths computed for the approximation, and set it as graph
+    attribute.
+
+    """
+    if implementation == "igraph":
+        return diameter_igraph(graph, sampled_path)
+    elif implementation == "homegrown":
+        return diameter_homegrown(graph)
+    else:
+        logging.critical("Betweenness implementation not recognized: %s",
+                implementation)
+        sys.exit(2)
+
 def main():
     """Parse arguments, call the approximation, write it to file."""
 
@@ -67,13 +133,20 @@ def main():
     parser = argparse.ArgumentParser()
     parser.description = "Compute an approximation of the diameter of a graph and the time needed to compute it, and (if specified) write these info as a graph attributes"
     parser.add_argument("graph", help="graph file")
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
+    parser.add_argument("-i", "--implementation", choices=["igraph",
+        "homegrown"], default="igraph", 
+        help="use specified implementation of betweenness computation")
+    parser.add_argument("-v", "--verbose", action="count", default=0, 
+            help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
     help="write the approximation of diameter of the graph as the 'approx_diameter' graph attribute and the time taken to compute it as the 'approx_diam_time' attribute")
     args = parser.parse_args()
 
     # Set the desired level of logging
     util.set_verbosity(args.verbose)
+
+    # Seed the random number generator
+    random.seed()
 
     # Read graph from file
     G = util.read_graph(args.graph)
@@ -87,7 +160,7 @@ def main():
         was_directed = True
 
     # Compute the diameter
-    (elapsed_time, diam) = diameter(G)
+    (elapsed_time, diam) = diameter(G, args.implementation)
 
     # Print info
     print("{}, diameter={}, time={}".format(args.graph, diam, elapsed_time))
