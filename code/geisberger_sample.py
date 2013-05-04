@@ -3,37 +3,27 @@
 """geisberger_sample.py
 
 Compute approximations of the betweenness centrality of all the vertices
-in the graph using the algorithm by Robert Geisberger, Peter Sanders, Dominik Schultes, and the time needed to
-compute them. These values are then written to an output file. For the
-algorihm, see http://www.siam.org/proceedings/alenex/2008/alx08_09geisbergerr.pdf .
+in the graph using the algorithm by Robert Geisberger, Peter Sanders, Dominik
+Schultes, and the time needed to compute them. These values are then written to
+an output file. For the algorihm, see
+http://www.siam.org/proceedings/alenex/2008/alx08_09geisbergerr.pdf .
 
 """
 import argparse
 import itertools
 import logging
 import math
-import os
 import random
 import time
 
 import util
 
-
-def find(value, seq):
-  """Return first item in sequence where f(item) == True."""
-  for item in seq:
-    print(item)
-    if item == value: 
-       print(value)
-       return item
-
-
 def betweenness(graph, epsilon, delta, set_attributes=True):
-    """Compute approx. betweenness using Brandes and Pick algorithm.
+    """Compute approx. betweenness using Geisber et al.'s algorithm.
     
     Compute approximations of the betweenness centrality of all the vertices in
-    the graph using the algorithm by Robert Geisberger, Peter Sanders, Dominik Schultes, and the time needed to
-    compute them. For the algorihm, see
+    the graph using the algorithm by Robert Geisberger, Peter Sanders, Dominik
+    Schultes, and the time needed to compute them. For the algorihm, see
     http://www.siam.org/proceedings/alenex/2008/alx08_09geisbergerr.pdf .
 
     Return a tuple with the time needed to compute the betweenness and the list
@@ -53,7 +43,6 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     for i in range(sample_size):
         # Sample a source vertex uniformly at random
         sampled_vertex = random.randrange(graph.vcount())
-        print(sampled_vertex)
         # get_all_shortest_paths returns a list of shortest paths
         shortest_paths = graph.get_all_shortest_paths(sampled_vertex) 
         # Group shortest paths by destination vertex, which is stored as the
@@ -65,10 +54,9 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
             addend = 1 / len(paths)           
             for path in paths:
                 # Update betweenness counters for vertices internal to the path
-                for vertex in path[1:-1]:
-                    position = find(vertex, path)
-                    ratio = (position + 1) / len(path)
-                    print(ratio)
+                for index in range(1, len(path) - 1):
+                    vertex = path[index]
+                    ratio = (index + 1) / len(path)
                     if ratio >= 0.5:
                          betw[vertex] += addend
     end_time = time.process_time()
