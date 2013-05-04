@@ -1,8 +1,10 @@
 We are going to implement our code in Python3.3.1, using the igraph library
 (http://igraph.sourceforge.net)
 
-Download graph data from snap.stanford.edu/data (Matteo should already have them
-somewhere on his laptop)
+Download graph data from http://snap.stanford.edu/data and
+http://law.di.unimi.it/datasets.php
+Another dataset that looks interesting is the US patent data. Look in the ALENEX
+paper.
 
 Convert graphs to igraph format
 
@@ -11,6 +13,9 @@ Implement ALENEX paper sampling algorithm
 Implement adaptive sampling algorithm
 
 Implement code to automatize experiments and reports
+
+Implement code to count how many edges are touched during the computation of
+betweenness. This can be play an important factor in large networks.
 
 # DONE! Implement converter to convert them from the native format (list of
 edges?) to an igraph graph

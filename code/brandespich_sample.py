@@ -32,7 +32,7 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     
     """
     # We do not use logging from here to the end of the computation to avoid
-    # wasting time (XXX right?)
+    # wasting time
     logging.info("Computing betweenness")
     # Seed the random number generator
     random.seed()
