@@ -15,15 +15,18 @@ to achieve the desired accuracy (expressed through $\varepsilon$) with the
 desired confidence (expressed through $1-\delta$). Then the algorithm builds a
 sample $S$ of $k$ shortest path from $\mathbb{S}_G$ by sampling them according to
 the probability distribution $\prob_G$ defined on $\mathbb{S}_G$ as follows:
-given a shortest path $p_{uv}\in\mathbb{S}_G$ between a pair of vertices
+given a shortest path $p_{uv}\in\mathbb{S}_G$ between a pair of distinct vertices
 $(u,v)\in V\times V$, 
 \[
 \prob_G(p_{uv})=\frac{1}{\binom{n}{2}|\mathcal{S}_{uv}|}\enspace.%=\frac{2}{n(n-1)|\mathcal{S}_{uv}|}\enspace.
 \]
+Note that $\prob_G(p_\emptyset)$ is non-zero if there is at least one pair
+$(u,v)$ with $\sigma_{uv}=0$.
 Sampling according to $\prob_G$ can be achieved by first picking a pair of distinct vertices $(u,v)$
 uniformly at random, computing the set $\mathcal{S}_{uv}$ of all the shortest
 paths between $u$ and $v$, and selecting one of these shortest paths uniformly
-at random. The estimation $\tilde\betw(v)$ of the betweenness centrality of each
+at random. If $\sigma_{uv}=0$, the sampled path is obviously $p_\emptyset$. The
+estimation $\tilde\betw(v)$ of the betweenness centrality of each
 vertex $v\in V$ is obtained by computing the fraction of shortest paths in $S$
 that $v$ is internal to and de-normalizing it: 
 \[

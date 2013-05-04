@@ -7,7 +7,7 @@ Let $G=(V,E)$ be a graph, where $E\subseteq V\times V$, with $n=|V|$ vertices
 and $m=|E|$ edges. Each edge
 $e\in E$ has a non-negative \XXX necessary? weight $\mathsf{w}(e)$. The graph
 $G$ can be directed or undirected. We assume
-that $G$ has a single connected component and that there are no self-loops and no multiple edges
+that $G$ has a single connected component \XXX necessary? and that there are no self-loops and no multiple edges
 between a pair of vertices. Given a pair of vertices $(u,v)\in V\times V$,
 $u\neq v$, a \emph{path $p_{uv}\subseteq V$ from $u$ to $v$} is an ordered sequence of
 vertices $p_{uv}=(w_1,\dotsc,w_{|p_{uv}|})$ such that $w_1=u$, $w_{|p_{uv}|}=v$ and
@@ -20,18 +20,24 @@ the edges composing the path:
 $\ell(p_{uv})=\sum_{i=1}^{|p_{uv}|-1}\mathsf{w}((w_i,w_{i+1}))$. We denote with
 $|p_{uv}|$ the number of vertices composing the path and call this the
 \emph{size of the path $p_{uv}$}. Note that if the weights are not all unitary,
-it is not necessarily true that $\ell(p_{uv})=|p_{uv}|-1$.
+it is not necessarily true that $\ell(p_{uv})=|p_{uv}|-1$. A special and
+degenerate path is the \emph{empty path} $p_{\emptyset}=\emptyset$, which by
+definition has length $\ell(p_\emptyset)=0$, no end points, and
+$\mathsf{Int}(p_\emptyset)=\emptyset$.
 
-Given two vertices $(u,v)\in V\times V$, the \emph{shortest path distance}
+Given two distinct vertices $(u,v)\in V\times V$, the \emph{shortest path distance}
 $\sigma_{uv}$ between $u$ and $v$ is the length of a path with minimum length
 between $u$ and $v$, among all paths between $u$ and $v$. If there is no path
 between $u$ and $v$, $\sigma_{uv}=0$. We call a path between $u$ and $v$ with
 length $\sigma_{uv}$ a \emph{shortest path between $u$ and $v$}. There can be
 multiple shortest paths between $u$ and $v$ and we denote the set of these paths
-as $\mathcal{S}_{uv}$. If $\sigma_{u,v}=0$, then $\mathcal{S}_{uv}=\emptyset$.
-By definition, $\mathcal{S}_{vv}=\emptyset$.
+as $\mathcal{S}_{uv}$. If $\sigma_{u,v}=0$, then
+$\mathcal{S}_{uv}=\{p_\emptyset\}$\footnote{Note that even if
+$p_\emptyset=\emptyset$, the set $\{p_\emptyset\}$ is not empty. It contains
+one element.}
+%By definition, $\mathcal{S}_{vv}=\emptyset$.
 We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$, for all
-$(u,v)\in V\times V$: 
+pair $(u,v)\in V\times V$ of distinct nodes: 
 \[ \mathbb{S}_G=\bigcup_{(u,v)\in V\times V}\mathcal{S}_{uv}\enspace.\]
 
 We now define a characteristic quantity of a graph that we will use throughout
