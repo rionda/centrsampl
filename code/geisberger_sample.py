@@ -54,9 +54,10 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
             addend = 1 / len(paths)           
             for path in paths:
                 # Update betweenness counters for vertices internal to the path
-                for index in range(1, len(path) - 1):
+                path_len = len(path) - 1
+                for index in range(1, path_len):
                     vertex = path[index]
-                    ratio = (index + 1) / len(path)
+                    ratio = index  / path_len
                     if ratio >= 0.5:
                          betw[vertex] += addend
     end_time = time.process_time()
