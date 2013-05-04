@@ -15,7 +15,7 @@ import igraph as ig
 
 import util
 
-def diameter(graph):
+def diameter(graph, sample_path=False):
     """Compute diameter approximation and time needed to compute it.
 
     Return a tuple (elapsed_time, diam), where elapsed_time is the time (in
@@ -27,6 +27,9 @@ def diameter(graph):
     the lengths of the two longest paths we found. The returned value is an
     upper bound to the diameter of the graph and is at most 2 times the exact
     value.
+
+    If sample_path is True, sample one of the shortest paths computed for the
+    approximation, and set it as graph attribute.
     
     """
     logging.info("Computing diameter")
@@ -38,15 +41,23 @@ def diameter(graph):
     # sample a vertex uniformly at random
     sampled_vertex = graph.vs[random.randint(0, len(graph.vs)-1)]
     # We convert the list to a set to remove duplicates
-    shortest_path_lengths = set(graph.shortest_paths_dijkstra([sampled_vertex])[0]) - set([float('inf')])
+    shortest_paths = graph.get_all_shortest_paths(sampled_vertex)
+    shortest_path_lengths = frozenset(map(lambda x : len(x) - 1, shortest_paths)) 
     diam = max(shortest_path_lengths)
-    diam += max(shortest_path_lengths - set([diam]))
+    diam += max(shortest_path_lengths - frozenset([diam]))
     end_time = time.process_time()
     elapsed_time = end_time - start_time
 
     logging.info("Diameter approximation is %d, computed in %f seconds", diam, elapsed_time)
     graph["approx_diam"] = diam
     graph["approx_diam_time"] = elapsed_time
+
+    # If required, sample a path among the shortest paths. Useful to minimally
+    # speed up betweenness computation 
+    # TODO Test if it actually speeds things up
+    if sample_path:
+        graph["sampled_path"] = random.sample(shortest_paths[1:], 1)[0]
+
     return (elapsed_time, diam)
 
 def main():
@@ -68,6 +79,7 @@ def main():
     G = util.read_graph(args.graph)
 
     # Check if graph is directed and act accordingly
+    # XXX We probably shouldn't do this!
     was_directed = False
     if G.is_directed():
         logging.warning("Graph is directed, converting it to undirected")

@@ -43,10 +43,15 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
     # Seed the random number generator
     random.seed()
     betw = [0] * graph.vcount()
+    sampled_path = False
     start_time = time.process_time()
     # Use desired diameter
     if int(use_approx_diameter) == 1: # Use approximate diameter
-        diameter_approx.diameter(graph)
+        diameter_approx.diameter(graph, sample_path=True)
+        sampled_path = True
+        # Update betweenness counters for vertices internal of the sampled path
+        for vertex in graph["sampled_path"][1:-1]:
+                betw[vertex] += 1
         # Compute VC-dimension upper bound using the approximate diameter
         vcdim_upp_bound = math.floor(math.log2(graph["approx_diam"] - 1))
     elif int(use_approx_diameter) == 0: # Use exact diameter
@@ -63,6 +68,9 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
         logging.critical("got negative diameter explicitly passed. Exiting")
         sys.exit(2)
     sample_size = get_sample_size(epsilon, delta, vcdim_upp_bound)
+    # Adjust if we got a sample while computing the approximate diameter
+    if sampled_path:
+        sample_size -= 1
     for i in range(sample_size):
         # Sample a pair of different vertices uniformly at random
         sampled_pair = random.sample(range(graph.vcount()), 2)
@@ -74,8 +82,8 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True, set_attributes=
         if shortest_paths:
             # Sample a shortest path uniformly at random
             sampled_path = random.sample(shortest_paths, 1)[0]
-            # Update betweenness counters for vertices on the sampled path
-            for vertex in sampled_path:
+            # Update betweenness counters for vertices internal of the sampled path
+            for vertex in sampled_path[1:-1]:
                 betw[vertex] += 1
     end_time = time.process_time()
     elapsed_time = end_time - start_time
