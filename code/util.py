@@ -20,20 +20,20 @@ def random_shortest_path(graph, source, destination):
     
     """
     # base case
-    if graph.vs[destination]["preds"] == [graph.vs[source]]:
+    if graph.vs[destination]["preds"] == [source]:
         return [source]
     # recursion step
     # Create balls to put in urn to choose predecessor
     balls = [0] * graph.vs[destination]["paths"]
     ball_index = 0
     for pred in graph.vs[destination]["preds"]:
-        for i in range(pred["paths"]):
-            balls[ball_index] = pred.index
+        for i in range(graph.vs[pred]["paths"]):
+            balls[ball_index] = pred
             ball_index += 1
     # Draw a random ball to choose a predecessor to follow
-    pred_index = random.sample(balls, 1)[0]
+    sampled_pred = random.sample(balls, 1)[0]
     # Compute predecessor shortest path 
-    pred_sp = random_shortest_path(graph, source, pred_index)
+    pred_sp = random_shortest_path(graph, source, sampled_pred)
 
     return pred_sp.append(destination)
 
@@ -48,13 +48,13 @@ def get_all_shortest_paths(graph, source, destination):
 
     """
     # base case
-    if graph.vs[destination]["preds"] == [graph.vs[source]]:
+    if graph.vs[destination]["preds"] == [source]:
         return [[source]]
     # recursion step
     shortest_paths = [[]] * graph.vs[destination]["paths"]
     path_index = 0
     for pred in graph.vs[destination]["preds"]:
-        pred_shortest_paths = get_all_shortest_paths(graph, source, graph.vs[pred].index)
+        pred_shortest_paths = get_all_shortest_paths(graph, source, pred)
         for path in pred_shortest_paths:
             shortest_paths[path_index] = path.append(destination)
             path_index += 1
@@ -77,7 +77,7 @@ def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=Non
     """  
     # Initialization
     # list of predecessors
-    graph.vs["preds"] = [] * graph.vcount()
+    graph.vs["preds"] = [[]] * graph.vcount()
     # number of shortest paths through this node
     graph.vs["paths"] = [0] * graph.vcount ()
     graph.vs[source]["paths"] = 1
@@ -100,31 +100,33 @@ def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=Non
             assert len(weights) == graph.ecount()
             _weights = weights
 
-    heapq.heappush(distance_heap, (graph.vs[source]["dist"], graph.vs[source]))
+    heapq.heappush(distance_heap, (graph.vs[source]["dist"], source))
 
     # Shortest paths computation 
     while distance_heap:
-        vertex = heapq.heappop(distance_heap)[0]
+        vertex_index = heapq.heappop(distance_heap)[1]
+        vertex = graph.vs[vertex_index]
         # It is only when we pop the destination from the heap that we can be
         # sure that all the predecessor of destination have been examined.
-        if vertex.index == destination:
+        if vertex_index == destination:
             break
-        vertices_stack.append(vertex)
-        for neighbor in graph.neighbors(vertex):
+        vertices_stack.append(vertex_index)
+        for neighbor_index in graph.neighbors(vertex):
             # Relax
-            distance_from_vertex = _weights[graph.eid(vertex, neighbor)]
+            neighbor = graph.vs[neighbor_index]
+            distance_from_vertex = _weights[graph.get_eid(vertex_index, neighbor_index)]
             # Is it the first time we see neighbor?
             if neighbor["dist"] == -1:
                 # Update distance of neighbor from source
                 neighbor["dist"] = vertex["dist"] + distance_from_vertex
                 # Push neighbor to distance_heap
-                heapq.heappush(distance_heap, (neighbor["dist"], neighbor))
+                heapq.heappush(distance_heap, (neighbor["dist"], neighbor_index))
             # shortest path to neighbor via vertex?
             if neighbor["dist"] == vertex["dist"] + distance_from_vertex:
                 # Update number of paths from source to neighbor
                 neighbor["paths"] += vertex["paths"]
                 # Add vertex to the predecessors of neighbor
-                neighbor["preds"].append(vertex)
+                neighbor["preds"].append(vertex_index)
     # Return the stack of vertices
     return vertices_stack
   
