@@ -1,8 +1,10 @@
 We are going to implement our code in Python3.3.1, using the igraph library
 (http://igraph.sourceforge.net)
 
-Download graph data from snap.stanford.edu/data (Matteo should already have them
-somewhere on his laptop)
+Download graph data from http://snap.stanford.edu/data and
+http://law.di.unimi.it/datasets.php
+Another dataset that looks interesting is the US patent data. Look in the ALENEX
+paper.
 
 Convert graphs to igraph format
 
