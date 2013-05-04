@@ -64,8 +64,8 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     logging.info("Betweenness computation complete, took %s seconds",
             elapsed_time)
 
-    # Denormalize betweenness counters by n / k
-    normalization = graph.vcount() / sample_size 
+    # Denormalize betweenness counters by 2n
+    normalization = 2 * graph.vcount() 
     betw = list(map(lambda x : x * normalization, betw))
 
     # Write attributes to graph, if specified
