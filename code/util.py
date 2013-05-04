@@ -5,10 +5,62 @@ Various useful functions.
 import argparse
 import heapq
 import logging
+import random
 import sys
 import igraph as ig
 
-def get_all_shortest_paths_dijkstra(graph, source, to=None, weights=None):
+def random_shortest_path(graph, source, destination):
+    """Return a random shortest path between source and destination.
+
+    This function assumes that compute_shortest_paths_dijkstra has been called
+    with the same source most recently.
+
+    The returned shortest path is chosen uniformly at random among all those
+    between source and destination.
+    
+    """
+    # base case
+    if graph.vs[destination]["preds"] == [graph.vs[source]]:
+        return [source]
+    # recursion step
+    # Create balls to put in urn to choose predecessor
+    balls = [0] * graph.vs[destination]["paths"]
+    ball_index = 0
+    for pred in graph.vs[destination]["preds"]:
+        for i in range(pred["paths"]):
+            balls[ball_index] = pred.index
+            ball_index += 1
+    # Draw a random ball to choose a predecessor to follow
+    pred_index = random.sample(balls, 1)[0]
+    # Compute predecessor shortest path 
+    pred_sp = sample_random_shortest_path(graph, source, pred_index)
+
+    return pred_sp.append(destination)
+
+def get_all_shortest_paths(graph, source, destination):
+    """Return all shortest paths between source and destination.
+    
+    This function assumes that compute_shortest_paths_dijkstra has been called
+    with the same source most recently.
+
+    Return a list of lists of vertex indexes, each list represents a path
+    between source and destination.
+
+    """
+    # base case
+    if graph.vs[destination]["preds"] == [graph.vs[source]]:
+        return [[source]]
+    # recursion step
+    shortest_paths = [[]] * graph.vs[destination]["paths"]
+    path_index = 0
+    for pred in graph.vs[destination]["preds"]:
+        pred_shortest_paths = get_all_shortest_paths(graph, source, graph.vs[pred].index)
+        for path in pred_shortest_paths:
+            shortest_paths[path_index] = path.append(destination)
+            path_index += 1
+    return shortest_paths
+
+def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=None):
     """Compute all shortest paths from a given source in the graph.
     
     Compute the shortest paths from source to all vertices in the graph or, if
@@ -16,8 +68,13 @@ def get_all_shortest_paths_dijkstra(graph, source, to=None, weights=None):
     a list or the name of an edge attribute holding edge weights. If None, all
     edges are assumed to have unitary weight.
 
+    The shortest paths between source and another vertex can be retrieved by
+    walking back from 
+
     Return a list of vertices sorted by non-increasing distance from the
     source.
+
+    TODO: Implement destination handling
     """  
     # Initialization
     # list of predecessors
