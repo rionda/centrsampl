@@ -74,7 +74,6 @@ def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=Non
     Return a list of vertices sorted by non-increasing distance from the
     source.
 
-    TODO: Implement destination handling
     """  
     # Initialization
     # list of predecessors
@@ -105,7 +104,11 @@ def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=Non
 
     # Shortest paths computation 
     while distance_heap:
-        vertex = heapq.heappop(distance_heap)
+        vertex = heapq.heappop(distance_heap)[0]
+        # It is only when we pop the destination from the heap that we can be
+        # sure that all the predecessor of destination have been examined.
+        if vertex.index == destination:
+            break
         vertices_stack.append(vertex)
         for neighbor in graph.neighbors(vertex):
             # Relax
@@ -120,7 +123,7 @@ def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=Non
             if neighbor["dist"] == vertex["dist"] + distance_from_vertex:
                 # Update number of paths from source to neighbor
                 neighbor["paths"] += vertex["paths"]
-                # Add vertex to the predecessors of neightbor
+                # Add vertex to the predecessors of neighbor
                 neighbor["preds"].append(vertex)
     # Return the stack of vertices
     return vertices_stack
