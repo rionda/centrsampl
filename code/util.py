@@ -33,7 +33,7 @@ def random_shortest_path(graph, source, destination):
     # Draw a random ball to choose a predecessor to follow
     pred_index = random.sample(balls, 1)[0]
     # Compute predecessor shortest path 
-    pred_sp = sample_random_shortest_path(graph, source, pred_index)
+    pred_sp = random_shortest_path(graph, source, pred_index)
 
     return pred_sp.append(destination)
 
