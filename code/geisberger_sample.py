@@ -1,4 +1,3 @@
- 
 #! /usr/bin/env python3
 """geisberger_sample.py
 
@@ -23,7 +22,7 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     
     Compute approximations of the betweenness centrality of all the vertices in
     the graph using the algorithm by Robert Geisberger, Peter Sanders, Dominik
-    Schultes, and the time needed to compute them. For the algorihm, see
+    Schultes, and the time needed to compute them. For the algorithm, see
     http://www.siam.org/proceedings/alenex/2008/alx08_09geisbergerr.pdf .
 
     Return a tuple with the time needed to compute the betweenness and the list
@@ -35,8 +34,6 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     # We do not use logging from here to the end of the computation to avoid
     # wasting time
     logging.info("Computing betweenness")
-    # Seed the random number generator
-    random.seed()
     betw = [0] * graph.vcount()
     start_time = time.process_time()
     sample_size = get_sample_size(epsilon, delta, graph.vcount())
@@ -110,6 +107,9 @@ def main():
 
     # Set the desired level of logging
     util.set_verbosity(args.verbose)
+
+    # Seed the random number generator
+    random.seed()
 
     # Read graph
     G = util.read_graph(args.graph)

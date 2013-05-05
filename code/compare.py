@@ -8,6 +8,7 @@ import argparse
 import itertools
 import logging
 import math
+import random
 
 import util
 import brandes_exact
@@ -41,6 +42,9 @@ def main():
 
     # Set the desired level of logging
     util.set_verbosity(args.verbose)
+
+    # Seed the random number generator
+    random.seed()
 
     # Read graph
     G = util.read_graph(args.graph)
