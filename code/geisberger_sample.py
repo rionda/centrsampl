@@ -13,12 +13,13 @@ import itertools
 import logging
 import math
 import random
+import sys
 import time
 
 import util
 
-def betweenness(graph, epsilon, delta, set_attributes=True):
-    """Compute approx. betweenness using Geisber et al.'s algorithm.
+def betweenness(graph, epsilon, delta, scaling="bisection", set_attributes=True):
+    """Compute approx. betweenness using Geisberger et al.'s algorithm.
     
     Compute approximations of the betweenness centrality of all the vertices in
     the graph using the algorithm by Robert Geisberger, Peter Sanders, Dominik
@@ -31,13 +32,22 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     as vertex attributes, and the time as a graph attribute.
     
     """
+    if scaling == "bisection":
+        scaling_function = lambda x : int(x >= 0.5)
+    elif scaling == "linear":
+        scaling_function = lambda x : x 
+    else:
+        logging.critical("Invalid scaling specification: %s", scaling)
+        sys.exit(2)
     # We do not use logging from here to the end of the computation to avoid
     # wasting time
-    logging.info("Computing betweenness")
+    logging.info("Computing approximate betweenness using Geisberger et al.")
     betw = [0] * graph.vcount()
     start_time = time.process_time()
     sample_size = get_sample_size(epsilon, delta, graph.vcount())
     for i in range(sample_size):
+        # Flip coin to decide whether we go backwards or forward
+        backwards = random.randrange(2)
         # Sample a source vertex uniformly at random
         sampled_vertex = random.randrange(graph.vcount())
         # get_all_shortest_paths returns a list of shortest paths
@@ -47,16 +57,20 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
         grouped_shortest_paths = itertools.groupby(shortest_paths, lambda x : x[-1])
         for destination, group in grouped_shortest_paths:
             paths = list(group)
-            # addend: 1 / number of shortest paths between source and destination
-            addend = 1 / len(paths)           
             for path in paths:
                 # Update betweenness counters for vertices internal to the path
                 path_len = len(path) - 1
                 for index in range(1, path_len):
                     vertex = path[index]
+                    # Compute l(Q) / l(P) (see original paper)
                     ratio = index  / path_len
-                    if ratio >= 0.5:
-                         betw[vertex] += addend
+                    # Compute f(x) (see original paper)
+                    scal = scaling_function(ratio)
+                    # Contribution is different depending on the direction
+                    if backwards:
+                        betw[vertex] += (1 - scal) / len(paths)
+                    else:
+                        betw[vertex] += scal /  len(paths)
     end_time = time.process_time()
     elapsed_time = end_time - start_time
     logging.info("Betweenness computation complete, took %s seconds",
@@ -99,6 +113,8 @@ def main():
             help="confidence parameter")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
+    parser.add_argument("-s", "--scaling", choices=["bisection", "linear"],
+            default="bisection", help="use specified function")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
             help="store the approximate betweenness as an attribute of each vertex the graph and the computation time as attribute of the graph, and write these to the graph file")
@@ -115,7 +131,7 @@ def main():
     G = util.read_graph(args.graph)
 
     # Compute betweenness
-    (elapsed_time, betw) = betweenness(G, args.epsilon, args.delta, True)
+    (elapsed_time, betw) = betweenness(G, args.epsilon, args.delta, args.scaling, True)
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file
