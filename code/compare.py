@@ -30,11 +30,9 @@ def main():
             help="use exact diameter when computing approximation of betweenness using VC-Dimension (default)")
     parser.add_argument("-f", "--force", action="store_true", default=False,
             help="Force recomputation of all betweenness values, exact and approximate.")
-    group2 = parser.add_mutually_exclusive_group()
-    group2.add_argument("-i", "--igraph", action="store_true",
-            default=True, help="use igraph algorithm (default)")
-    group2.add_argument("-n", "--noigraph", action="store_true", default=False,
-            help="use homegrown algorithm")
+    parser.add_argument("-i", "--implementation", choices=["igraph",
+        "homegrown"], default="igraph", 
+        help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
     help="write the betweenness and the time taken to compute them (if needed) back to file")
@@ -53,14 +51,17 @@ def main():
     # wrong ones, (re-)compute them
     logging.info("Recomputing betweenness if needed")
     if args.force or not "betw_time" in G.attributes():
-        brandes_exact.betweenness(G, not args.noigraph, True)
+        brandes_exact.betweenness(G, args.implementation, True)
     if args.force or not "vc_betw_time" in G.attributes() or G["vc_eps"] != args.epsilon or G["vc_delta"] != args.delta:
         if args.diameter > 0:
-            vc_sample.betweenness(G, args.epsilon, args.delta, args.diameter, True)
+            vc_sample.betweenness(G, args.epsilon, args.delta, args.diameter,
+                    args.implementation, True)
         else:
-            vc_sample.betweenness(G, args.epsilon, args.delta, args.approximate, True)
+            vc_sample.betweenness(G, args.epsilon, args.delta,
+                    args.approximate, args.implementation, True)
     if args.force or not "bp_betw_time" in G.attributes() or G["bp_eps"] != args.epsilon or G["bp_delta"] != args.delta:
-        brandespich_sample.betweenness(G, args.epsilon, args.delta, True)
+        brandespich_sample.betweenness(G, args.epsilon, args.delta,
+                args.implementation, True)
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file
