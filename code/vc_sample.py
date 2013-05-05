@@ -74,24 +74,26 @@ def betweenness_homegrown(graph, epsilon, delta, use_approx_diameter=True,
         # Sample a pair of different vertices uniformly at random
         (source, destination) = random.sample(range(graph.vcount()), 2)
         # Compute all shortest paths between sampled vertices
-        util.compute_shortest_paths_dijkstra(graph, source, destination)
-        # Walk backwards from the destination, sampling a shortest path at
-        # random and updating the betweenness of vertices along this path
-        vertex = destination
-        while True:
-            if len(graph.vs[vertex]["preds"]) > 1:
-                # Recipe for weighted sampling from Python API docs for random
-                weighted_choices = [(x, graph.vs[x]["paths"]) for x in
-                        graph.vs[vertex]["preds"]]
-                population = [val for val, cnt in weighted_choices for i in range(cnt)]
-                sampled_pred = random.choice(population)
-            else:
-                sampled_pred = graph.vs[vertex]["preds"][0]
-            # Update betweenness counter of internal node
-            if sampled_pred != source:
-                betw[sampled_pred] += 1
-            else:
-                break
+        reached_vertices = util.compute_shortest_paths_dijkstra(graph, source, destination)
+        # If there is a path between the source and the destination, walk
+        # backwards from the destination, sampling a shortest path at random and
+        # updating the betweenness of vertices along this path
+        if destination in reached_vertices:
+            vertex = destination
+            while True:
+                if len(graph.vs[vertex]["preds"]) > 1:
+                    # Recipe for weighted sampling from Python API docs for random
+                    weighted_choices = [(x, graph.vs[x]["paths"]) for x in
+                            graph.vs[vertex]["preds"]]
+                    population = [val for val, cnt in weighted_choices for i in range(cnt)]
+                    sampled_pred = random.choice(population)
+                else:
+                    sampled_pred = graph.vs[vertex]["preds"][0]
+                # Update betweenness counter of internal node
+                if sampled_pred != source:
+                    betw[sampled_pred] += 1
+                else:
+                    break
     end_time = time.process_time()
     elapsed_time = end_time - start_time
     logging.info("Betweenness computation complete, took %s seconds",
