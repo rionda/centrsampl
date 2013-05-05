@@ -112,7 +112,7 @@ def compute_shortest_paths_dijkstra(graph, source, destination=None, weights=Non
         if vertex_index == destination:
             break
         vertices_stack.append(vertex_index)
-        for neighbor_index in graph.neighbors(vertex):
+        for neighbor_index in graph.neighbors(vertex, ig.OUT):
             # Relax
             neighbor = graph.vs[neighbor_index]
             distance_from_vertex = _weights[graph.get_eid(vertex_index, neighbor_index)]
