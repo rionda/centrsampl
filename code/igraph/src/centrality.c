@@ -31,6 +31,7 @@
 #include "igraph_random.h"
 #include "igraph_adjlist.h"
 #include "igraph_interface.h"
+#include "igraph_paths.h"
 #include "igraph_progress.h"
 #include "igraph_interrupt_internal.h"
 #include "igraph_topology.h"
@@ -1444,71 +1445,23 @@ int igraph_personalized_pagerank(const igraph_t *graph, igraph_vector_t *vector,
   return 0;
 }
 
-/**
- * \ingroup structural
- * \function igraph_betweenness
- * \brief Betweenness centrality of some vertices.
- * 
- * </para><para>
- * The betweenness centrality of a vertex is the number of geodesics
- * going through it. If there are more than one geodesic between two
- * vertices, the value of these geodesics are weighted by one over the 
- * number of geodesics.
- * \param graph The graph object.
- * \param res The result of the computation, a vector containing the
- *        betweenness scores for the specified vertices.
- * \param vids The vertices of which the betweenness centrality scores
- *        will be calculated.
- * \param directed Logical, if true directed paths will be considered
- *        for directed graphs. It is ignored for undirected graphs.
- * \param weights An optional vector containing edge weights for 
- *        calculating weighted betweenness. Supply a null pointer here
- *        for unweighted betweenness.
- * \param nobigint Logical, if true, then we don't use big integers
- *        for the calculation, setting this to 1 (=true) should
- *        work for most graphs. It is currently ignored for weighted
- *        graphs.
- * \return Error code:
- *        \c IGRAPH_ENOMEM, not enough memory for
- *        temporary data. 
- *        \c IGRAPH_EINVVID, invalid vertex id passed in
- *        \p vids. 
- *
- * Time complexity: O(|V||E|),
- * |V| and 
- * |E| are the number of vertices and
- * edges in the graph. 
- * Note that the time complexity is independent of the number of
- * vertices for which the score is calculated.
- *
- * \sa Other centrality types: \ref igraph_degree(), \ref igraph_closeness().
- *     See \ref igraph_edge_betweenness() for calculating the betweenness score
- *     of the edges in a graph. See \ref igraph_betweenness_estimate() to
- *     estimate the betweenness score of the vertices in a graph.
- * 
- * \example examples/simple/igraph_betweenness.c
- */
-int igraph_betweenness(const igraph_t *graph, igraph_vector_t *res,
-		       const igraph_vs_t vids, igraph_bool_t directed, 
-		       const igraph_vector_t* weights, igraph_bool_t nobigint) {
-  return igraph_betweenness_estimate(graph, res, vids, directed, -1, weights,
-				     nobigint);
-}
-
 int igraph_i_betweenness_estimate_weighted(const igraph_t *graph, 
 					 igraph_vector_t *res, 
+           igraph_integer_t no_of_samples,
 					 const igraph_vs_t vids, 
 					 igraph_bool_t directed,
 					 igraph_real_t cutoff, 
 					 const igraph_vector_t *weights, 
 					 igraph_bool_t nobigint) {
 
+  igraph_rng_t *rng=NULL;
+  igraph_bool_t do_sample=0;
   long int no_of_nodes=igraph_vcount(graph);
   long int no_of_edges=igraph_ecount(graph);
   igraph_2wheap_t Q;
   igraph_inclist_t inclist;
   igraph_adjlist_t fathers;
-  long int source, j;
+  long int vertex_index, source, j;
   igraph_stack_t S;
   igraph_integer_t mode= directed ? IGRAPH_OUT : IGRAPH_ALL;
   igraph_vector_t dist, nrgeo, tmpscore;
@@ -1520,6 +1473,16 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
   }
   if (igraph_vector_min(weights) <= 0) {
     IGRAPH_ERROR("Weight vector must be positive", IGRAPH_EINVAL);
+  }
+
+  if (no_of_samples == -1) {
+    no_of_samples = no_of_nodes;
+  } else if (no_of_samples < -1 || no_of_samples == 0) {
+    IGRAPH_ERROR("Number of samples must be positive or -1 (for no sampling)",
+        IGRAPH_EINVAL);
+  } else {
+    do_sample=1;
+    rng=igraph_rng_default();
   }
 
   IGRAPH_CHECK(igraph_2wheap_init(&Q, no_of_nodes));
@@ -1543,9 +1506,15 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
     IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
   }
 
-  for (source=0; source<no_of_nodes; source++) {
-    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*source/no_of_nodes, 0);
+  for (vertex_index=0; vertex_index<no_of_samples; vertex_index++) {
+    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*vertex_index/no_of_samples, 0);
     IGRAPH_ALLOW_INTERRUPTION();
+
+    if (do_sample) {
+      source = igraph_rng_get_integer(rng, 0, no_of_nodes -1);
+    } else {
+      source = vertex_index;
+    }
 
     igraph_2wheap_push_with_index(&Q, source, 0);
     VECTOR(dist)[source]=1.0;
@@ -1612,7 +1581,7 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
       igraph_vector_clear(igraph_adjlist_get(&fathers, w));
     }
     
-  } /* source < no_of_nodes */
+  } /* vertex_index < no_of_samples */
 
   if (!igraph_vs_is_all(&vids)) {
     IGRAPH_CHECK(igraph_vit_create(graph, vids, &vit));
@@ -1632,6 +1601,9 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
     IGRAPH_FINALLY_CLEAN(2);
   }
 
+  /* I don't really understand why they divide the betweenness by 2 if the graph
+   * is undirected. I never saw such definition. Matteo
+   */
   if (!directed || !igraph_is_directed(graph)) {
     for (j=0; j<no_of_nodes; j++) {
       VECTOR(*res)[j] /= 2.0;
@@ -1661,60 +1633,13 @@ void igraph_i_destroy_biguints(igraph_biguint_t *p) {
   igraph_Free(p2);
 }
 
-/**
- * \ingroup structural
- * \function igraph_betweenness_estimate
- * \brief Estimated betweenness centrality of some vertices.
- * 
- * </para><para>
- * The betweenness centrality of a vertex is the number of geodesics
- * going through it. If there are more than one geodesic between two
- * vertices, the value of these geodesics are weighted by one over the 
- * number of geodesics. When estimating betweenness centrality, igraph
- * takes into consideration only those paths that are shorter than or
- * equal to a prescribed length. Note that the estimated centrality
- * will always be less than the real one.
- *
- * \param graph The graph object.
- * \param res The result of the computation, a vector containing the
- *        estimated betweenness scores for the specified vertices.
- * \param vids The vertices of which the betweenness centrality scores
- *        will be estimated.
- * \param directed Logical, if true directed paths will be considered
- *        for directed graphs. It is ignored for undirected graphs.
- * \param cutoff The maximal length of paths that will be considered.
- *        If zero or negative, the exact betweenness will be calculated
- *        (no upper limit on path lengths).
- * \param weights An optional vector containing edge weights for 
- *        calculating weighted betweenness. Supply a null pointer here
- *        for unweighted betweenness.
- * \param nobigint Logical, if true, then we don't use big integers
- *        for the calculation, setting this to 1 (=true) should
- *        work for most graphs. It is currently ignored for weighted
- *        graphs.
- * \return Error code:
- *        \c IGRAPH_ENOMEM, not enough memory for
- *        temporary data. 
- *        \c IGRAPH_EINVVID, invalid vertex id passed in
- *        \p vids. 
- *
- * Time complexity: O(|V||E|),
- * |V| and 
- * |E| are the number of vertices and
- * edges in the graph. 
- * Note that the time complexity is independent of the number of
- * vertices for which the score is calculated.
- *
- * \sa Other centrality types: \ref igraph_degree(), \ref igraph_closeness().
- *     See \ref igraph_edge_betweenness() for calculating the betweenness score
- *     of the edges in a graph.
- */
-int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res, 
-				const igraph_vs_t vids, igraph_bool_t directed,
-				igraph_real_t cutoff, 
-				const igraph_vector_t *weights, 
-				igraph_bool_t nobigint) {
+int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res, 
+        igraph_integer_t no_of_samples, const igraph_vs_t vids, 
+        igraph_bool_t directed, igraph_real_t cutoff, 
+        const igraph_vector_t *weights, igraph_bool_t nobigint) {
 
+  igraph_rng_t *rng=NULL;
+  igraph_bool_t do_sample=0;
   long int no_of_nodes=igraph_vcount(graph);
   igraph_dqueue_t q=IGRAPH_DQUEUE_NULL;
   long int *distance;
@@ -1723,7 +1648,7 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
   igraph_biguint_t *big_nrgeo=0;
   double *tmpscore;
   igraph_stack_t stack=IGRAPH_STACK_NULL;
-  long int source;
+  long int vertex_index;
   long int j, k, nneis;
   igraph_vector_t *neis;
   igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
@@ -1735,7 +1660,7 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
   igraph_biguint_t D, R, T;
 
   if (weights) { 
-    return igraph_i_betweenness_estimate_weighted(graph, res, vids, directed,
+    return igraph_i_betweenness_estimate_weighted(graph, res, no_of_samples, vids, directed,
 						cutoff, weights, nobigint);
   }
 
@@ -1798,21 +1723,39 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
     IGRAPH_CHECK(igraph_biguint_init(&T));
     IGRAPH_FINALLY(igraph_biguint_destroy, &T);
   }
+
   tmpscore=igraph_Calloc(no_of_nodes, double);
   if (tmpscore==0) {
     IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
   }
   IGRAPH_FINALLY(igraph_free, tmpscore);
 
+
   IGRAPH_DQUEUE_INIT_FINALLY(&q, 100);
   igraph_stack_init(&stack, no_of_nodes);
   IGRAPH_FINALLY(igraph_stack_destroy, &stack);
     
   /* here we go */
+  if (no_of_samples == -1) {
+    no_of_samples = no_of_nodes;
+  } else if (no_of_samples < -1 || no_of_samples == 0) {
+    IGRAPH_ERROR("Number of samples must be positive or -1 (for no sampling)",
+        IGRAPH_EINVAL);
+  } else {
+    do_sample=1;
+    rng=igraph_rng_default();
+  }
   
-  for (source=0; source<no_of_nodes; source++) {
-    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*source/no_of_nodes, 0);
+  for (vertex_index=0; vertex_index<no_of_samples; vertex_index++) {
+    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*vertex_index/no_of_samples, 0);
     IGRAPH_ALLOW_INTERRUPTION();
+
+    long int source;
+    if (do_sample) {
+      source = igraph_rng_get_integer(rng, 0, no_of_nodes - 1);
+    } else {
+      source = vertex_index;
+    }
 
     IGRAPH_CHECK(igraph_dqueue_push(&q, source));
     if (nobigint) { 
@@ -1824,6 +1767,8 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
     
     while (!igraph_dqueue_empty(&q)) {
       long int actnode=igraph_dqueue_pop(&q);
+
+
       IGRAPH_CHECK(igraph_stack_push(&stack, actnode));
 
       if (cutoff >= 0 && distance[actnode] >= cutoff+1) { continue; }
@@ -1833,26 +1778,26 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
       for (j=0; j<nneis; j++) {
         long int neighbor=VECTOR(*neis)[j];
         if (distance[neighbor]==0) {
-	  distance[neighbor]=distance[actnode]+1;
-	  IGRAPH_CHECK(igraph_dqueue_push(&q, neighbor));
-	} 
-	if (distance[neighbor]==distance[actnode]+1) {
-	  igraph_vector_t *v=igraph_adjlist_get(adjlist_in_p, neighbor);
-	  igraph_vector_push_back(v, actnode);
-	  if (nobigint) { 
-	    nrgeo[neighbor]+=nrgeo[actnode];
-	  } else {
-	    IGRAPH_CHECK(igraph_biguint_add(&big_nrgeo[neighbor],
-					    &big_nrgeo[neighbor], 
-					    &big_nrgeo[actnode]));
-	  }
-	}
-      }
+          distance[neighbor]=distance[actnode]+1;
+          IGRAPH_CHECK(igraph_dqueue_push(&q, neighbor));
+        } 
+        if (distance[neighbor]==distance[actnode]+1) {
+          igraph_vector_t *v=igraph_adjlist_get(adjlist_in_p, neighbor);
+          igraph_vector_push_back(v, actnode);
+          if (nobigint) { 
+            nrgeo[neighbor]+=nrgeo[actnode];
+          } else {
+            IGRAPH_CHECK(igraph_biguint_add(&big_nrgeo[neighbor],
+                  &big_nrgeo[neighbor], &big_nrgeo[actnode]));
+          }
+        }
+      } /* for j < nneis */
     } /* while !igraph_dqueue_empty */
     
     /* Ok, we've the distance of each node and also the number of
        shortest paths to them. Now we do an inverse search, starting
        with the farthest nodes. */
+     
     while (!igraph_stack_empty(&stack)) {
       long int actnode=igraph_stack_pop(&stack);
       neis = igraph_adjlist_get(adjlist_in_p, actnode);
@@ -1889,7 +1834,7 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
       igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, actnode));      
     }
 
-  } /* for source < no_of_nodes */
+  } /* for vertex_index < no_of_samples */
 
   IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
 
@@ -1926,8 +1871,10 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
     igraph_vector_destroy(tmpres);
     IGRAPH_FINALLY_CLEAN(2);
   }     
-
+  
+  /* I still think this makes no sense. Matteo */
   /* divide by 2 for undirected graph */
+  
   if (!directed) {
     nneis=igraph_vector_size(res);
     for (j=0; j<nneis; j++) {
@@ -1940,6 +1887,784 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
   IGRAPH_FINALLY_CLEAN(2);
 
   return 0;
+}
+
+/**
+ * \ingroup structural
+ * \function igraph_betweenness
+ * \brief Betweenness centrality of some vertices.
+ * 
+ * </para><para>
+ * The betweenness centrality of a vertex is the number of geodesics
+ * going through it. If there are more than one geodesic between two
+ * vertices, the value of these geodesics are weighted by one over the 
+ * number of geodesics.
+ * \param graph The graph object.
+ * \param res The result of the computation, a vector containing the
+ *        betweenness scores for the specified vertices.
+ * \param vids The vertices of which the betweenness centrality scores
+ *        will be calculated.
+ * \param directed Logical, if true directed paths will be considered
+ *        for directed graphs. It is ignored for undirected graphs.
+ * \param weights An optional vector containing edge weights for 
+ *        calculating weighted betweenness. Supply a null pointer here
+ *        for unweighted betweenness.
+ * \param nobigint Logical, if true, then we don't use big integers
+ *        for the calculation, setting this to 1 (=true) should
+ *        work for most graphs. It is currently ignored for weighted
+ *        graphs.
+ * \return Error code:
+ *        \c IGRAPH_ENOMEM, not enough memory for
+ *        temporary data. 
+ *        \c IGRAPH_EINVVID, invalid vertex id passed in
+ *        \p vids. 
+ *
+ * Time complexity: O(|V||E|),
+ * |V| and 
+ * |E| are the number of vertices and
+ * edges in the graph. 
+ * Note that the time complexity is independent of the number of
+ * vertices for which the score is calculated.
+ *
+ * \sa Other centrality types: \ref igraph_degree(), \ref igraph_closeness().
+ *     See \ref igraph_edge_betweenness() for calculating the betweenness score
+ *     of the edges in a graph. See \ref igraph_betweenness_estimate() to
+ *     estimate the betweenness score of the vertices in a graph.
+ * 
+ * \example examples/simple/igraph_betweenness.c
+ */
+int igraph_betweenness(const igraph_t *graph, igraph_vector_t *res,
+		       const igraph_vs_t vids, igraph_bool_t directed, 
+		       const igraph_vector_t* weights, igraph_bool_t nobigint) {
+  return igraph_i_betweenness_estimate(graph, res, -1, vids, directed, -1, weights, nobigint);
+}
+
+/**
+ * \ingroup structural
+ * \function igraph_betweenness_sample_bp
+ * \brief Approximate betweenness centrality of some vertices using Brandes and Pich algorithm.
+ * 
+ * </para><para>
+ * TODO
+ */
+int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
+           igraph_real_t epsilon, igraph_real_t delta, const igraph_vs_t vids,
+           igraph_bool_t directed, igraph_real_t cutoff, 
+           const igraph_vector_t* weights, igraph_bool_t nobigint) {
+  int j, return_code;
+  igraph_integer_t no_of_samples;
+  long int no_of_nodes=igraph_vcount(graph);
+  double normalization_factor;
+  /* Check values of epsilon and delta */
+  if (delta >= 1.0 || delta <= 0.0) {
+    IGRAPH_ERROR("delta must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
+  }
+  if (epsilon >= 1.0 || epsilon <= 0.0) {
+    IGRAPH_ERROR("epsilon must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
+  }
+  /* Compute sample size */
+  no_of_samples=(igraph_integer_t) ceil((2 * pow((no_of_nodes - 2) / (epsilon * (no_of_nodes - 1)), 2) * log(2 * no_of_nodes / delta)));
+  /* Denormalize betweenness counters by n / k */
+  normalization_factor =  ((double) no_of_nodes) / no_of_samples;
+  return_code = igraph_i_betweenness_estimate(graph, res, no_of_samples, vids, directed, cutoff, weights, nobigint);
+  for (j=0; j<no_of_nodes; j++) {
+    VECTOR(*res)[j] *= normalization_factor;
+  }
+  return return_code;
+}
+
+int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector_t *res,
+           igraph_integer_t no_of_samples, const igraph_vs_t vids,
+           igraph_bool_t directed, igraph_real_t cutoff, 
+           const igraph_vector_t* weights, igraph_bool_t nobigint) {
+
+  igraph_rng_t *rng=igraph_rng_default();
+  long int no_of_nodes=igraph_vcount(graph);
+  long int no_of_edges=igraph_ecount(graph);
+  igraph_inclist_t inclist;
+  igraph_adjlist_t fathers;
+  long int vertex_index, j;
+  /* igraph_stack_t S; */
+  igraph_integer_t mode= directed ? IGRAPH_OUT : IGRAPH_ALL;
+  igraph_vector_t dist, nrgeo; //, tmpscore;
+  igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
+  igraph_vit_t vit;
+  
+  if (igraph_vector_size(weights) != no_of_edges) {
+    IGRAPH_ERROR("Weight vector length does not match", IGRAPH_EINVAL);
+  }
+  if (igraph_vector_min(weights) <= 0) {
+    IGRAPH_ERROR("Weight vector must be positive", IGRAPH_EINVAL);
+  }
+
+  if (no_of_samples < 1) {
+    IGRAPH_ERROR("Number of samples must be positive",
+        IGRAPH_EINVAL);
+  }
+
+  IGRAPH_CHECK(igraph_inclist_init(graph, &inclist, mode));  
+  IGRAPH_FINALLY(igraph_inclist_destroy, &inclist);
+  
+  IGRAPH_CHECK(igraph_adjlist_init_empty(&fathers, no_of_nodes));
+  IGRAPH_FINALLY(igraph_adjlist_destroy, &fathers);
+
+  /* 
+  IGRAPH_CHECK(igraph_stack_init(&S, no_of_nodes));
+  IGRAPH_FINALLY(igraph_stack_destroy, &S);
+  */
+  IGRAPH_VECTOR_INIT_FINALLY(&dist, no_of_nodes);
+  /* IGRAPH_VECTOR_INIT_FINALLY(&tmpscore, no_of_nodes); */
+  IGRAPH_VECTOR_INIT_FINALLY(&nrgeo, no_of_nodes);
+
+  if (igraph_vs_is_all(&vids)) {
+    IGRAPH_CHECK(igraph_vector_resize(res, no_of_nodes));
+    igraph_vector_null(res);
+    tmpres=res;
+  } else {
+    IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
+  }
+
+  // setbuf(stdout, 0);
+
+  for (vertex_index=0; vertex_index<no_of_samples; vertex_index++) {
+    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*vertex_index/no_of_samples, 0);
+    IGRAPH_ALLOW_INTERRUPTION();
+    // printf("vertex_index=%ld\n", vertex_index);
+    
+    /* Sample a pair of distinct vertices */
+    long int destination = 0;
+    long int source = igraph_rng_get_integer(rng, 0, no_of_nodes - 1);
+    do {
+      destination = igraph_rng_get_integer(rng, 0, no_of_nodes - 1);
+    } while (destination == source);
+    //printf("source=%ld,destination=%ld\n", source, destination);
+
+    igraph_bool_t destination_is_reached = 0;
+
+    igraph_2wheap_t Q;
+    IGRAPH_CHECK(igraph_2wheap_init(&Q, no_of_nodes));
+    IGRAPH_FINALLY(igraph_2wheap_destroy, &Q);
+
+    igraph_2wheap_push_with_index(&Q, source, 0);
+    VECTOR(dist)[source]=1.0;
+    VECTOR(nrgeo)[source]=1;
+    
+    while (!igraph_2wheap_empty(&Q)) {
+      long int minnei=igraph_2wheap_max_index(&Q);
+      igraph_real_t mindist=-igraph_2wheap_delete_max(&Q);
+      igraph_vector_t *neis;
+      long int nlen;
+      // printf("minnei=%ld\n", minnei);
+      
+      /* igraph_stack_push(&S, minnei); */
+      /* Set a flag if destination is reached */
+      if (minnei == destination) {
+        destination_is_reached=1;
+        break;
+      }
+      
+      if (cutoff >=0 && VECTOR(dist)[minnei] >= cutoff+1.0) { continue; }
+      
+      /* Now check all neighbors of 'minnei' for a shorter path */
+      neis=igraph_inclist_get(&inclist, minnei);
+      nlen=igraph_vector_size(neis);
+      for (j=0; j<nlen; j++) {
+        long int edge=VECTOR(*neis)[j];
+        long int to=IGRAPH_OTHER(graph, edge, minnei);
+        // printf("to=%ld\n", to);
+        igraph_real_t altdist=mindist + VECTOR(*weights)[edge];
+        igraph_real_t curdist=VECTOR(dist)[to];
+        if (curdist==0) {
+          /* This is the first non-infinite distance */
+          igraph_vector_t *v=igraph_adjlist_get(&fathers, to);
+          igraph_vector_resize(v,1);
+          VECTOR(*v)[0]=minnei;
+          VECTOR(nrgeo)[to] = VECTOR(nrgeo)[minnei];
+
+          VECTOR(dist)[to]=altdist+1.0;
+          IGRAPH_CHECK(igraph_2wheap_push_with_index(&Q, to, -altdist));
+        } else if (altdist < curdist-1) {
+          /* This is a shorter path */
+          igraph_vector_t *v=igraph_adjlist_get(&fathers, to);
+          igraph_vector_resize(v,1);
+          VECTOR(*v)[0]=minnei;
+          VECTOR(nrgeo)[to] = VECTOR(nrgeo)[minnei];
+
+          VECTOR(dist)[to]=altdist+1.0;
+          IGRAPH_CHECK(igraph_2wheap_modify(&Q, to, -altdist));
+        } else if (altdist == curdist-1) {
+          igraph_vector_t *v=igraph_adjlist_get(&fathers, to);
+          igraph_vector_push_back(v, minnei);
+          VECTOR(nrgeo)[to] += VECTOR(nrgeo)[minnei];
+        }
+      }
+      
+    } /* !igraph_2wheap_empty(&Q) */
+
+    /* If there is a path between the source and the destination, walk
+     * backwards from the destination, sampling a shortest path at random and
+     * updating the betweenness of vertices along this path
+     */
+    if (destination_is_reached) {
+      long int path_vertex, sampled_pred = destination;
+      igraph_vector_t sampling_limits;
+      while (1) {
+        path_vertex = sampled_pred;
+        /* Get list of predecessors of path_vertex */
+        igraph_vector_t *fatv=igraph_adjlist_get(&fathers, path_vertex);
+        /* Weighted sampling of predecessor according to the number of paths
+         * passing through it.
+         */
+        long int fatv_len=igraph_vector_size(fatv);
+        if (fatv_len > 1) {
+          //printf("sampling\n");
+          IGRAPH_VECTOR_INIT_FINALLY(&sampling_limits, fatv_len); 
+          /*IGRAPH_CHECK(igraph_vector_init(&sampling_limits, fatv_len)); */
+          int curr_limit = -1;
+          for (j=0; j<fatv_len; j++) {
+            long int f = VECTOR(*fatv)[j];
+            curr_limit+=VECTOR(nrgeo)[f];
+            VECTOR(sampling_limits)[j]=curr_limit;
+          }
+          igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, VECTOR(nrgeo)[path_vertex] - 1);
+          //printf("sampled=%d\n", sampled);
+          j=0;
+          while (VECTOR(sampling_limits)[j] < sampled) {
+            j++;
+          }
+          sampled_pred=VECTOR(*fatv)[j];
+          //printf("sampled_pred=%ld\n", sampled_pred);
+          igraph_vector_destroy(&sampling_limits);
+          IGRAPH_FINALLY_CLEAN(1);
+        } else {
+          sampled_pred=VECTOR(*fatv)[0];
+        }
+        //printf("%ld %ld %ld %ld\n", destination, path_vertex, sampled_pred, source);
+
+        /* Increase betweenness counter for internal node */
+        if (sampled_pred != source) {
+          VECTOR(*tmpres)[sampled_pred]+=1; 
+        } else {
+          break;
+        }
+      } /* while(1) */
+    } /* destination_is_reached */
+    
+    /* cleanup */
+    for (j=0; j<no_of_nodes; j++) {
+      igraph_vector_clear(igraph_adjlist_get(&fathers, j));
+      VECTOR(nrgeo)[j] = 0;
+      VECTOR(dist)[j] = 0;
+    }
+    igraph_2wheap_destroy(&Q);
+    IGRAPH_FINALLY_CLEAN(1);
+    /* end cleanup */
+
+    /* Computation of betweenness by Brandes
+    while (!igraph_stack_empty(&S)) {
+      long int w=igraph_stack_pop(&S);
+      igraph_vector_t *fatv=igraph_adjlist_get(&fathers, w);
+      long int fatv_len=igraph_vector_size(fatv);
+      for (j=0; j<fatv_len; j++) {
+	long int f=VECTOR(*fatv)[j];
+	VECTOR(tmpscore)[f] += VECTOR(nrgeo)[f]/VECTOR(nrgeo)[w] * (1+VECTOR(tmpscore)[w]);
+      }
+      if (w!=source) { VECTOR(*tmpres)[w] += VECTOR(tmpscore)[w]; }
+
+      VECTOR(tmpscore)[w]=0;
+      VECTOR(dist)[w]=0;
+      VECTOR(nrgeo)[w]=0;
+      igraph_vector_clear(igraph_adjlist_get(&fathers, w));
+    } */
+    
+  } /* vertex_index < no_of_samples */
+
+  if (!igraph_vs_is_all(&vids)) {
+    IGRAPH_CHECK(igraph_vit_create(graph, vids, &vit));
+    IGRAPH_FINALLY(igraph_vit_destroy, &vit);
+    IGRAPH_CHECK(igraph_vector_resize(res, IGRAPH_VIT_SIZE(vit)));
+    
+    for (j=0, IGRAPH_VIT_RESET(vit); !IGRAPH_VIT_END(vit);
+	 IGRAPH_VIT_NEXT(vit), j++) {
+      long int node=IGRAPH_VIT_GET(vit);
+      VECTOR(*res)[j] = VECTOR(*tmpres)[node];
+    }
+    
+    no_of_nodes = j;
+    
+    igraph_vit_destroy(&vit);
+    igraph_vector_destroy(tmpres);
+    IGRAPH_FINALLY_CLEAN(2);
+  }
+  
+
+  IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
+
+  /*
+  igraph_vector_destroy(&nrgeo);
+  igraph_vector_destroy(&tmpscore);
+  igraph_vector_destroy(&dist);
+   igraph_stack_destroy(&S); 
+  igraph_adjlist_destroy(&fathers);
+  */
+  igraph_inclist_destroy(&inclist);
+  IGRAPH_FINALLY_CLEAN(4); 
+  
+  return 0;
+}
+
+int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
+           igraph_integer_t no_of_samples, const igraph_vs_t vids,
+           igraph_bool_t directed, igraph_real_t cutoff, 
+           const igraph_vector_t* weights, igraph_bool_t nobigint) {
+
+  igraph_rng_t *rng=igraph_rng_default();
+  long int no_of_nodes=igraph_vcount(graph);
+  /*igraph_dqueue_t q=IGRAPH_DQUEUE_NULL; */
+  long int *distance;
+  unsigned long long int *nrgeo=0;  /* must be long long; consider grid
+				       graphs for example */
+  igraph_biguint_t *big_nrgeo=0;
+  /* double *tmpscore; */
+  /* igraph_stack_t stack=IGRAPH_STACK_NULL; */
+  long int vertex_index;
+  long int j, k, nneis;
+  igraph_vector_t *neis;
+  igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
+  igraph_vit_t vit;
+
+  igraph_adjlist_t adjlist_out, adjlist_in;
+  igraph_adjlist_t *adjlist_out_p, *adjlist_in_p;
+
+  igraph_biguint_t D, R, T;
+
+  if (weights) { 
+    return igraph_i_betweenness_sample_vc_weighted(graph, res, no_of_samples,
+        vids, directed, cutoff, weights, nobigint);
+  }
+
+  if (no_of_samples < 1) {
+    IGRAPH_ERROR("Number of samples must be positive", IGRAPH_EINVAL);
+  }
+
+  if (!igraph_vs_is_all(&vids)) {
+    /* subset */
+    IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
+  } else {
+    /* only  */
+    IGRAPH_CHECK(igraph_vector_resize(res, no_of_nodes));
+    igraph_vector_null(res);
+    tmpres=res;
+  }
+
+  directed=directed && igraph_is_directed(graph);
+  if (directed) {
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_out, IGRAPH_OUT));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_out);
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_in, IGRAPH_IN));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_in);
+    adjlist_out_p=&adjlist_out;
+    adjlist_in_p=&adjlist_in;
+  } else {
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_out, IGRAPH_ALL));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_out);
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_in, IGRAPH_ALL));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_in);
+    adjlist_out_p=&adjlist_out;
+    adjlist_in_p=&adjlist_in;
+  }
+  for (j=0; j<no_of_nodes; j++) {
+    igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, j));
+  }
+  
+  distance=igraph_Calloc(no_of_nodes, long int);
+  if (distance==0) {
+    IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+  }
+  IGRAPH_FINALLY(igraph_free, distance);
+  if (nobigint) {
+    nrgeo=igraph_Calloc(no_of_nodes, unsigned long long int);
+    if (nrgeo==0) {
+      IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+    }
+    IGRAPH_FINALLY(igraph_free, nrgeo);
+  } else {
+    /* +1 is to have one containing zeros, when we free it, we stop
+       at the zero */
+    big_nrgeo=igraph_Calloc(no_of_nodes+1, igraph_biguint_t);
+    if (!big_nrgeo) {
+      IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+    }
+    IGRAPH_FINALLY(igraph_i_destroy_biguints, big_nrgeo);
+    for (j=0; j<no_of_nodes; j++) {
+      IGRAPH_CHECK(igraph_biguint_init(&big_nrgeo[j]));
+    }
+    IGRAPH_CHECK(igraph_biguint_init(&D));
+    IGRAPH_FINALLY(igraph_biguint_destroy, &D);
+    IGRAPH_CHECK(igraph_biguint_init(&R));
+    IGRAPH_FINALLY(igraph_biguint_destroy, &R);
+    IGRAPH_CHECK(igraph_biguint_init(&T));
+    IGRAPH_FINALLY(igraph_biguint_destroy, &T);
+  }
+  /*
+  tmpscore=igraph_Calloc(no_of_nodes, double);
+  if (tmpscore==0) {
+    IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+  }
+  IGRAPH_FINALLY(igraph_free, tmpscore);
+
+  IGRAPH_DQUEUE_INIT_FINALLY(&q, 100);
+  igraph_stack_init(&stack, no_of_nodes);
+  IGRAPH_FINALLY(igraph_stack_destroy, &stack);
+  */
+    
+  /* here we go */
+
+  //setbuf(stdout, NULL);
+  
+  for (vertex_index=0; vertex_index<no_of_samples; vertex_index++) {
+    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*vertex_index/no_of_samples, 0);
+    IGRAPH_ALLOW_INTERRUPTION();
+    //printf("vertex_index=%ld", vertex_index);
+
+    /* Sample a pair of distinct vertices */
+    long int destination = 0;
+    long int source = igraph_rng_get_integer(rng, 0, no_of_nodes -1);
+    do {
+      destination = igraph_rng_get_integer(rng, 0, no_of_nodes -1);
+    } while (destination == source);
+    //printf("source=%ld, destination=%ld\n", source, destination);
+
+    igraph_bool_t destination_is_reached = 0;
+
+    igraph_dqueue_t q=IGRAPH_DQUEUE_NULL;
+    IGRAPH_DQUEUE_INIT_FINALLY(&q, 100);
+    IGRAPH_CHECK(igraph_dqueue_push(&q, source));
+    if (nobigint) { 
+      nrgeo[source]=1;
+    } else {
+      igraph_biguint_set_limb(&big_nrgeo[source], 1);
+    }
+    distance[source]=1;
+    
+    while (!igraph_dqueue_empty(&q)) {
+      long int actnode=igraph_dqueue_pop(&q);
+      //printf("actnode=%ld\n", actnode);
+      /* IGRAPH_CHECK(igraph_stack_push(&stack, actnode)); */
+
+      /* Set a flag if destination is reached */
+      if (actnode == destination) {
+        destination_is_reached = 1;
+        break;
+      }
+
+      if (cutoff >= 0 && distance[actnode] >= cutoff+1) { continue; }
+      
+      /* Now check all neighbors of 'actnode' for a shorter path */
+      neis = igraph_adjlist_get(adjlist_out_p, actnode);
+      nneis = igraph_vector_size(neis);
+      for (j=0; j<nneis; j++) {
+        long int neighbor=VECTOR(*neis)[j];
+        if (distance[neighbor]==0) {
+          distance[neighbor]=distance[actnode]+1;
+          IGRAPH_CHECK(igraph_dqueue_push(&q, neighbor));
+        } 
+        if (distance[neighbor]==distance[actnode]+1) {
+          igraph_vector_t *v=igraph_adjlist_get(adjlist_in_p, neighbor);
+          igraph_vector_push_back(v, actnode);
+          //printf("%ld -> %ld\n", actnode, neighbor);
+          if (nobigint) { 
+            nrgeo[neighbor]+=nrgeo[actnode];
+          } else {
+            IGRAPH_CHECK(igraph_biguint_add(&big_nrgeo[neighbor],
+                    &big_nrgeo[neighbor], 
+                    &big_nrgeo[actnode]));
+          }
+        }
+      }
+    } /* while !igraph_dqueue_empty */
+    /* If there is a path between the source and the destination, walk
+     * backwards from the destination, sampling a shortest path at random and
+     * updating the betweenness of vertices along this path
+     */
+    if (destination_is_reached) {
+      //printf("destination is reached\n");
+
+      long int path_vertex, sampled_pred=destination;
+      igraph_vector_t sampling_limits;
+      igraph_vector_t *fatv=NULL;
+      while (1) {
+        path_vertex = sampled_pred;
+        /* Get list of predecessors of path_vertex */
+        fatv=igraph_adjlist_get(adjlist_in_p, path_vertex);
+        /* Weighted sampling of predecessor according to the number of paths
+         * passing through it.
+         */
+        long int fatv_len=igraph_vector_size(fatv);
+        if (fatv_len > 1) {
+          //printf("sampling\n");
+          IGRAPH_VECTOR_INIT_FINALLY(&sampling_limits, fatv_len);
+          int curr_limit = -1;
+          for (j=0; j<fatv_len; j++) {
+            long int f = VECTOR(*fatv)[j];
+            /* curr_limit+=VECTOR(nrgeo)[f]; */
+            curr_limit+=nrgeo[f];
+            VECTOR(sampling_limits)[j]=curr_limit;
+          }
+          /* igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, VECTOR(nrgeo)[path_vertex] - 1); */
+          igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, nrgeo[path_vertex] - 1);
+          j=0;
+          while (VECTOR(sampling_limits)[j] < sampled) {
+            j++;
+          }
+          sampled_pred=VECTOR(*fatv)[j];
+          igraph_vector_destroy(&sampling_limits);
+          IGRAPH_FINALLY_CLEAN(1);
+        } else if (fatv_len == 1)  {
+          sampled_pred=VECTOR(*fatv)[0];
+        } else { 
+          /* XXX handle this better */
+          printf("How do even got here?\n");
+          exit(2);
+        }
+        //printf("%ld %ld %ld %ld\n", destination, path_vertex, sampled_pred, source);
+        //sleep(3);
+
+        /* Increase betweenness counter for internal node */
+        if (sampled_pred != source) {
+          VECTOR(*tmpres)[sampled_pred]+=1; 
+        } else {
+          break;
+        }
+      } /* while(1) */
+    } /* destination_is_reached */
+    /* cleanup */ 
+    //printf("cleanup\n");
+    distance = memset(distance, 0, no_of_nodes * sizeof(long int));
+    if (nobigint) { 
+      nrgeo = memset(nrgeo, 0, no_of_nodes * sizeof(unsigned long long int));
+    } else { 
+      for (j=0; j<no_of_nodes; j++) {
+        igraph_biguint_set_limb(&big_nrgeo[j], 0);
+      }
+    }
+    for (j=0; j<no_of_nodes; j++) {
+      igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, j));
+    }
+    igraph_dqueue_destroy(&q);
+    IGRAPH_FINALLY_CLEAN(1);
+    /* igraph_adjlist_clear(adjlist_in_p); */
+    /* End of clean up */
+    
+    /* Brandes computation of betweenness */
+    /* Ok, we've the distance of each node and also the number of
+       shortest paths to them. Now we do an inverse search, starting
+       with the farthest nodes. */
+    /*
+    while (!igraph_stack_empty(&stack)) {
+      long int actnode=igraph_stack_pop(&stack);
+      neis = igraph_adjlist_get(adjlist_in_p, actnode);
+      nneis = igraph_vector_size(neis);
+      for (j=0; j<nneis; j++) {
+        long int neighbor=VECTOR(*neis)[j];
+	if (nobigint) {
+	  tmpscore[neighbor] +=  (tmpscore[actnode]+1)*
+	    ((double)(nrgeo[neighbor]))/nrgeo[actnode];
+	} else {
+	  if (!igraph_biguint_compare_limb(&big_nrgeo[actnode], 0)) {
+	    tmpscore[neighbor] = IGRAPH_INFINITY;
+	  } else {
+	    double div;
+	    int shift=1000000000L;
+	    IGRAPH_CHECK(igraph_biguint_mul_limb(&T, &big_nrgeo[neighbor], 
+						 shift));	  
+	    igraph_biguint_div(&D, &R, &T, &big_nrgeo[actnode]);
+	    div=igraph_biguint_get(&D) / shift;
+	    tmpscore[neighbor] += (tmpscore[actnode]+1) * div;
+	  }
+	}
+      }
+      
+      if (actnode != source) { VECTOR(*tmpres)[actnode] += tmpscore[actnode]; }
+
+      distance[actnode]=0;
+      if (nobigint) { 
+	nrgeo[actnode]=0;
+      } else {
+	igraph_biguint_set_limb(&big_nrgeo[actnode], 0);
+      }
+      tmpscore[actnode]=0;
+      igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, actnode));      
+    } */ 
+
+  } /* for vertex_index < no_of_samples */
+
+  IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
+
+  /* clean  */
+  igraph_Free(distance);
+  if (nobigint) {
+    igraph_Free(nrgeo); 
+  } else {
+    igraph_biguint_destroy(&T);
+    igraph_biguint_destroy(&R);
+    igraph_biguint_destroy(&D);
+    IGRAPH_FINALLY_CLEAN(3);
+    igraph_i_destroy_biguints(big_nrgeo);
+  }
+  /* igraph_Free(tmpscore); */
+  
+  //igraph_dqueue_destroy(&q);
+  /* igraph_stack_destroy(&stack); */
+  IGRAPH_FINALLY_CLEAN(2); 
+
+  /* Keep only the requested vertices */
+  if (!igraph_vs_is_all(&vids)) { 
+    IGRAPH_CHECK(igraph_vit_create(graph, vids, &vit));
+    IGRAPH_FINALLY(igraph_vit_destroy, &vit);
+    IGRAPH_CHECK(igraph_vector_resize(res, IGRAPH_VIT_SIZE(vit)));
+
+    for (k=0, IGRAPH_VIT_RESET(vit); !IGRAPH_VIT_END(vit);
+	 IGRAPH_VIT_NEXT(vit), k++) {
+      long int node=IGRAPH_VIT_GET(vit);
+      VECTOR(*res)[k] = VECTOR(*tmpres)[node];
+    }
+
+    igraph_vit_destroy(&vit);
+    igraph_vector_destroy(tmpres);
+    IGRAPH_FINALLY_CLEAN(2);
+  }     
+  
+  igraph_adjlist_destroy(&adjlist_out);
+  igraph_adjlist_destroy(&adjlist_in);
+  IGRAPH_FINALLY_CLEAN(2);
+
+  return 0;
+}
+
+/**
+ * \ingroup structural
+ * \function igraph_betweenness_sample_vc
+ * \brief Approximate betweenness centrality of some vertices using sampling and VC-Dimension.
+ * 
+ * </para><para>
+ * TODO
+ */
+int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
+           igraph_real_t epsilon, igraph_real_t delta, 
+           igraph_integer_t diameter, const igraph_vs_t vids, 
+           igraph_bool_t directed, igraph_real_t cutoff, 
+           const igraph_vector_t* weights, igraph_bool_t nobigint) {
+  int j, return_code;
+  double sample_size_constant=0.5;
+  igraph_integer_t no_of_samples;
+  long int no_of_nodes=igraph_vcount(graph);
+  double normalization_factor;
+  /* Check values of epsilon and delta */
+  if (delta >= 1.0 || delta <= 0.0) {
+    IGRAPH_ERROR("delta must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
+  }
+  if (epsilon >= 1.0 || epsilon <= 0.0) {
+    IGRAPH_ERROR("epsilon must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
+  }
+  /* If diameter is -1, compute approximation of diameter (only valid for
+   * undirected graphs).
+   */
+  if (diameter == -1) {
+    if (!directed || !igraph_is_directed(graph)) {
+      igraph_rng_t *rng = igraph_rng_default();
+      igraph_matrix_t sp_res;
+      IGRAPH_CHECK(igraph_matrix_init(&sp_res, 1, no_of_nodes));
+      IGRAPH_FINALLY(igraph_matrix_destroy, &sp_res);
+      igraph_integer_t sampled_source = igraph_rng_get_integer(rng, 0, no_of_nodes);
+      // Computer shortest paths from sampled source
+      igraph_shortest_paths(graph, &sp_res, igraph_vss_1(sampled_source),
+        igraph_vss_all(), IGRAPH_ALL);
+      // Perform computation of diameter
+      igraph_real_t largest = 0;
+      igraph_real_t second_largest = 0;
+      for (j=0; j<no_of_nodes; j++) {
+        if (MATRIX(sp_res, 0, j) == IGRAPH_INFINITY)  {
+          continue;
+        }
+        if (MATRIX(sp_res, 0, j) >= largest) {
+          second_largest = largest;
+          largest = MATRIX(sp_res, 0, j);
+        }
+      }
+      diameter = (igraph_integer_t) largest + second_largest;
+      igraph_matrix_destroy(&sp_res);
+      IGRAPH_FINALLY_CLEAN(1);
+    } else {
+      IGRAPH_ERROR("Diameter approximation algorithm works only for undirected graphs", IGRAPH_EINVAL);
+    }
+  }
+  /* Compute sample size */
+  no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
+          2)) * (floor(log2(diameter - 1)) - log(delta)));
+  return_code = igraph_i_betweenness_sample_vc(graph, res, no_of_samples, vids, directed, cutoff, weights, nobigint);
+  /* Denormalize betweenness counters by (n choose 2) / k */
+  normalization_factor =  ((double) (no_of_nodes * (no_of_nodes - 1))) / ( 2 * no_of_samples);
+  for (j=0; j<no_of_nodes; j++) {
+    VECTOR(*res)[j] *= normalization_factor;
+  }
+  return return_code;
+}
+
+/**
+ * \ingroup structural
+ * \function igraph_betweenness_estimate
+ * \brief Estimated betweenness centrality of some vertices.
+ * 
+ * </para><para>
+ * The betweenness centrality of a vertex is the number of geodesics
+ * going through it. If there are more than one geodesic between two
+ * vertices, the value of these geodesics are weighted by one over the 
+ * number of geodesics. When estimating betweenness centrality, igraph
+ * takes into consideration only those paths that are shorter than or
+ * equal to a prescribed length. Note that the estimated centrality
+ * will always be less than the real one.
+ *
+ * \param graph The graph object.
+ * \param res The result of the computation, a vector containing the
+ *        estimated betweenness scores for the specified vertices.
+ * \param vids The vertices of which the betweenness centrality scores
+ *        will be estimated.
+ * \param directed Logical, if true directed paths will be considered
+ *        for directed graphs. It is ignored for undirected graphs.
+ * \param cutoff The maximal length of paths that will be considered.
+ *        If zero or negative, the exact betweenness will be calculated
+ *        (no upper limit on path lengths).
+ * \param weights An optional vector containing edge weights for 
+ *        calculating weighted betweenness. Supply a null pointer here
+ *        for unweighted betweenness.
+ * \param nobigint Logical, if true, then we don't use big integers
+ *        for the calculation, setting this to 1 (=true) should
+ *        work for most graphs. It is currently ignored for weighted
+ *        graphs.
+ * \return Error code:
+ *        \c IGRAPH_ENOMEM, not enough memory for
+ *        temporary data. 
+ *        \c IGRAPH_EINVVID, invalid vertex id passed in
+ *        \p vids. 
+ *
+ * Time complexity: O(|V||E|),
+ * |V| and 
+ * |E| are the number of vertices and
+ * edges in the graph. 
+ * Note that the time complexity is independent of the number of
+ * vertices for which the score is calculated.
+ *
+ * \sa Other centrality types: \ref igraph_degree(), \ref igraph_closeness().
+ *     See \ref igraph_edge_betweenness() for calculating the betweenness score
+ *     of the edges in a graph.
+ */
+int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res, 
+				const igraph_vs_t vids, igraph_bool_t directed,
+				igraph_real_t cutoff, 
+				const igraph_vector_t *weights, 
+				igraph_bool_t nobigint) {
+  return igraph_i_betweenness_estimate(graph, res, -1, vids, directed, cutoff, weights, nobigint);
 }
 
 int igraph_i_edge_betweenness_estimate_weighted(const igraph_t *graph, 
