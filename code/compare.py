@@ -31,7 +31,7 @@ def main():
     parser.add_argument("-f", "--force", action="store_true", default=False,
             help="Force recomputation of all betweenness values, exact and approximate.")
     parser.add_argument("-i", "--implementation", choices=["igraph",
-        "homegrown"], default="igraph", 
+        "homegrown", "chomegrown"], default="igraph", 
         help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
