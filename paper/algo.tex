@@ -123,6 +123,11 @@ known algorithms to approximate the diameter of a
 graph~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times
 and quality of approximations.
 
+\XXX TBD: This can actually be extended to directed case as well. We just need
+to also compute the ``backwards'' shortest paths \emph{to} the sampled nodes, and
+choose the maximum of these ``incoming'' paths and the maximum of the
+``outgoing'' paths. \MR
+
 For our case, if $G$ is \emph{undirected} and \emph{all the weights are
 unitary}, a $2$-approximation to $\Delta_G$ is sufficient and can be computed in
 time \XXX by selecting a vertex $v\in V$ uniformly at random, computing the
