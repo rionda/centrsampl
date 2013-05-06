@@ -174,7 +174,7 @@ def betweenness(graph, implementation="igraph", set_attributes=True):
     as vertex attributes, and the time as a graph attribute.
     
     """
-    if implementation == "igraph":
+    if implementation == "igraph" or implementation == "chomegrown":
         return betweenness_igraph(graph, set_attributes)
     elif implementation == "noigraph":
         return betweenness_noigraph(graph, set_attributes)
@@ -193,7 +193,7 @@ def main():
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
     parser.add_argument("-i", "--implementation", choices=["igraph",
-        "noigraph", "homegrown"], default="igraph", 
+        "noigraph", "homegrown", "chomegrown"], default="igraph", 
         help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, 
             help="increase verbosity (use multiple times for more verbosity)")
