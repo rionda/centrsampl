@@ -18,6 +18,41 @@ import time
 import brandes_exact
 import util
 
+def betweenness_chomegrown(graph, epsilon, delta, set_attributes=True):
+    """Compute approx. betweenness using Brandes and Pick algorithm.
+    
+    Compute approximations of the betweenness centrality of all the vertices in
+    the graph using the algorithm by Brandes and Pich, and the time needed to
+    compute them. For the algorihm, see
+    http://www.worldscientific.com/doi/abs/10.1142/S0218127407018403 .
+
+    Return a tuple with the time needed to compute the betweenness and the list
+    of betweenness values (one for each vertex in the graph).
+    If set_attributes is True (default), then set the values of the betweenness
+    as vertex attributes, and the time as a graph attribute.
+    
+    C Homegrown version
+    """
+    # We do not use logging from here to the end of the computation to avoid
+    # wasting time
+    logging.info("Computing approximate betweenness using Brandes and Pich algorithm, homegrown implementation")
+    start_time = time.process_time()
+    betw = graph.betweenness_sample_bp(epsilon, delta)
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    logging.info("Betweenness computation complete, took %s seconds",
+            elapsed_time)
+
+    # Write attributes to graph, if specified
+    if set_attributes:
+        graph["bp_betw_time"] = elapsed_time
+        graph["bp_delta"] = delta
+        graph["bp_eps"] = epsilon
+        graph["bp_type"] = "homegrown"
+        graph.vs["bp_betw"] = betw
+
+    return (elapsed_time, betw)
+
 def betweenness_homegrown(graph, epsilon, delta, set_attributes=True):
     """Compute approx. betweenness using Brandes and Pick algorithm.
     
@@ -141,6 +176,8 @@ def betweenness(graph, epsilon, delta, implementation="igraph",
         return betweenness_igraph(graph, epsilon, delta, set_attributes)
     elif implementation == "homegrown":
         return betweenness_homegrown(graph, epsilon, delta, set_attributes)
+    elif implementation == "chomegrown":
+        return betweenness_chomegrown(graph, epsilon, delta, set_attributes)
     else:
         logging.critical("Betweenness implementation not recognized: %s",
                 implementation)
@@ -171,7 +208,7 @@ def main():
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
     parser.add_argument("-i", "--implementation", choices=["igraph",
-        "homegrown"], default="igraph", 
+        "homegrown", "chomegrown"], default="igraph", 
         help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
