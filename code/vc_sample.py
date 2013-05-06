@@ -79,14 +79,15 @@ def betweenness_homegrown(graph, epsilon, delta, use_approx_diameter=True,
         # backwards from the destination, sampling a shortest path at random and
         # updating the betweenness of vertices along this path
         if destination in reached_vertices:
-            vertex = destination
+            sample_pred = destination
             while True:
+                vertex = sample_pred
                 if len(graph.vs[vertex]["preds"]) > 1:
                     # Recipe for weighted sampling from Python API docs for random
                     weighted_choices = [(x, graph.vs[x]["paths"]) for x in
                             graph.vs[vertex]["preds"]]
                     population = [val for val, cnt in weighted_choices for i in range(cnt)]
-                    sampled_pred = random.choice(population)
+                    vertex = random.choice(population)
                 else:
                     sampled_pred = graph.vs[vertex]["preds"][0]
                 # Update betweenness counter of internal node
