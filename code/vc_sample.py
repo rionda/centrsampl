@@ -17,6 +17,61 @@ import diameter
 import diameter_approx
 import util
 
+def betweenness_chomegrown(graph, epsilon, delta, use_approx_diameter=True,
+        set_attributes=True):
+    """Compute approximate betweenness using VC-Dimension.
+    
+    Compute approximations of the betweenness centrality of all the vertices in
+    the graph using sampling and the VC-Dimension, and the time needed to
+    compute them. 
+
+    Return a tuple with the time needed to compute the betweenness and the list
+    of betweenness values (one for each vertex in the graph).
+
+    The meaning of the use_approx_diameter parameter is peculiar. If True or
+    1 (default), compute an approximation of the diameter (only valid for
+    undirected, unweighted graphs). If False or 0, compute
+    the exact diameter (which kind of defeat the purpose of sampling, by the
+    way). If any integer > 1, use this value for the diameter, i.e. do not
+    perform any computation for the diameter.
+    If set_attributes is True (default), then set the values of the betweenness
+    as vertex attributes, and the time as a graph attribute.
+
+    C Homegrown version
+    
+    """
+    logging.info("Computing approximate betweenness using VC-Dimension, C homegrown implementation")
+    if use_approx_diameter == 1:
+        start_time = time.process_time()
+        betw = graph.betweenness_sample_vc(epsilon, delta, -1)
+    elif use_approx_diameter == 0:
+        start_time = time.process_time()
+        diam = graph.diameter()
+        betw = graph.betweenness_sample_vc(epsilon, delta, diam)
+    else:
+        start_time = time.process_time()
+        betw = graph.betweenness_sample_vc(epsilon, delta, use_approx_diameter)
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    logging.info("Betweenness computation complete, took %s seconds",
+            elapsed_time)
+
+    # Write attributes to graph, if specified
+    if set_attributes:
+        graph["vc_betw_time"] = elapsed_time
+        graph["vc_delta"] = delta
+        if int(use_approx_diameter) == 1:
+            graph["vc_diam_type"] = "approx" 
+        elif int(use_approx_diameter) == 0:
+            graph["vc_diam_type"] = "exact"
+        else:
+            graph["vc_diam_type"] = "specif"
+        graph["vc_eps"] = epsilon
+        graph["vc_type"] = "homegrown"
+        graph.vs["vc_betw"] = betw
+
+    return (elapsed_time, betw)
+
 def betweenness_homegrown(graph, epsilon, delta, use_approx_diameter=True,
         set_attributes=True):
     """Compute approximate betweenness using VC-Dimension.
@@ -222,6 +277,9 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True,
     elif implementation == "homegrown":
         return betweenness_homegrown(graph, epsilon, delta,
                 use_approx_diameter, set_attributes)
+    elif implementation == "chomegrown":
+        return betweenness_chomegrown(graph, epsilon, delta,
+                use_approx_diameter, set_attributes)
     else:
         logging.critical("Betweenness implementation not recognized: %s",
                 implementation)
@@ -258,7 +316,7 @@ def main():
     group.add_argument("-e", "--exact", action="store_true", default=False,
             help="use exact diameter (default)")
     parser.add_argument("-i", "--implementation", choices=["igraph",
-        "homegrown"], default="igraph", 
+        "homegrown", "chomegrown"], default="igraph", 
         help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
