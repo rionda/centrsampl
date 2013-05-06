@@ -5,6 +5,8 @@ Convert an edge list file to an igraph graph and write it to file in pickle
 format. The edge list file contains one edge per line as
 'from_vertex\tto_vertex'. Lines starting with '#' are treated as comments.  
 
+The graph is simplified if needed (loops and multiple edges are removed).
+
 """
 import argparse
 import logging
@@ -64,6 +66,11 @@ def convert(input_path, is_directed):
         sys.exit(2)
 
     logging.info("Conversion complete: %d vertices, %d edges", vertices_num, edges_num)
+
+    if not G.is_simple():
+        logging.warning("The graph is not simple. We are going to simplify it")
+        G.simplify()
+
     return G
 
 def main():
