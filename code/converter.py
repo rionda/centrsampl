@@ -20,10 +20,6 @@ import util
 def convert(input_path, is_directed):
     """Convert an edge list file to an igraph.Graph."""
 
-    G = ig.Graph(directed=is_directed)
-    G["rawfile"] = os.path.basename(input_path)
-    vertices_num = 0
-    edges_num = 0
     try: # Handle OSError
         with open(input_path, 'rt') as input_file:
             logging.info("Conversion started")
@@ -31,41 +27,20 @@ def convert(input_path, is_directed):
                 logging.debug("Considering graph as directed")
             else:
                 logging.debug("Considering graph as undirected")
-            for line in input_file:
-                # Skip line if it s a comment"
-                if line[0] == "#" :
-                    logging.debug("Skipping comment line: %s", line)
-                    continue
-                edge = line.split()
-                from_vertex = edge[0]
-                to_vertex = edge[1]
-                # Add vertices to graph if necessary. When we try to add the
-                # first vertex to the graph, a KeyError is raised when try to
-                # access G.vs["name"]. Handle it properly and go on.
-                try:
-                    if not from_vertex in G.vs["name"]:
-                        logging.debug("Adding vertex %s", from_vertex)
-                        G.add_vertex(name=from_vertex)
-                        vertices_num += 1
-                except KeyError:                    
-                        logging.debug("Adding vertex %s", from_vertex)
-                        G.add_vertex(name=from_vertex)
-                        vertices_num += 1
-                if not to_vertex in G.vs["name"]:
-                    logging.debug("Adding vertex %s", to_vertex)
-                    G.add_vertex(name=to_vertex)
-                    vertices_num += 1
-
-                # Add the edge
-                logging.debug("Adding edge %s -> %s", from_vertex, to_vertex)
-                G.add_edge(from_vertex, to_vertex)
-                edges_num +=1
+            prev_tell = input_file.tell()
+            line = input_file.readline()
+            # Skip comments
+            while line[0] == "#":
+                prev_tell = input_file.tell()
+                line = input_file.readline()
+            input_file.seek(prev_tell)
+            G = ig.Graph.Read_Edgelist(input_file, directed=is_directed)
     except OSError as E:
         logging.critical("Cannot read input file %s: %s", input_path,
                 os.strerror(E.errno))
         sys.exit(2)
 
-    logging.info("Conversion complete: %d vertices, %d edges", vertices_num, edges_num)
+    logging.info("Conversion complete: %d vertices, %d edges", G.vcount(), G.ecount())
 
     if not G.is_simple():
         logging.warning("The graph is not simple. We are going to simplify it")
@@ -82,7 +57,7 @@ def main():
     # Parse arguments
     parser = argparse.ArgumentParser()
 
-    parser.description = "Convert an edge list file to an igraph graph and write it to file in pickle format. The edge list file contains one edge per line as 'from_vertex\tto_vertex'. Lines starting with '#' are treated as comments."
+    parser.description = "Convert an edge list file to an igraph graph and write it to file in pickle format. The edge list file contains one edge per line as 'from_vertex\tto_vertex'. Lines at the beginning of the file starting with '#' are treated as comments."
     parser.add_argument("input", help="input file")
     parser.add_argument("output", help="output file (pickle format)")
     group = parser.add_mutually_exclusive_group()
@@ -90,8 +65,10 @@ def main():
             help="consider the graph as directed")
     group.add_argument("-u", "--undirected", action="store_true", default=True,
             help="consider the graph as undirected (default)")
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
-    parser.add_argument("-z", "--compress", action="store_true", default=False, help="compress the output file")
+    parser.add_argument("-v", "--verbose", action="count", default=0,
+            help="increase verbosity (use multiple times for more verbosity)")
+    parser.add_argument("-z", "--compress", action="store_true", default=False,
+            help="compress the output file")
     args = parser.parse_args()
 
     # Set the desired level of logging
