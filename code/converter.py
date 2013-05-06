@@ -71,6 +71,10 @@ def convert(input_path, is_directed):
         logging.warning("The graph is not simple. We are going to simplify it")
         G.simplify()
 
+    if not G.is_connected(mode=ig.WEAK):
+        logging.warning("The graph is not weakly connected. Exiting.")
+        exit(2)
+
     return G
 
 def main():
