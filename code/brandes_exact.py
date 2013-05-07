@@ -39,9 +39,9 @@ def betweenness_igraph(graph, set_attributes=True):
     # If the graph is undirected, it seems that igraph only counts paths once
     # in one direction, so multiply betweenness values by 2. 
     # XXX Needs more checking
-    if not graph.is_directed():
-        logging.debug("Adjusting betweenness values for undirectness")
-        betw = list(map(lambda x: x * 2, graph.betweenness()))
+    #if not graph.is_directed():
+    #    logging.debug("Adjusting betweenness values for undirectness")
+    #    betw = list(map(lambda x: x * 2, graph.betweenness()))
     
     # Write attributes to graph, if specified
     if set_attributes:
