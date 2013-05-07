@@ -35,7 +35,7 @@ def betweenness_chomegrown(graph, epsilon, delta, set_attributes=True):
     """
     # We do not use logging from here to the end of the computation to avoid
     # wasting time
-    logging.info("Computing approximate betweenness using Brandes and Pich algorithm, homegrown implementation")
+    logging.info("Computing approximate betweenness using Brandes and Pich algorithm, C homegrown implementation")
     start_time = time.process_time()
     betw = graph.betweenness_sample_bp(epsilon, delta)
     end_time = time.process_time()
