@@ -66,7 +66,7 @@ def main():
 
     #Compute useful graph statistics (mainly diameter)
     if "diam" not in G.attributes():
-        diameter.diameter()
+        diameter.diameter(G)
 
     # If specified, write betweenness as vertex attributes, and time and
     # diameter as graph attributes back to file
