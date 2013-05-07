@@ -1,21 +1,24 @@
-We are going to implement our code in Python3.3.1, using the igraph library
-(http://igraph.sourceforge.net)
+We are going to implement our code in Python3.3.1, using and extending the
+igraph library (http://igraph.sourceforge.net)
 
 Download graph data from http://snap.stanford.edu/data and
 http://law.di.unimi.it/datasets.php
 Another dataset that looks interesting is the US patent data. Look in the ALENEX
 paper.
 
-Convert graphs to igraph format
+Implement code to find the largest connected component in the diameter
+approximation algorithm
+
+Extend approximation algorithm to directed case
+
+Implement code to count how many edges are touched during the computation of
+betweenness. This can be play an important factor in large networks.
 
 Implement ALENEX paper sampling algorithm
 
 Implement adaptive sampling algorithm
 
 Implement code to automatize experiments and reports
-
-Implement code to count how many edges are touched during the computation of
-betweenness. This can be play an important factor in large networks.
 
 # DONE! Make sure our implementations of Brandes, Brandes and Pachi, and the ALENEX paper
 are the best possible.
