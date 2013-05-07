@@ -47,11 +47,21 @@ def convert(input_path, is_directed=False, save_max_conn=False):
         G.simplify()
         logging.info("Graph now has %d nodes, %d edges", G.vcount(), G.ecount())
 
+    
+    to_delete = []
+    for i in range(G.vcount()):
+        if G[i].degree() == 0:
+            to_delete.append(i)
+    if to_delete:
+        logging.info("Removing isolated vertices")
+        G.delete_vertices(to_delete)
+        logging.info("Graph now has %d nodes, %d edges", G.vcount(), G.ecount())
+
     if not G.is_connected(mode=ig.WEAK):
         if not save_max_conn:
             logging.warning("The graph is not weakly connected. Saving it anyway (no -m,--maxconn specified)")
         else:
-            logging.warning("The graph is not weakly connected. -m,--maxconn specified. Saving largest connected component.")
+            logging.warning("The graph is not weakly connected. Saving largest connected component (-m,--maxconn specified)")
             clustering = G.components(mode=ig.WEAK)
             max_size = 0
             max_index = 0
