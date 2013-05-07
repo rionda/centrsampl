@@ -10,9 +10,10 @@ import logging
 import math
 import random
 
-import util
+import diameter
 import brandes_exact
 import brandespich_sample
+import util
 import vc_sample
 
 def main():
@@ -49,7 +50,7 @@ def main():
 
     # If the graph does not have the attributes for the betweenness or has the
     # wrong ones, (re-)compute them
-    logging.info("Recomputing betweenness if needed")
+    logging.info("Recomputing betweenness if needed/specified")
     if args.force or not "betw_time" in G.attributes():
         brandes_exact.betweenness(G, args.implementation, True)
     if args.force or not "vc_betw_time" in G.attributes() or G["vc_eps"] != args.epsilon or G["vc_delta"] != args.delta:
@@ -63,10 +64,14 @@ def main():
         brandespich_sample.betweenness(G, args.epsilon, args.delta,
                 args.implementation, True)
 
-    # If specified, write betweenness as vertex attributes, and time as graph
-    # attribute back to file
+    #Compute useful graph statistics (mainly diameter)
+    if "diam" not in G.attributes():
+        diameter.diameter()
+
+    # If specified, write betweenness as vertex attributes, and time and
+    # diameter as graph attributes back to file
     if args.write:
-        logging.info("Writing betweenness as vertex attributes and time as graph attribute")
+        logging.info("Writing graph back to file")
         G.write(args.graph)
 
     # Compute error statistics
@@ -107,9 +112,9 @@ def main():
                  G.vs[i]["betw"], G.vs[i]["bp_betw"], G.vs[i]["vc_betw"], err, err / (G.vcount() * (G.vcount() -1) / 2)))
 
     # Print statistics to output as CSV
-    logging.info("Printing error statistics")
-    print("{}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(), G.ecount(),
-        G.is_directed(), args.epsilon, args.delta))
+    logging.info("Printing statistics")
+    print("graph, {}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
+        G.ecount(), G.diameter(), G.is_directed(), args.epsilon, args.delta))
     print("exact, {}, 0, 0".format(G["betw_time"]))
     print("vc, {}".format(", ".join([str(x) for x in [G["vc_betw_time"], vc_wrong_eps, vc_err_max,
         vc_err_min, vc_err_avg, vc_err_stddev]])))
