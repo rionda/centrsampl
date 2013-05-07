@@ -8,9 +8,6 @@ paper.
 
 Convert graphs to igraph format
 
-Make sure our implementations of Brandes, Brandes and Pachi, and the ALENEX paper
-are the best possible.
-
 Implement ALENEX paper sampling algorithm
 
 Implement adaptive sampling algorithm
@@ -19,6 +16,9 @@ Implement code to automatize experiments and reports
 
 Implement code to count how many edges are touched during the computation of
 betweenness. This can be play an important factor in large networks.
+
+# DONE! Make sure our implementations of Brandes, Brandes and Pachi, and the ALENEX paper
+are the best possible.
 
 # DONE! Implement converter to convert them from the native format (list of
 edges?) to an igraph graph
