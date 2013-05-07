@@ -78,16 +78,33 @@ def main():
     vc_err_max = vc_errs[-1]
     vc_err_min = list(itertools.filterfalse(lambda x: x == 0, vc_errs))[0]
     vc_err_stddev = math.sqrt(sum([math.pow(err - vc_err_avg, 2) for err in vc_errs]) / (G.vcount() -1))
-    vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
-        G.vcount() * (G.vcount() - 1) / 2, vc_errs)))
+    #vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
+    #    G.vcount() * (G.vcount() - 1) / 2, vc_errs)))
+    vc_wrong_eps = 0;
+    print("## VC wrong epsilon ##")
+    for i in range(G.vcount()):
+        err = abs(G.vs[i]["betw"] - G.vs[i]["vc_betw"])
+        if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
+            vc_wrong_eps += 1
+            print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
+                G.vs[i]["betw"], G.vs[i]["vc_betw"], G.vs[i]["bp_betw"],
+                err, err / (G.vcount() * (G.vcount() -1) / 2)))
 
     bp_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["bp_betw"])])
     bp_err_avg = sum(bp_errs) / G.vcount()
     bp_err_max = max(bp_errs)
     bp_err_min = list(itertools.filterfalse(lambda x: x == 0, bp_errs))[0]
     bp_err_stddev = math.sqrt(sum([math.pow(err - bp_err_avg, 2) for err in bp_errs]) / (G.vcount() -1))
-    bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
-        G.vcount() * (G.vcount() - 1) / 2, bp_errs)))
+    #bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
+    #    G.vcount() * (G.vcount() - 1) / 2, bp_errs)))
+    bp_wrong_eps = 0
+    print("## BP wrong epsilon ##")
+    for i in range(G.vcount()):
+        err = abs(G.vs[i]["betw"] - G.vs[i]["bp_betw"])
+        if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
+            bp_wrong_eps += 1
+            print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
+                 G.vs[i]["betw"], G.vs[i]["bp_betw"], G.vs[i]["vc_betw"], err, err / (G.vcount() * (G.vcount() -1) / 2)))
 
     # Print statistics to output as CSV
     logging.info("Printing error statistics")
