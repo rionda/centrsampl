@@ -49,8 +49,7 @@ def convert(input_path, is_directed=False, save_max_conn=False):
 
     if not G.is_connected(mode=ig.WEAK):
         if not save_max_conn:
-            logging.warning("The graph is not weakly connected. Exiting.")
-            exit(2)
+            logging.warning("The graph is not weakly connected. Saving it anyway (no -m,--maxconn specified)")
         else:
             logging.warning("The graph is not weakly connected. -m,--maxconn specified. Saving largest connected component.")
             clustering = G.components(mode=ig.WEAK)
