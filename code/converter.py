@@ -73,7 +73,7 @@ def convert(input_path, is_directed=False, save_max_conn=False):
                 index += 1
             G = clustering.subgraph(max_index)
 
-            G["filename"] = os.path.basename(input_path)
+    G["filename"] = os.path.basename(input_path)
 
     logging.info("Conversion complete: %d vertices, %d edges", G.vcount(), G.ecount())
 
