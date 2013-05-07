@@ -50,7 +50,7 @@ def convert(input_path, is_directed=False, save_max_conn=False):
     
     to_delete = []
     for i in range(G.vcount()):
-        if G[i].degree() == 0:
+        if G.vs[i].degree() == 0:
             to_delete.append(i)
     if to_delete:
         logging.info("Removing isolated vertices")
