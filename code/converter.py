@@ -17,12 +17,12 @@ import igraph as ig
 
 import util
 
-def convert(input_path, is_directed):
+def convert(input_path, is_directed=False, save_max_conn=False):
     """Convert an edge list file to an igraph.Graph."""
 
     try: # Handle OSError
         with open(input_path, 'rt') as input_file:
-            logging.info("Conversion started")
+            logging.info("Conversion started from file %s", input_path)
             if is_directed:
                 logging.debug("Considering graph as directed")
             else:
@@ -39,16 +39,32 @@ def convert(input_path, is_directed):
         logging.critical("Cannot read input file %s: %s", input_path,
                 os.strerror(E.errno))
         sys.exit(2)
-
-    logging.info("Conversion complete: %d vertices, %d edges", G.vcount(), G.ecount())
+    logging.info("Read file %s, %d nodes, %d edges", input_path, G.vcount(),
+            G.ecount())
 
     if not G.is_simple():
         logging.warning("The graph is not simple. We are going to simplify it")
         G.simplify()
+        logging.info("Graph now has %d nodes, %d edges", G.vcount(), G.ecount())
 
     if not G.is_connected(mode=ig.WEAK):
-        logging.warning("The graph is not weakly connected. Exiting.")
-        exit(2)
+        if not save_max_conn:
+            logging.warning("The graph is not weakly connected. Exiting.")
+            exit(2)
+        else:
+            logging.warning("The graph is not weakly connected. -m,--maxconn specified. Saving largest connected component.")
+            clustering = G.components(mode=ig.WEAK)
+            max_size = 0
+            max_index = 0
+            index = 0
+            while index < len(clustering):
+                if len(clustering[index]) > max_size:
+                    max_size = len(clustering[index])
+                    max_index = index
+                index += 1
+            G = clustering.subgraph(max_index)
+
+    logging.info("Conversion complete: %d vertices, %d edges", G.vcount(), G.ecount())
 
     return G
 
@@ -65,6 +81,8 @@ def main():
             help="consider the graph as directed")
     group.add_argument("-u", "--undirected", action="store_true", default=True,
             help="consider the graph as undirected (default)")
+    parser.add_argument("-m", "--maxconn", action="store_true", default=False,
+            help="if the graph is not weakly connected, only save the largest connected component")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-z", "--compress", action="store_true", default=False,
@@ -75,7 +93,7 @@ def main():
     util.set_verbosity(args.verbose)
 
     # Convert the file
-    G = convert(args.input, args.directed)
+    G = convert(args.input, args.directed, args.maxconn)
 
     # Serialize the graph to file
     logging.info("Writing graph to file %s", args.output)
