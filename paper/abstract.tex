@@ -1,23 +1,24 @@
 \begin{abstract}
   Betweenness centrality is an important measure in (social) network analysis as
   it allows to rank the vertices by their ``prominence'' in the network. The
-  betweenness of a vertex $v$ is, roughly, the number of shortest paths among
-  vertices of the network that go through $v$. The currently fastest algorithm
-  to compute the exact betweenness of all vertices in a graph
-  $G=(V,E)$ requires time $O(|V|\cdot|E|)$ if the edges have no weight and time
+  betweenness of a vertex $v$ is, roughly, the number of shortest paths between
+  all vertices that pass through $v$. The fastest known algorithm to compute
+  the exact betweenness of all vertices in a graph $G=(V,E)$ requires time
+  $O(|V|\cdot|E|)$ if the edges have no weight and time
   $O(|V|\cdot|E|+|V|^2\log|V|)$ for weighted graphs. Exact computation in large
   networks with millions of vertices and hundred of millions is therefore
   prohibitively expensive and fast approximation algorithms are required in
-  these cases. In this work we develop an algorithm based on random sampling
-  that probabilistically guarantees that the estimated betweenness of each
-  vertex in the graph is very close to its real value. Each sample is a random
-  shortest paths between two randomly chosen vertices of the graph. The required
-  sample size depends on the desired accuracy $\varepsilon$ and confidence
-  $\delta$ and on a characteristic quantity $\delta$ of the graph that we call
-  \emph{vertex-diameter}, viz.~the maximum number of vertices in a shortest
-  path. The resulting sample size $|S|=O(\log(\Delta/\delta)/\epsilon^2)$ is a
-  huge improvement over existing algorithms offering the same guarantees. In the
-  experimental evaluation on real and artificial networks we compare with these
-  existing methods and show that our algorithm is much faster.
+  these cases. In this work we develop an algorithm based on random sampling to
+  approximate the betweenness of all the nodes. It offers probabilistic
+  guarantees that the estimated betweenness of each vertex is very close to its
+  real value. Each sample is a random shortest path between two randomly chosen
+  vertices of the graph. The required sample size depends on the desired
+  accuracy $\varepsilon$ and confidence $\delta$ and on a characteristic
+  quantity $\delta$ of the graph that we call \emph{vertex-diameter}, viz.~the
+  maximum number of vertices in a shortest path. The resulting sample size
+  $|S|=O(\log(\Delta/\delta)/\epsilon^2)$ is a huge improvement over existing
+  algorithms offering the same guarantees. In the experimental evaluation on
+  real and artificial networks we compared with these existing methods and show
+  that our algorithm is much faster.
 \end{abstract}
 
