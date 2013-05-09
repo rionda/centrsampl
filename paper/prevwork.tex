@@ -1,4 +1,4 @@
-\section{Related works}\label{sec:prevwork}
+\section{Related work}\label{sec:prevwork}
 Over the years, a number of centrality measures have been defined. In this work
 we are only concerned with betweenness centrality and some of its variants. We
 refer the reader interested in other measure to the book by~\citet{Newman10} and
@@ -27,7 +27,7 @@ random and compute the contribution of the sampled vertices to the betweenness
 of every vertex. The number of samples needed to guarantee that, with
 probability at least $1-\delta$, the estimate for each node is within
 $\binom{|V|}{2}\varepsilon$ from the real value, for some $\varepsilon\in(0,1)$,
-is $O(\log(n/\delta)/\epsilon^2)$. The algorithm works exactly as the exact
+is $O(\log(n/\delta)/\varepsilon^2)$. The algorithm works exactly as the exact
 one, with the difference that, instead of computing the contribution of all
 vertices to the betweenness of the others, only it only consider the
 contribution of the sampled vertices. \citet{GeisbergerSS08} noticed that this

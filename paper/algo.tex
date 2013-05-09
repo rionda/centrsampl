@@ -21,11 +21,11 @@ $(u,v)\in V\times V$,
 \prob_G(p_{uv})=\frac{1}{\binom{n}{2}|\mathcal{S}_{uv}|}\enspace.%=\frac{2}{n(n-1)|\mathcal{S}_{uv}|}\enspace.
 \]
 Note that $\prob_G(p_\emptyset)$ is non-zero if there is at least one pair
-$(u,v)$ with $\sigma_{uv}=0$.
+$(u,v)$ with $d_{uv}=0$.
 Sampling according to $\prob_G$ can be achieved by first picking a pair of distinct vertices $(u,v)$
 uniformly at random, computing the set $\mathcal{S}_{uv}$ of all the shortest
 paths between $u$ and $v$, and selecting one of these shortest paths uniformly
-at random. If $\sigma_{uv}=0$, the sampled path is obviously $p_\emptyset$. The
+at random. If $d_{uv}=0$, the sampled path is obviously $p_\emptyset$. The
 estimation $\tilde\betw(v)$ of the betweenness centrality of each
 vertex $v\in V$ is obtained by computing the fraction of shortest paths in $S$
 that $v$ is internal to and de-normalizing it: 
