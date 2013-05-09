@@ -27,21 +27,36 @@ random and compute the contribution of the sampled vertices to the betweenness
 of every vertex. The number of samples needed to guarantee that, with
 probability at least $1-\delta$, the estimate for each node is within
 $\binom{|V|}{2}\varepsilon$ from the real value, for some $\varepsilon\in(0,1)$,
-is $O(\log(n/\delta)/\varepsilon^2)$. The algorithm works exactly as the exact
-one, with the difference that, instead of computing the contribution of all
-vertices to the betweenness of the others, only it only consider the
-contribution of the sampled vertices. \citet{GeisbergerSS08} noticed that this
-can lead to an overestimation of the betweenness of vertices that are close to
-the sampled ones and introduced different unbiased estimators that are
-experimentally shown to have smaller variance and do not occur in this
-overshooting. Our algorithm is different because each sample in our case is a
-single random shortest path between two randomly chosen nodes. This leads to a
-much smaller sample size and less work done for each sample, resulting in a much
-faster way to compute approximations of the betweenness with the same
-probabilistic guarantees. We delve more in the comparisons with these algorithm
-in Sect.~\ref{sec:discussion} and~\ref{sec:exper}.
-
-Adaptive sampling~\citep{BaderKMM07,MaiyaBW10,LimMRT11}.
+is $O(\log(n/\delta)/\varepsilon^2)$. The analysis uses Hoffeding bounds and the
+union bound. The algorithm mimics the exact one, with the difference
+that, instead of computing the contribution of all vertices to the betweenness
+of the others, only it only consider the contribution of the sampled vertices.
+\citet{GeisbergerSS08} noticed that this can lead to an overestimation of the
+betweenness of vertices that are close to the sampled ones and introduced
+different unbiased estimators that are experimentally shown to have smaller
+variance and do not occur in this overshooting. Our algorithm is different
+because each sample in our case is a single random shortest path between two
+randomly chosen nodes. This leads to a much smaller sample size and less work
+done for each sample, resulting in a much faster way to compute approximations
+of the betweenness with the same probabilistic guarantees. We delve more in the
+comparisons with these algorithm in Sect.~\ref{sec:discussion}
+and~\ref{sec:exper}.
+A number of works explored the use of adaptive sampling, in contrast with the
+previous algorithms (and ours) which use a fixed sample size. \citet{BaderKMM07}
+present an adaptive sampling algorithm which computes good estimations for the
+betweenness of high-centrality vertices, by keeping track of the partial
+contribution of each sampled vertex, obtained by performing a single-source
+shortest paths computation to all other vertices. \citet{MaiyaBW10} use concepts
+from expander graphs to select a connected sample of vertices which includes the
+highest centrality ones and such that the betweenness computed on the induced
+sample subgraph is close to the real one. They achieve these by repeatedly
+including in the sample the vertex in the neighborhood of the sample which
+maximizes the number of connections with vertices not already in the sample.
+Modified versions of this algorithm and an extensive experimental evaluation
+appeared in~\citep{LimMRTB11}. The algorithm does not offer any guarantee on the
+quality of the approximations. Compared to these adaptive sampling approaches,
+our method ensures that the betweenness of all vertices is well approximated
+with a fixed, predetermined amount of samples.
 
 Other approximations~\citep{GkorouPE10,PrountzosP13,SaryuceSKC13}
 
