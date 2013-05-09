@@ -39,8 +39,29 @@ $Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
 $\VC(\range_G)\le\lfloor\log_2(\Delta_G-2)\rfloor+1$.%\qed
 \end{proof}
 
-\XXX TBD: Consider the case of local betweenness centrality. \MR
+The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
+for each $d>2$ we can build a graph $G_d$ with vertex-diameter $d$ and such
+that the range set associated to the set of shortest path of $G_d$ has
+VC-dimension exactly $\lfloor\log_2(d-2)\rfloor+1$.
 
+\begin{lemma}\label{lem:vcdimlowbound}
+  Given $d>2$ there exists a graph $G$ with vertex-diameter $d$ and such that
+  $\VC(\range_G)=\lfloor\log_2(d-2)\rfloor+1$.
+\end{lemma}
+
+\begin{proof}
+  \XXX TBD Remember to take care of the cases $d=1,2$.
+\end{proof}
+
+\paragraph{Range set for $k$-betweenness} For the case of $k$-betweenness, if we let
+$\range_G^{(k)}=\{\mathcal{T}_v^{(k)}~:~ v\in V\}$, it is easy to bound
+$\VC(\range_G^{(k)})$ following the same reasoning as in
+Lemma~\ref{lem:vcdimuppbound}.
+\begin{lemma}\label{lem:vcdimuppboundk}
+$\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor$.
+\end{lemma}
+
+\paragraph{Unique shortest paths}
 In the restricted case when the graph is undirected and every pair of distinct vertices
 has a unique shortest path between them, the upper bound can be improved.
 \begin{lemma}\label{lem:vcdimuppboundunique}
@@ -112,21 +133,5 @@ has a unique shortest path between them, the upper bound can be improved.
 
   Lemma~\ref{lem:vcdimuppboundunique} gives us an upper bound $\VC(\range_G)\le3$,
   so we can conclude that $\VC(\range_G)=3$.
-\end{proof}
-
-
-
-The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
-for each $d>2$ we can build a graph $G_d$ with vertex-diameter $d$ and such
-that the range set associated to the set of shortest path of $G_d$ has
-VC-dimension exactly $\lfloor\log_2(d-2)\rfloor+1$.
-
-\begin{lemma}\label{lem:vcdimlowbound}
-  Given $d>2$ there exists a graph $G$ with vertex-diameter $d$ and such that
-  $\VC(\range_G)=\lfloor\log_2(d-2)\rfloor+1$.
-\end{lemma}
-
-\begin{proof}
-  \XXX TBD Remember to take care of the cases $d=1,2$.
 \end{proof}
 
