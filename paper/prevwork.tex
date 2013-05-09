@@ -1,28 +1,52 @@
-\section{Related work}\label{sec:prevwork}
-\XXX TBD
+\section{Related works}\label{sec:prevwork}
+Over the years, a number of centrality measures have been defined. In this work
+we are only concerned with betweenness centrality and some of its variants. We
+refer the reader interested in other measure to the book by~\citet{Newman10} and
+references therein.
 
-Classical papers introducing betweenness
-centrality~\citep{Anthonisse71,Freeman77}.
-
-Fast exact algorithm~\citep{Brandes01}.
+Betweenness centrality was introduced in the sociology
+literature~\citep{Anthonisse71,Freeman77}. 
 
 Variants~\citep{Brandes08,DolevEP10,KourtellisASIT12,PfefferC12}
 
-One-shot sample approximations~\citep{BrandesP07,EppsteinW04,GeisbergerSS08,JacobKLPT05}
+The need of fast algorithms to compute
+the betweenness of vertices in a graph arose as large online social networks
+developed. \citet{Brandes01} presents the first efficient algorithm for the
+task, running in time $O(|V|\cdot|E|)$ on unweighted graphs and
+$O(|V|\cdot|E|+|V|^2\log|V|)$ on weighted ones. The algorithm computes, for each
+vertex $v$, the shortest path to every other vertex and then traverses these paths
+backwards to efficiently compute the contribution of the shortest paths from $v$
+to the betweenness of other vertices. For very large networks, the cost of this
+algorithm would still be prohibitive in practice, so many approximation
+algorithms were
+developed~\citep{JacobKLPT05,BrandesP07,BaderKMM07,GeisbergerSS08,MaiyaBW10,LimMRT11}.
+The use of random sampling was one of the more natural approaches to speed up
+the computation of betweenness. Inspired by the work of~\citet{EppsteinW04},
+\citet{JacobKLPT05,BrandesP07} present an algorithm that samples vertices at
+random and compute the contribution of the sampled vertices to the betweenness
+of every vertex. The number of samples needed to guarantee that, with
+probability at least $1-\delta$, the estimate for each node is within
+$\binom{|V|}{2}\varepsilon$ from the real value, for some $\varepsilon\in(0,1)$,
+is $O(\log(n/\delta)/\epsilon^2)$. The algorithm works exactly as the exact
+one, with the difference that, instead of computing the contribution of all
+vertices to the betweenness of the others, only it only consider the
+contribution of the sampled vertices. \citet{GeisbergerSS08} noticed that this
+can lead to an overestimation of the betweenness of vertices that are close to
+the sampled ones and introduced different unbiased estimators that are
+experimentally shown to have smaller variance and do not occur in this
+overshooting. Our algorithm is different because each sample in our case is a
+single random shortest path between two randomly chosen nodes. This leads to a
+much smaller sample size and less work done for each sample, resulting in a much
+faster way to compute approximations of the betweenness with the same
+probabilistic guarantees. We delve more in the comparisons with these algorithm
+in Sect.~\ref{sec:discussion} and~\ref{sec:exper}.
 
-Adaptive sampling~\citep{BaderKMM07,LimMRT11,MaiyaBW10}
+Adaptive sampling~\citep{BaderKMM07,MaiyaBW10,LimMRT11}.
 
 Other approximations~\citep{GkorouPE10,PrountzosP13,SaryuceSKC13}
-
-$ $
 
 VC-Dimension on graphs~\citep{AnthonyBC95,KranakisKRUW97,MubayiZ07,YcartR07}
 (mostly only~\citep{KranakisKRUW97}
 
 VC-Dimension and Shortest paths~\citep{AbrahamDFGW11}
 
-%The work of~\citet{EppsteinW04} deployed sampling to approximate the closeness
-%centrality. Specifically, the authors proposed an
-%$O(\frac{\mbox{log}n}{\epsilon^2}(n\mbox{log}n+m))$ randomized algorithm with
-%additive error of $\epsilon \Delta$ for approximating the inverse closeness
-%centrality of weighted graphs, where $\Delta$ is the diameter of the graph.
