@@ -1,0 +1,111 @@
+\documentclass{sig-alternate}
+
+\usepackage{graphicx}
+\usepackage{balance}
+\usepackage{float}
+\usepackage{xspace}
+\usepackage[numbers,sort&compress,square]{natbib}
+\usepackage{ctable}
+%\makeatletter
+%\renewcommand\bibsection%
+%{
+%  \section*{\refname
+%    \@mkboth{\MakeUppercase{\refname}}{\MakeUppercase{\refname}}}
+%}
+%\makeatother
+
+%\usepackage{times}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{multirow}
+\usepackage{bigstrut}
+\usepackage{url}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+
+
+\DeclareCaptionType{copyrightbox}
+
+\newtheorem{corol}{Corollary}
+\newtheorem{conj}{Conjecture}
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{theorem}{Theorem}
+
+\newdef{definition}{Definition}
+
+\def\XXX{{\bf XXX}}
+\def\MR{{\bf MR}}
+\def\EK{{\bf EK}}
+
+\def\prob{\pi}
+\def\range{\mathcal{R}}
+\def\VC{\mathsf{VC}}
+\def\betw{\mathsf{b}}
+
+\begin{document}
+\conferenceinfo{CIKM'12,} {October 29--November 2, 2012, Maui, HI, USA.}
+\CopyrightYear{2012}
+\crdata{978-1-4503-1156-4/12/10}
+\clubpenalty=10000
+\widowpenalty = 10000
+
+\title{Fast Approximation of Betweenness Centrality Through Sampling}
+%\numberofauthors{3} 
+\numberofauthors{1}
+\author{
+\iffalse
+$ $ \\
+\affaddr{$  $}\\
+\affaddr{$  $}\\
+\affaddr{$  $}\\
+\email{$ $}
+\alignauthor
+Matteo Riondato\titlenote{Contact Author}\\
+       \affaddr{Dept.~of Computer Science}\\
+       \affaddr{Brown University}\\
+       \affaddr{Providence, RI, USA}\\
+       \email{matteo@cs.brown.edu}
+\alignauthor
+Evgenios M. Kornaropoulos\\
+       \affaddr{Dept.~of Computer Science}\\
+       \affaddr{Brown University}\\
+       \affaddr{Providence, RI, USA}\\
+       \email{evgenios@cs.brown.edu}
+\alignauthor
+Eli Upfal\\
+       \affaddr{Dept.~of Computer Science}\\
+       \affaddr{Brown University}\\
+       \affaddr{Providence, RI, USA}\\
+       \email{eli@cs.brown.edu} 
+ \fi
+ }
+%\additionalauthors{}
+\date{8 May 2013}
+
+\maketitle
+\input{abstract}
+
+\category{H.2.8}{Database Management}{Database Applications}[data mining]
+%\category{H.3.4}{Systems and Software}{Distributed Systems}
+\terms{Algorithms, Experimentation, Performance, Theory}
+\keywords{Betweenness centrality, Sampling, VC-Dimension}  
+
+\input{intro}
+\input{prevwork}
+\input{prelims}
+\input{rangeset}
+\input{algo}
+\input{exper}
+\input{concl}
+
+
+\bibliographystyle{abbrvnat}
+\bibliography{diamapprox,vcmine,vcgraph,centrality}
+
+\end{document}
+
