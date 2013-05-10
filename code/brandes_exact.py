@@ -16,7 +16,7 @@ import time
 
 import util
 
-def betweenness_igraph(graph, set_attributes=True):
+def betweenness_homegrown(graph, set_attributes=True):
     """Compute exact betweenness of vertices in graph and time needed.
 
     Return a tuple with the time needed to compute the betweenness and the list
@@ -24,12 +24,12 @@ def betweenness_igraph(graph, set_attributes=True):
     If set_attributes is True (default), then set the values of the betweenness
     as vertex attributes, and the time as a graph attribute.
 
-    igraph version using igraph.Graph.betweenness()
+    igraph version using igraph.Graph.betweenness(). Not really homegrown.
 
     """
     # We minimize the use of logging from here to the end of the computation to avoid
     # wasting time 
-    logging.info("Computing exact betweenness with igraph implementation")
+    logging.info("Computing exact betweenness with homegrown implementation")
     start_time = time.process_time()
     betw = graph.betweenness()
     end_time = time.process_time()
@@ -47,64 +47,8 @@ def betweenness_igraph(graph, set_attributes=True):
     if set_attributes:
         graph["betw_time"] = elapsed_time
         graph.vs["betw"] = betw
-        graph.vs["betw_type"] = "igraph"
-
-    return (elapsed_time, betw)
-
-def update_betweenness(graph, source, betw):
-    """Update the betweenness using the contribution of the source.
-    
-    Update the betweenness of all vertices in the graph by adding the
-    contribution of the specified source. The computation follows the
-    description in Brandes's original paper, see
-    http://dx.doi.org/10.1080/0022250X.2001.9990249 .
-
-    Return the update betweenness.
-
-    """ 
-    deltas = [0] * graph.vcount()
-    # Compute shortest paths
-    vertices_stack = util.compute_shortest_paths_dijkstra(graph, source.index)
-    while vertices_stack:
-        vertex_index = vertices_stack.pop(-1)
-        vertex = graph.vs[vertex_index]
-        for pred_index in vertex["preds"]:
-            deltas[pred_index] += (graph.vs[pred_index]["paths"] /
-                    vertex["paths"]) * (1 + deltas[vertex_index])
-        if vertex_index != source.index:
-            betw[vertex_index] += deltas[vertex_index]
-    return betw
-
-def betweenness_homegrown(graph, set_attributes=True):
-    """Compute exact betweenness of vertices in graph and time needed.
-
-    Return a tuple with the time needed to compute the betweenness and the list
-    of betweenness values (one for each vertex in the graph).
-    If set_attributes is True (default), then set the values of the betweenness
-    as vertex attributes, and the time as a graph attribute.
-
-    Completely homegrown version
-
-    """
-    # We minimize the use of logging from here to the end of the computation to avoid
-    # wasting time 
-    logging.info("Computing exact betweenness with homegrown implementation")
-    betw = [0] * graph.vcount()
-    start_time = time.process_time()
-    # Compute betweenness.
-    for source in graph.vs:
-       betw = update_betweenness(graph, source, betw) 
-    end_time = time.process_time()
-    elapsed_time = end_time - start_time
-    logging.info("Betweenness computation complete, took %s seconds",
-            elapsed_time)
-    
-    # Write attributes to graph, if specified
-    if set_attributes:
-        graph["betw_time"] = elapsed_time
-        graph.vs["betw"] = betw
         graph.vs["betw_type"] = "homegrown"
-    
+
     return (elapsed_time, betw)
 
 def vertex_betweenness_contribution(graph, vertex):
@@ -131,7 +75,7 @@ def vertex_betweenness_contribution(graph, vertex):
                     contrib[vertex] += addend
     return contrib
 
-def betweenness_noigraph(graph, set_attributes=True):
+def betweenness_igraph(graph, set_attributes=True):
     """Compute exact betweenness of vertices in graph and time needed.
 
     Return a tuple with the time needed to compute the betweenness and the list
@@ -139,12 +83,12 @@ def betweenness_noigraph(graph, set_attributes=True):
     If set_attributes is True (default), then set the values of the betweenness
     as vertex attributes, and the time as a graph attribute.
 
-    non-igraph version.
+    igraph version but not using the graph.betwenness() function
 
     """
     # We minimize the use of logging from here to the end of the computation to avoid
     # wasting time 
-    logging.info("Computing exact betweenness with noigraph implementation")
+    logging.info("Computing exact betweenness with igraph implementation")
     betw = [0] * graph.vcount()
     start_time = time.process_time()
     # Add the contribution of each vertex
@@ -159,27 +103,25 @@ def betweenness_noigraph(graph, set_attributes=True):
     if set_attributes:
         graph["betw_time"] = elapsed_time
         graph.vs["betw"] = betw
-        graph.vs["betw_type"] = "noigraph"
+        graph.vs["betw_type"] = "igraph"
     
     return (elapsed_time, betw)
 
-def betweenness(graph, implementation="igraph", set_attributes=True):
+def betweenness(graph, implementation="homegrown", set_attributes=True):
     """Compute exact betweenness of vertices in graph and time needed.
     
     Return a tuple with the time needed to compute the betweenness and the list
     of betweenness values (one for each vertex in the graph).
     Compute betweenness using the specified implementation (available: igraph,
-    noigraph, homegrown).
+    homegrown).
     If set_attributes is True (default), then set the values of the betweenness
     as vertex attributes, and the time as a graph attribute.
     
     """
-    if implementation == "igraph" or implementation == "chomegrown":
-        return betweenness_igraph(graph, set_attributes)
-    elif implementation == "noigraph":
-        return betweenness_noigraph(graph, set_attributes)
-    elif implementation == "homegrown":
+    if implementation == "homegrown":
         return betweenness_homegrown(graph, set_attributes)
+    elif implementation == "igraph":
+        return betweenness_igraph(graph, set_attributes)
     else:
         logging.critical("Betweenness implementation not recognized: %s",
                 implementation)
@@ -192,8 +134,8 @@ def main():
     parser.description = "Compute the exact betweenness centrality of all vertices in a graph using Brandes' algorithm, and the time to compute them, and write them to file"
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
-    parser.add_argument("-i", "--implementation", choices=["igraph",
-        "noigraph", "homegrown", "chomegrown"], default="igraph", 
+    parser.add_argument("-i", "--implementation", choices=["homegrown",
+        "igraph"], default="homegrown", 
         help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, 
             help="increase verbosity (use multiple times for more verbosity)")

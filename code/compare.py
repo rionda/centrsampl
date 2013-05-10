@@ -25,14 +25,14 @@ def main():
     parser.add_argument("graph", help="graph file")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-a", "--approximate", action="store_true",
-            default=False, help="use approximate diameter when computing approximation of betweenness using VC-Dimension")
+            default=True, help="use approximate diameter when computing approximation of betweenness using VC-Dimension (default)")
     group.add_argument("-d", "--diameter", type=util.positive_int, default=0, help="value to use for the diameter")
     group.add_argument("-e", "--exact", action="store_true", default=False,
-            help="use exact diameter when computing approximation of betweenness using VC-Dimension (default)")
+            help="use exact diameter when computing approximation of betweenness using VC-Dimension")
     parser.add_argument("-f", "--force", action="store_true", default=False,
             help="Force recomputation of all betweenness values, exact and approximate.")
-    parser.add_argument("-i", "--implementation", choices=["igraph",
-        "homegrown", "chomegrown"], default="igraph", 
+    parser.add_argument("-i", "--implementation", choices=["homegrown",
+        "igraph"], default="homegrown", 
         help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
@@ -47,6 +47,9 @@ def main():
 
     # Read graph
     G = util.read_graph(args.graph)
+
+    if args.exact:
+        args.approximate = False
 
     # If the graph does not have the attributes for the betweenness or has the
     # wrong ones, (re-)compute them
