@@ -1384,6 +1384,58 @@ PyObject *igraphmodule_Graph_get_eids(igraphmodule_GraphObject * self,
 
 /** \ingroup python_interface_graph
  * \brief Calculates the diameter of an \c igraph.Graph
+ *  TODO
+ * This method accepts two optional parameters: the first one is
+ * a boolean meaning whether to consider directed paths (and is
+ * ignored for undirected graphs). The second one is only meaningful
+ * in unconnected graphs: it is \c True if the longest geodesic
+ * within a component should be returned and \c False if the number of
+ * vertices should be returned. They both have a default value of \c False.
+ * 
+ * \return the diameter as a Python integer
+ * \sa igraph_diameter
+ */
+PyObject *igraphmodule_Graph_diameter_approx(igraphmodule_GraphObject * self,
+                                      PyObject * args, PyObject * kwds)
+{
+  PyObject *dir = Py_True, *vcount_if_unconnected = Py_True;
+  PyObject *weights_o = Py_None;
+  igraph_vector_t *weights = 0;
+
+  static char *kwlist[] = {
+    "directed", "unconn", "weights", NULL
+  };
+
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OOO", kwlist,
+                                   &dir, &vcount_if_unconnected,
+                                   &weights_o))
+    return NULL;
+
+  if (igraphmodule_attrib_to_vector_t(weights_o, self, &weights,
+	  ATTRIBUTE_TYPE_EDGE)) return NULL;
+
+  if (weights) {
+    igraph_real_t i;
+    if (igraph_diameter_dijkstra(&self->g, weights, &i, 0, 0, 0,
+          PyObject_IsTrue(dir), PyObject_IsTrue(vcount_if_unconnected))) {
+      igraphmodule_handle_igraph_error();
+      igraph_vector_destroy(weights); free(weights);
+      return NULL;
+    }
+    igraph_vector_destroy(weights); free(weights);
+    return PyFloat_FromDouble((double)i);
+  } else {
+    igraph_integer_t i;
+    if (igraph_diameter(&self->g, &i, 0, 0, 0, PyObject_IsTrue(dir),
+                        PyObject_IsTrue(vcount_if_unconnected))) {
+      igraphmodule_handle_igraph_error();
+      return NULL;
+    }
+    return PyInt_FromLong((long)i);
+  }
+
+/** \ingroup python_interface_graph
+ * \brief Calculates the diameter of an \c igraph.Graph
  * This method accepts two optional parameters: the first one is
  * a boolean meaning whether to consider directed paths (and is
  * ignored for undirected graphs). The second one is only meaningful

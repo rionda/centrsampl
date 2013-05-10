@@ -2554,38 +2554,41 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
  * TODO
  */
 
-int igraph_diameter_approximation(const igraph_t *graph, igraph_bool_t directed,
-    const igraph_vector_t *weights) {
+int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t
+    *diameter, const igraph_vector_t *weights) {
   igraph_bool_t do_computation = 1;
-  igraph_bool_t *component_is_strongly_connected = NULL;
-  int component_size;
-  int diameter=0;
+  igraph_bool_t component_is_strongly_connected;
+  int component_size, component_diameter = 0;
+  *diameter=0;
   int i,j=0;
   int max_component_size = 0;
-  igraph_rng_t *rng = igraph_rng_default();
+  igraph_rng_t *rng = NULL;
   igraph_vector_ptr_t components;
-  igraph_vector_ptr_init(&components, 1);
+  igraph_vector_ptr_init(&components, 0);
   IGRAPH_FINALLY(igraph_vector_ptr_destroy, &components);
   igraph_decompose(graph, &components, IGRAPH_WEAK, -1, 2);
-  if (! weights) {
+  if (weights) {
     do_computation = 0;
+  } else {
+    rng = igraph_rng_default();
   }
   for (j=0; j < igraph_vector_ptr_size(&components); j++) {
-    igraph_t *component = (igraph_t *) VECTOR(components)[j];
+    // igraph_t *component = (igraph_t *) VECTOR(components)[j];
+    igraph_t *component = VECTOR(components)[j];
     component_size = igraph_vcount(component);
     if (max_component_size < component_size - 1) {
       max_component_size = component_size - 1;
     }
     // Were all connected components we found until now strongly connected?
     if (do_computation) { 
-      igraph_is_connected(component, component_is_strongly_connected, IGRAPH_STRONG);
-      if (*component_is_strongly_connected) {
+      igraph_is_connected(component, &component_is_strongly_connected, IGRAPH_STRONG);
+      if (component_is_strongly_connected) {
         igraph_matrix_t sp_res;
         IGRAPH_CHECK(igraph_matrix_init(&sp_res, 1, component_size));
         IGRAPH_FINALLY(igraph_matrix_destroy, &sp_res);
         igraph_integer_t sampled_source = igraph_rng_get_integer(rng, 0, component_size);
         // Compute shortest paths from sampled source
-        igraph_shortest_paths(graph, &sp_res, igraph_vss_1(sampled_source),
+        igraph_shortest_paths(component, &sp_res, igraph_vss_1(sampled_source),
           igraph_vss_all(), IGRAPH_ALL);
         // Perform computation of diameter
         igraph_real_t largest = 0;
@@ -2599,7 +2602,10 @@ int igraph_diameter_approximation(const igraph_t *graph, igraph_bool_t directed,
             largest = MATRIX(sp_res, 0, i);
           }
         }
-        diameter = (igraph_integer_t) largest + second_largest;
+        component_diameter = (igraph_integer_t) largest + second_largest;
+        if (component_diameter > *diameter) {
+          *diameter = component_diameter;
+        }
         igraph_matrix_destroy(&sp_res);
         IGRAPH_FINALLY_CLEAN(1);
       } else { // component not strongly connected
@@ -2608,7 +2614,10 @@ int igraph_diameter_approximation(const igraph_t *graph, igraph_bool_t directed,
     } // and if do_computation
   } // end for connected components
   igraph_decompose_destroy(&components);
-  return do_computation ? diameter: max_component_size - 1;
+  if (! do_computation) {
+    *diameter = max_component_size - 1;
+  }
+  return 0;
 }
 
 /**
@@ -2625,6 +2634,7 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
            igraph_bool_t directed, igraph_real_t cutoff, 
            const igraph_vector_t* weights, igraph_bool_t nobigint) {
   double sample_size_constant=0.5;
+  igraph_integer_t my_diameter = diameter;
   igraph_integer_t no_of_samples;
   /* Check values of epsilon and delta */
   if (delta >= 1.0 || delta <= 0.0) {
@@ -2636,12 +2646,12 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   /* If diameter is -1, compute approximation of diameter (only valid for
    * undirected graphs).
    */
-  if (diameter == -1) {
-    diameter = igraph_diameter_approximation(graph, directed, weights);
+  if (my_diameter == -1) {
+    igraph_diameter_approximation(graph, &my_diameter, weights);
   }
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
-          2)) * (floor(log2(diameter - 1)) - log(delta)));
+          2)) * (floor(log2(my_diameter - 1)) - log(delta)));
   return igraph_i_betweenness_sample_vc(graph, res, no_of_samples, vids, directed, cutoff, weights, nobigint);
 }
 
