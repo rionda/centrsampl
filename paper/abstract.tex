@@ -1,25 +1,23 @@
 \begin{abstract}
-  Betweenness centrality is an important measure in (social) network analysis as
-  it allows to rank the vertices by their ``prominence'' in the network. The
-  betweenness of a vertex $v$ is, roughly, the number of shortest paths between
-  all vertices that pass through $v$. The fastest known algorithm to compute
-  the exact betweenness of all vertices in a graph $G=(V,E)$ requires time
-  $O(|V|\cdot|E|)$ if the edges have no weight and time
-  $O(|V|\cdot|E|+|V|^2\log|V|)$ for weighted graphs. Exact computation in large
-  networks with millions of vertices and hundred of millions is therefore
-  prohibitively expensive and fast approximation algorithms are required in
-  these cases. In this work we develop an algorithm based on random sampling to
-  approximate the betweenness of all the nodes. It offers probabilistic
-  guarantees that the estimated betweenness of each vertex is very close to its
-  real value. Each sample is a random shortest path between two randomly chosen
-  vertices of the graph. The required sample size depends on the desired
-  accuracy $\varepsilon$ and confidence $\delta$ and on a characteristic
-  quantity $\delta$ of the graph that we call \emph{vertex-diameter}, viz.~the
-  maximum number of vertices in a shortest path. The resulting sample size
-  $|S|=O(\log(\Delta/\delta)/\epsilon^2)$ is a huge improvement over existing
-  algorithms offering the same guarantees. In the experimental evaluation on
-  real and artificial networks we compared the performance of our algorithm
-  with that of exact and approximated methods and show that our algorithm is
-  much faster.
+  We present an efficient randomized algorithm for approximating the {\sl
+  betweenness centrality} of all nodes in a network within strict probabilistic
+  guarantees.  Betweenness centrality is a fundamental measure in social network
+  analysis, quantifying the importance or influence of individual nodes in a
+  network in terms of the number of shortest paths (between all pairs of nodes
+  in the network) that pass through that node. The fastest known algorithm to
+  compute the exact betweenness of all vertices in a graph $G=(V,E)$ in
+  $O(|V|\cdot|E|)$ steps in the unweighted case and in
+  $O(|V|\cdot|E|+|V|^2\log|V|)$ steps in weighted graphs. Exact computation in
+  large networks with millions of vertices and hundred of millions of edges is
+  therefore prohibitively expensive and fast approximation algorithms are
+  required in these cases. Our novel algorithm computes an
+  $(\epsilon,\delta)$-approximation of the vector of betweenness centrality of
+  all the nodes in the graph. Our algorithm is significantly faster than any
+  other algorithm with similar approximation guarantees. We achieve this speed
+  up through a novel application of the VC-dimension method for optimizing the
+  sampling component of the algorithm. Extensive experimental evaluation on real
+  and artificial networks demonstrate the practicality of our method and its
+  speed up compared to exact and other known approximated solutions for this
+  problem.
 \end{abstract}
-
+  
