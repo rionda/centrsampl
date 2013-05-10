@@ -1981,6 +1981,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
   igraph_rng_t *rng=igraph_rng_default();
   long int no_of_nodes=igraph_vcount(graph);
   long int no_of_edges=igraph_ecount(graph);
+  long int normalization_factor = no_of_nodes * (no_of_nodes - 1);
   igraph_inclist_t inclist;
   igraph_adjlist_t fathers;
   long int vertex_index, j;
@@ -2143,7 +2144,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
 
         /* Increase betweenness counter for internal node */
         if (sampled_pred != source) {
-          VECTOR(*tmpres)[sampled_pred]+=1; 
+          VECTOR(*tmpres)[sampled_pred]+= normalization_factor; 
         } else {
           break;
         }
@@ -2220,6 +2221,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
 
   igraph_rng_t *rng=igraph_rng_default();
   long int no_of_nodes=igraph_vcount(graph);
+  long int normalization_factor = no_of_nodes * (no_of_nodes - 1);
   /*igraph_dqueue_t q=IGRAPH_DQUEUE_NULL; */
   long int *distance;
   unsigned long long int *nrgeo=0;  /* must be long long; consider grid
@@ -2432,7 +2434,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
 
         /* Increase betweenness counter for internal node */
         if (sampled_pred != source) {
-          VECTOR(*tmpres)[sampled_pred]+=1; 
+          VECTOR(*tmpres)[sampled_pred]+= normalization_factor; 
         } else {
           break;
         }
@@ -2559,7 +2561,6 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   double sample_size_constant=0.5;
   igraph_integer_t no_of_samples;
   long int no_of_nodes=igraph_vcount(graph);
-  double normalization_factor;
   /* Check values of epsilon and delta */
   if (delta >= 1.0 || delta <= 0.0) {
     IGRAPH_ERROR("delta must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
@@ -2602,13 +2603,7 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
           2)) * (floor(log2(diameter - 1)) - log(delta)));
-  return_code = igraph_i_betweenness_sample_vc(graph, res, no_of_samples, vids, directed, cutoff, weights, nobigint);
-  /* Denormalize betweenness counters by (n choose 2) / k */
-  normalization_factor =  ((double) (no_of_nodes * (no_of_nodes - 1))) / ( 2 * no_of_samples);
-  for (j=0; j<no_of_nodes; j++) {
-    VECTOR(*res)[j] *= normalization_factor;
-  }
-  return return_code;
+  return igraph_i_betweenness_sample_vc(graph, res, no_of_samples, vids, directed, cutoff, weights, nobigint);
 }
 
 /**
