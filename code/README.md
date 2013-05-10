@@ -1,1 +1,1 @@
-This directory will contain the code for the experiments.
+This directory contains the code for the experiments.
