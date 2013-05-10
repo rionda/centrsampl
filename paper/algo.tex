@@ -171,20 +171,67 @@ slightly perturbing the edge weights or having a deterministic tie breaking
 policy.
 
 \subsection{Approximating the diameter}\label{sec:diam}
-The algorithm presented in the previous section requires the knowledge (or the
-computation) of the vertex-diameter $\Delta_G$) of the graph $G$ (line
-\ref{alg:diamcomp} of Alg.~\ref{alg:algorithm}). Computing $\Delta_G$ exactly
-can be done by finding the shortest paths between all pair of vertices in $V$
-and computing the maximum size. This can be done in time \XXX. Such an exact
-computation would defeat our purposes, because once we have all the shortest
-paths, we can compute the betweenness of all the nodes exactly. Given that
-Thm.~\ref{thm:eapprox} only requires an upper bound to the VC-dimension of the
-range set, an upper bound to the vertex-diameter would be sufficient for our
-purposes, provided its computation is fast and it does not result in a much
-larger sample size than if we used the exact value for $\Delta_G$. There are
-known algorithms to approximate the diameter of a
-graph~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times
-and quality of approximations.
+
+
+
+The algorithm presented in the previous section requires the value of the vertex-diameter $\Delta_G$ of the graph $G$ (line
+\ref{alg:diamcomp} of Alg.~\ref{alg:algorithm}). 
+Computing the exact value of $\Delta_G$ can be done by solving the all pair shorter paths (APSP) problem, and taking the
+shortest path with the maximum size.
+Algorithms for exactly solving APSP problem such as Johnson's which runs in $O(V^2logV+VE)$, Floyd-Warshall's runs in $\Theta(V^3)$, would defeat our purposes.
+The reason is that once we have all the shortest paths for the computation of the diameter, we can also compute the betweenness of all the nodes exactly. 
+Given that Thm.~\ref{thm:eapprox} only requires an upper bound to the VC-dimension of the range set, an approximation of the vertex-diameter would be sufficient for our purposes.
+The computation of the approximation not only affects the time complexity of our algorithm but also the number of samples that we need.
+Several refined algorithms for approximating the diameter are known~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times and quality of approximations.
+ We briefly present a well-known and simple approximation algorithm that has the right balance of accuracy and speed for our purposes.
+
+
+Let $G=(V,E)$ be an \emph{undirected} where \emph{all the weights are unitary}.
+We can form a $2$-approximation algorithm for the diameter $\Delta_G$ of $G$ in time $O(V+E)$ in the following way, 
+select a vertex $v\in V$ uniformly at random, compute the shortest paths from $v$ to all other vertices in $V$, and finally take
+$\tilde\Delta_G$ to be the sum of the lengths of the two longest shortest paths
+from $v$ to two distinct other nodes $u$ and $w$.
+The approximation guarantee follows from the next lemma.
+
+
+\begin{lemma}\label{lem:diam}
+  $\Delta_G\le\tilde\Delta_G\le 2\Delta_G$.
+\end{lemma}
+\begin{proof}
+  Let $v\in V$ be a vertex that we choose uniformly at random from the set $V$.
+  Let also $u,w\in V$ be the two vertices such that the sum of the shortest paths $p_{vu}$ and $p_{vw}$ is maximized among all the shortest paths that have $v$ as a source.
+  We have $\tilde\Delta_G\le 2\Delta_G$ because
+  $|p_{vu}|,|p_{vw}|\le\Delta_G$, so $|p_{vu}|+|p_{vw}|\le 2\Delta_G$. To see
+  that $\tilde\Delta_G\ge\Delta_G$, consider a pair of nodes $x$ and $z$ such
+  that the length of a shortest path between $x$ and $z$ is equal to $\Delta_G$.
+  Let $p_{xv}$ be a shortest path between $x$ and $v$ and let $p_{vz}$ be a
+  shortest path between $v$ and $z$. 
+  From the properties of the shortest paths $p_{vu}$, $p_{vw}$ we have $|p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}|$
+  Since the graph is undirected $|p_{s,t}|=|p_{t,s}|$ for every $s,t\in V$.
+  Therefore:
+  
+  \begin{displaymath}
+    \tilde\Delta_G = |p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}| = |p_{xv}|+|p_{vz}|\ge\Delta_G
+  \end{displaymath}
+   
+  For the last inequality we used the fact that since $\Delta_G$ is the length of the shortest path from $x$ to $z$, then every other path (in this case $p'_{xz}$ which is the merge of $p_{xv}$ and $p_{vz}$) has greater or equal length from $p_{x,z}$.
+  $\qed
+  $
+\end{proof}
+
+In case we have multiple connected components in $G$, we compute the longest shortest path of each component separately by following the above algorithm.
+The connected components can be computed in $O(n+m)$ by using the BFS algorithm.
+Let $\tilde\Delta_{G_{1}},\tilde\Delta_{G_{2}}, \ldots , \tilde\Delta_{G_{k}}$ be the approximations of the diameter for each of the $k$ connected components of $G$ as if they were separate graphs.
+The output of the approximation for the graph $G$, is the maximum of the values $\tilde\Delta_{G_{1}},\tilde\Delta_{G_{2}}, \ldots , \tilde\Delta_{G_{k}}$.
+The time complexity in the case of multiple connected components is again $O(n+m)$ since the sum of the vertices of individual components is $n$ and the sum of edges is $m$. 
+
+
+The use of the above $2$-approximation algorithm in the computation of the sample size results in at most $c/\varepsilon^2$ more samples than if we have used the exact value $\Delta_G$. 
+Furthermore, the computation of $\tilde\Delta_G$ does not affect the running time of our algorithm since for the construction of the first sample we can reuse the already computed shortest paths of $v$ from the approximation of $\Delta_G$.
+Specifically, we can sample a new node $u\neq v$ and then choose with uniform probability one of the
+(already computed) shortest paths between $v$ and $u$.
+
+
 
 \XXX TBD: This can actually be extended to directed case as well. We just need
 to also compute the ``backwards'' shortest paths \emph{to} the sampled nodes, and
@@ -195,44 +242,6 @@ choose the maximum of these ``incoming'' paths and the maximum of the
 approximation and be happy with it. Experiments should show that we are still
 faster than Brandes and Pich.
 
-\XXX TBD: mention that we need to compute the connected components.
-
-For our case, if $G$ is \emph{undirected} and \emph{all the weights are
-unitary}, a $2$-approximation to $\Delta_G$ is sufficient and can be computed in
-time \XXX by selecting a vertex $v\in V$ uniformly at random, computing the
-shortest paths from $v$ to all other vertices in $V$, and taking
-$\tilde\Delta_G$ to be the sum of the sizes of the two longest shortest paths
-from $v$ to two distinct other nodes $u$ and $w$. 
-
-\begin{lemma}\label{lem:diam}
-  $\Delta_G\le\tilde\Delta_G\le 2\Delta_G$.
-\end{lemma}
-\begin{proof}
-  Let $p_{vu}$ be the shortest path between $v$ and $u$ and analogously
-  $p_{vw}$. We have $\tilde\Delta_G\le 2\Delta_G$ because
-  $|p_{vu}|,|p_{vw}|\le\Delta_G$, so $|p_{vu}|+|p_{vw}|\le 2\Delta_g$. To see
-  that $\tilde\Delta_G\ge\Delta_G$, consider a pair of nodes $x$ and $z$ such
-  that the size of a shortest path between $x$ and $z$ is equal to $\Delta_G$.
-  Let $p_{xv}$ be a shortest path between $x$ and $v$ and let $p_{vz}$ be a
-  shortest path between $v$ and $z$. 
-  Then (by the triangle inequality? \XXX)
-  \[
-  |p_{xv}|+|p_{vz}|=|p_{vx}|+|p_{vz}|\ge\Delta_G\enspace.
-  \]
-  It is easy to see that $|p_{vu}|+|p_{vw}|\ge|p_{vx}|+|p_{vz}|$ because the
-  vertices $u$ and $w$ are chosen so that to maximize this sum. Hence
-  \[
-  \tilde\Delta_G = |p_{vu}|+|p_{vw}| \ge\Delta_G\enspace.%\qedhere
-  \]
-\end{proof}
-
-The impact of using $\tilde\Delta_G$ when computing the sample size $k$ is that
-the sample will contain at most $c/\varepsilon^2$ more paths than if we used the
-exact value $\Delta_G$. The computation of $\tilde\Delta_G$ has no (\XXX or
-minimal) impact on the running time of our algorithm: once the $\Delta_G$ has
-been computed, we can sample another node $u\neq v$ and then sample one of the
-(already computed) shortest paths between $v$ and $v$ and use this path as first
-element of the sample.
 
 \subsection{Discussion}\label{sec:discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.
