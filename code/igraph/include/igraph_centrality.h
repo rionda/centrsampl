@@ -69,6 +69,14 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
                                  igraph_bool_t directed, igraph_real_t cutoff, 
                                  const igraph_vector_t* weights, 
                                  igraph_bool_t nobigint);
+int igraph_betweenness_sample_vc_sample_size(const igraph_t *graph,
+                                             igraph_vector_t *res,
+                                             igraph_integer_t sample_size,
+                                             const igraph_vs_t vids,
+                                             igraph_bool_t directed,
+                                             igraph_real_t cutoff, 
+                                             const igraph_vector_t* weights,
+                                             igraph_bool_t nobigint);
 // XXX TODO THIS REALLY DOES NOT BELONG HERE
 int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t *res, const
 			   igraph_vector_t *weights);
