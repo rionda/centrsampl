@@ -26,6 +26,7 @@
 #include <string.h>    /* memset */
 #include <assert.h>
 #include "igraph_centrality.h"
+#include "igraph_components.h"
 #include "igraph_math.h"
 #include "igraph_memory.h"
 #include "igraph_random.h"
@@ -2546,6 +2547,72 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
 
 /**
  * \ingroup structural
+ * \function igraph_diameter_approximation
+ * \brief TODO
+ *  
+ * </para><para>
+ * TODO
+ */
+
+int igraph_diameter_approximation(const igraph_t *graph, igraph_bool_t directed,
+    const igraph_vector_t *weights) {
+  igraph_bool_t do_computation = 1;
+  igraph_bool_t *component_is_strongly_connected = NULL;
+  int component_size;
+  int diameter=0;
+  int i,j=0;
+  int max_component_size = 0;
+  igraph_rng_t *rng = igraph_rng_default();
+  igraph_vector_ptr_t components;
+  igraph_vector_ptr_init(&components, 1);
+  IGRAPH_FINALLY(igraph_vector_ptr_destroy, &components);
+  igraph_decompose(graph, &components, IGRAPH_WEAK, -1, 2);
+  if (! weights) {
+    do_computation = 0;
+  }
+  for (j=0; j < igraph_vector_ptr_size(&components); j++) {
+    igraph_t *component = (igraph_t *) VECTOR(components)[j];
+    component_size = igraph_vcount(component);
+    if (max_component_size < component_size - 1) {
+      max_component_size = component_size - 1;
+    }
+    // Were all connected components we found until now strongly connected?
+    if (do_computation) { 
+      igraph_is_connected(component, component_is_strongly_connected, IGRAPH_STRONG);
+      if (*component_is_strongly_connected) {
+        igraph_matrix_t sp_res;
+        IGRAPH_CHECK(igraph_matrix_init(&sp_res, 1, component_size));
+        IGRAPH_FINALLY(igraph_matrix_destroy, &sp_res);
+        igraph_integer_t sampled_source = igraph_rng_get_integer(rng, 0, component_size);
+        // Compute shortest paths from sampled source
+        igraph_shortest_paths(graph, &sp_res, igraph_vss_1(sampled_source),
+          igraph_vss_all(), IGRAPH_ALL);
+        // Perform computation of diameter
+        igraph_real_t largest = 0;
+        igraph_real_t second_largest = 0;
+        for (i=0; i<component_size; i++) {
+          if (MATRIX(sp_res, 0, i) == IGRAPH_INFINITY)  {
+            continue;
+          }
+          if (MATRIX(sp_res, 0, i) >= largest) {
+            second_largest = largest;
+            largest = MATRIX(sp_res, 0, i);
+          }
+        }
+        diameter = (igraph_integer_t) largest + second_largest;
+        igraph_matrix_destroy(&sp_res);
+        IGRAPH_FINALLY_CLEAN(1);
+      } else { // component not strongly connected
+        do_computation = 0;
+      }
+    } // and if do_computation
+  } // end for connected components
+  igraph_decompose_destroy(&components);
+  return do_computation ? diameter: max_component_size - 1;
+}
+
+/**
+ * \ingroup structural
  * \function igraph_betweenness_sample_vc
  * \brief Approximate betweenness centrality of some vertices using sampling and VC-Dimension.
  * 
@@ -2557,10 +2624,8 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
            igraph_integer_t diameter, const igraph_vs_t vids, 
            igraph_bool_t directed, igraph_real_t cutoff, 
            const igraph_vector_t* weights, igraph_bool_t nobigint) {
-  int j, return_code;
   double sample_size_constant=0.5;
   igraph_integer_t no_of_samples;
-  long int no_of_nodes=igraph_vcount(graph);
   /* Check values of epsilon and delta */
   if (delta >= 1.0 || delta <= 0.0) {
     IGRAPH_ERROR("delta must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
@@ -2572,33 +2637,7 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
    * undirected graphs).
    */
   if (diameter == -1) {
-    if (!directed || !igraph_is_directed(graph)) {
-      igraph_rng_t *rng = igraph_rng_default();
-      igraph_matrix_t sp_res;
-      IGRAPH_CHECK(igraph_matrix_init(&sp_res, 1, no_of_nodes));
-      IGRAPH_FINALLY(igraph_matrix_destroy, &sp_res);
-      igraph_integer_t sampled_source = igraph_rng_get_integer(rng, 0, no_of_nodes);
-      // Computer shortest paths from sampled source
-      igraph_shortest_paths(graph, &sp_res, igraph_vss_1(sampled_source),
-        igraph_vss_all(), IGRAPH_ALL);
-      // Perform computation of diameter
-      igraph_real_t largest = 0;
-      igraph_real_t second_largest = 0;
-      for (j=0; j<no_of_nodes; j++) {
-        if (MATRIX(sp_res, 0, j) == IGRAPH_INFINITY)  {
-          continue;
-        }
-        if (MATRIX(sp_res, 0, j) >= largest) {
-          second_largest = largest;
-          largest = MATRIX(sp_res, 0, j);
-        }
-      }
-      diameter = (igraph_integer_t) largest + second_largest;
-      igraph_matrix_destroy(&sp_res);
-      IGRAPH_FINALLY_CLEAN(1);
-    } else {
-      IGRAPH_ERROR("Diameter approximation algorithm works only for undirected graphs", IGRAPH_EINVAL);
-    }
+    diameter = igraph_diameter_approximation(graph, directed, weights);
   }
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
