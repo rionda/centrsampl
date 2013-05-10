@@ -16,14 +16,14 @@ $1-\delta$). Then the algorithm repeats, for $r$ times, the following steps:
 1.~it samples a pair $u,v$ of distinct vertices uniformly at random, 2.~it
 computes the set $\mathcal{S}_{uv}$ of all shortest paths between $u$ and $v$,
 3.~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random and
-increase by $\binom{n}{2}$ the betweenness counter of each vertex in
+increase by $n(n-1)$ the betweenness estimation of each vertex in
 $\mathsf{Int}(p)$. Note that if the sampled vertices $u$ and $v$ are not
 connected, we defined $\mathcal{S}_{uv}=\{p_\emptyset\}$ so nothing is done in
 step 3. In the end, the estimator for the betweenness $\betw(w)$ of a vertex $w$
 is 
 \[
-\tilde\betw(w) = \binom{n}{2}\frac{1}{k}\sum_{p\in S}
-\mathds{1}_{\mathsf{Int}(p)}(w) = \binom{n}{2}\frac{1}{k}\sum_{p\in S}
+\tilde\betw(w) = \frac{n(n-1)}{k}\sum_{p\in S}
+\mathds{1}_{\mathsf{Int}(p)}(w) = \frac{n(n-1)}{k}\sum_{p\in S}
 \mathds{1}_{\mathcal{T}_w}(p)\enspace.
 \]
 
@@ -134,7 +134,7 @@ approximations of the betweenness centrality.
 \begin{proof}
   For each $p_{uv}\in\mathbb{S}_G$ let
   \[
-  \pi_G(p_{uv})=\frac{2}{\binom{n}{2}|\mathcal{S}_{uv}|}\enspace.
+  \pi_G(p_{uv})=\frac{1}{n(n-1)|\mathcal{S}_{uv}|}\enspace.
   \]
   It is easy to see that $\pi_G$ is a probability distribution and
   $\pi_G(p_{uv})$ is the probability of sampling the path $p_{uv}$ during an
@@ -143,19 +143,19 @@ approximations of the betweenness centrality.
   
   Consider the range set $\range_G$ and the probability distribution $\prob_G$.
   Let $S$ be the set of paths sampled during the execution of the algorithm.
-  For $r$ as in~\eqref{eq:samplesize}, the sample $S$ is a
+  For $r$ as in~\eqref{eq:samplesize}, Thm.~\ref{thm:eapprox} tells us that the sample $S$ is a
   $\varepsilon$-approximation to $(\range_G,\prob_G)$ with probability at least
   $1-\delta$. Suppose that this is indeed the case, then from
   Def.~\ref{def:eapprox} and the definition of $\range_G$ we have that
   \[
   \left|\prob_G(\mathcal{T}_v) - \frac{1}{k}\sum_{p\in
   S}\mathds{1}_{\mathcal{T}_v}(p)\right|=\left|\prob_G(\mathcal{T}_v) -
-  \frac{1}{\binom{n}{2}}\tilde\betw(v)\right|\le\varepsilon, \forall v\in
+  \frac{1}{n(n-1)}\tilde\betw(v)\right|\le\varepsilon, \forall v\in
   V\enspace.
   \]
   From the definition of $\prob_G$ we have
   \[
-  \prob_G(\mathcal{T}_v)=\frac{1}{\binom{n}{2}}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}=\frac{1}{\binom{n}{2}}\betw(v),
+  \prob_G(\mathcal{T}_v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}=\frac{1}{n(n-1)}\betw(v),
   \]
   which concludes the proof.
 \end{proof}
