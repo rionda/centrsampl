@@ -1395,44 +1395,27 @@ PyObject *igraphmodule_Graph_get_eids(igraphmodule_GraphObject * self,
  * \return the diameter as a Python integer
  * \sa igraph_diameter
  */
-PyObject *igraphmodule_Graph_diameter_approx(igraphmodule_GraphObject * self,
+PyObject *igraphmodule_Graph_diameter_approximation(igraphmodule_GraphObject *self,
                                       PyObject * args, PyObject * kwds)
 {
-  PyObject *dir = Py_True, *vcount_if_unconnected = Py_True;
   PyObject *weights_o = Py_None;
   igraph_vector_t *weights = 0;
 
-  static char *kwlist[] = {
-    "directed", "unconn", "weights", NULL
-  };
+  static char *kwlist[] = {"weights", NULL };
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OOO", kwlist,
-                                   &dir, &vcount_if_unconnected,
-                                   &weights_o))
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "|O", kwlist, &weights_o))
     return NULL;
 
   if (igraphmodule_attrib_to_vector_t(weights_o, self, &weights,
 	  ATTRIBUTE_TYPE_EDGE)) return NULL;
 
+  igraph_integer_t i;
+  igraph_diameter_approximation(&self->g, &i, weights);
   if (weights) {
-    igraph_real_t i;
-    if (igraph_diameter_dijkstra(&self->g, weights, &i, 0, 0, 0,
-          PyObject_IsTrue(dir), PyObject_IsTrue(vcount_if_unconnected))) {
-      igraphmodule_handle_igraph_error();
-      igraph_vector_destroy(weights); free(weights);
-      return NULL;
-    }
     igraph_vector_destroy(weights); free(weights);
-    return PyFloat_FromDouble((double)i);
-  } else {
-    igraph_integer_t i;
-    if (igraph_diameter(&self->g, &i, 0, 0, 0, PyObject_IsTrue(dir),
-                        PyObject_IsTrue(vcount_if_unconnected))) {
-      igraphmodule_handle_igraph_error();
-      return NULL;
-    }
-    return PyInt_FromLong((long)i);
   }
+  return PyInt_FromLong((long)i);
+}
 
 /** \ingroup python_interface_graph
  * \brief Calculates the diameter of an \c igraph.Graph
@@ -12189,6 +12172,15 @@ struct PyMethodDef igraphmodule_Graph_methods[] = {
    "  and calculates the density accordingly. If C{False}, the algorithm\n"
    "  assumes that there can't be any loops.\n"
    "@return: the reciprocity of the graph."},
+
+  /* interface to igraph_diameter_approx */
+  {"diameter_approximation", (PyCFunction) igraphmodule_Graph_diameter_approximation,
+    METH_VARARGS | METH_KEYWORDS,
+   "diameter_approximation(weights=None)\n\n"
+   "Calculates an approximation of the diameter of the graph.\n\n"
+   "@param weights: edge weights to be used. Can be a sequence or iterable or\n"
+   "  even an edge attribute name.\n"
+   "@return: an upper bound to the diameter"},
 
   /* interfaces to igraph_diameter */
   {"diameter", (PyCFunction) igraphmodule_Graph_diameter,
