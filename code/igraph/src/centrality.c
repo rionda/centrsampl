@@ -1459,6 +1459,8 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
   igraph_bool_t do_sample=0;
   long int no_of_nodes=igraph_vcount(graph);
   long int no_of_edges=igraph_ecount(graph);
+  long int forward_touched_edges = 0;
+  long int backward_touched_edges = 0;
   igraph_2wheap_t Q;
   igraph_inclist_t inclist;
   igraph_adjlist_t fathers;
@@ -1535,6 +1537,7 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
       neis=igraph_inclist_get(&inclist, minnei);
       nlen=igraph_vector_size(neis);
       for (j=0; j<nlen; j++) {
+        forward_touched_edges++;
 	long int edge=VECTOR(*neis)[j];
 	long int to=IGRAPH_OTHER(graph, edge, minnei);
 	igraph_real_t altdist=mindist + VECTOR(*weights)[edge];
@@ -1571,6 +1574,7 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
       igraph_vector_t *fatv=igraph_adjlist_get(&fathers, w);
       long int fatv_len=igraph_vector_size(fatv);
       for (j=0; j<fatv_len; j++) {
+        backward_touched_edges++;
 	long int f=VECTOR(*fatv)[j];
 	VECTOR(tmpscore)[f] += VECTOR(nrgeo)[f]/VECTOR(nrgeo)[w] * (1+VECTOR(tmpscore)[w]);
       }
@@ -1990,6 +1994,8 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
   igraph_rng_t *rng=igraph_rng_default();
   long int no_of_nodes=igraph_vcount(graph);
   long int no_of_edges=igraph_ecount(graph);
+  long int backward_touched_edges = 0;
+  long int forward_touched_edges = 0;
   long int normalization_factor = no_of_nodes * (no_of_nodes - 1);
   igraph_inclist_t inclist;
   igraph_adjlist_t fathers;
@@ -2079,6 +2085,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
       neis=igraph_inclist_get(&inclist, minnei);
       nlen=igraph_vector_size(neis);
       for (j=0; j<nlen; j++) {
+        forward_touched_edges++;
         long int edge=VECTOR(*neis)[j];
         long int to=IGRAPH_OTHER(graph, edge, minnei);
         // printf("to=%ld\n", to);
@@ -2132,6 +2139,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
           /*IGRAPH_CHECK(igraph_vector_init(&sampling_limits, fatv_len)); */
           int curr_limit = -1;
           for (j=0; j<fatv_len; j++) {
+            backward_touched_edges++;
             long int f = VECTOR(*fatv)[j];
             curr_limit+=VECTOR(nrgeo)[f];
             VECTOR(sampling_limits)[j]=curr_limit;
@@ -2231,6 +2239,8 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   igraph_rng_t *rng=igraph_rng_default();
   long int no_of_nodes=igraph_vcount(graph);
   long int normalization_factor = no_of_nodes * (no_of_nodes - 1);
+  long int forward_touched_edges = 0;
+  long int backward_touched_edges = 0;
   /*igraph_dqueue_t q=IGRAPH_DQUEUE_NULL; */
   long int *distance;
   unsigned long long int *nrgeo=0;  /* must be long long; consider grid
@@ -2375,6 +2385,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
       neis = igraph_adjlist_get(adjlist_out_p, actnode);
       nneis = igraph_vector_size(neis);
       for (j=0; j<nneis; j++) {
+        forward_touched_edges++;
         long int neighbor=VECTOR(*neis)[j];
         if (distance[neighbor]==0) {
           distance[neighbor]=distance[actnode]+1;
@@ -2417,6 +2428,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
           IGRAPH_VECTOR_INIT_FINALLY(&sampling_limits, fatv_len);
           int curr_limit = -1;
           for (j=0; j<fatv_len; j++) {
+            backward_touched_edges++;
             long int f = VECTOR(*fatv)[j];
             /* curr_limit+=VECTOR(nrgeo)[f]; */
             curr_limit+=nrgeo[f];
@@ -2734,6 +2746,8 @@ int igraph_i_edge_betweenness_estimate_weighted(const igraph_t *graph,
 					      const igraph_vector_t *weights) {
   long int no_of_nodes=igraph_vcount(graph);
   long int no_of_edges=igraph_ecount(graph);
+  long int forward_touched_edges = 0;
+  long int backward_touched_edges = 0;
   igraph_2wheap_t Q;
   igraph_inclist_t inclist;
   igraph_inclist_t fathers;
@@ -2798,6 +2812,7 @@ int igraph_i_edge_betweenness_estimate_weighted(const igraph_t *graph,
       neis=igraph_inclist_get(&inclist, minnei);
       nlen=igraph_vector_size(neis);
       for (j=0; j<nlen; j++) {
+        forward_touched_edges++;
 	long int edge=VECTOR(*neis)[j];
 	long int to=IGRAPH_OTHER(graph, edge, minnei);
 	igraph_real_t altdist=mindist + VECTOR(*weights)[edge];
@@ -2837,6 +2852,7 @@ int igraph_i_edge_betweenness_estimate_weighted(const igraph_t *graph,
       long int fatv_len=igraph_vector_size(fatv);
 /*       printf("Popping %li.\n", w); */
       for (j=0; j<fatv_len; j++) {
+        backward_touched_edges++;
 	long int fedge=VECTOR(*fatv)[j];
 	long int neighbor=IGRAPH_OTHER(graph, fedge, w);
 	VECTOR(tmpscore)[neighbor] += ((double)VECTOR(nrgeo)[neighbor]) /
