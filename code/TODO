@@ -6,11 +6,6 @@ http://law.di.unimi.it/datasets.php
 Another dataset that looks interesting is the US patent data. Look in the ALENEX
 paper.
 
-Implement code to find the largest connected component in the diameter
-approximation algorithm
-
-Extend approximation algorithm to directed case
-
 Implement code to count how many edges are touched during the computation of
 betweenness. This can be play an important factor in large networks.
 
@@ -19,6 +14,11 @@ Implement ALENEX paper sampling algorithm
 Implement adaptive sampling algorithm
 
 Implement code to automatize experiments and reports
+
+# DONE ! Implement code to find the largest connected component in the diameter
+approximation algorithm
+
+# DONE ! Extend approximation algorithm to directed case
 
 # DONE! Make sure our implementations of Brandes, Brandes and Pachi, and the ALENEX paper
 are the best possible.
