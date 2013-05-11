@@ -4,6 +4,7 @@ Various useful functions.
 """
 import argparse
 import logging
+import pickle
 import sys
 import igraph as ig
 
@@ -13,8 +14,8 @@ def dict_to_csv(dictionary, csvkeys):
     cvskeys is a string of comma separated (potential) keys to be considered.
 
     """
-    return ",".join([dict_value_to_str(dictionary, key) for key in
-        csvkeys.split(",")])
+    keys = map(lambda x: x.strip(), csvkeys.split(","))
+    return ", ".join([dict_value_to_str(dictionary, key) for key in keys])
 
 def dict_value_to_str(dictionary, key):
     """Convert value in a dictionary to string.
@@ -59,6 +60,11 @@ def read_graph(path):
         sys.exit(2)
     return G
 
+def read_stats_betw(path):
+    """Read tuple from pickle file."""
+    (stats,betw) = pickle.load(path)
+    return (stats,betw)
+
 def set_verbosity(level):
      """Set the desired level of logging."""
 
@@ -86,14 +92,15 @@ def valid_interval_float(string):
            raise argparse.ArgumentTypeError(msg)
     return value
 
-def write_to_output(elapsed_time, betw, output_path):
-    """ Write time and betweenness to output file."""
+def write_to_output(stats, betw, output_path):
+    """ Write stats and betweenness to output file."""
     try:
         with open(output_path, 'wt') as output:
-            logging.info("Writing time and betweenness to output file")
-            output.write("({}, {})\n".format(betw, elapsed_time))
+            logging.info("Writing stats and betweenness to output file")
+            pickle.dump((stats,betw), output);
+            #output.write("({}, {})\n".format(stats, betw))
     except OSError as E:
-        logging.critical("Cannot write betweenness to %s: %s", output_path,
+        logging.critical("Cannot write stats and betweenness to %s: %s", output_path,
                 E.strerror)
 
 

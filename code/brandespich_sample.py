@@ -43,11 +43,12 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     logging.info("Betweenness computation complete, took %s seconds",
             elapsed_time)
 
+    stats["delta"] = delta
+    stats["epsilon"] = epsilon
     # Write attributes to graph, if specified
     if set_attributes:
-        graph["bp_betw_time"] = elapsed_time
-        graph["bp_delta"] = delta
-        graph["bp_eps"] = epsilon
+        for key in stats:
+            graph["bp_" + key] = stats[key]
         graph.vs["bp_betw"] = betw
 
     return (stats, betw)
@@ -85,8 +86,8 @@ def main():
         logging.info("Writing betweenness as vertex attributes and time as graph attribute")
         G.write(args.graph)
 
-    # Write betweenness and time to output
-    util.write_to_output(stats["time"], betw, args.output)
+    # Write stats and betweenness to output
+    util.write_to_output(stats, betw, args.output)
 
 if __name__ == "__main__":
     main()

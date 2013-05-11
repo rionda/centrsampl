@@ -29,8 +29,8 @@ def main():
     group.add_argument("-d", "--diameter", type=util.positive_int, default=0, help="value to use for the diameter")
     group.add_argument("-e", "--exact", action="store_true", default=False,
             help="use exact diameter when computing approximation of betweenness using VC-Dimension")
-    parser.add_argument("-f", "--force", action="store_true", default=False,
-            help="Force recomputation of all betweenness values, exact and approximate.")
+    parser.add_argument("-r", "--resultfiles", nargs=3, 
+    help="Use results files rather than recomputing betweenness. Files should be specified as 'exact_res vc_res bp_res'")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
     help="write the betweenness and the time taken to compute them (if needed) back to file")
@@ -48,19 +48,20 @@ def main():
     if args.exact:
         args.approximate = False
 
-    # If the graph does not have the attributes for the betweenness or has the
-    # wrong ones, (re-)compute them
-    logging.info("Recomputing betweenness if needed/specified")
-    if args.force or not "betw_time" in G.attributes():
-        brandes_exact.betweenness(G, True)
-    if args.force or not "vc_betw_time" in G.attributes() or G["vc_eps"] != args.epsilon or G["vc_delta"] != args.delta:
+    if not args.resultfiles:
+        (exact_stats, exact_betw) = brandes_exact.betweenness(G, True)
         if args.diameter > 0:
-            vc_sample.betweenness(G, args.epsilon, args.delta, args.diameter, True)
+            (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
+                    args.diameter, True)
         else:
-            vc_sample.betweenness(G, args.epsilon, args.delta,
+            (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
                     args.approximate, True)
-    if args.force or not "bp_betw_time" in G.attributes() or G["bp_eps"] != args.epsilon or G["bp_delta"] != args.delta:
-        brandespich_sample.betweenness(G, args.epsilon, args.delta, True)
+        (bp_stats, bp_betw) = brandespich_sample.betweenness(G, args.epsilon, args.delta,
+                True)
+    else:
+        (exact_stats, exact_betw) = util.read_stats_betw(args.result_files[0])
+        (vc_stats, vc_betw) = util.read_stats_betw(args.result_files[1])
+        (bp_stats, bp_betw) = util.read_stats_betw(args.result_files[2])
 
     #Compute useful graph statistics (mainly diameter)
     if "diam" not in G.attributes():
@@ -76,48 +77,49 @@ def main():
     # It is not a problem to sort the error by value because we only compute
     # aggregates.
     logging.info("Computing error statistics")
-    vc_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["vc_betw"])])
-    vc_err_avg = sum(vc_errs) / G.vcount()
-    vc_err_max = vc_errs[-1]
-    vc_err_min = list(itertools.filterfalse(lambda x: x == 0, vc_errs))[0]
-    vc_err_stddev = math.sqrt(sum([math.pow(err - vc_err_avg, 2) for err in vc_errs]) / (G.vcount() -1))
+    vc_errs = sorted([abs(a - b) for a,b in zip(exact_betw,vc_betw)])
+    vc_stats["err_avg"] = sum(vc_errs) / G.vcount()
+    vc_stats["err_max"] = vc_errs[-1]
+    vc_stats["err_min"] = list(itertools.filterfalse(lambda x: x == 0, vc_errs))[0]
+    vc_stats["err_stddev"] = math.sqrt(sum([math.pow(err - vc_stats["err_avg"], 2) for err in vc_errs]) / (G.vcount() -1))
     #vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
     #    G.vcount() * (G.vcount() - 1) / 2, vc_errs)))
-    vc_wrong_eps = 0;
+    vc_stats["wrong_eps"] = 0;
     print("## VC wrong epsilon ##")
     for i in range(G.vcount()):
-        err = abs(G.vs[i]["betw"] - G.vs[i]["vc_betw"])
+        err = abs(exact_betw[i] - vc_betw[i])
         if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
-            vc_wrong_eps += 1
+            vc_stats["wrong_eps"] += 1
             print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
-                G.vs[i]["betw"], G.vs[i]["vc_betw"], G.vs[i]["bp_betw"],
+                exact_betw[i], vc_betw[i], bp_betw[i],
                 err, err / (G.vcount() * (G.vcount() -1) / 2)))
 
-    bp_errs = sorted([abs(a - b) for a,b in zip(G.vs["betw"],G.vs["bp_betw"])])
-    bp_err_avg = sum(bp_errs) / G.vcount()
-    bp_err_max = max(bp_errs)
-    bp_err_min = list(itertools.filterfalse(lambda x: x == 0, bp_errs))[0]
-    bp_err_stddev = math.sqrt(sum([math.pow(err - bp_err_avg, 2) for err in bp_errs]) / (G.vcount() -1))
+    bp_errs = sorted([abs(a - b) for a,b in zip(exact_betw,bp_betw)])
+    bp_stats["err_avg"] = sum(bp_errs) / G.vcount()
+    bp_stats["err_max"] = max(bp_errs)
+    bp_stats["err_min"] = list(itertools.filterfalse(lambda x: x == 0, bp_errs))[0]
+    bp_stats["err_stddev"] = math.sqrt(sum([math.pow(err - bp_stats["err_avg"], 2) for err in bp_errs]) / (G.vcount() -1))
     #bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
     #    G.vcount() * (G.vcount() - 1) / 2, bp_errs)))
-    bp_wrong_eps = 0
+    bp_stats["wrong_eps"] = 0
     print("## BP wrong epsilon ##")
     for i in range(G.vcount()):
-        err = abs(G.vs[i]["betw"] - G.vs[i]["bp_betw"])
+        err = abs(exact_betw[i] - bp_betw[i])
         if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
-            bp_wrong_eps += 1
+            bp_stats["wrong_eps"] += 1
             print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
-                 G.vs[i]["betw"], G.vs[i]["bp_betw"], G.vs[i]["vc_betw"], err, err / (G.vcount() * (G.vcount() -1) / 2)))
+                 exact_betw[i], bp_betw[i], vc_betw[i], err, err / (G.vcount() * (G.vcount() -1) / 2)))
 
     # Print statistics to output as CSV
     logging.info("Printing statistics")
-    print("graph, {}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
+    print("graph, nodes, edges, diam, directed, epsilon, delta")
+    print("{}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
         G.ecount(), G["diam"], G.is_directed(), args.epsilon, args.delta))
-    print("exact, {}, 0, 0".format(G["betw_time"]))
-    print("vc, {}".format(", ".join([str(x) for x in [G["vc_betw_time"], vc_wrong_eps, vc_err_max,
-        vc_err_min, vc_err_avg, vc_err_stddev]])))
-    print("bp, {}".format(", ".join([str(x) for x in [G["bp_betw_time"], bp_wrong_eps, bp_err_max,
-        bp_err_min, bp_err_avg, bp_err_stddev]])))
+    csvkeys="epsilon, delta, time, sample_size, wrong_eps, err_avg, err_max, err_min, err_stddev, forward_edges_touched, backward_edges_touched, diameter, diam_type"
+    print("type", csvkeys)
+    print("vc", util.dict_to_csv(vc_stats, csvkeys))
+    print("bp", util.dict_to_csv(bp_stats, csvkeys))
+    print("exact", util.dict_to_csv(exact_stats, csvkeys))
     
 if __name__ == "__main__":
     main()

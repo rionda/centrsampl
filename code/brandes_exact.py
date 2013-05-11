@@ -37,8 +37,9 @@ def betweenness(graph, set_attributes=True):
 
     # Write attributes to graph, if specified
     if set_attributes:
-        graph["betw_time"] = elapsed_time
-        graph.vs["betw"] = betw
+        for key in stats:
+            graph["exact_" + key] = stats[key]
+        graph.vs["exact_betw"] = betw
 
     return (stats, betw)
 
@@ -70,8 +71,8 @@ def main():
         logging.info("Writing betweenness as vertex attributes and time as graph attribute")
         G.write(args.graph)
 
-    # Write betweenness and time to output
-    util.write_to_output(stats["time"], betw, args.output)
+    # Write stats and betweenness to output
+    util.write_to_output(stats, betw, args.output)
 
 if __name__ == "__main__":
     main()

@@ -8,13 +8,10 @@ compute them. These values are then written to an output file.
 """
 import argparse
 import logging
-import math
 import random
 import sys
 import time
 
-import diameter
-import diameter_approx
 import util
 
 def betweenness(graph, epsilon, delta, use_approx_diameter=True,
@@ -55,18 +52,19 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True,
     logging.info("Betweenness computation complete, took %s seconds",
             elapsed_time)
 
+    stats["delta"] = delta
+    if int(use_approx_diameter) == 1:
+        stats["diam_type"] = "approx" 
+    elif int(use_approx_diameter) == 0:
+        stats["diam_type"] = "exact"
+    else:
+        stats["diam_type"] = "specif"
+    stats["epsilon"] = epsilon
+
     # Write attributes to graph, if specified
     if set_attributes:
-        graph["vc_betw_time"] = elapsed_time
-        graph["vc_delta"] = delta
-        if int(use_approx_diameter) == 1:
-            graph["vc_diam_type"] = "approx" 
-        elif int(use_approx_diameter) == 0:
-            graph["vc_diam_type"] = "exact"
-        else:
-            graph["vc_diam_type"] = "specif"
-        graph["vc_diam"] = stats["diameter"]
-        graph["vc_eps"] = epsilon
+        for key in stats:
+            graph["vc_" + key] = stats[key]
         graph.vs["vc_betw"] = betw
 
     return (stats, betw)
@@ -123,8 +121,8 @@ def main():
         logging.info("Writing betweenness as vertex attributes and time as graph attribute")
         G.write(args.graph)
 
-    # Write betweenness and time to output
-    util.write_to_output(stats["time"], betw, args.output)
+    # Write stats and betweenness to output
+    util.write_to_output(stats, betw, args.output)
 
 if __name__ == "__main__":
     main()
