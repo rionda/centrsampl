@@ -3,9 +3,7 @@
 Various useful functions.
 """
 import argparse
-import heapq
 import logging
-import random
 import sys
 import igraph as ig
 
