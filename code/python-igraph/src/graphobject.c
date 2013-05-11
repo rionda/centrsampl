@@ -3453,9 +3453,14 @@ PyObject *igraphmodule_Graph_betweenness(igraphmodule_GraphObject * self,
   PyObject *cutoff = Py_None;
   PyObject *weights_o = Py_None;
   PyObject *nobigint = Py_True;
+  PyObject *stats_dict;
   igraph_vector_t res, *weights = 0;
   igraph_bool_t return_single = 0;
   igraph_vs_t vs;
+  igraph_vector_t stats;
+  igraph_strvector_t stats_names;
+  int j;
+
 
   if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OOOOO", kwlist,
                                    &vobj, &directed, &cutoff, &weights_o,
@@ -3478,8 +3483,22 @@ PyObject *igraphmodule_Graph_betweenness(igraphmodule_GraphObject * self,
     return igraphmodule_handle_igraph_error();
   }
 
+  if (igraph_vector_init(&stats, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
+  if (igraph_strvector_init(&stats_names, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
   if (cutoff == Py_None) {
-    if (igraph_betweenness(&self->g, &res, vs, PyObject_IsTrue(directed),
+    if (igraph_betweenness(&self->g, &res, &stats, &stats_names, vs, PyObject_IsTrue(directed),
           weights, PyObject_IsTrue(nobigint))) {
       igraph_vs_destroy(&vs);
       igraph_vector_destroy(&res);
@@ -3495,7 +3514,7 @@ PyObject *igraphmodule_Graph_betweenness(igraphmodule_GraphObject * self,
       if (weights) { igraph_vector_destroy(weights); free(weights); }
       return NULL;
     }
-    if (igraph_betweenness_estimate(&self->g, &res, vs, PyObject_IsTrue(directed),
+    if (igraph_betweenness_estimate(&self->g, &res, &stats, &stats_names, vs, PyObject_IsTrue(directed),
         (igraph_integer_t)PyInt_AsLong(cutoff_num), weights,
         PyObject_IsTrue(nobigint))) {
       igraph_vs_destroy(&vs);
@@ -3519,11 +3538,27 @@ PyObject *igraphmodule_Graph_betweenness(igraphmodule_GraphObject * self,
   else
     list = PyFloat_FromDouble(VECTOR(res)[0]);
 
+  stats_dict = PyDict_New();
+  if (! stats_dict) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    igraph_vector_destroy(&stats);
+    igraph_strvector_destroy(&stats_names);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return NULL;
+  }
+
+  for (j=0; j < igraph_strvector_size(&stats_names); j++) {
+    PyDict_SetItemString(stats_dict, STR(stats_names, j), PyFloat_FromDouble(VECTOR(stats)[j]));
+  }
+
+  igraph_strvector_destroy(&stats_names);
+  igraph_vector_destroy(&stats);
   igraph_vector_destroy(&res);
   igraph_vs_destroy(&vs);
   if (weights) { igraph_vector_destroy(weights); free(weights); }
 
-  return list;
+  return Py_BuildValue("(NN)", stats_dict, list);
 }
 
 /** \ingroup python_interface_graph
@@ -3541,10 +3576,14 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp_sample_size(igraphmodule_Grap
   PyObject *cutoff = Py_None;
   PyObject *weights_o = Py_None;
   PyObject *nobigint = Py_True;
+  PyObject *stats_dict;
   igraph_integer_t sample_size = 0;
   igraph_vector_t res, *weights = 0;
   igraph_bool_t return_single = 0;
   igraph_vs_t vs;
+  igraph_vector_t stats;
+  igraph_strvector_t stats_names;
+  int j;
 
   if (!PyArg_ParseTupleAndKeywords(args, kwds, "i|OOOOO", kwlist,
                                    &sample_size, &vobj, &directed, &cutoff, &weights_o,
@@ -3567,11 +3606,27 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp_sample_size(igraphmodule_Grap
     return igraphmodule_handle_igraph_error();
   }
 
+  if (igraph_vector_init(&stats, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
+  if (igraph_strvector_init(&stats_names, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
   if (cutoff == Py_None) {
-    if (igraph_betweenness_sample_bp_sample_size(&self->g, &res, sample_size, vs,
+    if (igraph_betweenness_sample_bp_sample_size(&self->g, &res, &stats, &stats_names, sample_size, vs,
           PyObject_IsTrue(directed), -1, weights, PyObject_IsTrue(nobigint))) {
       igraph_vs_destroy(&vs);
       igraph_vector_destroy(&res);
+      igraph_vector_destroy(&res);
+      igraph_vector_destroy(&stats);
       if (weights) { igraph_vector_destroy(weights); free(weights); }
       igraphmodule_handle_igraph_error();
       return NULL;
@@ -3581,15 +3636,19 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp_sample_size(igraphmodule_Grap
     if (cutoff_num == NULL) {
       igraph_vs_destroy(&vs);
       igraph_vector_destroy(&res);
+      igraph_vector_destroy(&res);
+      igraph_vector_destroy(&stats);
       if (weights) { igraph_vector_destroy(weights); free(weights); }
       return NULL;
     }
-    if (igraph_betweenness_sample_bp_sample_size(&self->g, &res, sample_size, vs,
+    if (igraph_betweenness_sample_bp_sample_size(&self->g, &res, &stats, &stats_names, sample_size, vs,
           PyObject_IsTrue(directed),
           (igraph_integer_t)PyInt_AsLong(cutoff_num), weights,
           PyObject_IsTrue(nobigint))) {
       igraph_vs_destroy(&vs);
       igraph_vector_destroy(&res);
+      igraph_vector_destroy(&res);
+      igraph_vector_destroy(&stats);
       if (weights) { igraph_vector_destroy(weights); free(weights); }
       Py_DECREF(cutoff_num);
       igraphmodule_handle_igraph_error();
@@ -3600,6 +3659,8 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp_sample_size(igraphmodule_Grap
     PyErr_SetString(PyExc_TypeError, "cutoff value must be None or integer");
     igraph_vs_destroy(&vs);
     igraph_vector_destroy(&res);
+    igraph_vector_destroy(&res);
+    igraph_vector_destroy(&stats);
     if (weights) { igraph_vector_destroy(weights); free(weights); }
     return NULL;
   }
@@ -3609,11 +3670,27 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp_sample_size(igraphmodule_Grap
   else
     list = PyFloat_FromDouble(VECTOR(res)[0]);
 
+  stats_dict = PyDict_New();
+  if (! stats_dict) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    igraph_vector_destroy(&stats);
+    igraph_strvector_destroy(&stats_names);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return NULL;
+  }
+
+  for (j=0; j < igraph_strvector_size(&stats_names); j++) {
+    PyDict_SetItemString(stats_dict, STR(stats_names, j), PyFloat_FromDouble(VECTOR(stats)[j]));
+  }
+
+  igraph_strvector_destroy(&stats_names);
+  igraph_vector_destroy(&stats);
   igraph_vector_destroy(&res);
   igraph_vs_destroy(&vs);
   if (weights) { igraph_vector_destroy(weights); free(weights); }
 
-  return list;
+  return Py_BuildValue("(NN)", stats_dict, list);
 }
 
 /** \ingroup python_interface_graph
@@ -3631,11 +3708,16 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp(igraphmodule_GraphObject * se
   PyObject *cutoff = Py_None;
   PyObject *weights_o = Py_None;
   PyObject *nobigint = Py_True;
+  PyObject *stats_dict;
   igraph_real_t delta = 0.0;
   igraph_real_t epsilon = 0.0;
   igraph_vector_t res, *weights = 0;
   igraph_bool_t return_single = 0;
   igraph_vs_t vs;
+  igraph_vector_t stats;
+  igraph_strvector_t stats_names;
+  int j;
+
 
   if (!PyArg_ParseTupleAndKeywords(args, kwds, "dd|OOOOO", kwlist,
                                    &epsilon, &delta, &vobj, &directed, &cutoff, &weights_o,
@@ -3658,8 +3740,22 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp(igraphmodule_GraphObject * se
     return igraphmodule_handle_igraph_error();
   }
 
+  if (igraph_vector_init(&stats, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
+  if (igraph_strvector_init(&stats_names, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
   if (cutoff == Py_None) {
-    if (igraph_betweenness_sample_bp(&self->g, &res, epsilon, delta, vs,
+    if (igraph_betweenness_sample_bp(&self->g, &res, &stats, &stats_names, epsilon, delta, vs,
           PyObject_IsTrue(directed), -1, weights, PyObject_IsTrue(nobigint))) {
       igraph_vs_destroy(&vs);
       igraph_vector_destroy(&res);
@@ -3675,7 +3771,7 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp(igraphmodule_GraphObject * se
       if (weights) { igraph_vector_destroy(weights); free(weights); }
       return NULL;
     }
-    if (igraph_betweenness_sample_bp(&self->g, &res, epsilon, delta, vs,
+    if (igraph_betweenness_sample_bp(&self->g, &res, &stats, &stats_names, epsilon, delta, vs,
           PyObject_IsTrue(directed),
           (igraph_integer_t)PyInt_AsLong(cutoff_num), weights,
           PyObject_IsTrue(nobigint))) {
@@ -3700,11 +3796,27 @@ PyObject *igraphmodule_Graph_betweenness_sample_bp(igraphmodule_GraphObject * se
   else
     list = PyFloat_FromDouble(VECTOR(res)[0]);
 
+  stats_dict = PyDict_New();
+  if (! stats_dict) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    igraph_vector_destroy(&stats);
+    igraph_strvector_destroy(&stats_names);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return NULL;
+  }
+
+  for (j=0; j < igraph_strvector_size(&stats_names); j++) {
+    PyDict_SetItemString(stats_dict, STR(stats_names, j), PyFloat_FromDouble(VECTOR(stats)[j]));
+  }
+
+  igraph_strvector_destroy(&stats_names);
+  igraph_vector_destroy(&stats);
   igraph_vector_destroy(&res);
   igraph_vs_destroy(&vs);
   if (weights) { igraph_vector_destroy(weights); free(weights); }
 
-  return list;
+  return Py_BuildValue("(NN)", stats_dict, list);
 }
 
 PyObject

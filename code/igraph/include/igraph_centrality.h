@@ -56,9 +56,11 @@ int igraph_closeness_estimate(const igraph_t *graph, igraph_vector_t *res,
 			      const igraph_vector_t *weights);
 
 int igraph_betweenness(const igraph_t *graph, igraph_vector_t *res, 
+                       igraph_vector_t *stats, igraph_strvector_t *stats_names,
                        const igraph_vs_t vids, igraph_bool_t directed,
 		       const igraph_vector_t *weights, igraph_bool_t nobigint);
 int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
+                                 igraph_vector_t *stats, igraph_strvector_t *stats_names,
                                  igraph_real_t epsilon, igraph_real_t delta,
                                  const igraph_vs_t vids, 
                                  igraph_bool_t directed, igraph_real_t cutoff, 
@@ -66,6 +68,8 @@ int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
                                  igraph_bool_t nobigint);
 int igraph_betweenness_sample_bp_sample_size(const igraph_t *graph,
                                              igraph_vector_t *res,
+                                             igraph_vector_t *stats,
+                                             igraph_strvector_t *stats_names,
                                              igraph_integer_t sample_size,
                                              const igraph_vs_t vids,
                                              igraph_bool_t directed,
@@ -93,6 +97,7 @@ int igraph_betweenness_sample_vc_sample_size(const igraph_t *graph,
 int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t *res, const
 			   igraph_vector_t *weights);
 int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res, 
+                                igraph_vector_t *stats, igraph_strvector_t *stats_names,
 			        const igraph_vs_t vids, igraph_bool_t directed,
                                 igraph_real_t cutoff, 
 				const igraph_vector_t *weights, 

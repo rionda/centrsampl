@@ -1448,6 +1448,8 @@ int igraph_personalized_pagerank(const igraph_t *graph, igraph_vector_t *vector,
 
 int igraph_i_betweenness_estimate_weighted(const igraph_t *graph, 
 					 igraph_vector_t *res, 
+           igraph_vector_t *stats,
+           igraph_strvector_t *stats_names,
            igraph_integer_t no_of_samples,
 					 const igraph_vs_t vids, 
 					 igraph_bool_t directed,
@@ -1588,6 +1590,11 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
     
   } /* vertex_index < no_of_samples */
 
+  igraph_vector_push_back(stats, forward_touched_edges);
+  igraph_strvector_add(stats_names, "forward_touched_edges");
+  igraph_vector_push_back(stats, backward_touched_edges);
+  igraph_strvector_add(stats_names, "backward_touched_edges");
+
   if (!igraph_vs_is_all(&vids)) {
     IGRAPH_CHECK(igraph_vit_create(graph, vids, &vit));
     IGRAPH_FINALLY(igraph_vit_destroy, &vit);
@@ -1608,12 +1615,12 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
 
   /* I don't really understand why they divide the betweenness by 2 if the graph
    * is undirected. I never saw such definition. Matteo
-   */
   if (!directed || !igraph_is_directed(graph)) {
     for (j=0; j<no_of_nodes; j++) {
       VECTOR(*res)[j] /= 2.0;
     }
   }
+   */
   
   IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
 
@@ -1639,6 +1646,7 @@ void igraph_i_destroy_biguints(igraph_biguint_t *p) {
 }
 
 int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res, 
+        igraph_vector_t *stats, igraph_strvector_t *stats_names,
         igraph_integer_t no_of_samples, const igraph_vs_t vids, 
         igraph_bool_t directed, igraph_real_t cutoff, 
         const igraph_vector_t *weights, igraph_bool_t nobigint) {
@@ -1646,6 +1654,8 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
   igraph_rng_t *rng=NULL;
   igraph_bool_t do_sample=0;
   long int no_of_nodes=igraph_vcount(graph);
+  long int forward_touched_edges = 0;
+  long int backward_touched_edges = 0;
   igraph_dqueue_t q=IGRAPH_DQUEUE_NULL;
   long int *distance;
   unsigned long long int *nrgeo=0;  /* must be long long; consider grid
@@ -1665,8 +1675,8 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
   igraph_biguint_t D, R, T;
 
   if (weights) { 
-    return igraph_i_betweenness_estimate_weighted(graph, res, no_of_samples, vids, directed,
-						cutoff, weights, nobigint);
+    return igraph_i_betweenness_estimate_weighted(graph, res, stats,
+        stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
   }
 
   if (!igraph_vs_is_all(&vids)) {
@@ -1781,6 +1791,7 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
       neis = igraph_adjlist_get(adjlist_out_p, actnode);
       nneis = igraph_vector_size(neis);
       for (j=0; j<nneis; j++) {
+        forward_touched_edges++;
         long int neighbor=VECTOR(*neis)[j];
         if (distance[neighbor]==0) {
           distance[neighbor]=distance[actnode]+1;
@@ -1808,6 +1819,7 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
       neis = igraph_adjlist_get(adjlist_in_p, actnode);
       nneis = igraph_vector_size(neis);
       for (j=0; j<nneis; j++) {
+        backward_touched_edges++;
         long int neighbor=VECTOR(*neis)[j];
 	if (nobigint) {
 	  tmpscore[neighbor] +=  (tmpscore[actnode]+1)*
@@ -1840,6 +1852,11 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
     }
 
   } /* for vertex_index < no_of_samples */
+
+  igraph_vector_push_back(stats, forward_touched_edges);
+  igraph_strvector_add(stats_names, "forward_touched_edges");
+  igraph_vector_push_back(stats, backward_touched_edges);
+  igraph_strvector_add(stats_names, "backward_touched_edges");
 
   IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
 
@@ -1880,12 +1897,14 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
   /* I still think this makes no sense. Matteo */
   /* divide by 2 for undirected graph */
   
+  /*
   if (!directed) {
     nneis=igraph_vector_size(res);
     for (j=0; j<nneis; j++) {
       VECTOR(*res)[j] /= 2.0;
     }
   }
+  */
   
   igraph_adjlist_destroy(&adjlist_out);
   igraph_adjlist_destroy(&adjlist_in);
@@ -1939,17 +1958,24 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
  * \example examples/simple/igraph_betweenness.c
  */
 int igraph_betweenness(const igraph_t *graph, igraph_vector_t *res,
+           igraph_vector_t *stats, igraph_strvector_t *stats_names,
 		       const igraph_vs_t vids, igraph_bool_t directed, 
 		       const igraph_vector_t* weights, igraph_bool_t nobigint) {
-  return igraph_i_betweenness_estimate(graph, res, -1, vids, directed, -1, weights, nobigint);
+  return igraph_i_betweenness_estimate(graph, res, stats, stats_names, -1,
+      vids, directed, -1, weights, nobigint);
 }
 
 int igraph_betweenness_sample_bp_sample_size(const igraph_t *graph,
-           igraph_vector_t *res, igraph_integer_t sample_size, 
+           igraph_vector_t *res, igraph_vector_t *stats, igraph_strvector_t
+           *stats_names, igraph_integer_t sample_size, 
            const igraph_vs_t vids, igraph_bool_t directed, 
            igraph_real_t cutoff, const igraph_vector_t* weights,
            igraph_bool_t nobigint) {
-  return igraph_i_betweenness_estimate(graph, res, sample_size, vids, directed, cutoff, weights, nobigint);
+  int ret_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
+      sample_size, vids, directed, cutoff, weights, nobigint);
+  igraph_vector_push_back(stats, sample_size);
+  igraph_strvector_add(stats_names, "sample_size");
+  return ret_code;
 }
 
 /**
@@ -1961,6 +1987,7 @@ int igraph_betweenness_sample_bp_sample_size(const igraph_t *graph,
  * TODO
  */
 int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
+           igraph_vector_t *stats, igraph_strvector_t *stats_names,
            igraph_real_t epsilon, igraph_real_t delta, const igraph_vs_t vids,
            igraph_bool_t directed, igraph_real_t cutoff, 
            const igraph_vector_t* weights, igraph_bool_t nobigint) {
@@ -1979,10 +2006,13 @@ int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
   no_of_samples=(igraph_integer_t) ceil((2 * pow((no_of_nodes - 2) / (epsilon * (no_of_nodes - 1)), 2) * log(2 * no_of_nodes / delta)));
   /* Denormalize betweenness counters by n / k */
   normalization_factor =  ((double) no_of_nodes) / no_of_samples;
-  return_code = igraph_i_betweenness_estimate(graph, res, no_of_samples, vids, directed, cutoff, weights, nobigint);
+  return_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
+      no_of_samples, vids, directed, cutoff, weights, nobigint);
   for (j=0; j<no_of_nodes; j++) {
     VECTOR(*res)[j] *= normalization_factor;
   }
+  igraph_vector_push_back(stats, no_of_samples);
+  igraph_strvector_add(stats_names, "sample_size");
   return return_code;
 }
 
@@ -2756,11 +2786,13 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
  *     of the edges in a graph.
  */
 int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res, 
+        igraph_vector_t *stats, igraph_strvector_t *stats_names,
 				const igraph_vs_t vids, igraph_bool_t directed,
 				igraph_real_t cutoff, 
 				const igraph_vector_t *weights, 
 				igraph_bool_t nobigint) {
-  return igraph_i_betweenness_estimate(graph, res, -1, vids, directed, cutoff, weights, nobigint);
+  return igraph_i_betweenness_estimate(graph, res, stats, stats_names, -1,
+      vids, directed, cutoff, weights, nobigint);
 }
 
 int igraph_i_edge_betweenness_estimate_weighted(const igraph_t *graph, 
@@ -3745,8 +3777,12 @@ int igraph_centralization_betweenness(const igraph_t *graph,
     IGRAPH_VECTOR_INIT_FINALLY(scores, 0);
   }
   
-  IGRAPH_CHECK(igraph_betweenness(graph, scores, igraph_vss_all(), directed, 
-				  /*weights=*/ 0, nobigint));
+  igraph_vector_t stats;
+  igraph_strvector_t stats_names;
+  igraph_vector_init(&stats, 0);
+  igraph_strvector_init(&stats_names, 0);
+  IGRAPH_CHECK(igraph_betweenness(graph, scores, &stats, &stats_names,
+        igraph_vss_all(), directed, /*weights=*/ 0, nobigint));
   
   IGRAPH_CHECK(igraph_centralization_betweenness_tmax(graph, 0, directed, 
 						      tmax));
