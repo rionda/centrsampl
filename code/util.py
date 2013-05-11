@@ -9,6 +9,27 @@ import random
 import sys
 import igraph as ig
 
+def dict_to_csv(dictionary, csvkeys):
+    """Returns a string of comma separated values from a dictionary.
+    
+    cvskeys is a string of comma separated (potential) keys to be considered.
+
+    """
+    return ",".join([dict_value_to_str(dictionary, key) for key in
+        csvkeys.split(",")])
+
+def dict_value_to_str(dictionary, key):
+    """Convert value in a dictionary to string.
+    
+    If dictionary has a key "key", returns the string representation of
+    dictionary[key], otherwise returns the empty string.
+
+    """
+    string = ""
+    if key in dictionary:
+        string = str(dictionary[key])
+    return string
+
 def positive_int(string):
     """Check validity of string as positive integer. Return value if it is.
     
@@ -76,4 +97,5 @@ def write_to_output(elapsed_time, betw, output_path):
     except OSError as E:
         logging.critical("Cannot write betweenness to %s: %s", output_path,
                 E.strerror)
+
 
