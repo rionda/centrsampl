@@ -2027,7 +2027,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
   long int no_of_edges=igraph_ecount(graph);
   long int backward_touched_edges = 0;
   long int forward_touched_edges = 0;
-  long int normalization_factor = no_of_nodes * (no_of_nodes - 1);
+  double normalization_factor = ((double) no_of_nodes) * (no_of_nodes - 1) / no_of_samples;
   igraph_inclist_t inclist;
   igraph_adjlist_t fathers;
   long int vertex_index, j;
@@ -2275,7 +2275,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
 
   igraph_rng_t *rng=igraph_rng_default();
   long int no_of_nodes=igraph_vcount(graph);
-  long int normalization_factor = no_of_nodes * (no_of_nodes - 1);
+  double normalization_factor = ((double) no_of_nodes) * (no_of_nodes - 1) / no_of_samples;
   long int forward_touched_edges = 0;
   long int backward_touched_edges = 0;
   /*igraph_dqueue_t q=IGRAPH_DQUEUE_NULL; */
