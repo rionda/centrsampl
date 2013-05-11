@@ -39,6 +39,7 @@
 #include "igraph_datatype.h"
 #include "igraph_iterators.h"
 #include "igraph_arpack.h"
+#include "igraph_strvector.h"
 
 __BEGIN_DECLS
 
@@ -72,6 +73,7 @@ int igraph_betweenness_sample_bp_sample_size(const igraph_t *graph,
                                              const igraph_vector_t* weights,
                                              igraph_bool_t nobigint);
 int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
+                                 igraph_vector_t *stats, igraph_strvector_t *stats_names,
                                  igraph_real_t epsilon, igraph_real_t delta,
                                  igraph_integer_t diameter, const igraph_vs_t vids, 
                                  igraph_bool_t directed, igraph_real_t cutoff, 
@@ -79,6 +81,8 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
                                  igraph_bool_t nobigint);
 int igraph_betweenness_sample_vc_sample_size(const igraph_t *graph,
                                              igraph_vector_t *res,
+                                             igraph_vector_t *stats,
+                                             igraph_strvector_t *stats_names,
                                              igraph_integer_t sample_size,
                                              const igraph_vs_t vids,
                                              igraph_bool_t directed,

@@ -1987,6 +1987,7 @@ int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
 }
 
 int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector_t *res,
+           igraph_vector_t *stats, igraph_strvector_t *stats_names,
            igraph_integer_t no_of_samples, const igraph_vs_t vids,
            igraph_bool_t directed, igraph_real_t cutoff, 
            const igraph_vector_t* weights, igraph_bool_t nobigint) {
@@ -2197,6 +2198,11 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
     
   } /* vertex_index < no_of_samples */
 
+  igraph_vector_push_back(stats, forward_touched_edges);
+  igraph_strvector_add(stats_names, "forward_touched_edges");
+  igraph_vector_push_back(stats, backward_touched_edges);
+  igraph_strvector_add(stats_names, "backward_touched_edges");
+
   if (!igraph_vs_is_all(&vids)) {
     IGRAPH_CHECK(igraph_vit_create(graph, vids, &vit));
     IGRAPH_FINALLY(igraph_vit_destroy, &vit);
@@ -2232,6 +2238,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
 }
 
 int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
+           igraph_vector_t *stats, igraph_strvector_t *stats_names,
            igraph_integer_t no_of_samples, const igraph_vs_t vids,
            igraph_bool_t directed, igraph_real_t cutoff, 
            const igraph_vector_t* weights, igraph_bool_t nobigint) {
@@ -2260,7 +2267,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   igraph_biguint_t D, R, T;
 
   if (weights) { 
-    return igraph_i_betweenness_sample_vc_weighted(graph, res, no_of_samples,
+    return igraph_i_betweenness_sample_vc_weighted(graph, res, stats, stats_names, no_of_samples,
         vids, directed, cutoff, weights, nobigint);
   }
 
@@ -2522,6 +2529,11 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
 
   } /* for vertex_index < no_of_samples */
 
+  igraph_vector_push_back(stats, forward_touched_edges);
+  igraph_strvector_add(stats_names, "forward_touched_edges");
+  igraph_vector_push_back(stats, backward_touched_edges);
+  igraph_strvector_add(stats_names, "backward_touched_edges");
+
   IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
 
   /* clean  */
@@ -2563,6 +2575,19 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   IGRAPH_FINALLY_CLEAN(2);
 
   return 0;
+}
+
+int igraph_betweenness_sample_vc_sample_size(const igraph_t *graph,
+           igraph_vector_t *res, igraph_vector_t *stats, 
+           igraph_strvector_t *stats_names, igraph_integer_t sample_size, 
+           const igraph_vs_t vids, igraph_bool_t directed, 
+           igraph_real_t cutoff, const igraph_vector_t* weights,
+           igraph_bool_t nobigint) {
+  int ret_code = igraph_i_betweenness_sample_vc(graph, res, stats, stats_names,
+      sample_size, vids, directed, cutoff, weights, nobigint);
+  igraph_vector_push_back(stats, sample_size);
+  igraph_strvector_add(stats_names, "sample_size");
+  return ret_code;
 }
 
 /**
@@ -2640,14 +2665,6 @@ int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t
   return 0;
 }
 
-int igraph_betweenness_sample_vc_sample_size(const igraph_t *graph,
-           igraph_vector_t *res, igraph_integer_t sample_size, 
-           const igraph_vs_t vids, igraph_bool_t directed, 
-           igraph_real_t cutoff, const igraph_vector_t* weights,
-           igraph_bool_t nobigint) {
-  return igraph_i_betweenness_sample_vc(graph, res, sample_size, vids, directed, cutoff, weights, nobigint);
-}
-
 /**
  * \ingroup structural
  * \function igraph_betweenness_sample_vc
@@ -2657,6 +2674,7 @@ int igraph_betweenness_sample_vc_sample_size(const igraph_t *graph,
  * TODO
  */
 int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
+           igraph_vector_t *stats, igraph_strvector_t *stats_names,
            igraph_real_t epsilon, igraph_real_t delta, 
            igraph_integer_t diameter, const igraph_vs_t vids, 
            igraph_bool_t directed, igraph_real_t cutoff, 
@@ -2680,7 +2698,13 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
           2)) * (floor(log2(my_diameter - 1)) - log(delta)));
-  return igraph_i_betweenness_sample_vc(graph, res, no_of_samples, vids, directed, cutoff, weights, nobigint);
+  
+  int ret_code = igraph_i_betweenness_sample_vc(graph, res, stats, stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
+  igraph_vector_push_back(stats, my_diameter);
+  igraph_strvector_add(stats_names, "diameter");
+  igraph_vector_push_back(stats, no_of_samples);
+  igraph_strvector_add(stats_names, "sample_size");
+  return ret_code;
 }
 
 /**
