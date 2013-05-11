@@ -111,7 +111,7 @@ def main():
 
     # Print statistics to output as CSV
     logging.info("Printing statistics")
-    print("graph, {}, {}, {}, {}, {}, {}, {}".format(G["rawfile"], G.vcount(),
+    print("graph, {}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
         G.ecount(), G["diam"], G.is_directed(), args.epsilon, args.delta))
     print("exact, {}, 0, 0".format(G["betw_time"]))
     print("vc, {}".format(", ".join([str(x) for x in [G["vc_betw_time"], vc_wrong_eps, vc_err_max,
