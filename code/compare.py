@@ -31,9 +31,6 @@ def main():
             help="use exact diameter when computing approximation of betweenness using VC-Dimension")
     parser.add_argument("-f", "--force", action="store_true", default=False,
             help="Force recomputation of all betweenness values, exact and approximate.")
-    parser.add_argument("-i", "--implementation", choices=["homegrown",
-        "igraph"], default="homegrown", 
-        help="use specified implementation of betweenness computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
     help="write the betweenness and the time taken to compute them (if needed) back to file")
@@ -55,17 +52,15 @@ def main():
     # wrong ones, (re-)compute them
     logging.info("Recomputing betweenness if needed/specified")
     if args.force or not "betw_time" in G.attributes():
-        brandes_exact.betweenness(G, args.implementation, True)
+        brandes_exact.betweenness(G, True)
     if args.force or not "vc_betw_time" in G.attributes() or G["vc_eps"] != args.epsilon or G["vc_delta"] != args.delta:
         if args.diameter > 0:
-            vc_sample.betweenness(G, args.epsilon, args.delta, args.diameter,
-                    args.implementation, True)
+            vc_sample.betweenness(G, args.epsilon, args.delta, args.diameter, True)
         else:
             vc_sample.betweenness(G, args.epsilon, args.delta,
-                    args.approximate, args.implementation, True)
+                    args.approximate, True)
     if args.force or not "bp_betw_time" in G.attributes() or G["bp_eps"] != args.epsilon or G["bp_delta"] != args.delta:
-        brandespich_sample.betweenness(G, args.epsilon, args.delta,
-                args.implementation, True)
+        brandespich_sample.betweenness(G, args.epsilon, args.delta, True)
 
     #Compute useful graph statistics (mainly diameter)
     if "diam" not in G.attributes():
@@ -116,7 +111,7 @@ def main():
 
     # Print statistics to output as CSV
     logging.info("Printing statistics")
-    print("graph, {}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
+    print("graph, {}, {}, {}, {}, {}, {}, {}".format(G["rawfile"], G.vcount(),
         G.ecount(), G["diam"], G.is_directed(), args.epsilon, args.delta))
     print("exact, {}, 0, 0".format(G["betw_time"]))
     print("vc, {}".format(", ".join([str(x) for x in [G["vc_betw_time"], vc_wrong_eps, vc_err_max,
