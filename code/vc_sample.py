@@ -30,7 +30,6 @@ def betweenness_sample_size(graph, sample_size, set_attributes=True):
             graph["vc_" + key] = stats[key]
         graph.vs["vc_betw"] = betw
 
-    print(stats)
     return (stats, betw)
 
 def betweenness(graph, epsilon, delta, use_approx_diameter=True,
