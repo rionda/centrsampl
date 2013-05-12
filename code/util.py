@@ -4,9 +4,17 @@ Various useful functions.
 """
 import argparse
 import logging
+import math
 import pickle
 import sys
 import igraph as ig
+
+def decile(value, max_value):
+    """Returns the decile of the interval [0,max_value] that value belongs to."""
+    ret = math.floor(100 * value / max_value)
+    ret -= (ret % 10)
+    ret = int(ret / 10)
+    return str(ret)
 
 def dict_to_csv(dictionary, csvkeys):
     """Returns a string of comma separated values from a dictionary.

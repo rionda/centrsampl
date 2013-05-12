@@ -87,6 +87,7 @@ def main():
     # It is not a problem to sort the error by value because we only compute
     # aggregates.
     logging.info("Computing error statistics")
+    max_err = args.epsilon * G.vcount() * (G.vcount() - 1) / 2
     vc_errs = sorted([abs(a - b) for a,b in zip(exact_betw,vc_betw)])
     vc_stats["err_avg"] = sum(vc_errs) / G.vcount()
     vc_stats["err_max"] = vc_errs[-1]
@@ -95,9 +96,12 @@ def main():
     #vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
     #    G.vcount() * (G.vcount() - 1) / 2, vc_errs)))
     vc_stats["wrong_eps"] = 0;
+    for i in range(10):
+        vc_stats["err_decile_" + str(i)] = 0;
     for i in range(G.vcount()):
         err = abs(exact_betw[i] - vc_betw[i])
-        if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
+        vc_stats["err_decile_" + util.decile(err, max_err)] += 1
+        if err > max_err:
             vc_stats["wrong_eps"] += 1
             if vc_stats["wrong_eps"] == 1:
                 print("## VC wrong epsilon ##")
@@ -113,9 +117,12 @@ def main():
     #bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
     #    G.vcount() * (G.vcount() - 1) / 2, bp_errs)))
     bp_stats["wrong_eps"] = 0
+    for i in range(10):
+        bp_stats["err_decile_" + str(i)] = 0;
     for i in range(G.vcount()):
         err = abs(exact_betw[i] - bp_betw[i])
-        if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
+        bp_stats["err_decile_" + util.decile(err, max_err)] += 1
+        if err > max_err:
             bp_stats["wrong_eps"] += 1
             if bp_stats["wrong_eps"] == 1:
                 print("## BP wrong epsilon ##")
@@ -128,11 +135,11 @@ def main():
     print("{}, {}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
         G.ecount(), G["diam"], G.is_directed(), args.epsilon, args.delta,
         args.samplesize))
-    csvkeys="epsilon, delta, sample_size, time, wrong_eps, err_avg, err_max, err_min, err_stddev, forward_edges_touched, backward_edges_touched, diameter, diam_type"
-    print("type", csvkeys)
-    print("vc", util.dict_to_csv(vc_stats, csvkeys))
-    print("bp", util.dict_to_csv(bp_stats, csvkeys))
-    print("exact", util.dict_to_csv(exact_stats, csvkeys))
+    csvkeys="epsilon, delta, sample_size, time, wrong_eps, err_avg, err_max, err_min, err_stddev, forward_touched_edges, backward_touched_edges, err_decile_0, err_decile_1, err_decile_2, err_decile_3, err_decile_4, err_decile_5, err_decile_6, err_decile_7, err_decile_8, err_decile_9, diameter, diam_type"
+    print("type,", csvkeys)
+    print("vc,", util.dict_to_csv(vc_stats, csvkeys))
+    print("bp,", util.dict_to_csv(bp_stats, csvkeys))
+    print("exact,", util.dict_to_csv(exact_stats, csvkeys))
     
 if __name__ == "__main__":
     main()
