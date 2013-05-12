@@ -95,7 +95,7 @@ def valid_interval_float(string):
 def write_to_output(stats, betw, output_path):
     """ Write stats and betweenness to output file."""
     try:
-        with open(output_path, 'wt') as output:
+        with open(output_path, 'wb') as output:
             logging.info("Writing stats and betweenness to output file")
             pickle.dump((stats,betw), output);
             #output.write("({}, {})\n".format(stats, betw))
