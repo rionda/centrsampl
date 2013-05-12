@@ -31,6 +31,8 @@ def main():
             help="use exact diameter when computing approximation of betweenness using VC-Dimension")
     parser.add_argument("-r", "--resultfiles", nargs=3, 
     help="Use results files rather than recomputing betweenness. Files should be specified as 'exact_res vc_res bp_res'")
+    parser.add_argument("-s", "--samplesize", type=util.positive_int,
+            default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
     help="write the betweenness and the time taken to compute them (if needed) back to file")
@@ -50,14 +52,22 @@ def main():
 
     if not args.resultfiles:
         (exact_stats, exact_betw) = brandes_exact.betweenness(G, True)
-        if args.diameter > 0:
-            (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
-                    args.diameter, True)
+        if args.samplesize: 
+            (vc_stats, vc_betw) = vc_sample.betweenness_sample_size(G,
+                    args.samplesize, True)
         else:
-            (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
-                    args.approximate, True)
-        (bp_stats, bp_betw) = brandespich_sample.betweenness(G, args.epsilon, args.delta,
-                True)
+            if args.diameter > 0:
+                (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
+                        args.diameter, True)
+            else:
+                (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
+                        args.approximate, True)
+        if args.samplesize: 
+            (bp_stats, bp_betw) = brandespich_sample.betweenness_sample_size(G,
+                    args.samplesize, True)
+        else:
+            (bp_stats, bp_betw) = brandespich_sample.betweenness(G,
+                    args.epsilon, args.delta, True)
     else:
         (exact_stats, exact_betw) = util.read_stats_betw(args.result_files[0])
         (vc_stats, vc_betw) = util.read_stats_betw(args.result_files[1])
@@ -85,11 +95,12 @@ def main():
     #vc_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
     #    G.vcount() * (G.vcount() - 1) / 2, vc_errs)))
     vc_stats["wrong_eps"] = 0;
-    print("## VC wrong epsilon ##")
     for i in range(G.vcount()):
         err = abs(exact_betw[i] - vc_betw[i])
         if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
             vc_stats["wrong_eps"] += 1
+            if vc_stats["wrong_eps"] == 1:
+                print("## VC wrong epsilon ##")
             print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
                 exact_betw[i], vc_betw[i], bp_betw[i],
                 err, err / (G.vcount() * (G.vcount() -1) / 2)))
@@ -102,20 +113,22 @@ def main():
     #bp_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
     #    G.vcount() * (G.vcount() - 1) / 2, bp_errs)))
     bp_stats["wrong_eps"] = 0
-    print("## BP wrong epsilon ##")
     for i in range(G.vcount()):
         err = abs(exact_betw[i] - bp_betw[i])
         if err > args.epsilon * G.vcount() * (G.vcount() - 1) / 2:
             bp_stats["wrong_eps"] += 1
+            if bp_stats["wrong_eps"] == 1:
+                print("## BP wrong epsilon ##")
             print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
                  exact_betw[i], bp_betw[i], vc_betw[i], err, err / (G.vcount() * (G.vcount() -1) / 2)))
 
     # Print statistics to output as CSV
     logging.info("Printing statistics")
-    print("graph, nodes, edges, diam, directed, epsilon, delta")
-    print("{}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
-        G.ecount(), G["diam"], G.is_directed(), args.epsilon, args.delta))
-    csvkeys="epsilon, delta, time, sample_size, wrong_eps, err_avg, err_max, err_min, err_stddev, forward_edges_touched, backward_edges_touched, diameter, diam_type"
+    print("graph, nodes, edges, diam, directed, epsilon, delta, sample_size")
+    print("{}, {}, {}, {}, {}, {}, {}, {}".format(G["filename"], G.vcount(),
+        G.ecount(), G["diam"], G.is_directed(), args.epsilon, args.delta,
+        args.samplesize))
+    csvkeys="epsilon, delta, sample_size, time, wrong_eps, err_avg, err_max, err_min, err_stddev, forward_edges_touched, backward_edges_touched, diameter, diam_type"
     print("type", csvkeys)
     print("vc", util.dict_to_csv(vc_stats, csvkeys))
     print("bp", util.dict_to_csv(bp_stats, csvkeys))

@@ -9,10 +9,29 @@ compute them. These values are then written to an output file.
 import argparse
 import logging
 import random
-import sys
 import time
 
 import util
+
+def betweenness_sample_size(graph, sample_size, set_attributes=True):
+    """TODO """
+    logging.info("Computing approximate betweenness using VC-Dimension, fixed sample size")
+    start_time = time.process_time()
+    (stats, betw) = graph.betweenness_sample_vc_sample_size(sample_size)
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    stats["time"] = elapsed_time
+    logging.info("Betweenness computation complete, took %s seconds",
+            elapsed_time)
+
+    # Write attributes to graph, if specified
+    if set_attributes:
+        for key in stats:
+            graph["vc_" + key] = stats[key]
+        graph.vs["vc_betw"] = betw
+
+    print(stats)
+    return (stats, betw)
 
 def betweenness(graph, epsilon, delta, use_approx_diameter=True,
         set_attributes=True):
@@ -88,6 +107,8 @@ def main():
             help="value to use for the diameter")
     group.add_argument("-e", "--exact", action="store_true", default=False,
             help="use exact diameter")
+    parser.add_argument("-s", "--samplesize", type=util.positive_int,
+            default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
@@ -108,12 +129,15 @@ def main():
         args.approximate = False
 
     # Compute betweenness
-    if args.diameter > 0:
-        (stats, betw) = betweenness(G, args.epsilon, args.delta,
-                args.diameter, True)
+    if args.samplesize:
+        (stats, betw) = betweenness_sample_size(G, args.samplesize, True)
     else:
-        (stats, betw) = betweenness(G, args.epsilon, args.delta,
-                args.approximate, True)
+        if args.diameter > 0:
+            (stats, betw) = betweenness(G, args.epsilon, args.delta,
+                    args.diameter, True)
+        else:
+            (stats, betw) = betweenness(G, args.epsilon, args.delta,
+                    args.approximate, True)
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file

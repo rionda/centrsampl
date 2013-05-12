@@ -8,15 +8,29 @@ algorithm, see http://www.worldscientific.com/doi/abs/10.1142/S0218127407018403 
 
 """
 import argparse
-import itertools
 import logging
-import math
-import random
-import sys
 import time
 
-import brandes_exact
 import util
+
+def betweenness_sample_size(graph, sample_size, set_attributes=True):
+    """TODO """
+    logging.info("Computing approximate betweenness using Brandes and Pich algorithm, fixed sample size")
+    start_time = time.process_time()
+    (stats, betw) = graph.betweenness_sample_bp_sample_size(sample_size)
+    end_time = time.process_time()
+    elapsed_time = end_time - start_time
+    stats["time"] = elapsed_time
+    logging.info("Betweenness computation complete, took %s seconds",
+            elapsed_time)
+
+    # Write attributes to graph, if specified
+    if set_attributes:
+        for key in stats:
+            graph["bp_" + key] = stats[key]
+        graph.vs["bp_betw"] = betw
+
+    return (stats, betw)
 
 def betweenness(graph, epsilon, delta, set_attributes=True):
     """Compute approx. betweenness using Brandes and Pick algorithm.
@@ -65,6 +79,8 @@ def main():
             help="confidence parameter")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
+    parser.add_argument("-s", "--samplesize", type=util.positive_int,
+            default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
             help="store the approximate betweenness as an attribute of each vertex the graph and the computation time as attribute of the graph, and write these to the graph file")
@@ -78,7 +94,10 @@ def main():
     G = util.read_graph(args.graph)
 
     # Compute betweenness
-    (stats, betw) = betweenness(G, args.epsilon, args.delta, True)
+    if args.samplesize:
+        (stats, betw) = betweenness_sample_size(G, args.samplesize, True)
+    else:
+        (stats, betw) = betweenness(G, args.epsilon, args.delta, True)
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file
