@@ -2424,6 +2424,11 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
         if (distance[neighbor]==0) {
           igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, neighbor));
           distance[neighbor]=distance[actnode]+1;
+          if (nobigint) {
+            nrgeo[neighbor] = 0;
+          } else {
+            igraph_biguint_set_limb(&big_nrgeo[neighbor], 0);
+          }
           IGRAPH_CHECK(igraph_dqueue_push(&q, neighbor));
         } 
         if (distance[neighbor]==distance[actnode]+1) {
@@ -2493,13 +2498,6 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
     /* cleanup */ 
     //printf("cleanup\n");
     memset(distance, 0, no_of_nodes * sizeof(long int));
-    if (nobigint) { 
-      memset(nrgeo, 0, no_of_nodes * sizeof(unsigned long long int));
-    } else { 
-      for (j=0; j<no_of_nodes; j++) {
-        igraph_biguint_set_limb(&big_nrgeo[j], 0);
-      }
-    }
     /* End of clean up */
     
     /* Brandes computation of betweenness */
