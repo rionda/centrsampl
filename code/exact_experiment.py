@@ -1,3 +1,12 @@
+#! /usr/bin/env python3
+""" exact_experiment.py
+
+    Perform experiment to evaluate Brandes' exact algorithm to compute the
+    betweenness centrality of all vertices in a graph.
+    The algorithm is run multiple times. We compute aggregate statistics about
+    the runs and save the stats and all the results in a single .pickle file.
+    
+"""
 import argparse
 import logging
 import math
