@@ -59,6 +59,7 @@ def main():
         stats["time_stddev"] = 0.0
 
     csvkeys="graph, runs, time_avg, time_stddev, time_max, time_min, forward_touched_edges, backward_touched_edges"
+    print(csvkeys)
     print(util.dict_to_csv(stats, csvkeys))
     # Write stats and results to output file
     try: 
