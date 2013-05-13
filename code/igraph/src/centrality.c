@@ -2198,7 +2198,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
     } /* destination_is_reached */
     
     /* cleanup */
-    bzero(VECTOR(dist), no_of_nodes * sizeof(igraph_real_t));
+    memset(VECTOR(dist), 0, no_of_nodes * sizeof(igraph_real_t));
     //for (j=0; j<no_of_nodes; j++) {
       //igraph_vector_clear(igraph_adjlist_get(&fathers, j));
       //VECTOR(nrgeo)[j] = 0;
@@ -2492,9 +2492,9 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
     } /* destination_is_reached */
     /* cleanup */ 
     //printf("cleanup\n");
-    bzero(distance, no_of_nodes * sizeof(long int));
+    memset(distance, 0, no_of_nodes * sizeof(long int));
     if (nobigint) { 
-      bzero(nrgeo, no_of_nodes * sizeof(unsigned long long int));
+      memset(nrgeo, 0, no_of_nodes * sizeof(unsigned long long int));
     } else { 
       for (j=0; j<no_of_nodes; j++) {
         igraph_biguint_set_limb(&big_nrgeo[j], 0);
