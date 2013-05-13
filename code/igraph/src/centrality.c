@@ -2198,11 +2198,12 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
     } /* destination_is_reached */
     
     /* cleanup */
-    for (j=0; j<no_of_nodes; j++) {
-      igraph_vector_clear(igraph_adjlist_get(&fathers, j));
-      VECTOR(nrgeo)[j] = 0;
-      VECTOR(dist)[j] = 0;
-    }
+    bzero(VECTOR(dist), no_of_nodes * sizeof(igraph_real_t));
+    //for (j=0; j<no_of_nodes; j++) {
+      //igraph_vector_clear(igraph_adjlist_get(&fathers, j));
+      //VECTOR(nrgeo)[j] = 0;
+      //VECTOR(dist)[j] = 0;
+    //}
     /* end cleanup */
 
     /* Computation of betweenness by Brandes
@@ -2421,6 +2422,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
         forward_touched_edges++;
         long int neighbor=VECTOR(*neis)[j];
         if (distance[neighbor]==0) {
+          igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, neighbor));
           distance[neighbor]=distance[actnode]+1;
           IGRAPH_CHECK(igraph_dqueue_push(&q, neighbor));
         } 
@@ -2498,10 +2500,6 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
         igraph_biguint_set_limb(&big_nrgeo[j], 0);
       }
     }
-    for (j=0; j<no_of_nodes; j++) {
-      igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, j));
-    }
-    /* igraph_adjlist_clear(adjlist_in_p); */
     /* End of clean up */
     
     /* Brandes computation of betweenness */
