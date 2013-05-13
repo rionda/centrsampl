@@ -1550,6 +1550,7 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
 	  igraph_vector_resize(v,1);
 	  VECTOR(*v)[0]=minnei;
 	  VECTOR(nrgeo)[to] = VECTOR(nrgeo)[minnei];
+    VECTOR(tmpscore)[to]=0;
 
 	  VECTOR(dist)[to]=altdist+1.0;
 	  IGRAPH_CHECK(igraph_2wheap_push_with_index(&Q, to, -altdist));
@@ -1582,10 +1583,10 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
       }
       if (w!=source) { VECTOR(*tmpres)[w] += VECTOR(tmpscore)[w]; }
 
-      VECTOR(tmpscore)[w]=0;
+      //VECTOR(tmpscore)[w]=0;
       VECTOR(dist)[w]=0;
-      VECTOR(nrgeo)[w]=0;
-      igraph_vector_clear(igraph_adjlist_get(&fathers, w));
+      //VECTOR(nrgeo)[w]=0;
+      //igraph_vector_clear(igraph_adjlist_get(&fathers, w));
     }
     
   } /* vertex_index < no_of_samples */
@@ -1796,6 +1797,13 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
         if (distance[neighbor]==0) {
           distance[neighbor]=distance[actnode]+1;
           IGRAPH_CHECK(igraph_dqueue_push(&q, neighbor));
+          if (nobigint) { 
+            nrgeo[neighbor]=0;
+          } else {
+            igraph_biguint_set_limb(&big_nrgeo[neighbor], 0);
+          }
+          tmpscore[neighbor]=0;
+          igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, neighbor));      
         } 
         if (distance[neighbor]==distance[actnode]+1) {
           igraph_vector_t *v=igraph_adjlist_get(adjlist_in_p, neighbor);
@@ -1842,13 +1850,15 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
       if (actnode != source) { VECTOR(*tmpres)[actnode] += tmpscore[actnode]; }
 
       distance[actnode]=0;
+      /*
       if (nobigint) { 
-	nrgeo[actnode]=0;
+        nrgeo[actnode]=0;
       } else {
-	igraph_biguint_set_limb(&big_nrgeo[actnode], 0);
+        igraph_biguint_set_limb(&big_nrgeo[actnode], 0);
       }
       tmpscore[actnode]=0;
       igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, actnode));      
+      */
     }
 
   } /* for vertex_index < no_of_samples */
