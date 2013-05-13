@@ -2071,6 +2071,10 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
     IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
   }
 
+  igraph_2wheap_t Q;
+  IGRAPH_CHECK(igraph_2wheap_init(&Q, no_of_nodes));
+  IGRAPH_FINALLY(igraph_2wheap_destroy, &Q);
+
   // setbuf(stdout, 0);
 
   for (vertex_index=0; vertex_index<no_of_samples; vertex_index++) {
@@ -2087,10 +2091,6 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
     //printf("source=%ld,destination=%ld\n", source, destination);
 
     igraph_bool_t destination_is_reached = 0;
-
-    igraph_2wheap_t Q;
-    IGRAPH_CHECK(igraph_2wheap_init(&Q, no_of_nodes));
-    IGRAPH_FINALLY(igraph_2wheap_destroy, &Q);
 
     igraph_2wheap_push_with_index(&Q, source, 0);
     VECTOR(dist)[source]=1.0;
@@ -2155,7 +2155,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
      */
     if (destination_is_reached) {
       long int path_vertex, sampled_pred = destination;
-      igraph_vector_t sampling_limits;
+      igraph_2wheap_clear(&Q);
       while (1) {
         path_vertex = sampled_pred;
         /* Get list of predecessors of path_vertex */
@@ -2164,27 +2164,25 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
          * passing through it.
          */
         long int fatv_len=igraph_vector_size(fatv);
+        int sampling_limits[fatv_len];
         if (fatv_len > 1) {
           //printf("sampling\n");
-          IGRAPH_VECTOR_INIT_FINALLY(&sampling_limits, fatv_len); 
           /*IGRAPH_CHECK(igraph_vector_init(&sampling_limits, fatv_len)); */
           int curr_limit = -1;
           for (j=0; j<fatv_len; j++) {
             backward_touched_edges++;
             long int f = VECTOR(*fatv)[j];
             curr_limit+=VECTOR(nrgeo)[f];
-            VECTOR(sampling_limits)[j]=curr_limit;
+            sampling_limits[j]=curr_limit;
           }
           igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, VECTOR(nrgeo)[path_vertex] - 1);
           //printf("sampled=%d\n", sampled);
           j=0;
-          while (VECTOR(sampling_limits)[j] < sampled) {
+          while (sampling_limits[j] < sampled) {
             j++;
           }
           sampled_pred=VECTOR(*fatv)[j];
           //printf("sampled_pred=%ld\n", sampled_pred);
-          igraph_vector_destroy(&sampling_limits);
-          IGRAPH_FINALLY_CLEAN(1);
         } else {
           sampled_pred=VECTOR(*fatv)[0];
         }
@@ -2205,8 +2203,6 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
       VECTOR(nrgeo)[j] = 0;
       VECTOR(dist)[j] = 0;
     }
-    igraph_2wheap_destroy(&Q);
-    IGRAPH_FINALLY_CLEAN(1);
     /* end cleanup */
 
     /* Computation of betweenness by Brandes
@@ -2246,9 +2242,10 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
     
     no_of_nodes = j;
     
+    igraph_2wheap_destroy(&Q);
     igraph_vit_destroy(&vit);
     igraph_vector_destroy(tmpres);
-    IGRAPH_FINALLY_CLEAN(2);
+    IGRAPH_FINALLY_CLEAN(3);
   }
   
 
@@ -2278,7 +2275,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   double normalization_factor = ((double) no_of_nodes) * (no_of_nodes - 1) / no_of_samples;
   long int forward_touched_edges = 0;
   long int backward_touched_edges = 0;
-  /*igraph_dqueue_t q=IGRAPH_DQUEUE_NULL; */
+  igraph_dqueue_t q=IGRAPH_DQUEUE_NULL;
   long int *distance;
   unsigned long long int *nrgeo=0;  /* must be long long; consider grid
 				       graphs for example */
@@ -2375,6 +2372,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   igraph_stack_init(&stack, no_of_nodes);
   IGRAPH_FINALLY(igraph_stack_destroy, &stack);
   */
+  IGRAPH_DQUEUE_INIT_FINALLY(&q, no_of_nodes);
     
   /* here we go */
 
@@ -2395,8 +2393,6 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
 
     igraph_bool_t destination_is_reached = 0;
 
-    igraph_dqueue_t q=IGRAPH_DQUEUE_NULL;
-    IGRAPH_DQUEUE_INIT_FINALLY(&q, 100);
     IGRAPH_CHECK(igraph_dqueue_push(&q, source));
     if (nobigint) { 
       nrgeo[source]=1;
@@ -2448,9 +2444,9 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
      */
     if (destination_is_reached) {
       //printf("destination is reached\n");
+      igraph_dqueue_clear(&q);
 
       long int path_vertex, sampled_pred=destination;
-      igraph_vector_t sampling_limits;
       igraph_vector_t *fatv=NULL;
       while (1) {
         path_vertex = sampled_pred;
@@ -2462,30 +2458,24 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
         long int fatv_len=igraph_vector_size(fatv);
         if (fatv_len > 1) {
           //printf("sampling\n");
-          IGRAPH_VECTOR_INIT_FINALLY(&sampling_limits, fatv_len);
+          int sampling_limits[fatv_len];
           int curr_limit = -1;
           for (j=0; j<fatv_len; j++) {
             backward_touched_edges++;
             long int f = VECTOR(*fatv)[j];
             /* curr_limit+=VECTOR(nrgeo)[f]; */
             curr_limit+=nrgeo[f];
-            VECTOR(sampling_limits)[j]=curr_limit;
+            sampling_limits[j] = curr_limit;
           }
-          /* igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, VECTOR(nrgeo)[path_vertex] - 1); */
           igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, nrgeo[path_vertex] - 1);
           j=0;
-          while (VECTOR(sampling_limits)[j] < sampled) {
+          /* XXX we should have binary search here */
+          while (sampling_limits[j] < sampled) {
             j++;
           }
           sampled_pred=VECTOR(*fatv)[j];
-          igraph_vector_destroy(&sampling_limits);
-          IGRAPH_FINALLY_CLEAN(1);
-        } else if (fatv_len == 1)  {
+        } else {
           sampled_pred=VECTOR(*fatv)[0];
-        } else { 
-          /* XXX handle this better */
-          printf("How do even got here?\n");
-          exit(2);
         }
         //printf("%ld %ld %ld %ld\n", destination, path_vertex, sampled_pred, source);
         //sleep(3);
@@ -2500,9 +2490,9 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
     } /* destination_is_reached */
     /* cleanup */ 
     //printf("cleanup\n");
-    distance = memset(distance, 0, no_of_nodes * sizeof(long int));
+    bzero(distance, no_of_nodes * sizeof(long int));
     if (nobigint) { 
-      nrgeo = memset(nrgeo, 0, no_of_nodes * sizeof(unsigned long long int));
+      bzero(nrgeo, no_of_nodes * sizeof(unsigned long long int));
     } else { 
       for (j=0; j<no_of_nodes; j++) {
         igraph_biguint_set_limb(&big_nrgeo[j], 0);
@@ -2511,8 +2501,6 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
     for (j=0; j<no_of_nodes; j++) {
       igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, j));
     }
-    igraph_dqueue_destroy(&q);
-    IGRAPH_FINALLY_CLEAN(1);
     /* igraph_adjlist_clear(adjlist_in_p); */
     /* End of clean up */
     
@@ -2579,9 +2567,9 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   }
   /* igraph_Free(tmpscore); */
   
-  //igraph_dqueue_destroy(&q);
+  igraph_dqueue_destroy(&q);
   /* igraph_stack_destroy(&stack); */
-  IGRAPH_FINALLY_CLEAN(2); 
+  IGRAPH_FINALLY_CLEAN(3); 
 
   /* Keep only the requested vertices */
   if (!igraph_vs_is_all(&vids)) { 
