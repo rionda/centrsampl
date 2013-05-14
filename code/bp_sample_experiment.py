@@ -37,6 +37,8 @@ def main():
             help="use pickle reader for input file")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
+    parser.add_argument("-t", "--timeout", type=util.positive_int, default=3600,
+            help="Timeout computation after specified number of seconds (default 3600 = 1h, 0 = no timeout)")
     parser.add_argument("-u", "--undirected", action="store_true", default=False,
             help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0,
@@ -60,10 +62,10 @@ def main():
         # Compute betweenness
         if args.samplesize:
             results.append(brandespich_sample.betweenness_sample_size(G,
-                args.samplesize, False))
+                args.samplesize, False, args.timeout))
         else:
             results.append(brandespich_sample.betweenness(G, args.epsilon,
-                args.delta, False))
+                args.delta, False, args.timeout))
 
     # Compute aggregate statistics about the experiments
     stats = dict()

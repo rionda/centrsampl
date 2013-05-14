@@ -13,19 +13,35 @@ import os.path
 import time
 
 import converter
+import timeout
 import util
 
-def betweenness_sample_size(graph, sample_size, set_attributes=True):
-    """TODO """
-    logging.info("Computing approximate betweenness using Brandes and Pich algorithm, fixed sample size")
+def do_betweenness_sample_size(graph, sample_size):
     start_time = time.process_time()
     (stats, betw) = graph.betweenness_sample_bp_sample_size(sample_size)
     end_time = time.process_time()
-    elapsed_time = end_time - start_time
-    stats["time"] = elapsed_time
-    logging.info("Betweenness computation complete, took %s seconds",
-            elapsed_time)
+    stats["time"] = end_time - start_time
+    return (stats, betw)
 
+def betweenness_sample_size(graph, sample_size, set_attributes=True, time_out=0):
+    """Compute approximate betweenness using Brandes and Pich algo and a specified sample size."""
+    logging.info("Computing approximate betweenness using Brandes and Pich algorithm, fixed sample size")
+    if not time_out:
+        (stats, betw) = do_betweenness_sample_size(graph)
+    else:
+        timeout_betweenness = timeout.add_timeout(do_betweenness_sample_size, time_out)
+        timeout_betweenness(graph, sample_size)
+        while (not timeout_betweenness.ready) and (not timeout_betweenness.expired):
+            pass
+        if timeout_betweenness.ready:
+            logging.info("Betweenness computed in %s seconds", stats['time'])
+            (stats, betw) = timeout_betweenness.value
+            stats["timed_out"] = 0
+        else:
+            logging.info("Betweenness computation timer expired after %d seconds.", time_out)
+            betw = [0] * graph.vcount()
+            stats = {"time": time_out, "timed_out": 1, "forward_touched_edges": -1,
+                    "backward_touched_edges": -1, "sample_size": sample_size}
     # Write attributes to graph, if specified
     if set_attributes:
         for key in stats:
@@ -34,7 +50,14 @@ def betweenness_sample_size(graph, sample_size, set_attributes=True):
 
     return (stats, betw)
 
-def betweenness(graph, epsilon, delta, set_attributes=True):
+def do_betweenness(graph, epsilon, delta):
+    start_time = time.process_time()
+    (stats, betw) = graph.betweenness_sample_bp(epsilon, delta)
+    end_time = time.process_time()
+    stats["time"] = end_time - start_time
+    return (stats, betw)
+
+def betweenness(graph, epsilon, delta, set_attributes=True, time_out=0):
     """Compute approx. betweenness using Brandes and Pick algorithm.
     
     Compute approximations of the betweenness centrality of all the vertices in
@@ -51,13 +74,22 @@ def betweenness(graph, epsilon, delta, set_attributes=True):
     # We do not use logging from here to the end of the computation to avoid
     # wasting time
     logging.info("Computing approximate betweenness using Brandes and Pich algorithm")
-    start_time = time.process_time()
-    (stats, betw) = graph.betweenness_sample_bp(epsilon, delta)
-    end_time = time.process_time()
-    elapsed_time = end_time - start_time
-    stats["time"] = elapsed_time
-    logging.info("Betweenness computation complete, took %s seconds",
-            elapsed_time)
+    if not time_out:
+        (stats, betw) = do_betweenness(graph, epsilon, delta)
+    else:
+        timeout_betweenness = timeout.add_timeout(do_betweenness, time_out)
+        timeout_betweenness(graph, epsilon, delta)
+        while (not timeout_betweenness.ready) and (not timeout_betweenness.expired):
+            pass
+        if timeout_betweenness.ready:
+            logging.info("Betweenness computed in %s seconds", stats['time'])
+            (stats, betw) = timeout_betweenness.value
+            stats["timed_out"] = 0
+        else:
+            logging.info("Betweenness computation timer expired after %d seconds.", time_out)
+            betw = [0] * graph.vcount()
+            stats = {"time": time_out, "timed_out": 1, "forward_touched_edges": -1,
+                    "backward_touched_edges": -1, "sample_size": -1}
 
     stats["delta"] = delta
     stats["epsilon"] = epsilon
@@ -87,11 +119,13 @@ def main():
             help="use pickle reader for input file")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
+    parser.add_argument("-t", "--timeout", type=util.positive_int, default=3600,
+            help="Timeout computation after specified number of seconds (default 3600 = 1h, 0 = no timeout)")
     parser.add_argument("-u", "--undirected", action="store_true", default=False,
             help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
-    parser.add_argument("-w", "--write", action="store_true", default=False,
-            help="store the approximate betweenness as an attribute of each vertex the graph and the computation time as attribute of the graph, and write these to the graph file")
+    parser.add_argument("-w", "--write", nargs="?", default=False, const="auto",
+            help="write graph (and computed attributes) to file.")
 
     args = parser.parse_args()
 
@@ -106,9 +140,11 @@ def main():
 
     # Compute betweenness
     if args.samplesize:
-        (stats, betw) = betweenness_sample_size(G, args.samplesize, True)
+        (stats, betw) = betweenness_sample_size(G, args.samplesize, args.write,
+                args.timeout)
     else:
-        (stats, betw) = betweenness(G, args.epsilon, args.delta, True)
+        (stats, betw) = betweenness(G, args.epsilon, args.delta, args.write,
+                args.timeout)
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file

@@ -13,18 +13,35 @@ import random
 import time
 
 import converter
+import timeout
 import util
 
-def betweenness_sample_size(graph, sample_size, set_attributes=True):
-    """Compute approximate betweenness using VC-Dimension and a specified sample size."""
-    logging.info("Computing approximate betweenness using VC-Dimension, fixed sample size")
+def do_betweenness_sample_size(graph, sample_size):
     start_time = time.process_time()
     (stats, betw) = graph.betweenness_sample_vc_sample_size(sample_size)
     end_time = time.process_time()
-    elapsed_time = end_time - start_time
-    stats["time"] = elapsed_time
-    logging.info("Betweenness computation complete, took %s seconds",
-            elapsed_time)
+    stats["time"] = end_time - start_time
+    return (stats, betw)
+
+def betweenness_sample_size(graph, sample_size, set_attributes=True, time_out=0):
+    """Compute approximate betweenness using VC-Dimension and a specified sample size."""
+    logging.info("Computing approximate betweenness using VC-Dimension, fixed sample size")
+    if not time_out:
+        (stats, betw) = do_betweenness_sample_size(graph)
+    else:
+        timeout_betweenness = timeout.add_timeout(do_betweenness_sample_size, time_out)
+        timeout_betweenness(graph, sample_size)
+        while (not timeout_betweenness.ready) and (not timeout_betweenness.expired):
+            pass
+        if timeout_betweenness.ready:
+            logging.info("Betweenness computed in %s seconds", stats['time'])
+            (stats, betw) = timeout_betweenness.value
+            stats["timed_out"] = 0
+        else:
+            logging.info("Betweenness computation timer expired after %d seconds.", time_out)
+            betw = [0] * graph.vcount()
+            stats = {"time": time_out, "timed_out": 1, "forward_touched_edges": -1,
+                    "backward_touched_edges": -1, "sample_size": sample_size}
 
     # Write attributes to graph, if specified
     if set_attributes:
@@ -34,8 +51,23 @@ def betweenness_sample_size(graph, sample_size, set_attributes=True):
 
     return (stats, betw)
 
+def do_betweenness(graph, epsilon, delta, use_approx_diameter):
+    if use_approx_diameter == 1:
+        start_time = time.process_time()
+        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, -1)
+    elif use_approx_diameter == 0:
+        start_time = time.process_time()
+        diam = graph.diameter()
+        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, diam)
+    else:
+        start_time = time.process_time()
+        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, use_approx_diameter)
+    end_time = time.process_time()
+    stats["time"] = end_time - start_time
+    return (stats, betw)
+
 def betweenness(graph, epsilon, delta, use_approx_diameter=True,
-        set_attributes=True):
+        set_attributes=True, time_out=0):
     """Compute approximate betweenness using VC-Dimension.
     
     Compute approximations of the betweenness centrality of all the vertices in
@@ -56,22 +88,24 @@ def betweenness(graph, epsilon, delta, use_approx_diameter=True,
     
     """
     logging.info("Computing approximate betweenness using VC-Dimension")
-    if use_approx_diameter == 1:
-        start_time = time.process_time()
-        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, -1)
-    elif use_approx_diameter == 0:
-        start_time = time.process_time()
-        diam = graph.diameter()
-        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, diam)
+    if not time_out:
+        (stats, betw) = do_betweenness(graph, epsilon, delta,
+                use_approx_diameter)
     else:
-        start_time = time.process_time()
-        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, use_approx_diameter)
-    end_time = time.process_time()
-    elapsed_time = end_time - start_time
-    stats["time"] = elapsed_time
-    logging.info("Betweenness computation complete, took %s seconds",
-            elapsed_time)
-
+        timeout_betweenness = timeout.add_timeout(do_betweenness, time_out)
+        timeout_betweenness(graph, epsilon, delta, use_approx_diameter)
+        while (not timeout_betweenness.ready) and (not timeout_betweenness.expired):
+            pass
+        if timeout_betweenness.ready:
+            logging.info("Betweenness computed in %s seconds", stats['time'])
+            (stats, betw) = timeout_betweenness.value
+            stats["timed_out"] = 0
+        else:
+            logging.info("Betweenness computation timer expired after %d seconds.", time_out)
+            betw = [0] * graph.vcount()
+            stats = {"time": time_out, "timed_out": 1, "forward_touched_edges": -1,
+                    "backward_touched_edges": -1, "sample_size": -1,
+                    "diameter": -1, "diameter_touched_edges": -1 }
     stats["delta"] = delta
     if int(use_approx_diameter) == 1:
         stats["diam_type"] = "approx" 
@@ -114,12 +148,14 @@ def main():
             help="use pickle reader for input file")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
+    parser.add_argument("-t", "--timeout", type=util.positive_int, default=3600,
+            help="Timeout computation after specified number of seconds (default 3600 = 1h, 0 = no timeout)")
     parser.add_argument("-u", "--undirected", action="store_true", default=False,
             help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", nargs="?", default=False, const="auto",
-            help="write graph (+ compute attributes) to file.")
+            help="write graph (and computed attributes) to file.")
 
     args = parser.parse_args()
 

@@ -40,12 +40,14 @@ def main():
     help="Use results files rather than recomputing betweenness. Files should be specified as 'exact_res vc_res bp_res'")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
+    parser.add_argument("-t", "--timeout", type=util.positive_int, default=3600,
+            help="Timeout computation after specified number of seconds (default 3600 = 1h, 0 = no timeout)")
     parser.add_argument("-u", "--undirected", action="store_true", default=False,
             help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", nargs="?", default=False, const="auto",
-            help="write graph (+ compute attributes) to file.")
+            help="write graph (and computed attributes) to file.")
     args = parser.parse_args()
 
     # Set the desired level of logging
@@ -64,23 +66,24 @@ def main():
         args.approximate = False
 
     if not args.resultfiles:
-        (exact_stats, exact_betw) = brandes_exact.betweenness(G, True)
+        (exact_stats, exact_betw) = brandes_exact.betweenness(G, args.write,
+                args.timeout)
         if args.samplesize: 
             (vc_stats, vc_betw) = vc_sample.betweenness_sample_size(G,
-                    args.samplesize, True)
+                    args.samplesize, args.write, args.timeout)
         else:
             if args.diameter > 0:
                 (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
-                        args.diameter, True)
+                        args.diameter, args.write, args.timeout)
             else:
                 (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
-                        args.approximate, True)
+                        args.approximate, args.write, args.timeout)
         if args.samplesize: 
             (bp_stats, bp_betw) = brandespich_sample.betweenness_sample_size(G,
-                    args.samplesize, True)
+                    args.samplesize, args.write, args.timeout)
         else:
             (bp_stats, bp_betw) = brandespich_sample.betweenness(G,
-                    args.epsilon, args.delta, True)
+                    args.epsilon, args.delta, args.write, args.timeout)
     else:
         (exact_stats, exact_betw) = util.read_stats_betw(args.result_files[0])
         (vc_stats, vc_betw) = util.read_stats_betw(args.result_files[1])

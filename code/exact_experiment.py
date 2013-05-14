@@ -32,6 +32,8 @@ def main():
             help="if the graph is not weakly connected, only save the largest connected component")
     parser.add_argument("-p", "--pickle", action="store_true", default=False,
             help="use pickle reader for input file")
+    parser.add_argument("-t", "--timeout", type=util.positive_int, default=3600,
+            help="Timeout computation after specified number of seconds (default 3600 = 1h, 0 = no timeout)")
     parser.add_argument("-u", "--undirected", action="store_true", default=False,
             help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0, 
@@ -51,7 +53,7 @@ def main():
     results = []
     for i in range(args.runs):
         logging.info("Run #%d", i)
-        results.append(brandes_exact.betweenness(G, False))
+        results.append(brandes_exact.betweenness(G, False, args.timeout))
 
     # Compute aggregate statistics about the experiments
     stats = dict(results[0][0])
