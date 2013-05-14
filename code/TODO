@@ -1,16 +1,15 @@
 We are going to implement our code in Python3.3.1, using and extending the
 igraph library (http://igraph.sourceforge.net)
 
-Download graph data from http://snap.stanford.edu/data and
-http://law.di.unimi.it/datasets.php
-Another dataset that looks interesting is the US patent data. Look in the ALENEX
-paper.
-
 Implement ALENEX paper sampling algorithm
 
 Implement adaptive sampling algorithm
 
 Implement code to automatize reports
+
+# DONE! Download graph data from http://snap.stanford.edu/data and
+http://law.di.unimi.it/datasets.php (not done from unimi as they are not in a
+format readable by igraph so whatever)
 
 # DONE! Implement code to automatize experiments
 
