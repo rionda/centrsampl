@@ -2641,6 +2641,7 @@ int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t
   } else {
     rng = igraph_rng_default();
   }
+  //setbuf(stdout, 0);
   for (j=0; j < igraph_vector_ptr_size(&components); j++) {
     // igraph_t *component = (igraph_t *) VECTOR(components)[j];
     igraph_t *component = VECTOR(components)[j];
@@ -2648,29 +2649,38 @@ int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t
     if (max_component_size < component_size - 1) {
       max_component_size = component_size - 1;
     }
+    //printf("%d\n", j);
     // Were all connected components we found until now strongly connected?
     if (do_computation) { 
+      //printf("do_computation\n");
       igraph_is_connected(component, &component_is_strongly_connected, IGRAPH_STRONG);
       if (component_is_strongly_connected) {
+        //printf("strongly connected\n");
         igraph_matrix_t sp_res;
         IGRAPH_CHECK(igraph_matrix_init(&sp_res, 1, component_size));
         IGRAPH_FINALLY(igraph_matrix_destroy, &sp_res);
-        igraph_integer_t sampled_source = igraph_rng_get_integer(rng, 0, component_size);
+        igraph_integer_t sampled_source = igraph_rng_get_integer(rng, 0, component_size - 1);
         // Compute shortest paths from sampled source
+        //printf("pre-ssp\n");
         igraph_shortest_paths(component, &sp_res, igraph_vss_1(sampled_source),
           igraph_vss_all(), IGRAPH_ALL);
+        //printf("post-ssp\n");
         // Perform computation of diameter
         igraph_real_t largest = 0;
         igraph_real_t second_largest = 0;
         for (i=0; i<component_size; i++) {
+          //printf("%d %d %ld %lf\n", i, component_size, igraph_matrix_size(&sp_res), MATRIX(sp_res, 0, 1));
           if (MATRIX(sp_res, 0, i) == IGRAPH_INFINITY)  {
+            //printf("infinity\n");
             continue;
           }
           if (MATRIX(sp_res, 0, i) >= largest) {
+            //printf("largest\n");
             second_largest = largest;
             largest = MATRIX(sp_res, 0, i);
           }
         }
+        //printf("computed max\n");
         component_diameter = (igraph_integer_t) largest + second_largest;
         if (component_diameter > *diameter) {
           *diameter = component_diameter;
