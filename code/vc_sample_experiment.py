@@ -94,6 +94,7 @@ def main():
     stats_names = ["time", "forward_touched_edges", "backward_touched_edges"]
     if not args.samplesize:
         stats_names.append("diameter")
+        stats_names.append("diameter_touched_edges")
     for stat_name in stats_names:
         values = sorted([x[0][stat_name] for x in results])
         stats[stat_name + "_max"] = values[-1]

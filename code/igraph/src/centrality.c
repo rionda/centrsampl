@@ -2623,8 +2623,11 @@ int igraph_betweenness_sample_vc_sample_size(const igraph_t *graph,
  * TODO
  */
 
-int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t
-    *diameter, const igraph_vector_t *weights) {
+int igraph_diameter_approximation(const igraph_t *graph, 
+                                  igraph_integer_t *diameter, 
+                                  igraph_vector_t *stats, 
+                                  igraph_strvector_t *stats_names,
+                                  const igraph_vector_t *weights) {
   igraph_bool_t do_computation = 1;
   igraph_bool_t component_is_strongly_connected;
   int component_size, component_diameter = 0;
@@ -2662,8 +2665,8 @@ int igraph_diameter_approximation(const igraph_t *graph, igraph_integer_t
         igraph_integer_t sampled_source = igraph_rng_get_integer(rng, 0, component_size - 1);
         // Compute shortest paths from sampled source
         //printf("pre-ssp\n");
-        igraph_shortest_paths(component, &sp_res, igraph_vss_1(sampled_source),
-          igraph_vss_all(), IGRAPH_ALL);
+        igraph_shortest_paths_stats(component, &sp_res, stats, stats_names,
+            igraph_vss_1(sampled_source), igraph_vss_all(), IGRAPH_ALL);
         //printf("post-ssp\n");
         // Perform computation of diameter
         igraph_real_t largest = 0;
@@ -2727,7 +2730,10 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
    * undirected graphs).
    */
   if (my_diameter == -1) {
-    igraph_diameter_approximation(graph, &my_diameter, weights);
+    igraph_diameter_approximation(graph, &my_diameter, stats, stats_names, weights);
+  } else {
+    igraph_vector_push_back(stats, 0.0);
+    igraph_strvector_add(stats_names, "diameter_touched_edges");
   }
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,

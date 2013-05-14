@@ -1410,7 +1410,7 @@ PyObject *igraphmodule_Graph_diameter_approximation(igraphmodule_GraphObject *se
 	  ATTRIBUTE_TYPE_EDGE)) return NULL;
 
   igraph_integer_t i;
-  igraph_diameter_approximation(&self->g, &i, weights);
+  igraph_diameter_approximation(&self->g, &i, NULL, NULL, weights);
   if (weights) {
     igraph_vector_destroy(weights); free(weights);
   }
