@@ -2013,7 +2013,7 @@ int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
     IGRAPH_ERROR("epsilon must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
   }
   /* Compute sample size */
-  no_of_samples=(igraph_integer_t) ceil((2 * pow((no_of_nodes - 2) / (epsilon * (no_of_nodes - 1)), 2) * log(2 * no_of_nodes / delta)));
+  no_of_samples=(igraph_integer_t) ceil((pow((no_of_nodes - 2) / (epsilon * (no_of_nodes - 1)), 2) * 0.5 * log(2 * no_of_nodes / delta)));
   /* Denormalize betweenness counters by n / k */
   normalization_factor =  ((double) no_of_nodes) / no_of_samples;
   return_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
