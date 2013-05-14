@@ -274,9 +274,9 @@ of $k$.
 \citet{BrandesP07} use this result to compute a sample size $k$ sufficient to ensure that, for
 a fixed vertex $u$,
 \[ 
-\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\binom{n}{2}\right)<\frac{\delta}{n}\enspace.
+\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon n(n-1)\right)<\frac{\delta}{n}\enspace.
 \]
-In their setting $\xi=\varepsilon\binom{n}{2}$ and there is a variable $X_i$ for
+In their setting $\xi=\varepsilon n(n-1)$ and there is a variable $X_i$ for
 each vertex $v_i$ in the sample:
 \[ 
 X_i=n\sum_{w\neq v_i,w\neq
@@ -302,12 +302,12 @@ otherwise, so $\Pr(Y_v=1)=k/n$.
 
 Plugging these values in~\eqref{eq:hoeffding}, we have
 \[
-\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\binom{n}{2}\right)\leq
-2e^{-2k^2\varepsilon^2\left(\frac{n(n-1)}{2}\right)^2/kn^2(n-2)^2}=2e^{-k\epsilon^2(n-1)^2/2(n-2)^2}\enspace.
+\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon n(n-1)\right)\leq
+2e^{-2(k\varepsilon n(n-1))^2/kn^2(n-2)^2}=2e^{-2k\epsilon^2(n-1)^2/(n-2)^2}\enspace.
 \]
 We want this probability to be at most $\delta/n$, so we need a sample of size
 \[
-k\geq \frac{2(n-2)^2}{\varepsilon^2(n-1)^2}\left(\ln n
+k\geq \frac{(n-2)^2}{2\varepsilon^2(n-1)^2}\left(\ln n
 +\ln\frac{1}{\delta} +\ln 2\right)\enspace.
 \]
 An application of the union bound over the $n$ vertices ensures a uniform guarantee on the quality of
