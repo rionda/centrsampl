@@ -1,4 +1,20 @@
 \section{Conclusions}\label{sec:concl}
-\XXX TBD
-
+In this work we presented an random-sampling-based algorithm for accurately and
+efficiently estimate the betweenness centrality of all the vertices in a graph,
+with high probability. For very large graphs, exact computation of the
+betweenness centrality is impossible, so one has to resort to an approximation.
+Our algorithm is different from previous ones achieving the same
+guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05} as it is based on a
+completely novel application of results from VC-dimension theory. These results
+allow us to show that the number of samples needed to approximate the
+betweenness with the desired accuracy and confidence is much smaller than that
+suggested by previous works. Moreover, our algorithm performs much less work
+per sample than other algorithms. We tested our algorithm on many real graphs
+and showed that it is many times faster than other proposed methods. In future
+work we would like to explore the possibility of extending our methods to
+generalizations of betweenness centrality~\citep{DolevEP10} and to other centrality
+measures. On the more theoretical side, we believe that the bound presented in
+Lemma~\ref{lem:vcdimuppbound} is strict in the sense that there are graphs $G$
+whose $\range_G$ has VC-dimension exactly $\lfloor\log_2\Delta_G\rfloor+1$, and
+we have preliminary results in this sense that need formalization. 
 
