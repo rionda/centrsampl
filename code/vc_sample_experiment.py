@@ -15,6 +15,7 @@ import os.path
 import pickle
 import sys
 
+import converter
 import util
 import vc_sample
 
@@ -37,8 +38,14 @@ def main():
             help="value to use for the diameter")
     group.add_argument("-e", "--exact", action="store_true", default=False,
             help="use exact diameter")
+    parser.add_argument("-m", "--maxconn", action="store_true", default=False,
+            help="if the graph is not weakly connected, only save the largest connected component")
+    parser.add_argument("-p", "--pickle", action="store_true", default=False,
+            help="use pickle reader for input file")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
+    parser.add_argument("-u", "--undirected", action="store_true", default=False,
+            help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
 
@@ -48,7 +55,10 @@ def main():
     util.set_verbosity(args.verbose)
 
     # Read graph
-    G = util.read_graph(args.graph)
+    if args.pickle:
+        G = util.read_graph(args.graph)
+    else:
+        G = converter.convert(args.graph, not args.undirected, args.maxconn)
 
     if args.exact:
         args.approximate = False

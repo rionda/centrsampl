@@ -9,11 +9,11 @@ http://www.tandfonline.com/doi/abs/10.1080/0022250X.2001.9990249 .
 
 """
 import argparse
-import itertools
 import logging
-import sys
+import os.path
 import time
 
+import converter
 import util
 
 def betweenness(graph, set_attributes=True):
@@ -50,6 +50,12 @@ def main():
     parser.description = "Compute the exact betweenness centrality of all vertices in a graph using Brandes' algorithm, and the time to compute them, and write them to file"
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
+    parser.add_argument("-m", "--maxconn", action="store_true", default=False,
+            help="if the graph is not weakly connected, only save the largest connected component")
+    parser.add_argument("-p", "--pickle", action="store_true", default=False,
+            help="use pickle reader for input file")
+    parser.add_argument("-u", "--undirected", action="store_true", default=False,
+            help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0, 
             help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
@@ -60,7 +66,10 @@ def main():
     util.set_verbosity(args.verbose)
 
     # Read graph
-    G = util.read_graph(args.graph)
+    if args.pickle:
+        G = util.read_graph(args.graph)
+    else:
+        G = converter.convert(args.graph, not args.undirected, args.maxconn)
 
     # Compute betweenness
     (stats, betw) = betweenness(G, True)
@@ -68,8 +77,12 @@ def main():
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file.
     if args.write:
-        logging.info("Writing betweenness as vertex attributes and time as graph attribute")
-        G.write(args.graph)
+        logging.info("Writing betweenness as vertex attributes and stats as graph attribute")
+        if args.write == "auto":
+            filename = os.path.splitext(args.graph)[0] + ("-undir" if args.undirected else "dir") + ".picklez"
+            G.write(filename)
+        else:
+            G.write(args.write)
 
     # Write stats and betweenness to output
     util.write_to_output(stats, betw, args.output)

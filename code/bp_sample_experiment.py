@@ -16,6 +16,7 @@ import pickle
 import sys
 
 import brandespich_sample
+import converter
 import util
 
 def main():
@@ -30,8 +31,14 @@ def main():
     parser.add_argument("runs", type=util.positive_int, default=20, help="number of runs")
     parser.add_argument("graph", help="graph file")
     parser.add_argument("output", help="output file")
+    parser.add_argument("-m", "--maxconn", action="store_true", default=False,
+            help="if the graph is not weakly connected, only save the largest connected component")
+    parser.add_argument("-p", "--pickle", action="store_true", default=False,
+            help="use pickle reader for input file")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
+    parser.add_argument("-u", "--undirected", action="store_true", default=False,
+            help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
 
@@ -41,7 +48,10 @@ def main():
     util.set_verbosity(args.verbose)
 
     # Read graph
-    G = util.read_graph(args.graph)
+    if args.pickle:
+        G = util.read_graph(args.graph)
+    else:
+        G = converter.convert(args.graph, not args.undirected, args.maxconn)
 
     # Perform experiment multiple times
     results = []
@@ -103,7 +113,6 @@ def main():
         logging.critical("Cannot write stats and results to %s: %s",
                 args.output, E.strerror)
         sys.exit(2)
-
 
 if __name__ == "__main__":
     main()
