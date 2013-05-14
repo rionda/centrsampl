@@ -8,11 +8,13 @@ import argparse
 import itertools
 import logging
 import math
+import os.path
 import random
 
-import diameter
 import brandes_exact
 import brandespich_sample
+import converter
+import diameter
 import util
 import vc_sample
 
@@ -26,16 +28,24 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-a", "--approximate", action="store_true",
             default=True, help="use approximate diameter when computing approximation of betweenness using VC-Dimension (default)")
-    group.add_argument("-d", "--diameter", type=util.positive_int, default=0, help="value to use for the diameter")
+    group.add_argument("-d", "--diameter", type=util.positive_int, default=0,
+            help="value to use for the diameter")
     group.add_argument("-e", "--exact", action="store_true", default=False,
             help="use exact diameter when computing approximation of betweenness using VC-Dimension")
+    parser.add_argument("-m", "--maxconn", action="store_true", default=False,
+            help="if the graph is not weakly connected, only save the largest connected component")
+    parser.add_argument("-p", "--pickle", action="store_true", default=False,
+            help="use pickle reader for input file")
     parser.add_argument("-r", "--resultfiles", nargs=3, 
     help="Use results files rather than recomputing betweenness. Files should be specified as 'exact_res vc_res bp_res'")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
-    parser.add_argument("-w", "--write", action="store_true", default=False,
-    help="write the betweenness and the time taken to compute them (if needed) back to file")
+    parser.add_argument("-u", "--undirected", action="store_true", default=False,
+            help="consider the graph as undirected ")
+    parser.add_argument("-v", "--verbose", action="count", default=0,
+            help="increase verbosity (use multiple times for more verbosity)")
+    parser.add_argument("-w", "--write", nargs="?", default=False, const="auto",
+            help="write graph (+ compute attributes) to file.")
     args = parser.parse_args()
 
     # Set the desired level of logging
@@ -45,7 +55,10 @@ def main():
     random.seed()
 
     # Read graph
-    G = util.read_graph(args.graph)
+    if args.pickle:
+        G = util.read_graph(args.graph)
+    else:
+        G = converter.convert(args.graph, not args.undirected, args.maxconn)
 
     if args.exact:
         args.approximate = False
@@ -79,9 +92,14 @@ def main():
 
     # If specified, write betweenness as vertex attributes, and time and
     # diameter as graph attributes back to file
+
     if args.write:
-        logging.info("Writing graph back to file")
-        G.write(args.graph)
+        logging.info("Writing betweenness as vertex attributes and stats as graph attribute")
+        if args.write == "auto":
+            filename = os.path.splitext(args.graph)[0] + ("-undir" if args.undirected else "dir") + ".picklez"
+            G.write(filename)
+        else:
+            G.write(args.write)
 
     # Compute error statistics
     # It is not a problem to sort the error by value because we only compute
