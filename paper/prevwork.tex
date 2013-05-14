@@ -16,8 +16,8 @@ shortest paths and takes into account routing policies in the network.
 
 The need of fast algorithms to compute the betweenness of vertices in a graph
 arose as large online social networks developed. \citet{Brandes01} presents the
-first efficient algorithm for the task, running in time $O(|V|\cdot|E|)$ on
-unweighted graphs and $O(|V|\cdot|E|+|V|^2\log|V|)$ on weighted ones. The
+first efficient algorithm for the task, running in time $O(nm)$ on
+unweighted graphs and $O(nm+n^2\log n)$ on weighted ones. The
 algorithm computes, for each vertex $v$, the shortest path to every other vertex
 and then traverses these paths backwards to efficiently compute the contribution
 of the shortest paths from $v$ to the betweenness of other vertices. For very
@@ -30,7 +30,7 @@ the computation of betweenness. Inspired by the work of~\citet{EppsteinW04},
 that samples vertices at random and compute the contribution of the sampled
 vertices to the betweenness of every vertex. The number of samples needed to
 guarantee that, with probability at least $1-\delta$, the estimate for each node
-is within $\binom{|V|}{2}\varepsilon$ from the real value, for some
+is within $\varepsilon n(n-1)$ from the real value, for some
 $\varepsilon\in(0,1)$, is $O(\log(n/\delta)/\varepsilon^2)$. The analysis uses
 Hoeffding bounds\citep{Hoeffding63} and the union bound. The algorithm mimics
 the exact one, with the difference that, instead of computing the contribution
