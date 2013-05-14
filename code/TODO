@@ -10,7 +10,9 @@ Implement ALENEX paper sampling algorithm
 
 Implement adaptive sampling algorithm
 
-Implement code to automatize experiments and reports
+Implement code to automatize reports
+
+# DONE! Implement code to automatize experiments
 
 # DONE! Implement code to count how many edges are touched during the computation of
 betweenness. This can be play an important factor in large networks.
