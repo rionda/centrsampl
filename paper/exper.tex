@@ -1,7 +1,17 @@
 \section{Experimental evaluation}\label{sec:exper}
+We conducted and extensive experimental evaluation of our algorithm and
+compared its performances with those of other existing algorithm, both
+exact~\citep{Brandes01} and approximate~\citep{BrandesP08,JakobKLPT05}.
+
 \paragraph{Goals} TBD
 
-\paragraph{Implementation and environment} TBD
+\paragraph{Implementation and environment}
+We implemented our algorithm and the one presented
+in~\citep{BrandesP08,JakobKLPT05} in C, by extending the implementation of the
+exact algorithm~\citep{Brandes01} contained in igraph~\citep{igraph}. We
+exposed our implementations through Python 3.3.1, which was used for running the
+simulations. We run the experiments on a quad-core AMD Phenom\texttrademark II
+X4 955 Processor with 16GB of RAM, running GNU/Linux 3.2.0.
 
 \paragraph{Datasets} TBD
 
