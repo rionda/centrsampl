@@ -1417,6 +1417,24 @@ PyObject *igraphmodule_Graph_diameter_approximation(igraphmodule_GraphObject *se
   return PyInt_FromLong((long)i);
 }
 
+PyObject *igraphmodule_Graph_diameter_approximation_motwani(igraphmodule_GraphObject *self,
+                                  PyObject * args, PyObject * kwds)
+{
+    
+    
+    static char *kwlist[] = { NULL };
+    
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|", kwlist))
+        return NULL;
+    
+    igraph_integer_t ret_diameter;
+    
+    igraph_diameter_approximation_motwani(&self->g, &ret_diameter);
+        
+    return PyInt_FromLong((long)ret_diameter);
+
+}
+
 /** \ingroup python_interface_graph
  * \brief Calculates the diameter of an \c igraph.Graph
  * This method accepts two optional parameters: the first one is
@@ -1513,6 +1531,8 @@ PyObject *igraphmodule_Graph_get_diameter(igraphmodule_GraphObject * self,
   igraph_vector_destroy(&res);
   return result;
 }
+
+
 
 /** \ingroup python_interface_graph
  * \brief Returns the farthest points and their distances in the graph
@@ -2017,7 +2037,7 @@ PyObject *igraphmodule_Graph_Degree_Sequence(PyTypeObject * type,
 }
 
 /** \ingroup python_interface_graph
- * \brief Generates a graph based on the Erdõs-Rényi model
+ * \brief Generates a graph based on the Erdï¿½s-Rï¿½nyi model
  * \return a reference to the newly generated Python igraph object
  * \sa igraph_erdos_renyi_game
  */
@@ -12451,6 +12471,15 @@ struct PyMethodDef igraphmodule_Graph_methods[] = {
    "  arbitrary precision integers at the expense of increased computation\n"
    "  time.\n"
    "@return: the estimated betweenness of the given vertices in a list\n" },
+
+
+  {"diameter_approximation_motwani", (PyCFunction) igraphmodule_Graph_diameter_approximation_motwani,
+    METH_VARARGS | METH_KEYWORDS,
+    "diameter_approximation_motwani()\n\n"
+    "Runs the 2/3 approxiamtion algorithm for diameter. \n\n"
+    "@param graph: the graph\n"
+    "@return: the approximated value"},
+
 
   /* interface to biconnected_components */
   {"biconnected_components", (PyCFunction) igraphmodule_Graph_biconnected_components,
