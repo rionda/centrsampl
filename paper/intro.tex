@@ -1,3 +1,15 @@
 \section{Introduction}\label{sec:intro}
 \XXX TBD
 
+\paragraph{Our contributions} 
+We present an algorithm to approximate the betweenness centrality of all the
+vertices in a graph. The algorithm is based on random sampling of shortest
+paths. The analysis to derive the sufficient sample size uses results from
+VC-Dimension theory. This results in a much smaller sample size than that used
+by other algorithms guaranteeing the same approximation. Moreover, the amount
+of work performed per sample is also less than what was done in previous works.
+We extensively evaluated our method on real graphs and compared its
+performances to the exact algorithm for betweenness
+centrality~\citep{Brandes01} and to other sampling based
+algorithms~\citep{BrandesP07,JacobKLPT05}.
+
