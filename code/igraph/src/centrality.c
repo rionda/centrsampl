@@ -2747,6 +2747,274 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   return ret_code;
 }
 
+
+
+int igraph_diameter_approximation_motwani(const igraph_t *graph, igraph_integer_t *diameter ){    
+    
+    igraph_vector_t ret_nodes;
+    igraph_integer_t ret_depth;
+    
+    igraph_vector_t ret_nodes_part_MAX;
+    igraph_integer_t ret_depth_part_MAX = -1;
+    igraph_integer_t ret_vid_part_MAX = -1;
+    
+    long int s,a_1=1,b_1=0;
+    long int no_of_nodes = igraph_vcount(graph);
+    
+    
+    // The paper suggests to have a O(sqrt{nlogn}) number of nodes for the pBFS
+    s = a_1*sqrt(no_of_nodes*log10(no_of_nodes)/log10(2)) + b_1 ;
+    s = s + 1; //s not including the source
+
+    igraph_vs_t vs;
+    igraph_vit_t vit;
+    
+    igraph_vs_all(&vs);
+    igraph_vit_create(graph, vs, &vit);
+    
+    
+    //Create a deep copy of graph, add edges as \hat{G} suggests.
+    //We wil use that in step 5
+    
+    igraph_t graph_augm;
+    igraph_copy(&graph_augm,graph);
+
+    //
+    // Line 1 of the algorithm: Compute s-partial-BFS from each vertex
+    //
+        
+    igraph_vector_t edges_2_add_total;
+    igraph_vector_init(&edges_2_add_total,0);
+    
+    igraph_vector_t edges_2_add_current;
+    igraph_vector_init(&edges_2_add_current,(int) 2*(s-1));
+    
+    int i;
+    
+    while (!IGRAPH_VIT_END(vit)) {
+        
+        igraph_vector_fill (&edges_2_add_current, (igraph_integer_t) IGRAPH_VIT_GET(vit));
+        
+        igraph_kBFS(graph, &graph_augm, &ret_nodes, &ret_depth, (igraph_integer_t) IGRAPH_VIT_GET(vit) ,(igraph_integer_t) s);
+        IGRAPH_VIT_NEXT(vit);
+        
+        for (i=1; i < igraph_vector_size(&ret_nodes); i++){
+            VECTOR(edges_2_add_current)[2*i-1] = (int) VECTOR(ret_nodes)[i];
+        }
+        
+    
+        
+        igraph_vector_append(&edges_2_add_total,&edges_2_add_current);
+        // Line 2 of the algorithm: Compute the maximum out of all pBFS
+        
+        if (ret_depth>ret_depth_part_MAX){
+            ret_vid_part_MAX = (igraph_integer_t) IGRAPH_VIT_GET(vit);
+            ret_depth_part_MAX = ret_depth;
+            ret_nodes_part_MAX=ret_nodes;
+        }
+        
+        
+                
+    }
+    
+    igraph_integer_t ret_depth_total_MAX = -1;
+    igraph_integer_t current_depth = -1;
+
+
+    //
+    // Line 3a: Compute a BFS-tree from w
+    //
+       
+    
+    igraph_vector_t ord,rank, dist, father, pred, succ;
+    igraph_vector_init(&ord, no_of_nodes-1);
+    igraph_vector_init(&rank, no_of_nodes-1);
+    igraph_vector_init(&father, no_of_nodes-1);
+    igraph_vector_init(&pred, no_of_nodes-1);
+    igraph_vector_init(&succ, no_of_nodes-1);
+    igraph_vector_init(&dist, no_of_nodes-1);
+    
+    igraph_bfs(graph, /*root=*/ ret_vid_part_MAX, /*roots=*/ NULL, /*neimode=*/ IGRAPH_OUT,/*unreachable=*/ NULL, /*restricted=*/ NULL,
+               /*order*/ &ord, /*rank*/ &rank, &father, &pred, &succ, /*distance*/ &dist, NULL, NULL);
+
+    current_depth = igraph_vector_max(&dist);
+ 
+    igraph_vector_destroy(&rank);
+    igraph_vector_destroy(&dist);
+    igraph_vector_destroy(&father);
+    igraph_vector_destroy(&pred);
+    igraph_vector_destroy(&succ);
+    
+    
+    if (current_depth > ret_depth_total_MAX){
+        ret_depth_total_MAX = current_depth;
+    }
+    
+    //
+    // Line 3b: Compute a BFS-tree(inverse edges) from each vertex in pBFS of w
+    //
+    
+
+
+    for( i=0 ; i < igraph_vector_size(&ret_nodes_part_MAX) ; i++){
+                
+        igraph_vector_t ord,rank, dist, father, pred, succ;
+        igraph_vector_init(&ord, no_of_nodes-1);
+        igraph_vector_init(&rank, no_of_nodes-1);
+        igraph_vector_init(&father, no_of_nodes-1);
+        igraph_vector_init(&pred, no_of_nodes-1);
+        igraph_vector_init(&succ, no_of_nodes-1);
+        igraph_vector_init(&dist, no_of_nodes-1);
+        
+        igraph_bfs(graph, /*root=*/ (igraph_integer_t) VECTOR(ret_nodes_part_MAX)[i], /*roots=*/ NULL, /*neimode=*/ IGRAPH_IN,/*unreachable=*/ NULL, /*restricted=*/ NULL ,/*order*/ &ord, /*rank*/ &rank, &father, &pred, &succ, /*distance*/ &dist, NULL, NULL);
+        current_depth = igraph_vector_max(&dist);
+        
+        
+        igraph_vector_destroy(&rank);
+        igraph_vector_destroy(&dist);
+        igraph_vector_destroy(&father);
+        igraph_vector_destroy(&pred);
+        igraph_vector_destroy(&succ);
+        
+        
+        if (current_depth > ret_depth_total_MAX){
+             ret_depth_total_MAX = current_depth;
+        }
+    }
+    
+    
+    
+    //
+    // Line 4: Compute augmented graph G_aug
+    //
+    
+    
+    igraph_add_edges(&graph_augm,&edges_2_add_total,0);
+       
+    //
+    // Line 5: Compute an out-dominating set D in G
+    //
+
+
+
+    igraph_vector_t D;
+    long int number_samples,a_2=1,b_2=0;    
+    
+    long int no_of_nodes_augm = igraph_vcount(&graph_augm);
+
+    
+    // The paper suggests to have a θ(sqrt{nlogn}) samples from the augmented graph G'
+    number_samples=a_2*sqrt(no_of_nodes_augm*log10(no_of_nodes_augm)/log10(2)) + b_2 ;
+    
+    igraph_vector_t sampled_graph_augm;
+    igraph_vector_init(&sampled_graph_augm,number_samples);
+    
+    igraph_rng_t *rng = NULL;
+    rng = igraph_rng_default();
+    
+    for ( i = 0; i < number_samples ; i++){
+        VECTOR(sampled_graph_augm)[i] = igraph_rng_get_integer(rng, 0, no_of_nodes_augm -1);
+    }    
+    
+    //
+    // Line 6: Compute a BFS tree from each vertex in D in G_aug
+    //
+    
+    
+    for( i=0 ; i < igraph_vector_size(&sampled_graph_augm) ; i++){
+        
+        igraph_vector_t dist;
+        igraph_vector_init(&dist, no_of_nodes-1);
+        
+        
+        //NOT SURE WHETHER IT IS ON G OR G'
+        igraph_bfs(&graph_augm, /*root=*/ (igraph_integer_t) VECTOR(sampled_graph_augm)[i], /*roots=*/ NULL, /*neimode=*/ IGRAPH_OUT,/*unreachable=*/ NULL, /*restricted=*/ NULL ,/*order*/ NULL, /*rank*/ NULL, NULL, NULL, NULL, /*distance*/ &dist, NULL, NULL);
+        
+        current_depth = igraph_vector_max(&dist);
+        
+        igraph_vector_destroy(&dist);
+        
+        if (current_depth > ret_depth_total_MAX){
+            ret_depth_total_MAX = current_depth;
+        }
+    }
+    
+    // Return
+
+    *diameter = ret_depth_total_MAX;
+
+    return 0;
+   
+}
+
+
+
+
+igraph_bool_t bfs_callback(const igraph_t *graph,
+                           igraph_integer_t vid,
+                           igraph_integer_t pred,
+                           igraph_integer_t succ,
+                           igraph_integer_t rank,
+                           igraph_integer_t dist,
+                           igraph_vector_t *vec) {
+        
+    igraph_integer_t k_number_of_nodes = VECTOR(*vec)[0];
+    
+    VECTOR(*vec)[1] = rank;
+   
+    if(rank < (long int) k_number_of_nodes+1){
+        return 0;
+    }
+    
+}
+
+
+int igraph_kBFS(const igraph_t *graph, igraph_t *graph_augm, igraph_vector_t *ret_nodes, igraph_integer_t *ret_depth, igraph_integer_t root_index, const igraph_integer_t k_number_of_nodes){
+
+    long int no_of_nodes=igraph_vcount(graph);
+
+    igraph_vector_t ord,rank, dist, father, pred, succ;
+    igraph_vector_init(&ord, no_of_nodes-1);
+    igraph_vector_init(&rank, no_of_nodes-1);
+    igraph_vector_init(&father, no_of_nodes-1);
+    igraph_vector_init(&pred, no_of_nodes-1);
+    igraph_vector_init(&succ, no_of_nodes-1);
+    igraph_vector_init(&dist, no_of_nodes-1);
+
+    igraph_vector_t vec;
+    igraph_vector_init(&vec,2);
+    VECTOR(vec)[0]=k_number_of_nodes;
+    
+    igraph_integer_t actual_rank=-1;
+    
+    VECTOR(vec)[1] = actual_rank;
+    
+    //igraph_bfs(graph, /*root=*/ root_index, /*roots=*/ NULL, /*neimode=*/ IGRAPH_OUT,/*unreachable=*/ NULL, /*restricted=*/ NULL,
+    //           /*order*/ &ord, /*rank*/ &rank, &father, &pred, &succ, /*distance*/ &dist, &bfs_callback, &k_number_of_nodes);
+    igraph_bfs(graph, /*root=*/ 22, /*roots=*/ NULL, /*neimode=*/ IGRAPH_OUT,/*unreachable=*/ NULL, /*restricted=*/ NULL,
+                          /*order*/ &ord, /*rank*/ &rank, &father, &pred, &succ, /*distance*/ &dist, &bfs_callback, &vec);
+    
+    
+    actual_rank = VECTOR(vec)[1]+1;
+    
+    
+    igraph_vector_resize(&ord, actual_rank);
+    
+    *ret_nodes = ord;
+
+    *ret_depth=VECTOR(dist)[(int)igraph_vector_tail(ret_nodes)];
+
+    igraph_vector_destroy(&rank);
+    igraph_vector_destroy(&dist);
+    igraph_vector_destroy(&father);
+    igraph_vector_destroy(&pred);
+    igraph_vector_destroy(&succ);
+
+    return 0;
+}
+
+
+
 /**
  * \ingroup structural
  * \function igraph_betweenness_estimate
