@@ -2890,7 +2890,10 @@ int igraph_diameter_approximation_motwani(const igraph_t *graph, igraph_integer_
     
     
     igraph_add_edges(&graph_augm,&edges_2_add_total,0);
-       
+    igraph_simplify(&graph_augm, 1, 1,NULL);
+
+   
+   
     //
     // Line 5: Compute an out-dominating set D in G
     //
@@ -2962,7 +2965,7 @@ igraph_bool_t bfs_callback(const igraph_t *graph,
     
     VECTOR(*vec)[1] = rank;
    
-    if(rank < (long int) k_number_of_nodes+1){
+    if(rank < (long int) k_number_of_nodes){
         return 0;
     }
     
@@ -2991,7 +2994,7 @@ int igraph_kBFS(const igraph_t *graph, igraph_t *graph_augm, igraph_vector_t *re
     
     //igraph_bfs(graph, /*root=*/ root_index, /*roots=*/ NULL, /*neimode=*/ IGRAPH_OUT,/*unreachable=*/ NULL, /*restricted=*/ NULL,
     //           /*order*/ &ord, /*rank*/ &rank, &father, &pred, &succ, /*distance*/ &dist, &bfs_callback, &k_number_of_nodes);
-    igraph_bfs(graph, /*root=*/ 22, /*roots=*/ NULL, /*neimode=*/ IGRAPH_OUT,/*unreachable=*/ NULL, /*restricted=*/ NULL,
+    igraph_bfs(graph, /*root=*/ root_index, /*roots=*/ NULL, /*neimode=*/ IGRAPH_OUT,/*unreachable=*/ NULL, /*restricted=*/ NULL,
                           /*order*/ &ord, /*rank*/ &rank, &father, &pred, &succ, /*distance*/ &dist, &bfs_callback, &vec);
     
     
