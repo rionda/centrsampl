@@ -39,12 +39,6 @@ def main():
     # Read graph from file                                   
     G = util.read_graph(args.graph)
 
-    # Check if graph is directed and act accordingly
-    # XXX We probably shouldn't do this!
-    was_directed = False
-    if G.is_directed():
-        logging.warning("Graph is directed, running 2/3-approx for directed graphs")
-
     # Compute the 2/3 approximation
     (elapsed_time,diam) = diameter_approximation_motwani(G)
 
