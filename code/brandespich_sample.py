@@ -82,8 +82,8 @@ def betweenness(graph, epsilon, delta, set_attributes=True, time_out=0):
         while (not timeout_betweenness.ready) and (not timeout_betweenness.expired):
             pass
         if timeout_betweenness.ready:
-            logging.info("Betweenness computed in %s seconds", stats['time'])
             (stats, betw) = timeout_betweenness.value
+            logging.info("Betweenness computed in %s seconds", stats['time'])
             stats["timed_out"] = 0
         else:
             logging.info("Betweenness computation timer expired after %d seconds.", time_out)
