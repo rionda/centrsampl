@@ -14,6 +14,7 @@ import sys
 import time
 import igraph as ig
 
+import converter
 import util
 
 def diameter_homegrown(graph, weights=None):
@@ -133,6 +134,12 @@ def main():
     parser.add_argument("-i", "--implementation", choices=["homegrown",
         "igraph"], default="homegrown", 
         help="use specified implementation of betweenness computation")
+    parser.add_argument("-m", "--maxconn", action="store_true", default=False,
+            help="if the graph is not weakly connected, only save the largest connected component")
+    parser.add_argument("-p", "--pickle", action="store_true", default=False,
+            help="use pickle reader for input file")
+    parser.add_argument("-u", "--undirected", action="store_true", default=False,
+            help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0, 
             help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
@@ -145,16 +152,11 @@ def main():
     # Seed the random number generator
     random.seed()
 
-    # Read graph from file
-    G = util.read_graph(args.graph)
-
-    # Check if graph is directed and act accordingly
-    # XXX We probably shouldn't do this!
-    was_directed = False
-    if G.is_directed():
-        logging.warning("Graph is directed, converting it to undirected")
-        G.to_undirected()
-        was_directed = True
+     # Read graph
+    if args.pickle:
+        G = util.read_graph(args.graph)
+    else:
+        G = converter.convert(args.graph, not args.undirected, args.maxconn)   # Read graph from file
 
     # Compute the diameter
     (elapsed_time, diam) = diameter(G, args.implementation)
@@ -165,9 +167,6 @@ def main():
     # If requested, add graph attributes and write graph back to original file
     if args.write:
         logging.info("Writing diameter approximation and time to graph")
-        # If the graph was directed and we converted it, re-read it
-        if was_directed:
-            G = ig.Graph.Read(args.graph)
         G["approx_diam"] = diam
         G["approx_diam_time"] = elapsed_time
         # We use format auto-detection, which should work given that it worked

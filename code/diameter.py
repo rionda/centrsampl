@@ -9,6 +9,7 @@ import argparse
 import logging
 import time
 
+import converter
 import util
 
 def diameter(graph):
@@ -38,6 +39,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.description = "Compute the diameter of a graph and the time needed to compute it, and (if specified) write these info as a graph attributes"
     parser.add_argument("graph", help="graph file")
+    parser.add_argument("-m", "--maxconn", action="store_true", default=False,
+            help="if the graph is not weakly connected, only save the largest connected component")
+    parser.add_argument("-p", "--pickle", action="store_true", default=False,
+            help="use pickle reader for input file")
+    parser.add_argument("-u", "--undirected", action="store_true", default=False,
+            help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0, help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", action="store_true", default=False,
     help="write the diameter of the graph as the 'diameter' graph attribute and the time taken to compute it as the 'diam_time' attribute")
@@ -46,8 +53,11 @@ def main():
     # Set the desired level of logging
     util.set_verbosity(args.verbose)
 
-    # Read graph from file
-    G = util.read_graph(args.graph)
+    # Read graph
+    if args.pickle:
+        G = util.read_graph(args.graph)
+    else:
+        G = converter.convert(args.graph, not args.undirected, args.maxconn)   # Read graph from file
 
     # Compute the diameter
     (elapsed_time, diam) = diameter(G)
