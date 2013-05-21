@@ -2098,6 +2098,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
   igraph_adjlist_t fathers;
   long int vertex_index, j;
   /* igraph_stack_t S; */
+  directed = directed && igraph_is_directed(graph);
   igraph_integer_t mode= directed ? IGRAPH_OUT : IGRAPH_ALL;
   igraph_vector_t dist, nrgeo; //, tmpscore;
   igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
