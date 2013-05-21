@@ -2250,6 +2250,7 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
           sampled_pred=VECTOR(*fatv)[j];
           //printf("sampled_pred=%ld\n", sampled_pred);
         } else {
+          backward_touched_edges++;
           sampled_pred=VECTOR(*fatv)[0];
         }
         //printf("%ld %ld %ld %ld\n", destination, path_vertex, sampled_pred, source);
@@ -2548,6 +2549,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
           }
           sampled_pred=VECTOR(*fatv)[j];
         } else {
+          backward_touched_edges++;
           sampled_pred=VECTOR(*fatv)[0];
         }
         //printf("%ld %ld %ld %ld\n", destination, path_vertex, sampled_pred, source);
