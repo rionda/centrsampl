@@ -1,5 +1,4 @@
-\documentclass{sig-alternate}
-
+\documentclass[10pt, conference, compsocconf]{IEEEtran}
 \usepackage{datetime}
 \usepackage{graphicx}
 \usepackage{balance}
@@ -17,7 +16,8 @@
 
 %\usepackage{times}
 \usepackage{amsfonts}
-\usepackage{amsmath}
+\usepackage[cmex10]{amsmath}
+\interdisplaylinepenalty=2500
 \usepackage{amssymb}
 \usepackage{dsfont}
 \usepackage{mathtools}
@@ -37,7 +37,8 @@
 \newtheorem{claim}{Claim}
 \newtheorem{theorem}{Theorem}
 
-\newdef{definition}{Definition}
+%\newdef{definition}{Definition}
+\newtheorem{definition}{Definition}
 
 \def\XXX{{\bf XXX}}
 \def\MR{{\bf MR}}
@@ -49,53 +50,19 @@
 \def\betw{\mathsf{b}}
 
 \begin{document}
-%\conferenceinfo{CIKM'12,} {October 29--November 2, 2012, Maui, HI, USA.}
-%\CopyrightYear{2012}
-%\crdata{978-1-4503-1156-4/12/10}
-%\clubpenalty=10000
-%\widowpenalty = 10000
-
 \title{Fast Approximation of Betweenness Centrality Through Sampling}
-%\numberofauthors{3} 
-\numberofauthors{1}
-\author{
-\iffalse
-$ $ \\
-\affaddr{$  $}\\
-\affaddr{$  $}\\
-\affaddr{$  $}\\
-\email{$ $}
-\alignauthor
-Matteo Riondato\titlenote{Contact Author}\\
-       \affaddr{Dept.~of Computer Science}\\
-       \affaddr{Brown University}\\
-       \affaddr{Providence, RI, USA}\\
-       \email{matteo@cs.brown.edu}
-\alignauthor
-Evgenios M. Kornaropoulos\\
-       \affaddr{Dept.~of Computer Science}\\
-       \affaddr{Brown University}\\
-       \affaddr{Providence, RI, USA}\\
-       \email{evgenios@cs.brown.edu}
-\alignauthor
-Eli Upfal\\
-       \affaddr{Dept.~of Computer Science}\\
-       \affaddr{Brown University}\\
-       \affaddr{Providence, RI, USA}\\
-       \email{eli@cs.brown.edu} 
- \fi
- }
-%\additionalauthors{}
-\date{8 May 2013}
-
+\author{Submitted for blind review}
 \maketitle
+
 {\bf \large \today, \currenttime}
+
+\XXX IEEE doesn't want symbols/math in abstract :(
 \input{abstract}
 
-\category{G.2.2}{Discrete Mathematics}{Graph Theory}[Graph algorithms]
-\category{H.2.8}{Database Management}{Database Applications}[data mining]
-\terms{Algorithms, Experimentation, Performance, Theory}
-\keywords{Betweenness centrality, Sampling, VC-Dimension}  
+\begin{IEEEkeywords}
+component; formatting; style; styling;
+
+\end{IEEEkeywords}
 
 \input{intro}
 \input{prevwork}
@@ -108,6 +75,7 @@ Eli Upfal\\
 
 \bibliographystyle{abbrvnat}
 \bibliography{diamapprox,vcmine,vcgraph,centrality}
+
 
 \end{document}
 
