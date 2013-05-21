@@ -289,8 +289,9 @@ The following lemma shows the properties of the collection $\tilde T(k,G)$.
   \XXX add detail about accuracy of estimation?
 \end{lemma}
 \begin{proof}
-  With probability at least $1-\delta'$, a sample of size $r'$ is a
-  $\varepsilon$-approximation to $(\range_G,\pi_G)$ and with probability at least
+  From Thm.~\ref{thm:eapprox} we know that, with probability at least $1-\delta'$, a sample of size $r'$ is a
+  $\varepsilon$-approximation to $(\range_G,\pi_G)$ and from
+  Thm.~\ref{thm:eapproxrel} we have that with probability at least
   $1-\delta''$ a sample of size $r''$ is a relative
   $(\ell',\varepsilon)$-approximation to $(\range_G,\pi_G)$. Suppose both these events
   occur, which happens with probability at least $1-\delta$.
