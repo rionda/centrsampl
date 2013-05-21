@@ -15,6 +15,7 @@ import brandes_exact
 import brandespich_sample
 import converter
 import diameter
+import geisbergerss_sample
 import util
 import vc_sample
 
@@ -36,8 +37,8 @@ def main():
             help="if the graph is not weakly connected, only save the largest connected component")
     parser.add_argument("-p", "--pickle", action="store_true", default=False,
             help="use pickle reader for input file")
-    parser.add_argument("-r", "--resultfiles", nargs=3, 
-    help="Use results files rather than recomputing betweenness. Files should be specified as 'exact_res vc_res bp_res'")
+    parser.add_argument("-r", "--resultfiles", nargs=4, 
+    help="Use results files rather than recomputing betweenness. Files should be specified as 'exact_res vc_res bp_res gss_res'")
     parser.add_argument("-s", "--samplesize", type=util.positive_int,
             default=0, help="use specified sample size. Overrides epsilon, delta, and diameter computation")
     parser.add_argument("-t", "--timeout", type=util.positive_int, default=3600,
@@ -71,6 +72,10 @@ def main():
         if args.samplesize: 
             (vc_stats, vc_betw) = vc_sample.betweenness_sample_size(G,
                     args.samplesize, args.write, args.timeout)
+            (bp_stats, bp_betw) = brandespich_sample.betweenness_sample_size(G,
+                    args.samplesize, args.write, args.timeout)
+            (gss_stats, gss_betw) = geisbergerss.betweenness_sample_size(G,
+                    args.samplesize, args.write, args.timeout)
         else:
             if args.diameter > 0:
                 (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
@@ -78,16 +83,16 @@ def main():
             else:
                 (vc_stats, vc_betw) = vc_sample.betweenness(G, args.epsilon, args.delta,
                         args.approximate, args.write, args.timeout)
-        if args.samplesize: 
-            (bp_stats, bp_betw) = brandespich_sample.betweenness_sample_size(G,
-                    args.samplesize, args.write, args.timeout)
-        else:
+
             (bp_stats, bp_betw) = brandespich_sample.betweenness(G,
+                    args.epsilon, args.delta, args.write, args.timeout)
+            (gss_stats, gss_betw) = geisbergerss_sample.betweenness(G,
                     args.epsilon, args.delta, args.write, args.timeout)
     else:
         (exact_stats, exact_betw) = util.read_stats_betw(args.result_files[0])
         (vc_stats, vc_betw) = util.read_stats_betw(args.result_files[1])
         (bp_stats, bp_betw) = util.read_stats_betw(args.result_files[2])
+        (gss_stats, gss_betw) = util.read_stats_betw(args.result_files[3])
 
     #Compute useful graph statistics (mainly diameter)
     if "diam" not in G.attributes():
@@ -150,6 +155,26 @@ def main():
             print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
                  exact_betw[i], bp_betw[i], vc_betw[i], err, err / (G.vcount() * (G.vcount() -1) / 2)))
 
+    gss_errs = sorted([abs(a - b) for a,b in zip(exact_betw,gss_betw)])
+    gss_stats["err_avg"] = sum(gss_errs) / G.vcount()
+    gss_stats["err_max"] = max(gss_errs)
+    gss_stats["err_min"] = list(itertools.filterfalse(lambda x: x == 0, gss_errs))[0]
+    gss_stats["err_stddev"] = math.sqrt(sum([math.pow(err - gss_stats["err_avg"], 2) for err in gss_errs]) / (G.vcount() -1))
+    #gss_wrong_eps = len(list(itertools.filterfalse(lambda x: x <= args.epsilon *
+    #    G.vcount() * (G.vcount() - 1) / 2, gss_errs)))
+    gss_stats["wrong_eps"] = 0
+    for i in range(10):
+        gss_stats["err_decile_" + str(i)] = 0;
+    for i in range(G.vcount()):
+        err = abs(exact_betw[i] - gss_betw[i])
+        gss_stats["err_decile_" + util.decile(err, max_err)] += 1
+        if err > max_err:
+            gss_stats["wrong_eps"] += 1
+            if gss_stats["wrong_eps"] == 1:
+                print("## BP wrong epsilon ##")
+            print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
+                 exact_betw[i], gss_betw[i], vc_betw[i], err, err / (G.vcount() * (G.vcount() -1) / 2)))
+
     # Print statistics to output as CSV
     logging.info("Printing statistics")
     print("graph, nodes, edges, diam, directed, epsilon, delta, sample_size")
@@ -160,6 +185,7 @@ def main():
     print("type,", csvkeys)
     print("vc,", util.dict_to_csv(vc_stats, csvkeys))
     print("bp,", util.dict_to_csv(bp_stats, csvkeys))
+    print("gss,", util.dict_to_csv(gss_stats, csvkeys))
     print("exact,", util.dict_to_csv(exact_stats, csvkeys))
     
 if __name__ == "__main__":
