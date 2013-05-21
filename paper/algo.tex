@@ -29,8 +29,8 @@ is
 
 There are two crucial steps in this algorithm: the computation of $\Delta_G$ and
 the sampling of a path uniformly at random from $\mathcal{S}_{uv}$. We first
-deal with the latter, and present an approximation algorithm for $\Delta_G$ in
-Sect.~\ref{sec:diam}. Algorithm~\ref{alg:algorithm} presents the
+deal with the latter, and then present an approximation algorithm for $\Delta_G$
+in Sect.~\ref{sec:diam}. Algorithm~\ref{alg:algorithm} presents the
 pseudocode of the algorithm, including the steps to select a random path.
 The \texttt{getDiameterApprox()} procedure is our approximation algorithm for
 computing an approximation for $\Delta_G$ and its pseudocode is presented in
@@ -171,9 +171,6 @@ slightly perturbing the edge weights or having a deterministic tie breaking
 policy.
 
 \subsection{Approximating the diameter}\label{sec:diam}
-
-
-
 The algorithm presented in the previous section requires the value of the vertex-diameter $\Delta_G$ of the graph $G$ (line
 \ref{alg:diamcomp} of Alg.~\ref{alg:algorithm}). 
 Computing the exact value of $\Delta_G$ can be done by solving the all pair shorter paths (APSP) problem, and taking the
@@ -231,17 +228,81 @@ Furthermore, the computation of $\tilde\Delta_G$ does not affect the running tim
 Specifically, we can sample a new node $u\neq v$ and then choose with uniform probability one of the
 (already computed) shortest paths between $v$ and $u$.
 
-
-
-\XXX TBD: This can actually be extended to directed case as well. We just need
-to also compute the ``backwards'' shortest paths \emph{to} the sampled nodes, and
-choose the maximum of these ``incoming'' paths and the maximum of the
-``outgoing'' paths. \MR
-
 \XXX TBD: take care of the weighted case. Say that we can just use $n$ as
 approximation and be happy with it. Experiments should show that we are still
 faster than Brandes and Pich.
 
+\subsection{High-quality approximation of the top-$k$ betweenness
+vertices}\label{sec:topk}
+Very often in practice one is interested only in identifying the vertices with
+the highest betweenness centrality, as they are the ``primary actors'' in the
+network. We present here an algorithm to compute a very high-quality
+approximation of the set $T(k,G)$ of the top-$k$ betweenness vertices in a graph
+$G=(V,E)$. Formally, let $v_1,\dotsc,v_n$ be a labelling of the vertices in $V$
+such that $\betw(v_i)\ge\betw(v_j)$ for $1\le i<j\le n$. Then $T(k,G)$ is
+defined as the set of vertices with betweenness at least $\betw(v_k)$:
+\[
+T(k,G)=\{v\in V ~:~ \betw(v)\ge\betw(v_k)\}\enspace.
+\]
+Note that $T(k,G)$ may contain more than $k$ vertices. This is in line with the
+definition of the set of top-$k$ Frequent Itemsets in the market basket analysis
+setting \XXX add reference.
+
+Our algorithm works in two phases. Each phase is basically a run of the
+algorithm for approximating the betweenness of all vertices presented in the
+previous section, with some additional computation at the end of each phase and
+different ways to compute the number of vertices to sample. In the first phase,
+we compute a lower bound $\ell'$ to $\betw(v_k)$. In the second phase we use
+$\ell'$ to compute the number of samples needed to obtain a relative
+$(\ell',\varepsilon)$-approximation to the $(\range_G,\pi_G)$. Then we use this
+number of samples to approximate the betweenness of all vertices again, and
+return a collection of vertices that is, with high probability, a superset of
+$T(k,G)$.
+
+Let $\tilde\Delta_G$ be an upper bound to the vertex-diameter of $G$. Given
+$\varepsilon,\delta\in(0,1)$, let $\delta',\delta''$ be two positive reals such
+that $(1-\delta')(1-\delta'')\ge(1-\delta)$. Let
+\[
+  r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2\tilde\Delta_G\rfloor+1+\log\frac{1}{\delta''}\right)\enspace.
+\]
+Let $\tilde\betw'_k$ be the $k$-th highest estimated betweenness obtained using
+Algorithm~\ref{alg:algorithm} where $r=r'$, and let
+\[
+  \ell'=\frac{\tilde\betw_k}{n(n-1)}-\varepsilon.
+\]
+Let
+\[
+  r''=\frac{c'}{\varepsilon^2\ell}\left(\ell'(\lfloor\log_2\tilde\Delta_G\rfloor+1)+\log\frac{1}{\delta''}\right)\enspace.
+\]
+We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $T''(k,G)$ be the set
+of the $k$ vertices with the highest estimated betweenness $\tilde\betw''$. Let
+$\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon), v\in T''(k,G)\}$. We
+return the collection $\tilde T(k,G)$ of vertices $v$ such that
+$\tilde\betw''(v)*(1+\varepsilon)/(1-\varepsilon)\ge\ell''$:
+\[
+\tilde T(k,G)= \left\{v\in V ~:~
+\tilde\betw''(v)\frac{1+\varepsilon}{1-\varepsilon}\ge\ell''\right\}\enspace.
+\]
+The following lemma shows the properties of the collection $\tilde T(k,G)$.
+
+\begin{lemma}
+  With probability at least $1-\delta$, $T(k,G)\subseteq \tilde T(k,G)$.
+  \XXX add detail about accuracy of estimation?
+\end{lemma}
+\begin{proof}
+  With probability at least $1-\delta'$, a sample of size $r'$ is a
+  $\varepsilon$-approximation to $(\range_G,\pi_G)$ and with probability at least
+  $1-\delta''$ a sample of size $r''$ is a relative
+  $(\ell',\varepsilon)$-approximation to $(\range_G,\pi_G)$. Suppose both these events
+  occur, which happens with probability at least $1-\delta$.
+  Then it is easy to see that $\ell'\le\betw(v_k)$, as there must be at least
+  $k$ vertices with exact betweenness greater or equal to $\ell'$. 
+  Consider now $\ell''$. Following the same reasoning as for $\ell'$, it should
+  be clear that $\ell''\le\betw(v_k)$. The vertices included in $\tilde T(k,G)$
+  are all and only those vertices that \emph{may} have exact betweenness at least
+  $\ell''$, which implies that all vertices that have exact betweenness at least
+  $\betw(v_k)$ are included in $\tilde T(k,G)$. 
+\end{proof}
 
 \subsection{Discussion}\label{sec:discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.

@@ -164,3 +164,30 @@ VC-dimension of $\range$:
 \citet{LofflerP09} showed experimentally that the constant $c$ is approximately
 $0.5$. We used this value in our experiments.
 
+A similar definition offers relative guarantees on the approximation.
+\begin{definition}\label{def:releapprox}
+  Let $\range$ be a range set on $D$ and $\phi$ be a probability distribution on
+  $D$. For $\epsilon,pi\in (0,1)$, a \emph{relative
+  $(p,\varepsilon)$-approximation to $(\range,\phi)$} is a bag $S$ of elements
+  from $D$ such that 
+  \begin{itemize}
+    \item For any $A\in\range$ such that $\phi(A)\ge p$, we have 
+      \[ |\phi(A) - \phi_S(A)|\le \varepsilon\phi(A)\enspace.\]
+    \item For any $B\in\range$ such that $\phi(B)< p$, we have $\phi_S(B)\le
+      (1+\varepsilon)p$.
+  \end{itemize}
+\end{definition}
+
+\begin{theorem}[Thm.~2.11~\citep{HarPS11}]\label{thm:releapprox}
+  Let $\range$ be a range set on a domain $D$ with
+  $\VC(\range)\le d$, and let $\phi$ be a distribution on $D$. Given
+  $\varepsilon,\delta,p\in(0,1)$ let $S$ be a collection of $|S|$ points from $D$
+  sampled according to $\phi$ for
+  \begin{equation}\label{eq:releapprox}
+    |S|\ge\frac{c'}{\varepsilon^2p}\left(d\log\frac{1}{p}+\log\frac{1}{\delta}\right)
+  \end{equation}
+  where $c'$ is an absolute positive constant. Then $S$ is a relative
+  $(p,\varepsilon$-approximation to $(\range,\phi)$ with probability at least
+  $1-\delta$.
+\end{theorem}
+
