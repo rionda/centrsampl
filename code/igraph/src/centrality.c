@@ -2793,7 +2793,7 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   }
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
-          2)) * (floor(log2(my_diameter - 1)) - log(delta)));
+          2)) * (floor(log2(my_diameter - 1)) + 1 - log(delta)));
   
   int ret_code = igraph_i_betweenness_sample_vc(graph, res, stats, stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
   igraph_vector_push_back(stats, my_diameter);
