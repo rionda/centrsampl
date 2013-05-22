@@ -74,7 +74,7 @@ def main():
                     args.samplesize, args.write, args.timeout)
             (bp_stats, bp_betw) = brandespich_sample.betweenness_sample_size(G,
                     args.samplesize, args.write, args.timeout)
-            (gss_stats, gss_betw) = geisbergerss.betweenness_sample_size(G,
+            (gss_stats, gss_betw) = geisbergerss_sample.betweenness_sample_size(G,
                     args.samplesize, args.write, args.timeout)
         else:
             if args.diameter > 0:
