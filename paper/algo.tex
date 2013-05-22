@@ -262,7 +262,7 @@ Let $\tilde\Delta_G$ be an upper bound to the vertex-diameter of $G$. Given
 $\varepsilon,\delta\in(0,1)$, let $\delta',\delta''$ be two positive reals such
 that $(1-\delta')(1-\delta'')\ge(1-\delta)$. Let
 \[
-  r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2\tilde\Delta_G\rfloor+1+\log\frac{1}{\delta''}\right)\enspace.
+  r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2\tilde\Delta_G-2\rfloor+1+\log\frac{1}{\delta''}\right)\enspace.
 \]
 Let $\tilde\betw'_k$ be the $k$-th highest estimated betweenness obtained using
 Algorithm~\ref{alg:algorithm} where $r=r'$, and let
@@ -271,7 +271,7 @@ Algorithm~\ref{alg:algorithm} where $r=r'$, and let
 \]
 Let
 \[
-  r''=\frac{c'}{\varepsilon^2\ell}\left(\ell'(\lfloor\log_2\tilde\Delta_G\rfloor+1)+\log\frac{1}{\delta''}\right)\enspace.
+  r''=\frac{c'}{\varepsilon^2\ell}\left(\ell'(\lfloor\log_2\tilde\Delta_G-2\rfloor+1)+\log\frac{1}{\delta''}\right)\enspace.
 \]
 We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $T''(k,G)$ be the set
 of the $k$ vertices with the highest estimated betweenness $\tilde\betw''$. Let
@@ -289,18 +289,18 @@ The following lemma shows the properties of the collection $\tilde T(k,G)$.
   \XXX add detail about accuracy of estimation?
 \end{lemma}
 \begin{proof}
-  From Thm.~\ref{thm:eapprox} we know that, with probability at least $1-\delta'$, a sample of size $r'$ is a
-  $\varepsilon$-approximation to $(\range_G,\pi_G)$ and from
-  Thm.~\ref{thm:releapprox} we have that with probability at least
-  $1-\delta''$ a sample of size $r''$ is a relative
-  $(\ell',\varepsilon)$-approximation to $(\range_G,\pi_G)$. Suppose both these events
-  occur, which happens with probability at least $1-\delta$.
-  Then it is easy to see that $\ell'\le\betw(v_k)$, as there must be at least
-  $k$ vertices with exact betweenness greater or equal to $\ell'$. 
-  Consider now $\ell''$. Following the same reasoning as for $\ell'$, it should
-  be clear that $\ell''\le\betw(v_k)$. The vertices included in $\tilde T(k,G)$
-  are all and only those vertices that \emph{may} have exact betweenness at least
-  $\ell''$, which implies that all vertices that have exact betweenness at least
+  From Thm.~\ref{thm:eapprox} we know that, with probability at least
+  $1-\delta'$, a sample of size $r'$ is a $\varepsilon$-approximation to
+  $(\range_G,\pi_G)$ and from Thm.~\ref{thm:releapprox} we have that with
+  probability at least $1-\delta''$ a sample of size $r''$ is a relative
+  $(\ell',\varepsilon)$-approximation to $(\range_G,\pi_G)$. Suppose both these
+  events occur, which happens with probability at least $1-\delta$. Then it is
+  easy to see that $\ell'\le\betw(v_k)$, as there must be at least $k$ vertices
+  with exact betweenness greater or equal to $\ell'$.  Consider now $\ell''$.
+  Following the same reasoning as for $\ell'$, it should be clear that
+  $\ell''\le\betw(v_k)$. The vertices included in $\tilde T(k,G)$ are all and
+  only those vertices that \emph{may} have exact betweenness at least $\ell''$,
+  which implies that all vertices that have exact betweenness at least
   $\betw(v_k)$ are included in $\tilde T(k,G)$. 
 \end{proof}
 
