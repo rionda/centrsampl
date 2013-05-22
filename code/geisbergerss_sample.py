@@ -28,7 +28,7 @@ def betweenness_sample_size(graph, sample_size, set_attributes=True, time_out=0)
     scaling version and a specified sample size."""
     logging.info("Computing approximate betweenness using GeisbergerSS algorithm, linear scaling fixed sample size")
     if not time_out:
-        (stats, betw) = do_betweenness_sample_size(graph)
+        (stats, betw) = do_betweenness_sample_size(graph, sample_size)
     else:
         timeout_betweenness = timeout.add_timeout(do_betweenness_sample_size, time_out)
         timeout_betweenness(graph, sample_size)
