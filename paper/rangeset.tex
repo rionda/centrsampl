@@ -1,8 +1,8 @@
-\section{A range set for shortest paths}\label{sec:rangeset}
-We now define a range set for shortest paths of a graph $G=(V,E)$, and present 
-an upper bound to its VC-dimension. We show that this upper bound is strict. We
-use the range set and the bound in our algorithm for estimating the betweenness
-centrality of vertices of the graph.
+\section{A range set of shortest paths}\label{sec:rangeset}
+We now define a range set of the shortest paths of a graph $G=(V,E)$, and present 
+an upper bound to its VC-dimension. \XXX We show that this upper bound is strict. We
+use the range set and the bound in the analysis of our algorithm for estimating
+the betweenness centrality of vertices of the graph.
 
 The range set $\range_G$ is defined on the set $\mathbb{S}_G$ of all shortest
 paths between vertices of $G$. It contains, for each vertex $v\in V$, the set
@@ -12,12 +12,13 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
 \]
 
 \begin{lemma}\label{lem:vcdimuppbound}
-  Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
-  $\range_G$ associated to the shortest paths in $G$ has VC-dimension
-  $\VC(\range_G)$ at most $\lfloor\log_2(\Delta_G-2)\rfloor+1$.
+  %Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
+  %$\range_G$ associated to the shortest paths in $G$ has VC-dimension
+  $\VC(\range_G)\le\lfloor\log_2(\Delta_G-2)\rfloor+1$.
 \end{lemma}
 
-\begin{proof}
+%\begin{proof}
+\begin{IEEEproof}
 Let $k>\lfloor\log_2(\Delta_G-2)\rfloor+1$ and assume for the sake of contradiction
 that $\VC(\range_G)=k$. From the definition of the VC-dimension there is a set
 $Q\subseteq\mathbb{S}_G$ of size $k$ that is shattered by $\range_G$. Let $p$ be
@@ -37,7 +38,8 @@ $2^{k-1}>\Delta_G-2$, we reached a contradiction and there cannot be $2^{k-1}$
 distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
 $Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
 $\VC(\range_G)\le\lfloor\log_2(\Delta_G-2)\rfloor+1$.%\qed
-\end{proof}
+%\end{proof}
+\end{IEEEproof}
 
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
 for each $d>2$ we can build a graph $G_d$ with vertex-diameter $d$ and such
@@ -49,9 +51,9 @@ VC-dimension exactly $\lfloor\log_2(d-2)\rfloor+1$.
   $\VC(\range_G)=\lfloor\log_2(d-2)\rfloor+1$.
 \end{lemma}
 
-\begin{proof}
+\begin{IEEEproof}
   \XXX TBD Remember to take care of the cases $d=1,2$.
-\end{proof}
+\end{IEEEproof}
 
 \paragraph{Range set for $k$-betweenness} For the case of $k$-betweenness, if we let
 $\range_G^{(k)}=\{\mathcal{T}_v^{(k)}~:~ v\in V\}$, it is easy to bound
@@ -70,7 +72,7 @@ has a unique shortest path between them, the upper bound can be improved.
   shortest paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $3$.
 \end{lemma}
 
-\begin{proof}
+\begin{IEEEproof}
   First of all, notice that in this restricted setting, if two different paths
   $p_1$ and $p_2$ meet at a vertex $u$, then they either go on together or at a
   certain point they separate never to meet again at any other vertex $v=\neq u$.
@@ -116,7 +118,7 @@ has a unique shortest path between them, the upper bound can be improved.
   We showed that in all possible cases, we reached a contradiction and $Q$,
   which has size $4$ can not be shattered by $\range_G$, hence $\VC(\range_G)\le
   3$.
-\end{proof}
+\end{IEEEproof}
 
 \begin{lemma}\label{lem:vcdimlowboundunique}
   There is an graph $G=(V,E)$ with $|\mathcal{S}_{uv}|\le1$ for all
@@ -124,7 +126,7 @@ has a unique shortest path between them, the upper bound can be improved.
   shortest paths in $G$ has VC-Dimension exactly $3$.
 \end{lemma}
 
-\begin{proof}
+\begin{IEEEproof}
   Let $V=\{a,b,c,d,e,f,g,h,j,k,l\}$, and let $p_1=()$, $p_2=()$, $p_3=()$, \XXX
   TBD
 
@@ -133,5 +135,5 @@ has a unique shortest path between them, the upper bound can be improved.
 
   Lemma~\ref{lem:vcdimuppboundunique} gives us an upper bound $\VC(\range_G)\le3$,
   so we can conclude that $\VC(\range_G)=3$.
-\end{proof}
+\end{IEEEproof}
 
