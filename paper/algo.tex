@@ -138,7 +138,7 @@ approximations of the betweenness centrality.
 \begin{IEEEproof}
   For each $p_{uv}\in\mathbb{S}_G$ let
   \[
-  \pi_G(p_{uv})=\mathcal{S}_{uv}|}\enspace.
+  \pi_G(p_{uv})=\frac{1}{n(n-1)}\frac{1}{\sigma_{uv}}\enspace.
   \]
   It is easy to see that $\pi_G$ is a probability distribution and
   $\pi_G(p_{uv})$ is the probability of sampling the path $p_{uv}$ during an
@@ -174,7 +174,10 @@ paths are common in or even enforced in road networks~\citep{GeisbergerSS08} by
 slightly perturbing the edge weights or having a deterministic tie breaking
 policy.
 
-\XXX $k$-betweenness
+\paragraph{$k$-betweenness} For the case of $k$-betweenness, the sample size can
+be reduced to 
+\[ r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2 k-1\rfloor + 1 +\ln\frac{1}{\delta}\right)
+\]
 
 \subsection{Approximating the diameter}\label{sec:diam}
 The algorithm presented in the previous section requires the value of the
@@ -183,7 +186,7 @@ vertex-diameter $\VD(G)$ of the graph $G$ (line
 Computing the exact value of $\VD(G)$ can be done by solving the all pair shorter paths (APSP) problem, and taking the
 shortest path with the maximum size.
 Algorithms for exactly solving APSP problem such as Johnson's which runs in
-$O(V^2\logV+VE)$, Floyd-Warshall's runs in $\Theta(V^3)$, would defeat our purposes.
+$O(V^2\log V+VE)$, Floyd-Warshall's runs in $\Theta(V^3)$, would defeat our purposes.
 The reason is that once we have all the shortest paths for the computation of the diameter, we can also compute the betweenness of all the nodes exactly. 
 Given that Thm.~\ref{thm:eapprox} only requires an upper bound to the VC-dimension of the range set, an approximation of the vertex-diameter would be sufficient for our purposes.
 The computation of the approximation not only affects the time complexity of our algorithm but also the number of samples that we need.
