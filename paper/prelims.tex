@@ -14,27 +14,27 @@ vertices $p_{uv}=(w_1,\dotsc,w_{|p_{uv}|})$ such that $w_1=u$, $w_{|p_{uv}|}=v$ 
 for each $1\le i < |p_{uv}|$, $(w_i,w_{i+1})\in E$. The vertices $u$ and $v$ are
 called the \emph{end points} of $p_{uv}$ and the vertices in
 $\mathsf{Int}(p_{uv})=p_{uv}\setminus\{u,v\}$ are the \emph{internal vertices of
-$p_{uv}$}. The \emph{length}
-$\ell(p_{uv})$ of a path $p_{uv}$ from $u$ to $v$ is the sum of the weights of
-the edges composing the path:
-$\ell(p_{uv})=\sum_{i=1}^{|p_{uv}|-1}\mathsf{w}((w_i,w_{i+1}))$. We denote with
+$p_{uv}$}. The \emph{weight}
+$\mathsf{w}(p_{uv})$ of a path $p_{uv}=(u=v_1,v_2,\cdots,v_{p_{|uv|}}=v)$ from
+$u$ to $v$ is the sum of the weights of the edges composing the path:
+$\mathsf{w}(p_{uv})=\sum_{i=1}^{|p_{uv}|-1}\mathsf{w}((v_i,v_{i+1}))$. We denote with
 $|p_{uv}|$ the number of vertices composing the path and call this the
 \emph{size of the path $p_{uv}$}. Note that if the weights are not all unitary,
 it is not necessarily true that $\ell(p_{uv})=|p_{uv}|-1$. A special and
 degenerate path is the \emph{empty path} $p_{\emptyset}=\emptyset$, which by
-definition has length $\ell(p_\emptyset)=0$, no end points, and
+definition has weight $\mathsf{w}(p_\emptyset)=0$, no end points, and
 $\mathsf{Int}(p_\emptyset)=\emptyset$.
 
 Given two distinct vertices $(u,v)\in V\times V$, the \emph{shortest path distance}
-$d_{uv}$ between $u$ and $v$ is the length of a path with minimum length
+$d_{uv}$ between $u$ and $v$ is the weight of a path with minimum weight 
 between $u$ and $v$, among all paths between $u$ and $v$. If there is no path
 between $u$ and $v$, $d_{uv}=0$. We call a path between $u$ and $v$ with
-length $d_{uv}$ a \emph{shortest path between $u$ and $v$}. There can be
+weight $d_{uv}$ a \emph{shortest path between $u$ and $v$}. There can be
 multiple shortest paths between $u$ and $v$ and we denote the set of these paths
-as $\mathcal{S}_{uv}$. If $d_{u,v}=0$, then
+as $\mathcal{S}_{uv}$. If there is no path between $u$ and $v$, then
 $\mathcal{S}_{uv}=\{p_\emptyset\}$\footnote{Note that even if
 $p_\emptyset=\emptyset$, the set $\{p_\emptyset\}$ is not empty. It contains
-one element.}
+one element.}.
 %By definition, $\mathcal{S}_{vv}=\emptyset$.
 We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$'s, for all
 pair $(u,v)\in V\times V$ of distinct nodes $u\neq v$: 
@@ -43,12 +43,12 @@ pair $(u,v)\in V\times V$ of distinct nodes $u\neq v$:
 We now define a characteristic quantity of a graph that we will use throughout
 the paper.
 \begin{definition}\label{def:vertexdiam}
-  Given a graph $G=(V,E)$, the \emph{vertex-diameter $\Delta_G$ of $G$} is the
+  Given a graph $G=(V,E)$, the \emph{vertex-diameter $\VD(G)$ of $G$} is the
   maximum size of a shortest path between a pair of vertices of $V$:
   \[
-  \Delta_G = \max\left\{|p| ~:~ p\in \mathbb{S}_G\right\}\enspace.\]
+  \VD(G) = \max\left\{|p| ~:~ p\in \mathbb{S}_G\right\}\enspace.\]
 \end{definition}
-If all the edge weights are unitary, then $\Delta_G$ is equal to
+If all the edge weights are unitary, then $\VD(G)$ is equal to
 $\mathsf{diam}(G)+1$, where $\mathsf{diam}(G)$ is the number of edges composing the
 longest shortest path in $G$.
 Given a vertex $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
@@ -63,14 +63,13 @@ vertices of a graph.
   Given a graph $G=(V,E)$, the \emph{betweenness centrality of a vertex $v\in
   V$} is defined as
   \[
-  %\betw(v)=\sum_{(u,w)\in V\times
-  %V}\sum_{p\in\mathcal{S}_{uw}}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
-  %\betw(v)=\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
-  \betw(v)=\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}=\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}\enspace.
+  \betw(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}\enspace.
   \]
 \end{definition} 
 
-It is easy to see that $0\le b(v)\le (n-1)(n-2)$. \citet{Brandes01} presented an
+It is easy to see that $\betw(v)\in[0,1]$.\footnote{We use the normalized
+version of betweenness as we believe it to be more suitable for presenting approximation
+results.} \citet{Brandes01} presented an
 algorithm to compute the betweenness centrality for all $v\in V$ in time
 $O(nm)$ for unweighted graphs and $O(nm + n^2 \log n)$ for weighted graphs. 
 
@@ -91,7 +90,7 @@ $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
   %\betw(v)=\sum_{(u,w)\in V\times
   %V}\sum_{p\in\mathcal{S}_{uw}}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
   %\betw(v)=\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
-  \betw(v)=\sum_{p_{uw}\in\mathbb{S}^{(k)}_G}\frac{\mathds{1}_{\mathcal{T}^{(k)}_v}(p)}{\left|\mathcal{S}^{(k)}_{uw}\right|}=\sum_{p_{uw}\in\mathcal{T}^{(k)}_v}\frac{1}{\left|\mathcal{S}^{(k)}_{uw}\right|}\enspace.
+  \betw^{(k)}(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}^{(k)}_G}\frac{\mathds{1}_{\mathcal{T}^{(k)}_v}(p)}{\left|\mathcal{S}^{(k)}_{uw}\right|}=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}^{(k)}_v}\frac{1}{\left|\mathcal{S}^{(k)}_{uw}\right|}\enspace.
   \]
 \end{definition}
 
@@ -102,9 +101,11 @@ class~\citep{VapnikC71}. Given a probability distribution on the set of points,
 a finite bound on the VC-dimension of the class of subsets implies a bound on
 the number of random samples required to approximate the probability of each
 subsets its empirical average. We outline here some basic definitions and
-results and refer the reader to the works of~\citet[Sect.~14.4]{AlonS08} and
-\citet[Sect.~3]{BoucheronBL05} for an introduction of VC-dimension and a survey
-of recent developments. 
+results and refer the reader to the book of~\citet{MohriRT12} for an in-depth
+presentation.
+%works of~\citet[Sect.~14.4]{AlonS08} and
+%\citet[Sect.~3]{BoucheronBL05} for an introduction of VC-dimension and a survey
+%of recent developments. \XXX Cite book Foundations of ML instead.
 %~\citet[Sect.~12.4]{DevroyeGL96},
 %\citet[Sect.~3]{BoucheronBL05}, \citet[Sect.~14.4]{AlonS08}, and
 %\citet{Vapnik99} for more details on VC-dimension.
