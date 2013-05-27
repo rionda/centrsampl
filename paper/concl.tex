@@ -1,9 +1,10 @@
 \section{Conclusions}\label{sec:concl}
-In this work we presented an random-sampling-based algorithm for accurately and
-efficiently estimate the betweenness centrality of all the vertices in a graph,
-with high probability. For very large graphs, exact computation of the
-betweenness centrality is impossible, so one has to resort to an approximation.
-Our algorithm is different from previous ones achieving the same
+In this work we presented two random-sampling-based algorithms for accurately and
+efficiently estimate the betweenness centrality of the (top-$K$) vertices in a
+graph, with high probability.
+%For very large graphs, exact computation of the
+%betweenness centrality is impossible, so one has to resort to an approximation.
+Our algorithms take a different approach than previous ones achieving the same
 guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05} as it is based on a
 completely novel application of results from VC-dimension theory. These results
 allow us to show that the number of samples needed to approximate the
