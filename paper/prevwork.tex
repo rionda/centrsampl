@@ -29,10 +29,10 @@ the computation of betweenness. Inspired by the work of~\citet{EppsteinW04},
 \citet{JacobKLPT05} and independently \citet{BrandesP07} present an algorithm
 that samples vertices at random and compute the contribution of the sampled
 vertices to the betweenness of every vertex. The number of samples needed to
-guarantee that, with probability at least $1-\delta$, the estimate for each node
-is within $\varepsilon n(n-1)$ from the real value, for some
+guarantee that, with probability at least $1-\delta$, the estimate for each
+vertex is within $\varepsilon$ from the real value, for some
 $\varepsilon\in(0,1)$, is $O(\log(n/\delta)/\varepsilon^2)$. The analysis uses
-Hoeffding bounds\citep{Hoeffding63} and the union bound. The algorithm mimics
+Hoeffding bounds~\citep{Hoeffding63} and the union bound. The algorithm mimics
 the exact one, with the difference that, instead of computing the contribution
 of all vertices to the betweenness of the others, only it only consider the
 contribution of the sampled vertices. \citet{GeisbergerSS08} noticed that this
@@ -43,14 +43,20 @@ overshooting. Our algorithm is different because each sample in our case is a
 single random shortest path between two randomly chosen nodes. This leads to a
 much smaller sample size and less work done for each sample, resulting in a much
 faster way to compute approximations of the betweenness with the same
-probabilistic guarantees. We delve more in the comparisons with these algorithm
-in Sect.~\ref{sec:discussion} and~\ref{sec:exper}. A number of works explored
+probabilistic guarantees. Although these works can be extended to return a
+superset of the top-$K$ vertices with highest betweenness, they only offer an
+\emph{additive}  approximation guarantee, while our algorithm offers a
+\emph{multiplicative}, i.e., stricter, one. We delve more in the comparisons
+with these algorithm in Sect.~\ref{sec:discussion} and~\ref{sec:exper}. A number of works explored
 the use of adaptive sampling, in contrast with the previous algorithms (and
-ours) which use a fixed sample size.  \citet{BaderKMM07} present an adaptive
+ours) which use a fixed sample size. \citet{BaderKMM07} present an adaptive
 sampling algorithm which computes good estimations for the betweenness of
 high-centrality vertices, by keeping track of the partial contribution of each
 sampled vertex, obtained by performing a single-source shortest paths
-computation to all other vertices.  \citet{MaiyaBW10} use concepts from expander
+computation to all other vertices. \XXX TBD Need to read this paper better and
+understand how to compare to it for our top-k algo.
+
+\citet{MaiyaBW10} use concepts from expander
 graphs to select a connected sample of vertices which includes the highest
 centrality ones and such that the betweenness computed on the induced sample
 subgraph is close to the real one.  They achieve these by repeatedly including
@@ -64,8 +70,7 @@ fixed, predetermined amount of samples.  \citep{SaryuceSKC13} present an
 algorithm that pre-processes the network in multiple ways by removing degree-1
 vertices and identical vertices and splits it in separate components where the
 computation of betweenness can be performed independently and then aggregated.
-They do not present an analysis of the complexity of the algorithm. {\bf XXX:
-say a little more}
+They do not present an analysis of the complexity of the algorithm. 
 
 In the analysis of our algorithm we use results from VC-dimension
 theory~\citep{VapnikC71} and compute an upper bound to the VC-dimension of a
