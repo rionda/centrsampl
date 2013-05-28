@@ -14,12 +14,12 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
 \begin{lemma}\label{lem:vcdimuppbound}
   %Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
   %$\range_G$ associated to the shortest paths in $G$ has VC-dimension
-  $\VC(\range_G)\le\lfloor\log_2(\Delta_G-2)\rfloor+1$.
+  $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.
 \end{lemma}
 
 %\begin{proof}
 \begin{IEEEproof}
-Let $k>\lfloor\log_2(\Delta_G-2)\rfloor+1$ and assume for the sake of contradiction
+Let $k>\lfloor\log_2(\VD(G)-2)\rfloor+1$ and assume for the sake of contradiction
 that $\VC(\range_G)=k$. From the definition of the VC-dimension there is a set
 $Q\subseteq\mathbb{S}_G$ of size $k$ that is shattered by $\range_G$. Let $p$ be
 an element of $Q$. The path $p$ is contained in $2^{k-1}$ non-empty subsets of
@@ -32,12 +32,13 @@ other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
 $R_i$, that is, there are $2^{k-1}$ distinct ranges in $\range_G$ containing
 $p$. But $p$ belongs to the ranges corresponding to the internal vertices of
 $p$, i.e., to the vertices in $\mathsf{Int}(p)$. This means that the number of ranges
-in $\range_G$ that $p$ belongs to is equal to $|p|-2$. But $|p|\le\Delta_G$, by definition of $\Delta_G$, so $p$
-can belong to at most $\Delta_G-2$ ranges from $\range_G$. Given that
-$2^{k-1}>\Delta_G-2$, we reached a contradiction and there cannot be $2^{k-1}$
+in $\range_G$ that $p$ belongs to is equal to $|p|-2$. But $|p|\le\VD(G)$, by
+definition of $\VD(G)$, so $p$
+can belong to at most $\VD(G)-2$ ranges from $\range_G$. Given that
+$2^{k-1}>\VD(G)-2$, we reached a contradiction and there cannot be $2^{k-1}$
 distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
 $Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
-$\VC(\range_G)\le\lfloor\log_2(\Delta_G-2)\rfloor+1$.%\qed
+$\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{proof}
 \end{IEEEproof}
 
