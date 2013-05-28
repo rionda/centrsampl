@@ -408,12 +408,12 @@ algorithm to compute good approximations for all the vertices.
 \subsection{Discussion}\label{sec:discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.
 
-\citet{BrandesP07,JacobKLPT05} present an algorithm that also uses sampling to approximate
-the betweenness centrality of all the vertices of the graph. The algorithm
-create a sample $S=\{v_1,\dotsc,v_k\}$ of $k$ vertices drawn uniformly at random 
-and computes all the shortest paths between each $v_i$ to all other vertices in
-the graph. The estimation $\tilde\betw'(u)$ for the betweenness centrality
-$\betw(u)$ is
+\citet{JacobKLPT05,BrandesP07} present an algorithm that also uses sampling to
+approximate the betweenness centrality of all the vertices of the graph. The
+algorithm create a sample $S=\{v_1,\dotsc,v_k\}$ of $k$ vertices drawn uniformly
+at random and computes all the shortest paths between each $v_i$ to all other
+vertices in the graph. The estimation $\tilde\betw'(u)$ for the betweenness
+centrality $\betw(u)$ is
 \XXX check
 \[ 
 \tilde\betw'(u)= \frac{1}{k}\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
@@ -426,15 +426,15 @@ on the following classical result by~\citet{Hoeffding63} for their computation
 of $k$.
 
 \begin{theorem}[\citep{Hoeffding63}]
-  Let $X_1,X_2,\dotsc,X_k$ be a sequence of independent random variables
+  Let $X_1,X_2,\dotsc,X_r$ be a sequence of independent random variables
   such that $a_i\leq X_i\leq b_i$. Then for any $\xi > 0$
   \begin{equation}\label{eq:hoeffding}
-    \Pr\left(\frac{|X_1+\dotsb+X_k|}{k}-\mathbf{E}\left[\frac{|X_1+\dotsb+X_k|}{k}\right]|\geq
-    \xi\right)\leq 2e^{-2k^2\xi^2/\sum_{i=1}^{k}(b_{i}-a_{i})^2}\enspace.
+    \Pr\left(\frac{|X_1+\dotsb+X_k|}{k}-\mathbf{E}\left[\frac{|X_1+\dotsb+X_r|}{k}\right]|\geq
+    \xi\right)\leq 2e^{-2r^2\xi^2/\sum_{i=1}^{r}(b_{i}-a_{i})^2}\enspace.
   \end{equation}
 \end{theorem}
 
-\citet{BrandesP07} use this result to compute a sample size $k$ sufficient to ensure that, for
+\citet{BrandesP07} use this result to compute a sample size $r$ sufficient to ensure that, for
 a fixed vertex $u$,
 \[ 
 \Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)<\frac{\delta}{n}\enspace.
@@ -442,36 +442,35 @@ a fixed vertex $u$,
 In their setting $\xi=\varepsilon$ and there is a variable $X_i$ for
 each vertex $v_i$ in the sample:
 \[ 
-X_i=n\sum_{w\neq v_i,w\neq
+X_i=\frac{1}{n-1}\sum_{w\neq v_i,w\neq
 u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace
 .
 \]
 It is easy to see that $0\le X_i\le 1$. Moreover,
 \begin{align*}
-\mathbf{E}\left[\frac{|X_1+\dotsb+X_k|}{k}\right] &=
-\frac{1}{k}\mathbf{E}\left[\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
+\mathbf{E}\left[\frac{|X_1+\dotsb+X_r|}{r}\right] &=
+\frac{1}{r(n-1)}\mathbf{E}\left[\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
 u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\right]
-=\frac{1}{k}\sum_{v\in V}\mathbf{E}\left[Y_v\sum_{w\neq v,w\neq
+=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}\left[Y_v\sum_{w\neq v,w\neq
 u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}\right] =
 \\
-&=\frac{1}{k}\sum_{v\in V}\mathbf{E}[Y_v]\sum_{w\neq v,w\neq
+&=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}[Y_v]\sum_{w\neq v,w\neq
 u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
-=\frac{1}{k}\sum_{v\in V}\frac{k}{n}\sum_{w\neq v,w\neq
+=\frac{1}{r(n-1)}\sum_{v\in V}\frac{r}{n}\sum_{w\neq v,w\neq
 u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
 = \betw(u),
 \end{align*}
 where $Y_v$ is a Bernoulli random variable taking value 1 if $v\in S$, and 0
-otherwise, so $\mathbb{E}[Y_v]=\Pr(Y_v=1)=k/n$.
+otherwise, so $\mathbf{E}[Y_v]=\Pr(Y_v=1)=r/n$.
 
 Plugging these values in~\eqref{eq:hoeffding}, we have
 \[
 \Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)\leq
-2e^{-2(k\varepsilon n(n-1))^2/kn^2(n-2)^2}=2e^{-2k\epsilon^2(n-1)^2/(n-2)^2}\enspace.
+2e^{-2r\epsilon^2}\enspace.
 \]
 We want this probability to be at most $\delta/n$, so we need a sample of size
 \[
-k\geq \frac{1}{2\varepsilon^2}\left(\ln n
-+\ln\frac{1}{\delta} +\ln 2\right)\enspace.
+r\geq \frac{1}{2\varepsilon^2}\left(\ln n + \ln 2 +\ln\frac{1}{\delta}\right)\enspace.
 \]
 An application of the union bound over the $n$ vertices ensures a uniform
 (simultaneous) guarantee on the quality of
