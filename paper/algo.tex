@@ -316,10 +316,11 @@ Let
 \[
 r''=\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)\enspace.
 \]
-We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $\TOPK''(K,G)$ be the set
-of the $K$ vertices with the highest estimated betweenness $\tilde\betw''$. Let
-$\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon), v\in \TOPK''(K,G)\}$. We
-return the collection $\tilde \TOPK(K,G)$ of vertices $v$ such that
+We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $\tilde\betw''_K$ be
+the $K$-th highest estimated betweenness. Let
+$\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon) ~:~ v\in V \mbox{ s.t. }
+\tilde\betw''(v)\ge\tilde\betw''_K\}$. We
+return the collection $\tilde\TOPK(K,G)$ of vertices $v$ such that
 $\tilde\betw''(v)*(1+\varepsilon)/(1-\varepsilon)\ge\ell''$:
 \[
 \tilde\TOPK(K,G)= \left\{v\in V ~:~
@@ -331,12 +332,15 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
 \begin{lemma}
   With probability at least $1-\delta$, 
   \begin{enumerate*}
-    \item $T(k,G)\subseteq \tilde T(k,G)$, and
-    \item \XXX add details about accuracy of estimation
+    \item $\TOPK(K,G)\subseteq \tilde\TOPK(K,G)$, and
+    \item for all $v\in\TOPK(K,G)$ we have
+      $|\tilde\betw''(v)-\betw(v)|\le\varepsilon\betw(v)$.
+    \item no vertex $u\in\tilde\TOPK(K,G)\setminus\TOPK(K,G)$ has an estimated
+      betweenness greater than $\ell'(1+\varepsilon)$.
   \end{enumerate*}
 \end{lemma}
 \begin{IEEEproof}
-  From Thm.~\ref{thm:eapprox} we know that, with probability at least
+  We start by proving 1. From Thm.~\ref{thm:eapprox} we know that, with probability at least
   $1-\delta'$, a sample of size $r'$ is a $\varepsilon$-approximation to
   $(\range_G,\pi_G)$ and from Thm.~\ref{thm:releapprox} we have that with
   probability at least $1-\delta''$ a sample of size $r''$ is a relative
@@ -349,6 +353,8 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
   only those vertices that \emph{may} have exact betweenness at least $\ell''$,
   which implies that all vertices that have exact betweenness at least
   $\betw(v_K)$ are included in $\tilde\TOPK(K,G)$. 
+  Points 2 and 3 in the thesis follow from the properties of the relative
+  $(\ell',\varepsilon)$-approximation (Def.~\ref{def:releapprox}).
 \end{IEEEproof}
 
 \begin{algorithm}[h]
