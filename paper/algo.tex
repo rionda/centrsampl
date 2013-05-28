@@ -169,140 +169,160 @@ there is an unique shortest path between each pair of node, then one can apply
 Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
 \[ r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
 \]
-to approximate the betweenness centralities of all the vertices. Unique shortest
-paths are common in or even enforced in road networks~\citep{GeisbergerSS08} by
+to approximate the betweenness values of all the vertices. Unique shortest
+paths are common in or even enforced in road networks by
 slightly perturbing the edge weights or having a deterministic tie breaking
-policy.
+policy~\citep{GeisbergerSS08}.
 
 \paragraph{$k$-betweenness} For the case of $k$-betweenness, the sample size can
 be reduced to 
 \[ r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2 k-1\rfloor + 1 +\ln\frac{1}{\delta}\right)
 \]
 
-\subsection{Approximating the diameter}\label{sec:diam}
+\paragraph{$k$-path betweennes} \XXX TBD
+
+\subsection{Approximating the vertex-diameter}\label{sec:diam}
 The algorithm presented in the previous section requires the value of the
 vertex-diameter $\VD(G)$ of the graph $G$ (line
 \ref{alg:diamcomp} of Alg.~\ref{alg:algorithm}). 
-Computing the exact value of $\VD(G)$ can be done by solving the all pair shorter paths (APSP) problem, and taking the
-shortest path with the maximum size.
+Computing the exact value of $\VD(G)$ could be done by solving the All Pair
+Shortest Paths (APSP) problem, and taking the shortest path with the maximum size.
 Algorithms for exactly solving APSP problem such as Johnson's which runs in
-$O(V^2\log V+VE)$, Floyd-Warshall's runs in $\Theta(V^3)$, would defeat our purposes.
-The reason is that once we have all the shortest paths for the computation of the diameter, we can also compute the betweenness of all the nodes exactly. 
-Given that Thm.~\ref{thm:eapprox} only requires an upper bound to the VC-dimension of the range set, an approximation of the vertex-diameter would be sufficient for our purposes.
-The computation of the approximation not only affects the time complexity of our algorithm but also the number of samples that we need.
-Several refined algorithms for approximating the diameter are known~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times and quality of approximations.
- We briefly present a well-known and simple approximation algorithm that has the right balance of accuracy and speed for our purposes.
-
+$O(V^2\log V+VE)$, Floyd-Warshall's runs in $\Theta(V^3)$, would defeat our
+purposes: once we have all the shortest paths for the computation of
+the diameter, we can also compute the betweenness of all the vertices exactly. 
+Given that Thm.~\ref{thm:eapprox} only requires an upper bound to the
+VC-dimension of the range set, an approximation of the vertex-diameter would be
+sufficient for our purposes. Several refined algorithms for approximating the
+diameter are known~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various
+running times and quality of approximations. We briefly present a well-known and
+simple approximation algorithm that has the right balance of accuracy and speed
+for our purposes.
 
 Let $G=(V,E)$ be an \emph{undirected} where \emph{all the weights are unitary}.
-We can form a $2$-approximation algorithm for the diameter $\VD(G)$ of $G$ in time $O(V+E)$ in the following way, 
-select a vertex $v\in V$ uniformly at random, compute the shortest paths from $v$ to all other vertices in $V$, and finally take
-$\tilde\Delta_G$ to be the sum of the lengths of the two longest shortest paths
-from $v$ to two distinct other nodes $u$ and $w$.
-The approximation guarantee follows from the next lemma.
-
+We can obtain a $2$-approximation $\mathsf{AVD}(G)$ of the diameter $\VD(G)$ of
+$G$ in time $O(V+E)$ in the following way: 1. select a vertex $v\in V$ uniformly
+at random, 2. compute the shortest paths from $v$ to all other vertices in $V$,
+and 3.finally take $\mathsf{AVD}(G)$ to be the sum of the lengths of the two
+shortest paths with maximum size (which equals to the two longest shortest
+paths) from $v$ to two distinct other nodes $u$ and $w$. The approximation
+guarantee follows from the next lemma.
 
 \begin{lemma}\label{lem:diam}
-  $\VD(G)\le\tilde\Delta_G\le 2\VD(G)$.
+  $\VD(G)\le\mathsf{AVD}(G)\le 2\VD(G)$.
 \end{lemma}
 \begin{IEEEproof}
   Let $v\in V$ be a vertex that we choose uniformly at random from the set $V$.
-  Let also $u,w\in V$ be the two vertices such that the sum of the shortest paths $p_{vu}$ and $p_{vw}$ is maximized among all the shortest paths that have $v$ as a source.
-  We have $\tilde\Delta_G\le 2\Delta_G$ because
-  $|p_{vu}|,|p_{vw}|\le\Delta_G$, so $|p_{vu}|+|p_{vw}|\le 2\Delta_G$. To see
-  that $\tilde\Delta_G\ge\Delta_G$, consider a pair of nodes $x$ and $z$ such
-  that the length of a shortest path between $x$ and $z$ is equal to $\Delta_G$.
+  Let also $u,w\in V$ be the two vertices such that the sum of the sizes of the
+  shortest paths $p_{vu}$ and $p_{vw}$ is maximized among all the shortest paths
+  that have $v$ as a source.  We have $\mathsf{AVD}(G)\le 2\VD(G)$ because
+  $|p_{vu}|,|p_{vw}|\le\VD(G)$, so $|p_{vu}|+|p_{vw}|\le 2\VD(G)$. To see
+  that $\mathsf{AVD}(G)\ge\VD(G)$, consider a pair of vertices $x$ and $z$ such
+  that the length of a shortest path between $x$ and $z$ is equal to $\VD(G)$.
   Let $p_{xv}$ be a shortest path between $x$ and $v$ and let $p_{vz}$ be a
   shortest path between $v$ and $z$. 
-  From the properties of the shortest paths $p_{vu}$, $p_{vw}$ we have $|p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}|$
-  Since the graph is undirected $|p_{s,t}|=|p_{t,s}|$ for every $s,t\in V$.
+  From the properties of the shortest paths $p_{vu}$, $p_{vw}$ we have
+  $|p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}|$. Since the graph is undirected
+  $|p_{s,t}|=|p_{t,s}|$ for every $s,t\in V$.
   Therefore:
-  
-  \begin{displaymath}
-    \tilde\Delta_G = |p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}| = |p_{xv}|+|p_{vz}|\ge\Delta_G
-  \end{displaymath}
-   
-  For the last inequality we used the fact that since $\Delta_G$ is the length of the shortest path from $x$ to $z$, then every other path (in this case $p'_{xz}$ which is the merge of $p_{xv}$ and $p_{vz}$) has greater or equal length from $p_{x,z}$.
+  \[
+    \mathsf{AVD}(G) = |p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}| =
+    |p_{xv}|+|p_{vz}|\ge\VD(G)\enspace. 
+  \]
+  For the last inequality we used the fact that since $\VD(G)$ is the size of
+  the shortest path from $x$ to $z$, then every other path (in this case
+  $p'_{xz}$ which is the merge of $p_{xv}$ and $p_{vz}$) has greater or equal
+  length from $p_{x,z}$.
   %$\qed$
 \end{IEEEproof}
 
-In case we have multiple connected components in $G$, we compute the longest shortest path of each component separately by following the above algorithm.
-The connected components can be computed in $O(n+m)$ by using the BFS algorithm.
-Let $\tilde\Delta_{G_{1}},\tilde\Delta_{G_{2}}, \ldots , \tilde\Delta_{G_{k}}$ be the approximations of the diameter for each of the $k$ connected components of $G$ as if they were separate graphs.
-The output of the approximation for the graph $G$, is the maximum of the values $\tilde\Delta_{G_{1}},\tilde\Delta_{G_{2}}, \ldots , \tilde\Delta_{G_{k}}$.
-The time complexity in the case of multiple connected components is again $O(n+m)$ since the sum of the vertices of individual components is $n$ and the sum of edges is $m$. 
+In case we have multiple connected components in $G$, we compute an upper bound
+to the vertex diameter of each component separately by running the above
+algorithm on each component, and then taking the maximum. 
+The connected components can be computed in $O(n+m)$ by traversing the graph in
+a Breadth-First-Search (BFS) fashion starting from a random $v$.
+%Let $\tilde\Delta_{G_{1}},\tilde\Delta_{G_{2}}, \ldots , \tilde\Delta_{G_{k}}$
+%be the approximations of the diameter for each of the $k$ connected components
+%of $G$ as if they were separate graphs.
+%The output of the approximation for the graph $G$, is the maximum of the values
+%$\tilde\Delta_{G_{1}},\tilde\Delta_{G_{2}}, \ldots , \tilde\Delta_{G_{k}}$.
+The time complexity of the approximation algorithm in the case of multiple
+connected components is again $O(n+m)$ since the sum of the vertices of
+individual components is $n$ and the sum of edges is $m$. 
 
-
-The use of the above $2$-approximation algorithm in the computation of the
-sample size results in at most $c/\varepsilon^2$ more samples than if we have
-used the exact value $\VD(G)$. 
-Furthermore, the computation of $\tilde\Delta_G$ does not affect the running
-time of our algorithm since for the construction of the first sample we can
-reuse the already computed shortest paths of $v$ from the approximation of
-$\VD(G)$.
-Specifically, we can sample a new node $u\neq v$ and then choose with uniform probability one of the
+The use of the above $2$-approximation in the computation of the
+sample size results in at most $c/\varepsilon^2$ more samples than if we
+used the exact value $\VD(G)$. Furthermore, the computation of $\mathsf{AVD}(G)$
+does not affect the running time of our algorithm since for the construction of
+the first sample we can reuse the already computed shortest paths from the
+vertex $v$ used to obtain the approximation. Specifically, we can sample a new
+vertex $u\neq v$ and then choose with uniform probability one of the
 (already computed) shortest paths between $v$ and $u$.
 
-\XXX TBD: take care of the weighted case. Say that we can just use $n$ as
+\XXX TBD: take care of the weighted/directed case. Say that we can just use $n$ as
 approximation and be happy with it. Experiments should show that we are still
-faster than Brandes and Pich.
+faster than~\citet{BrandesP07}.
 
-\subsection{High-quality approximation of the top-$k$ betweenness
+\subsection{High-quality approximation of the top-$K$ betweenness
 vertices}\label{sec:topk}
 Very often in practice one is interested only in identifying the vertices with
 the highest betweenness centrality, as they are the ``primary actors'' in the
 network. We present here an algorithm to compute a very high-quality
-approximation of the set $T(k,G)$ of the top-$k$ betweenness vertices in a graph
+approximation of the set $\TOPK(K,G)$ of the top-$K$ betweenness vertices in a graph
 $G=(V,E)$. Formally, let $v_1,\dotsc,v_n$ be a labelling of the vertices in $V$
-such that $\betw(v_i)\ge\betw(v_j)$ for $1\le i<j\le n$. Then $T(k,G)$ is
-defined as the set of vertices with betweenness at least $\betw(v_k)$:
+such that $\betw(v_i)\ge\betw(v_j)$ for $1\le i<j\le n$. Then $\TOPK(K,G)$ is
+defined as the set of vertices with betweenness at least $\betw(v_K)$:
 \[
-T(k,G)=\{v\in V ~:~ \betw(v)\ge\betw(v_k)\}\enspace.
+\TOPK(K,G)=\{(v,\betw(v)), ~:~ v\in V \mbox{ and } \betw(v)\ge\betw(v_K)\}\enspace.
 \]
-Note that $T(k,G)$ may contain more than $k$ vertices. This is in line with the
-definition of the set of top-$k$ Frequent Itemsets in the market basket analysis
-setting \XXX add reference.
+Note that $\TOPK(K,G)$ may contain more than $K$ vertices. This is in line with
+the definition of the set of top-$k$ Frequent Itemsets in the market basket
+analysis setting \XXX add reference.
 
 Our algorithm works in two phases. Each phase is basically a run of the
 algorithm for approximating the betweenness of all vertices presented in the
 previous section, with some additional computation at the end of each phase and
-different ways to compute the number of vertices to sample. In the first phase,
-we compute a lower bound $\ell'$ to $\betw(v_k)$. In the second phase we use
+different ways to compute the number of paths to sample. In the first phase,
+we compute a lower bound $\ell'$ to $\betw(v_K)$. In the second phase we use
 $\ell'$ to compute the number of samples needed to obtain a relative
 $(\ell',\varepsilon)$-approximation to the $(\range_G,\pi_G)$. Then we use this
 number of samples to approximate the betweenness of all vertices again, and
 return a collection of vertices that is, with high probability, a superset of
-$T(k,G)$.
+$\TOPK(K,G)$.
 
-Let $\tilde\Delta_G$ be an upper bound to the vertex-diameter of $G$. Given
+Let $\mathsf{AVD}(G)$ be an upper bound to the vertex-diameter of $G$. Given
 $\varepsilon,\delta\in(0,1)$, let $\delta',\delta''$ be two positive reals such
 that $(1-\delta')(1-\delta'')\ge(1-\delta)$. Let
 \[
-  r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2\tilde\Delta_G-2\rfloor+1+\log\frac{1}{\delta''}\right)\enspace.
+r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1+\log\frac{1}{\delta''}\right)\enspace.
 \]
-Let $\tilde\betw'_k$ be the $k$-th highest estimated betweenness obtained using
+Let $\tilde\betw'_k$ be the $K$-th highest estimated betweenness obtained using
 Algorithm~\ref{alg:algorithm} where $r=r'$, and let
 \[
-  \ell'=\frac{\tilde\betw_k}{n(n-1)}-\varepsilon.
+  \ell'=\tilde\betw_K-\varepsilon.
 \]
 Let
 \[
-  r''=\frac{c'}{\varepsilon^2\ell}\left(\ell'(\lfloor\log_2\tilde\Delta_G-2\rfloor+1)+\log\frac{1}{\delta''}\right)\enspace.
+r''=\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)\enspace.
 \]
-We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $T''(k,G)$ be the set
-of the $k$ vertices with the highest estimated betweenness $\tilde\betw''$. Let
-$\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon), v\in T''(k,G)\}$. We
-return the collection $\tilde T(k,G)$ of vertices $v$ such that
+We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $\TOPK''(K,G)$ be the set
+of the $K$ vertices with the highest estimated betweenness $\tilde\betw''$. Let
+$\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon), v\in \TOPK''(K,G)\}$. We
+return the collection $\tilde \TOPK(K,G)$ of vertices $v$ such that
 $\tilde\betw''(v)*(1+\varepsilon)/(1-\varepsilon)\ge\ell''$:
 \[
-\tilde T(k,G)= \left\{v\in V ~:~
+\tilde\TOPK(K,G)= \left\{v\in V ~:~
 \tilde\betw''(v)\frac{1+\varepsilon}{1-\varepsilon}\ge\ell''\right\}\enspace.
 \]
-The following lemma shows the properties of the collection $\tilde T(k,G)$.
+The following lemma shows the properties of the collection $\tilde\TOPK(K,G)$.
+The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
 
 \begin{lemma}
-  With probability at least $1-\delta$, $T(k,G)\subseteq \tilde T(k,G)$.
-  \XXX add detail about accuracy of estimation?
+  With probability at least $1-\delta$, 
+  \begin{enumerate*}
+    \item $T(k,G)\subseteq \tilde T(k,G)$, and
+    \item \XXX add details about accuracy of estimation
+  \end{enumerate*}
 \end{lemma}
 \begin{IEEEproof}
   From Thm.~\ref{thm:eapprox} we know that, with probability at least
@@ -311,14 +331,62 @@ The following lemma shows the properties of the collection $\tilde T(k,G)$.
   probability at least $1-\delta''$ a sample of size $r''$ is a relative
   $(\ell',\varepsilon)$-approximation to $(\range_G,\pi_G)$. Suppose both these
   events occur, which happens with probability at least $1-\delta$. Then it is
-  easy to see that $\ell'\le\betw(v_k)$, as there must be at least $k$ vertices
+  easy to see that $\ell'\le\betw(v_K)$, as there must be at least $K$ vertices
   with exact betweenness greater or equal to $\ell'$.  Consider now $\ell''$.
   Following the same reasoning as for $\ell'$, it should be clear that
-  $\ell''\le\betw(v_k)$. The vertices included in $\tilde T(k,G)$ are all and
+  $\ell''\le\betw(v_K)$. The vertices included in $\tilde\TOPK(K,G)$ are all and
   only those vertices that \emph{may} have exact betweenness at least $\ell''$,
   which implies that all vertices that have exact betweenness at least
-  $\betw(v_k)$ are included in $\tilde T(k,G)$. 
+  $\betw(v_K)$ are included in $\tilde\TOPK(K,G)$. 
 \end{IEEEproof}
+
+\begin{algorithm}[h]
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{Output}{Output}
+  \SetKwComment{Comment}{//}{}
+  \SetKwFunction{VertexDiameter}{getVertexDiameter}
+  \SetKwFunction{SamplePair}{sampleUniformVertexPair}
+  \SetKwFunction{SampleUniform}{sampleUniformPath}
+  \SetKwFunction{PairShortestPaths}{computeAllShortestPaths}
+   \DontPrintSemicolon
+  %\dontprintsemicolon
+  \Input{a graph $G=(V,E)$ with $|V|=n$, a positive integer $K\le n$, real
+  values $\varepsilon,\delta\in(0,1)$}
+  \Output{a superset of $\TOPK(K,G)$, with high-quality estimation of the
+  betweenness for the vertices in the returned set.}
+  $\delta',\delta''\leftarrow$ two positive reals such that
+  $(1-\delta')(1-\delta'')\ge(1-\delta)$\;
+  $\mathsf{AVD}(G)\leftarrow$ upper bound to $\VD(G)$\;
+  \Comment{First phase}
+  $r'\leftarrow\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1+\log\frac{1}{\delta''}\right)$\;
+  $B'=\{(v,\tilde\betw'(v)) ~:~ v\in V\}\leftarrow$ output of Algorithm~\ref{alg:algorithm} with $r=r'$\;
+  $\tilde\betw_K'\leftarrow$ $K$-th highest betweenness value from $B'$, ties
+  broken arbitrarily\;
+  $\ell'\leftarrow\tilde\betw_K'-\varepsilon$\;
+  $r''\leftarrow\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)$\;
+  \Comment{Second phase}
+  $B''=\{(v,\tilde\betw''(v)) ~:~ v\in V\}\leftarrow$ output of
+  Algorithm~\ref{alg:algorithm} with $r=r''$\;
+  $\tilde\betw_K''\leftarrow$ $K$-th highest betweenness value from $B''$, ties
+  broken arbitrarily\;
+  $\ell''\leftarrow\min\{\tilde\betw''(v)/(1+\varepsilon) ~:~ v \mbox{ s.t. }
+  \tilde\betw''(v)\ge\tilde\betw_K''\}$\;
+  \Return $\{(v,\tilde\betw''(v)) ~:~ v\in V \mbox{ s.t. }
+  \tilde\betw''(v)\frac{1+\varepsilon}{1-\varepsilon}\ge\ell''\}$\;
+  \caption{High-quality approximation of the top-$K$ betweenness vertices}
+  \label{alg:topk}
+\end{algorithm}
+
+The advantage of using our algorithm to approximate the collection of top-$K$
+betweenness vertices consist in the very high-quality approximation of the
+betweenness values for the returned set of vertices: they are all within a
+multiplicative factor $\varepsilon$ from their exact values. By reverse-sorting
+them according to the approximated betweenness, one can obtain a ranking that is
+very similar to the original exact one. Previous algorithms did not offer such a
+good ranking as they were only able to approximate the betweenness values to
+within an additive error $\varepsilon$. The cost of computing the high quality
+approximation for the top-$K$ vertices is the cost of an additional run of our
+algorithm to compute good approximations for all the vertices.
 
 \subsection{Discussion}\label{sec:discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.
