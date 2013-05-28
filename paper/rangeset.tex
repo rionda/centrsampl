@@ -118,15 +118,26 @@ has a unique shortest path between them, the upper bound can be improved.
   shortest paths in $G$ has VC-Dimension exactly $3$.
 \end{lemma}
 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.3]{uniqueshortestpathtight}
+  \caption{Graph $G$ with $\VC(\range_G)\ge 3$.}
+  \label{fig:uniquetight}
+\end{figure}
+
 \begin{IEEEproof}
-  Let $V=\{a,b,c,d,e,f,g,h,j,k,l\}$, and let $p_1=()$, $p_2=()$, $p_3=()$, \XXX
-  TBD
-
-  We now show that $Q=\{p_1,p_2,p_3\}$ can be shattered by $\range_G$, which
-  implies $\VC(\range_G)\ge 3$. \XXX TBD
-
-  Lemma~\ref{lem:vcdimuppboundunique} gives us an upper bound $\VC(\range_G)\le3$,
-  so we can conclude that $\VC(\range_G)=3$.
+  Consider the graph $G$ in Fig.~\ref{fig:uniquetight}.
+  Let $p_1=(a,b,c,e,i,j)$, $p_2=(m,f,e,i,k,l)$, $p_3=(d,c,e,f,g,h)$ be three
+  paths. We now show that $Q=\{p_1,p_2,p_3\}$ can be shattered by $\range_G$, which
+  implies $\VC(\range_G)\ge 3$. We have $\emptyset=Q\cap\mathcal{T}_a$,
+  $\{p_1\}=Q\cap\mathcal{T}_b$,$\{p_2\}=Q\cap\mathcal{T}_k$,
+  $\{p_3\}=Q\cap\mathcal{T}_g$, $\{p_1,p_2\}=Q\cap\mathcal{T}_i$,
+  $\{p_1,p_3\}=Q\cap\mathcal{T}_c$, $\{p_2,p_3\}=Q\cap\mathcal{T}_f$,
+  $\{p_1,p_2,p_3\}=Q\cap\mathcal{T}_e$,  
+  Hence all subsets of $Q$ can be expressed as the intersection between $Q$ and
+  some range in $\range_G$ which means that $Q$ can be shattered and
+  $\VC(\range_G)\ge 3$. Lemma~\ref{lem:vcdimuppboundunique} gives us an upper
+  bound $\VC(\range_G)\le3$, so we can conclude that $\VC(\range_G)=3$.
 \end{IEEEproof}
 
 \paragraph{Range set for $k$-betweenness} For the case of $k$-betweenness, if we let
