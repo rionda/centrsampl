@@ -102,16 +102,16 @@ ones for which the estimation is updated) as we compute $p^*$.
   {\label{algline:forloop}
   $(u,v)\leftarrow$\SamplePair{$V$}\;
   $\mathcal{S}_{uv}\leftarrow$\PairShortestPaths{$u,v$}\;
-  \Comment{Random path sampling and estimation update}
   \If{$\mathcal{S}_{uv}\neq\{p_\emptyset\}$}
   {
+  \Comment{Random path sampling and estimation update}
   $j\leftarrow v$\;
   $s\leftarrow v$\;
   $t\leftarrow v$\;
   \While{$t \neq u$} {
   sample $z\in P_u(t)$ with probability $\sigma_{uz}/\sigma_{us}$\;
   \If{$z\neq u$} {
-  $\tilde\betw(z) \leftarrow \tilde\betw(z)+\binom{|V|}{2}$\;
+  $\tilde\betw(z) \leftarrow \tilde\betw(z)+1/r$\;
   $s\leftarrow t$\;
   $t\leftarrow z$\;
   }
@@ -152,14 +152,14 @@ approximations of the betweenness centrality.
   $1-\delta$. Suppose that this is indeed the case, then from
   Def.~\ref{def:eapprox} and the definition of $\range_G$ we have that
   \[
-  \left|\prob_G(\mathcal{T}_v) - \frac{1}{k}\sum_{p\in
+  \left|\prob_G(\mathcal{T}_v) - \frac{1}{r}\sum_{p\in
   S}\mathds{1}_{\mathcal{T}_v}(p)\right|=\left|\prob_G(\mathcal{T}_v) -
   \tilde\betw(v)\right|\le\varepsilon, \forall v\in
   V\enspace.
   \]
   From the definition of $\prob_G$ we have
   \[
-  \prob_G(\mathcal{T}_v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}=\frac{1}{n(n-1)}\betw(v),
+  \prob_G(\mathcal{T}_v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{\sigma_{uw}}=\betw(v),
   \]
   which concludes the proof.
 \end{IEEEproof}
@@ -459,7 +459,7 @@ otherwise, so $\mathbb{E}[Y_v]=\Pr(Y_v=1)=k/n$.
 
 Plugging these values in~\eqref{eq:hoeffding}, we have
 \[
-\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon n(n-1)\right)\leq
+\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)\leq
 2e^{-2(k\varepsilon n(n-1))^2/kn^2(n-2)^2}=2e^{-2k\epsilon^2(n-1)^2/(n-2)^2}\enspace.
 \]
 We want this probability to be at most $\delta/n$, so we need a sample of size
