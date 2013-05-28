@@ -79,7 +79,9 @@ has a unique shortest path between them, the upper bound can be improved.
   all paths in $Q$ go through $w$. Let $x$ be the farthest predecessor of $w$
   along $p_1$ that $p_1$ shares with some other path from $Q$, and let $y$ be
   the farthest successor of $w$ along $p_1$ that $p_1$ shares with some other
-  path from $Q$. Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
+  path from $Q$. It is easy to see that if either $x$ or $y$ (or both) do not
+  exist, then $Q$ cannot be shattered, so let us assume that $x$ and $y$ exist.
+  Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
   Because of fact $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
   between $x$ and $w$ and all paths in $Q_y$ must go through the same vertices
   between $w$ and $y$. This also means that all paths in $Q_x\cap Q_y$ must go
