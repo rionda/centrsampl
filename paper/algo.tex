@@ -270,9 +270,20 @@ vertex $v$ used to obtain the approximation. Specifically, we can sample a new
 vertex $u\neq v$ and then choose with uniform probability one of the
 (already computed) shortest paths between $v$ and $u$.
 
-\XXX TBD: take care of the weighted/directed case. Say that we can just use $n$ as
-approximation and be happy with it. Experiments should show that we are still
-faster than~\citet{BrandesP07}.
+If the graph is directed and/or is weighted, the computation of a good
+approximation to $\VD(G)$ becomes more problematic. In particular, notice that
+there is no relationship between $\VD(G)$ and $\mathsf{diam}(G)$ if $G$ is
+weighted, as the shortest path with maximum size may not be the shortest path
+with maximum weight. In these cases, one can use
+the size (number of vertices) of the largest Weakly Connected Component (WCC) ,
+as upper bound to $\VD(G)$. \XXX describe how we compute it. Although this
+quantity can be as high as $n$, in the computation of the sample size we use its
+logarithm. This has the effect of making our sample size comparable with that
+proposed by~\citet{BrandesP07}, but the amount of work done per sample in our
+algorithm is still much smaller, in practice, than that done by the algorithm
+they presented (see Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more
+details).
+
 
 \subsection{High-quality approximation of the top-$K$ betweenness
 vertices}\label{sec:topk}
