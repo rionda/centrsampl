@@ -58,8 +58,7 @@ shortest paths that $v$ is \emph{internal} to:
 \]
 In this work we are interested in the \emph{betweenness centrality} of the
 vertices of a graph.
-\begin{definition}\label{def:betwenness}
-  \citep{Anthonisse71,Freeman77}
+\begin{definition}[\citep{Anthonisse71,Freeman77}]\label{def:betwenness}
   Given a graph $G=(V,E)$, the \emph{betweenness centrality of a vertex $v\in
   V$} is defined as
   \[
@@ -82,8 +81,8 @@ of all the $\mathcal{S}^{(k)}_{uv}$. Let
 $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
 \emph{of size up to $k$} that $v$ is internal to, for each $v\in V$.
 
-\begin{definition}\label{def:kbetweenness}
-  \cite{BorgattiE06,Brandes08}
+\begin{definition}[\citep{BorgattiE06,Brandes08}]\label{def:kbetweenness}
+ 
   Given a graph $G=(V,E)$ and an integer $k>1$, the \emph{$k$-betweenness
   centrality of a vertex $v\in V$} is defined as
   \[
@@ -93,6 +92,28 @@ $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
   \betw^{(k)}(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}^{(k)}_G}\frac{\mathds{1}_{\mathcal{T}^{(k)}_v}(p)}{\left|\mathcal{S}^{(k)}_{uw}\right|}=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}^{(k)}_v}\frac{1}{\left|\mathcal{S}^{(k)}_{uw}\right|}\enspace.
   \]
 \end{definition}
+
+Another interesting variant of betweenness centrality do not consider
+\emph{shortest} paths, but rather \emph{simple random walks} of size up to
+$k+1$, expressing the intuition that information in a network does not
+necessarily spread across shortest paths but has a high probability of ``fading
+out'' after having touched at most a fixed number of vertices.
+
+\begin{definition}[\citep{KourtellisASIT12}]\label{def:kpathbetweenness}
+ Given a graph $G=(V,E)$ and a positive integer $k$, the \emph{$k$-path
+ centrality} Ck(v) of $v\in V$ is defined as the average\footnote{We take the
+ average, rather than the sum, as defined in the original work
+ by~\citet{KourtellisASIT12}, to normalize the value to fall in the interval
+ $[0,1]$}, over all possible source
+ nodes $s$, of the probability that a simple random walk originating from
+ $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
+ included) goes through $v$.
+\end{definition}
+
+\citet{KourtellisASIT12} present a randomized approximation algorithm to
+estimate, with probability at least $1-1/n^2$, all the $k$-path betweenness
+values to within an additive error $n^{-1/2+\alpha}$ in time
+$O(k^3n^{2-2\alpha}\ln n)$.
 
 \subsection{Vapnik-Chervonenkis dimension}\label{sec:prelvcdim}
 The Vapnik-Chernovenkis (VC) dimension of a class of subsets defined

@@ -167,7 +167,8 @@ approximations of the betweenness centrality.
 \paragraph{Unique shortest paths case} When the graph $G$ is undirected and
 there is an unique shortest path between each pair of node, then one can apply
 Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
-\[ r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
+\[
+  r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
 \]
 to approximate the betweenness values of all the vertices. Unique shortest
 paths are common in or even enforced in road networks by
@@ -176,10 +177,20 @@ policy~\citep{GeisbergerSS08}.
 
 \paragraph{$k$-betweenness} For the case of $k$-betweenness, the sample size can
 be reduced to 
-\[ r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2 k-1\rfloor + 1 +\ln\frac{1}{\delta}\right)
+\[ 
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2 k-1\rfloor + 1 +\ln\frac{1}{\delta}\right)
 \]
 
-\paragraph{$k$-path betweennes} \XXX TBD
+\paragraph{$k$-path betweenness}
+For the case of $k$-path betweenness, the algorithm is slightly different:
+for 
+\[
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2 k-1\rfloor + 1 +\ln\frac{1}{\delta}\right)
+\]
+iterations, rather than sampling a pair of vertices and then a shortest path
+between them, we sample a single node and an integer $\ell\in[1,k+1]$ and
+perform a random walk touching $\ell$ vertices, while updating the estimated
+betweenness of each touched vertices.
 
 \subsection{Approximating the vertex-diameter}\label{sec:diam}
 The algorithm presented in the previous section requires the value of the
@@ -391,7 +402,7 @@ algorithm to compute good approximations for all the vertices.
 \subsection{Discussion}\label{sec:discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.
 
-\citet{BrandesP07,JacobKPLT05} present an algorithm that also uses sampling to approximate
+\citet{BrandesP07,JacobKLPT05} present an algorithm that also uses sampling to approximate
 the betweenness centrality of all the vertices of the graph. The algorithm
 create a sample $S=\{v_1,\dotsc,v_k\}$ of $k$ vertices drawn uniformly at random 
 and computes all the shortest paths between each $v_i$ to all other vertices in
