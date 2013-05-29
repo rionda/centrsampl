@@ -1911,6 +1911,7 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
 	 IGRAPH_VIT_NEXT(vit), k++) {
       long int node=IGRAPH_VIT_GET(vit);
       VECTOR(*res)[k] = VECTOR(*tmpres)[node];
+      //printf("The value of node: %lf is %lf \n", k, VECTOR(*res)[k]);
     }
 
     igraph_vit_destroy(&vit);
@@ -1985,8 +1986,15 @@ int igraph_betweenness(const igraph_t *graph, igraph_vector_t *res,
            igraph_vector_t *stats, igraph_strvector_t *stats_names,
 		       const igraph_vs_t vids, igraph_bool_t directed, 
 		       const igraph_vector_t* weights, igraph_bool_t nobigint) {
-  return igraph_i_betweenness_estimate(graph, res, stats, stats_names, -1,
+  int j;
+  int ret_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names, -1,
       vids, directed, -1, 0, weights, nobigint);
+   long int no_of_nodes=igraph_vcount(graph);   
+  double normalization_factor = 1.0 /  ((no_of_nodes-1) * no_of_nodes);
+  for (j=0; j<no_of_nodes; j++) {
+    VECTOR(*res)[j] *= normalization_factor;
+  }    
+  return ret_code;
 }
 
 int igraph_betweenness_sample_gss_linear_sample_size(const igraph_t *graph,
@@ -1999,6 +2007,12 @@ int igraph_betweenness_sample_gss_linear_sample_size(const igraph_t *graph,
       sample_size, vids, directed, cutoff, 1, weights, nobigint);
   igraph_vector_push_back(stats, sample_size);
   igraph_strvector_add(stats_names, "sample_size");
+  int j;
+  long int no_of_nodes=igraph_vcount(graph);
+  double normalization_factor = 1.0 / ((no_of_nodes - 1) * sample_size);
+  for (j=0; j<no_of_nodes; j++) {
+    VECTOR(*res)[j] *= normalization_factor;
+  }
   return ret_code;
 }
 
@@ -2021,7 +2035,8 @@ int igraph_betweenness_sample_gss_linear(const igraph_t *graph, igraph_vector_t 
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((pow((no_of_nodes - 2) / (epsilon * (no_of_nodes - 1)), 2) * 0.5 * log(2 * no_of_nodes / delta)));
   /* Denormalize betweenness counters by n / k */
-  normalization_factor =  ((double) no_of_nodes) / no_of_samples;
+  //normalization_factor =  ((double) no_of_nodes) / no_of_samples;
+  normalization_factor = 1.0 / ((no_of_nodes - 1) * no_of_samples);
   return_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
       no_of_samples, vids, directed, cutoff, 1, weights, nobigint);
   for (j=0; j<no_of_nodes; j++) {
@@ -2042,6 +2057,14 @@ int igraph_betweenness_sample_bp_sample_size(const igraph_t *graph,
       sample_size, vids, directed, cutoff, 0, weights, nobigint);
   igraph_vector_push_back(stats, sample_size);
   igraph_strvector_add(stats_names, "sample_size");
+  int j;
+  long int no_of_nodes=igraph_vcount(graph);
+  
+  double normalization_factor = 1.0 / ((no_of_nodes - 1) * sample_size);
+  for (j=0; j<no_of_nodes; j++) {
+    VECTOR(*res)[j] *= normalization_factor;
+  }
+  
   return ret_code;
 }
 
@@ -2072,7 +2095,8 @@ int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
   /* Compute sample size */
   no_of_samples=(igraph_integer_t) ceil((pow((no_of_nodes - 2) / (epsilon * (no_of_nodes - 1)), 2) * 0.5 * log(2 * no_of_nodes / delta)));
   /* Denormalize betweenness counters by n / k */
-  normalization_factor =  ((double) no_of_nodes) / no_of_samples;
+  //normalization_factor =  ((double) no_of_nodes) / no_of_samples;
+  normalization_factor = 1.0 / ((no_of_nodes - 1) *no_of_samples);
   return_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
       no_of_samples, vids, directed, cutoff, 0, weights, nobigint);
   for (j=0; j<no_of_nodes; j++) {
@@ -2094,7 +2118,9 @@ int igraph_i_betweenness_sample_vc_weighted(const igraph_t *graph, igraph_vector
   long int no_of_edges=igraph_ecount(graph);
   long int backward_touched_edges = 0;
   long int forward_touched_edges = 0;
-  double normalization_factor = ((double) no_of_nodes) * (no_of_nodes - 1) / no_of_samples;
+  //double normalization_factor = ((double) no_of_nodes) * (no_of_nodes - 1) / no_of_samples;
+    double normalization_factor = 1 / no_of_samples;
+
   igraph_inclist_t inclist;
   igraph_adjlist_t fathers;
   long int vertex_index, j;
@@ -2342,7 +2368,8 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
 
   igraph_rng_t *rng=igraph_rng_default();
   long int no_of_nodes=igraph_vcount(graph);
-  double normalization_factor = ((double) no_of_nodes) * (no_of_nodes - 1) / no_of_samples;
+  //double normalization_factor = ((double) no_of_nodes) * (no_of_nodes - 1) / no_of_samples;
+  double normalization_factor = 1 / no_of_samples;
   long int forward_touched_edges = 0;
   long int backward_touched_edges = 0;
   igraph_dqueue_t q=IGRAPH_DQUEUE_NULL;
@@ -2545,7 +2572,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
           }
           igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, nrgeo[path_vertex] - 1);
           j=0;
-          /* XXX TODO we should have binary search here */
+          /* XXX we should have binary search here */
           while (sampling_limits[j] < sampled) {
             j++;
           }
@@ -2966,7 +2993,7 @@ int igraph_diameter_approximation_motwani(const igraph_t *graph, igraph_integer_
     long int no_of_nodes_augm = igraph_vcount(&graph_augm);
 
     
-    // The paper suggests to have a θ(sqrt{nlogn}) samples from the augmented graph G'
+    // The paper suggests to have a Î¸(sqrt{nlogn}) samples from the augmented graph G'
     number_samples=a_2*sqrt(no_of_nodes_augm*log10(no_of_nodes_augm)/log10(2)) + b_2 ;
     
     igraph_vector_t sampled_graph_augm;
