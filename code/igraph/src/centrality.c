@@ -2545,7 +2545,7 @@ int igraph_i_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
           }
           igraph_integer_t sampled=igraph_rng_get_integer(rng, 0, nrgeo[path_vertex] - 1);
           j=0;
-          /* XXX we should have binary search here */
+          /* XXX TODO we should have binary search here */
           while (sampling_limits[j] < sampled) {
             j++;
           }
