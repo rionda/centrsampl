@@ -1,4 +1,4 @@
-#
+#!
 #
 # $1 should be the graph dataset for the experiment
 # $2 should be either -u or -d
@@ -38,7 +38,7 @@ number_point=${#percentages[@]}
 #Initialize the X-axis (number of samples)
 echo "Sample_size = ["  > $path/Sample_size.txt
 iter=0
-while [ $iter -le $number_point ]
+while [ $iter -lt $number_point ]
 do
   echo "${percentages[$iter]} * $no_nodes" | bc -l >> $path/Sample_size.txt
   (( iter += 1 ))
@@ -51,7 +51,7 @@ repetitions_4_each_point=20
 
 
 point=1
-while [ $point -le $number_point ]
+while [ $point -lt $number_point ]
 do
     echo point:$point
     echo !!========== $point - point ==========!! 
@@ -66,7 +66,7 @@ do
     python3 vc_sample_experiment.py 0.05 0.1 $repetitions_4_each_point $1 $path_out/out_vc_$point.picklez -u -s ${samples/\.*}
     python3 bp_sample_experiment.py 0.05 0.1 $repetitions_4_each_point $1 $path_out/out_bp_$point.picklez -u -s ${samples/\.*}
     python3 gss_sample_experiment.py 0.05 0.1 $repetitions_4_each_point $1 $path_out/out_gss_$point.picklez -u -s ${samples/\.*}
-    #We only run exact three times because the variance is really small from run to run
+    #We only run exact two times because the variance is really small from run to run
     python3 exact_experiment.py 2 $1 $path_out/out_exact_$point.picklez -u   
 
     (( point += 1 ))
