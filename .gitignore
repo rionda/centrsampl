@@ -34,3 +34,4 @@
 *.swp
 *.old
 paper/centrsampl.pdf
+*__pycache__*
