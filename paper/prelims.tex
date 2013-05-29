@@ -72,7 +72,10 @@ results.} \citet{Brandes01} presented an
 algorithm to compute the betweenness centrality for all $v\in V$ in time
 $O(nm)$ for unweighted graphs and $O(nm + n^2 \log n)$ for weighted graphs. 
 
-A ``local'' variant of betweenness, called \emph{$k$-betweenness} only considers
+A ``local'' variant of betweenness, called \emph{$k$-bounded-distance
+betweenness}\footnote{Bounded-distance betweenness is also known as
+$k$-betweenness. We prefer the former denomination to avoid confusion with
+$k$-path betweenness.} only considers
 the contribution of paths of size up to $k+1$~\citep{BorgattiE06,Brandes08}.
 For $k>1$ and any pair of distinct vertices $u,v\in V$, $u\neq V$, let
 $\mathcal{S}^{(k)}_{uv}\subseteq\mathcal{S}_{uv}$ be the set of shortest paths
@@ -81,9 +84,9 @@ of all the $\mathcal{S}^{(k)}_{uv}$. Let
 $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
 \emph{of size up to $k$} that $v$ is internal to, for each $v\in V$.
 
-\begin{definition}[\citep{BorgattiE06,Brandes08}]\label{def:kbetweenness}
+\begin{definition}[\citep{BorgattiE06,Brandes08}]\label{def:kboundbetweenness}
  
-  Given a graph $G=(V,E)$ and an integer $k>1$, the \emph{$k$-betweenness
+  Given a graph $G=(V,E)$ and an integer $k>1$, the \emph{$k$-bounded-distance betweenness
   centrality of a vertex $v\in V$} is defined as
   \[
   %\betw(v)=\sum_{(u,w)\in V\times
