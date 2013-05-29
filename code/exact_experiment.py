@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# -*- coding: iso-8859-1 -*-
 """ exact_experiment.py
 
     Perform experiment to evaluate Brandes' exact algorithm to compute the
@@ -78,6 +79,7 @@ def main():
         with open(args.output, "wb") as output:
             logging.info("Writing stats and results to %s", args.output)
             pickle.dump((stats, results), output)
+            output.close()
     except OSError as E:
         logging.critical("Cannot write stats and results to %s: %s",
                 args.output, E.strerror)
