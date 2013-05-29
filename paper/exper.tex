@@ -6,12 +6,17 @@ exact~\citep{Brandes01} and approximate~\citep{BrandesP07,JacobKLPT05}.
 \paragraph{Goals} TBD
 
 \paragraph{Implementation and environment}
-We implemented our algorithm and the one presented
-in~\citep{BrandesP07,JacobKLPT05} in C, by extending the implementation of the
-exact algorithm~\citep{Brandes01} contained in igraph~\citep{igraph}. We
-exposed our implementations through Python 3.3.1, which was used for running the
-simulations. We run the experiments on a quad-core AMD Phenom\texttrademark II
-X4 955 Processor with 16GB of RAM, running GNU/Linux 3.2.0.
+We implemented our algorithms, the one presented
+in~\citep{BrandesP07,JacobKLPT05}, and the linear scaling version
+from~\citep{GeisbergerSS08} in C, by extending the implementation of the
+exact algorithm~\citep{Brandes01} contained in igraph~\citep{igraph}. The
+implementations are very similarly engineering, given that they are based on the
+same subroutines for the computation of the shortest path (Dijkstra's algorithm
+for weighted graphs, BFS for unweighted ones) and received similar amount of
+optimizations. We exposed our implementations through Python 3.3.1, which was
+used for running the simulations. We run the experiments on a quad-core AMD
+Phenom\texttrademark II X4 955 Processor with 16GB of RAM, running Debian
+\emph{wheezy} with a Linux kernel version 3.2.0.
 
 \paragraph{Datasets} We used a number of datasets from the Stanford Large
 Network Dataset

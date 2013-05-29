@@ -152,14 +152,15 @@ $\range_G^{(k)}=\{\mathcal{T}_v^{(k)}~:~ v\in V\}$, it is easy to bound
 $\VC(\range_G^{(k)})$ following the same reasoning as in
 Lemma~\ref{lem:vcdimuppbound}.
 \begin{lemma}\label{lem:vcdimuppboundk}
-$\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor$.
+$\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor$+1.
 \end{lemma}
 
-We can define another range set $\range_G^{\mathrm{p},k}$ if we are interested
-in $k$-path betweenness. The domain $B$ of the range set now is the set of all
-simple random walks starting from any vertex of and of size up to $k+1$. For
-each vertex $v\in V$, the range $R_v$ is the subset of $B$ containing all and
-only the random walks from $B$ that have $v$ as internal vertex. It is easy to
-see that $\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
+\paragraph{$k$-path betweenness} We can define another range set
+$\range_G^{\mathrm{p},k}$ if we are interested in $k$-path betweenness. The
+domain $B$ of the range set now is the set of all simple random walks starting
+from any vertex of and of size up to $k+1$. For each vertex $v\in V$, the range
+$R_v$ is the subset of $B$ containing all and only the random walks from $B$
+that have $v$ as internal vertex. It is easy to see that
+$\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
 following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
 

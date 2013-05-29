@@ -3,13 +3,12 @@ In this section we present our algorithms to compute a set of approximations for
 betweenness centrality of the (top-$K$) vertices in a graph through sampling,
 with probabilistic guarantees on the quality of the approximations.
 
-\XXX Define $(\varepsilon,\delta)$-approx and analogously for top-$K$.
-
 \subsection{Approximation for all the vertices}\label{sec:allvertapprox}
-The intuition behind the algorithm is the following. Given a graph $G=(V,E)$
-with vertex-diameter $\Delta_G$ and two parameters $\varepsilon,\delta\in(0,1)$
+The intuition behind the algorithm to approximate the betweenness values of all
+vertices is the following. Given a graph $G=(V,E)$
+with vertex-diameter $\VD(G)$ and two parameters $\varepsilon,\delta\in(0,1)$
 we first compute a sample size $r$ using~\eqref{eq:vceapprox} with
-$d=\lfloor\log_2(\Delta_G-2)\rfloor+1$:
+$d=\lfloor\log_2(\VD(G)-2)\rfloor+1$:
 \begin{equation}\label{eq:samplesize}
 r=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\Delta_G-2)\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
 \end{equation}
@@ -18,11 +17,12 @@ The sample size is sufficient to achieve the desired accuracy
 $1-\delta$). Then the algorithm repeats, for $r$ times, the following steps:
 1.~it samples a pair $u,v$ of distinct vertices uniformly at random, 2.~it
 computes the set $\mathcal{S}_{uv}$ of all shortest paths between $u$ and $v$,
-3.~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random and
-increase by $1/r$ the betweenness estimation of each vertex in
+3.~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random, 4.~ it
+increases by $1/r$ the betweenness estimation of each vertex in
 $\mathsf{Int}(p)$. Note that if the sampled vertices $u$ and $v$ are not
 connected, we defined $\mathcal{S}_{uv}=\{p_\emptyset\}$ so nothing is done in
-step 3. In the end, the estimator for the betweenness $\betw(w)$ of a vertex $w$
+steps 3 and 4. Denoting with $S$ the set of the sampled shortest paths, the
+estimator $\tilde\betw(w)$ for the betweenness $\betw(w)$ of a vertex $w$
 is 
 \[
 \tilde\betw(w) = \frac{1}{r}\sum_{p\in S}
@@ -35,19 +35,25 @@ the sampling of a path uniformly at random from $\mathcal{S}_{uv}$. We first
 deal with the latter, and then present an approximation algorithm for $\VD(G)$
 in Sect.~\ref{sec:diam}. Algorithm~\ref{alg:algorithm} presents the
 pseudocode of the algorithm, including the steps to select a random path.
-The \texttt{getDiameterApprox()} procedure is our approximation algorithm for
-computing an approximation for $\VD(G)$ and its pseudocode is presented in
-Alg. \XXX %~\ref{alg:diam}.
-
+The \texttt{computeAllShortestPaths(}$u,v$\texttt{)}  on
+line~\ref{algline:shortestpaths} is a call to a modified Dijkstra's (or BFS)
+algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
+as~\citet{Brandes01}.
+The \texttt{getDiameterApprox()} procedure is an approximation algorithm for
+computing an approximation for $\VD(G)$ (see Sect.~\ref{sec:diam} for details
+(see Sect.~\ref{sec:diam} for details).
 \paragraph{Sampling a shortest path}
 Our procedure to select a random shortest path from $\mathcal{S}_{uv}$ is
 inspired by the dependencies accumulation procedure used in Brandes' exact
-algorithm~\citep{Brandes01}. Given a vertex $w$, ~\citet{Brandes01} showed how
-to compute, for every vertex $z$, the number $\sigma_{wz}$ of shortest paths
-from $w$ to $z$. We can compute this number for every vertex belonging to at
-least one path from the sampled vertex $u$ to the sampled vertex $v$ while we
-compute the set $\mathcal{S}_{uv}$ of all the shortest paths from $u$ to $v$. We
-can use this information to select a shortest path $p$ uniformly at random from
+algorithm~\citep{Brandes01}. 
+%Given a vertex $w$, ~\citet{Brandes01} showed how
+%to compute, for every vertex $z$, the amount $\sigma_{wz}$ of shortest paths
+%from $w$ to $z$, while computing the set $\mathcal{S}_{wz}$. 
+Let $u$ and $v$ be the vertices sampled by our algorithm, and let $y$ be any
+vertex belonging to at least one shortest path from $u$ to $v$. We can,
+following~\citet{Brandes01}, compute $\sigma_{uy}$ and $\mathcal{S}_{uy}$ while
+we compute the set $\mathcal{S}_{uv}$  of all the shortest paths from $u$ to $v$. We
+can then use this information to select a shortest path $p$ uniformly at random from
 $\mathcal{S}_{uv}$. We assume that $u$ and $v$ are connected, otherwise, the
 only possibility is to select the empty path $p_\emptyset$. For each vertex $w$
 let $P_u(w)$ be the subset of neighbors of $w$ that are \emph{predecessors} of
@@ -56,11 +62,11 @@ we select one of its predecessors $z\in P_u(v)$ using a weighted random sampling
 where each $z\in P_u(v)$ has probability $\sigma_{uz}/\sum_{w\in
 P_u(v)}\sigma_{uw}$ of being sampled. We add $z$ to $p^*$ and  then repeat the
 procedure for $z$, selecting one of its predecessors from $P_u(z)$ and adding it
-to $p^*$, and so on until we reached $u$. Note that we can update the estimation
+to $p^*$, and so on until we reach $u$. Note that we can update the estimation
 of the betweenness of the internal vertices that are added to $p^*$ (the only
 ones for which the estimation is updated) as we compute $p^*$.
 
-\begin{lemma}
+\begin{lemma}\label{lem:samplpath}
   The path $p*$ built according to the above procedure is selected uniformly at
   random among the paths in $\mathcal{S}_{uv}$.
 \end{lemma}
@@ -101,7 +107,7 @@ ones for which the estimation is updated) as we compute $p^*$.
   \For{$i\leftarrow 1$ to $r$}
   {\label{algline:forloop}
   $(u,v)\leftarrow$\SamplePair{$V$}\;
-  $\mathcal{S}_{uv}\leftarrow$\PairShortestPaths{$u,v$}\;
+  $\mathcal{S}_{uv}\leftarrow$\PairShortestPaths{$u,v$}\label{algline:shortestpaths}\;
   \If{$\mathcal{S}_{uv}\neq\{p_\emptyset\}$}
   {
   \Comment{Random path sampling and estimation update}
@@ -143,7 +149,8 @@ approximations of the betweenness centrality.
   It is easy to see that $\pi_G$ is a probability distribution and
   $\pi_G(p_{uv})$ is the probability of sampling the path $p_{uv}$ during an
   execution of the loop on line~\ref{algline:forloop} in
-  Alg.~\ref{alg:algorithm}.
+  Alg.~\ref{alg:algorithm}, given the way that the vertices $u$ and $v$ are
+  selected and Lemma~\ref{lem:samplpath}.
   
   Consider the range set $\range_G$ and the probability distribution $\prob_G$.
   Let $S$ be the set of paths sampled during the execution of the algorithm.
@@ -171,27 +178,30 @@ Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
   r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
 \]
 to approximate the betweenness values of all the vertices. Unique shortest
-paths are common in or even enforced in road networks by
+paths are common or even enforced in road networks by
 slightly perturbing the edge weights or having a deterministic tie breaking
 policy~\citep{GeisbergerSS08}.
 
 \paragraph{$k$-bounded-distance betweenness} For the case of
-$k$-bounded-distance betweenness, the sample size can
-be reduced to 
+$k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
+of Alg.~\ref{alg:algorithm} can be reduced to 
 \[ 
-  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2 k-1\rfloor + 1 +\ln\frac{1}{\delta}\right)
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
 \]
+and the computation of the shortest paths on line~\ref{algline:shortestpaths}
+can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$
 
 \paragraph{$k$-path betweenness}
 For the case of $k$-path betweenness, the algorithm is slightly different:
 for 
 \[
-  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2 k-1\rfloor + 1 +\ln\frac{1}{\delta}\right)
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
 \]
-iterations, rather than sampling a pair of vertices and then a shortest path
-between them, we sample a single node and an integer $\ell\in[1,k+1]$ and
+iterations, rather than sampling a pair of vertices $(uv)$, computing
+$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
+single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
 perform a random walk touching $\ell$ vertices, while updating the estimated
-betweenness of each touched vertices.
+betweenness of each touched vertex by adding $1/r$ to its estimation.
 
 \subsection{Approximating the vertex-diameter}\label{sec:diam}
 The algorithm presented in the previous section requires the value of the
@@ -203,33 +213,35 @@ Algorithms for exactly solving APSP problem such as Johnson's which runs in
 $O(V^2\log V+VE)$, Floyd-Warshall's runs in $\Theta(V^3)$, would defeat our
 purposes: once we have all the shortest paths for the computation of
 the diameter, we can also compute the betweenness of all the vertices exactly. 
-Given that Thm.~\ref{thm:eapprox} only requires an upper bound to the
-VC-dimension of the range set, an approximation of the vertex-diameter would be
-sufficient for our purposes. Several refined algorithms for approximating the
-diameter are known~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various
-running times and quality of approximations. We briefly present a well-known and
-simple approximation algorithm that has the right balance of accuracy and speed
+Given that Thm.~\ref{thm:eapprox} (and Thm.~\ref{thm:releapprox} too) only
+requires an upper bound to the VC-dimension of the range set, an approximation
+of the vertex-diameter would be sufficient for our purposes. Several refined
+algorithms for approximating the diameter are
+known~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times
+and quality of approximations. We briefly present a well-known and simple
+approximation algorithm that has the right balance of accuracy and speed
 for our purposes.
 
-Let $G=(V,E)$ be an \emph{undirected} where \emph{all the weights are unitary}.
-We can obtain a $2$-approximation $\mathsf{AVD}(G)$ of the diameter $\VD(G)$ of
-$G$ in time $O(V+E)$ in the following way: 1. select a vertex $v\in V$ uniformly
-at random, 2. compute the shortest paths from $v$ to all other vertices in $V$,
-and 3.finally take $\mathsf{AVD}(G)$ to be the sum of the lengths of the two
+Let $G=(V,E)$ be an \emph{undirected} graph where \emph{all the edge weights are
+equal}.
+We can obtain a $2$-approximation $\widetilde\VD(G)$ of the vertex-diameter $\VD(G)$ of
+$G$ in time $O(V+E)$ in the following way: 1.~select a vertex $v\in V$ uniformly
+at random, 2.~compute the shortest paths from $v$ to all other vertices in $V$,
+and 3.~finally take $\widetilde\VD(G)$ to be the sum of the lengths of the two
 shortest paths with maximum size (which equals to the two longest shortest
 paths) from $v$ to two distinct other nodes $u$ and $w$. The approximation
 guarantee follows from the next lemma.
 
 \begin{lemma}\label{lem:diam}
-  $\VD(G)\le\mathsf{AVD}(G)\le 2\VD(G)$.
+  $\VD(G)\le\widetilde\VD(G)\le 2\VD(G)$.
 \end{lemma}
 \begin{IEEEproof}
   Let $v\in V$ be a vertex that we choose uniformly at random from the set $V$.
   Let also $u,w\in V$ be the two vertices such that the sum of the sizes of the
   shortest paths $p_{vu}$ and $p_{vw}$ is maximized among all the shortest paths
-  that have $v$ as a source.  We have $\mathsf{AVD}(G)\le 2\VD(G)$ because
+  that have $v$ as a source.  We have $\widetilde\VD(G)\le 2\VD(G)$ because
   $|p_{vu}|,|p_{vw}|\le\VD(G)$, so $|p_{vu}|+|p_{vw}|\le 2\VD(G)$. To see
-  that $\mathsf{AVD}(G)\ge\VD(G)$, consider a pair of vertices $x$ and $z$ such
+  that $\widetilde\VD(G)\ge\VD(G)$, consider a pair of vertices $x$ and $z$ such
   that the length of a shortest path between $x$ and $z$ is equal to $\VD(G)$.
   Let $p_{xv}$ be a shortest path between $x$ and $v$ and let $p_{vz}$ be a
   shortest path between $v$ and $z$. 
@@ -238,7 +250,7 @@ guarantee follows from the next lemma.
   $|p_{s,t}|=|p_{t,s}|$ for every $s,t\in V$.
   Therefore:
   \[
-    \mathsf{AVD}(G) = |p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}| =
+    \widetilde\VD(G) = |p_{vu}|+|p_{vw}|\geq |p_{vx}|+|p_{vz}| =
     |p_{xv}|+|p_{vz}|\ge\VD(G)\enspace. 
   \]
   For the last inequality we used the fact that since $\VD(G)$ is the size of
@@ -263,28 +275,28 @@ connected components is again $O(n+m)$ since the sum of the vertices of
 individual components is $n$ and the sum of edges is $m$. 
 
 The use of the above $2$-approximation in the computation of the
-sample size results in at most $c/\varepsilon^2$ more samples than if we
-used the exact value $\VD(G)$. Furthermore, the computation of $\mathsf{AVD}(G)$
+sample size from line~\ref{algline:forloop} of Alg.~\ref{alg:algorithm} results
+in at most $c/\varepsilon^2$ additional samples than if we
+used the exact value $\VD(G)$. Furthermore, the computation of $\widetilde\VD(G)$
 does not affect the running time of our algorithm since for the construction of
 the first sample we can reuse the already computed shortest paths from the
 vertex $v$ used to obtain the approximation. Specifically, we can sample a new
 vertex $u\neq v$ and then choose with uniform probability one of the
 (already computed) shortest paths between $v$ and $u$.
 
-If the graph is directed and/or is weighted, the computation of a good
+If the graph is directed and/or not all edge weights are equal, the computation of a good
 approximation to $\VD(G)$ becomes more problematic. In particular, notice that
 there is no relationship between $\VD(G)$ and $\mathsf{diam}(G)$ if $G$ is
 weighted, as the shortest path with maximum size may not be the shortest path
 with maximum weight. In these cases, one can use
 the size (number of vertices) of the largest Weakly Connected Component (WCC) ,
-as upper bound to $\VD(G)$. \XXX describe how we compute it. Although this
-quantity can be as high as $n$, in the computation of the sample size we use its
-logarithm. This has the effect of making our sample size comparable with that
-proposed by~\citet{BrandesP07}, but the amount of work done per sample in our
-algorithm is still much smaller, in practice, than that done by the algorithm
-they presented (see Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more
-details).
-
+as upper bound to $\VD(G)$. The WCC's can again be computed in $O(n+m)$ using
+BFS. Although this quantity can be as high as $n$, in the computation of the
+sample size we use its logarithm. This has the effect of making our sample size
+comparable with that proposed by~\citet{BrandesP07}, but the amount of work done
+per sample in our algorithm is still much smaller, in practice, than that done
+by the algorithm they presented (see Sect.~\ref{sec:discussion}
+and~\ref{sec:exper} for more details).
 
 \subsection{High-quality approximation of the top-$K$ betweenness
 vertices}\label{sec:topk}
@@ -313,11 +325,11 @@ number of samples to approximate the betweenness of all vertices again, and
 return a collection of vertices that is, with high probability, a superset of
 $\TOPK(K,G)$.
 
-Let $\mathsf{AVD}(G)$ be an upper bound to the vertex-diameter of $G$. Given
+Let $\widetilde\VD(G)$ be an upper bound to the vertex-diameter of $G$. Given
 $\varepsilon,\delta\in(0,1)$, let $\delta',\delta''$ be two positive reals such
 that $(1-\delta')(1-\delta'')\ge(1-\delta)$. Let
 \[
-r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1+\log\frac{1}{\delta''}\right)\enspace.
+r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1+\log\frac{1}{\delta'}\right)\enspace.
 \]
 Let $\tilde\betw'_k$ be the $K$-th highest estimated betweenness obtained using
 Algorithm~\ref{alg:algorithm} where $r=r'$, and let
@@ -326,28 +338,28 @@ Algorithm~\ref{alg:algorithm} where $r=r'$, and let
 \]
 Let
 \[
-r''=\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)\enspace.
+r''=\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)\enspace.
 \]
 We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $\tilde\betw''_K$ be
-the $K$-th highest estimated betweenness. Let
+the so-obtained $K$-th highest estimated betweenness. Let
 $\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon) ~:~ v\in V \mbox{ s.t. }
 \tilde\betw''(v)\ge\tilde\betw''_K\}$. We
-return the collection $\tilde\TOPK(K,G)$ of vertices $v$ such that
+return the collection $\widetilde\TOPK(K,G)$ of vertices $v$ such that
 $\tilde\betw''(v)*(1+\varepsilon)/(1-\varepsilon)\ge\ell''$:
 \[
-\tilde\TOPK(K,G)= \left\{v\in V ~:~
+\widetilde\TOPK(K,G)= \left\{v\in V ~:~
 \tilde\betw''(v)\frac{1+\varepsilon}{1-\varepsilon}\ge\ell''\right\}\enspace.
 \]
-The following lemma shows the properties of the collection $\tilde\TOPK(K,G)$.
+The following lemma shows the properties of the collection $\widetilde\TOPK(K,G)$.
 The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
 
 \begin{lemma}
   With probability at least $1-\delta$, 
   \begin{enumerate*}
-    \item $\TOPK(K,G)\subseteq \tilde\TOPK(K,G)$, and
+    \item $\TOPK(K,G)\subseteq \widetilde\TOPK(K,G)$, and
     \item for all $v\in\TOPK(K,G)$ we have
       $|\tilde\betw''(v)-\betw(v)|\le\varepsilon\betw(v)$.
-    \item no vertex $u\in\tilde\TOPK(K,G)\setminus\TOPK(K,G)$ has an estimated
+    \item no vertex $u\in\widetilde\TOPK(K,G)\setminus\TOPK(K,G)$ has an estimated
       betweenness greater than $\ell'(1+\varepsilon)$.
   \end{enumerate*}
 \end{lemma}
@@ -361,10 +373,10 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
   easy to see that $\ell'\le\betw(v_K)$, as there must be at least $K$ vertices
   with exact betweenness greater or equal to $\ell'$.  Consider now $\ell''$.
   Following the same reasoning as for $\ell'$, it should be clear that
-  $\ell''\le\betw(v_K)$. The vertices included in $\tilde\TOPK(K,G)$ are all and
+  $\ell''\le\betw(v_K)$. The vertices included in $\widetilde\TOPK(K,G)$ are all and
   only those vertices that \emph{may} have exact betweenness at least $\ell''$,
   which implies that all vertices that have exact betweenness at least
-  $\betw(v_K)$ are included in $\tilde\TOPK(K,G)$. 
+  $\betw(v_K)$ are included in $\widetilde\TOPK(K,G)$. 
   Points 2 and 3 in the thesis follow from the properties of the relative
   $(\ell',\varepsilon)$-approximation (Def.~\ref{def:releapprox}).
 \end{IEEEproof}
@@ -385,14 +397,14 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
   betweenness for the vertices in the returned set.}
   $\delta',\delta''\leftarrow$ two positive reals such that
   $(1-\delta')(1-\delta'')\ge(1-\delta)$\;
-  $\mathsf{AVD}(G)\leftarrow$ upper bound to $\VD(G)$\;
+  $\widetilde\VD(G)\leftarrow$ upper bound to $\VD(G)$\;
   \Comment{First phase}
-  $r'\leftarrow\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1+\log\frac{1}{\delta''}\right)$\;
+  $r'\leftarrow\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1+\log\frac{1}{\delta''}\right)$\;
   $B'=\{(v,\tilde\betw'(v)) ~:~ v\in V\}\leftarrow$ output of Algorithm~\ref{alg:algorithm} with $r=r'$\;
   $\tilde\betw_K'\leftarrow$ $K$-th highest betweenness value from $B'$, ties
   broken arbitrarily\;
   $\ell'\leftarrow\tilde\betw_K'-\varepsilon$\;
-  $r''\leftarrow\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\mathsf{AVD}(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)$\;
+  $r''\leftarrow\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)$\;
   \Comment{Second phase}
   $B''=\{(v,\tilde\betw''(v)) ~:~ v\in V\}\leftarrow$ output of
   Algorithm~\ref{alg:algorithm} with $r=r''$\;
@@ -407,43 +419,46 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
 \end{algorithm}
 
 The advantage of using our algorithm to approximate the collection of top-$K$
-betweenness vertices consist in the very high-quality approximation of the
+betweenness vertices consists in the very high-quality approximation of the
 betweenness values for the returned set of vertices: they are all within a
 multiplicative factor $\varepsilon$ from their exact values. By reverse-sorting
 them according to the approximated betweenness, one can obtain a ranking that is
-very similar to the original exact one. Previous algorithms did not offer such a
-good ranking as they were only able to approximate the betweenness values to
-within an additive error $\varepsilon$. The cost of computing the high quality
-approximation for the top-$K$ vertices is the cost of an additional run of our
-algorithm to compute good approximations for all the vertices.
+very similar to the original exact one.\XXX Experiments should show this
+Previous algorithms did not offer such a good ranking as they were only able to
+approximate the betweenness values to within an additive error $\varepsilon$.
+The cost of computing the high quality approximation for the top-$K$ vertices is
+the cost of an additional run of our algorithm to compute good approximations
+for all the vertices.
 
 \subsection{Discussion}\label{sec:discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.
 
-\citet{JacobKLPT05,BrandesP07} present an algorithm that also uses sampling to
-approximate the betweenness centrality of all the vertices of the graph. The
-algorithm create a sample $S=\{v_1,\dotsc,v_k\}$ of $k$ vertices drawn uniformly
-at random and computes all the shortest paths between each $v_i$ to all other
-vertices in the graph. The estimation $\tilde\betw'(u)$ for the betweenness
-centrality $\betw(u)$ is
-\XXX check
+\citet{JacobKLPT05} and independently~\citet{BrandesP07} present an algorithm
+that also uses sampling to approximate the betweenness centrality of all the
+vertices of the graph. The algorithm create a sample $S=\{v_1,\dotsc,v_r\}$ of
+$r$ vertices drawn uniformly at random and computes all the shortest paths
+between each $v_i$ to all other vertices in the graph. The estimation
+$\tilde\betw'(u)$ for the betweenness centrality $\betw(u)$ is
 \[ 
-\tilde\betw'(u)= \frac{1}{k}\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
-u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|},
+\tilde\betw'(u)= \frac{1}{(n-1)r}\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
+u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace.
 \]
 As it was for our algorithm, the key ingredient to ensure a correct
 approximation for the betweenness centrality is the computation of the sample
-size $k$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07} rely
+size $r$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07} rely
 on the following classical result by~\citet{Hoeffding63} for their computation
-of $k$.
+of $r$.
 
 \begin{theorem}[\citep{Hoeffding63}]
   Let $X_1,X_2,\dotsc,X_r$ be a sequence of independent random variables
   such that $a_i\leq X_i\leq b_i$. Then for any $\xi > 0$
-  \begin{equation}\label{eq:hoeffding}
-    \Pr\left(\frac{|X_1+\dotsb+X_k|}{k}-\mathbf{E}\left[\frac{|X_1+\dotsb+X_r|}{k}\right]|\geq
-    \xi\right)\leq 2e^{-2r^2\xi^2/\sum_{i=1}^{r}(b_{i}-a_{i})^2}\enspace.
-  \end{equation}
+  \begin{align}\label{eq:hoeffding}
+    \begin{split}
+      \Pr&\left(\left|\frac{|\sum_{i=1}^rX_i|}{r}-\mathbf{E}\left[\frac{|\sum_{i=1}^rX_i|}{r}\right]\right|\geq
+    \xi\right)\le \\
+      &\leq 2e^{-2r^2\xi^2/\sum_{i=1}^{r}(b_{i}-a_{i})^2}\enspace.
+    \end{split}
+  \end{align}
 \end{theorem}
 
 \citet{BrandesP07} use this result to compute a sample size $r$ sufficient to ensure that, for
@@ -459,22 +474,24 @@ u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{
 .
 \]
 It is easy to see that $0\le X_i\le 1$. Moreover,
-\begin{align*}
-\mathbf{E}\left[\frac{|X_1+\dotsb+X_r|}{r}\right] &=
-\frac{1}{r(n-1)}\mathbf{E}\left[\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
-u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\right]
-=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}\left[Y_v\sum_{w\neq v,w\neq
-u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}\right] =
-\\
-&=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}[Y_v]\sum_{w\neq v,w\neq
-u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
-=\frac{1}{r(n-1)}\sum_{v\in V}\frac{r}{n}\sum_{w\neq v,w\neq
-u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
-= \betw(u),
-\end{align*}
-where $Y_v$ is a Bernoulli random variable taking value 1 if $v\in S$, and 0
-otherwise, so $\mathbf{E}[Y_v]=\Pr(Y_v=1)=r/n$.
-
+\[
+  \mathbf{E}\left[\frac{|\sum_{i=1}^r X_i}{r}\right] = \betw(u)\enspace.
+\]
+%\begin{align*}
+%\mathbf{E}\left[\frac{|X_1+\dotsb+X_r|}{r}\right] &=
+%\frac{1}{r(n-1)}\mathbf{E}\left[\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
+%u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\right]
+%=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}\left[Y_v\sum_{w\neq v,w\neq
+%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}\right] =
+%\\
+%&=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}[Y_v]\sum_{w\neq v,w\neq
+%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
+%=\frac{1}{r(n-1)}\sum_{v\in V}\frac{r}{n}\sum_{w\neq v,w\neq
+%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
+%= \betw(u),
+%\end{align*}
+%where $Y_v$ is a Bernoulli random variable taking value 1 if $v\in S$, and 0
+%otherwise, so $\mathbf{E}[Y_v]=\Pr(Y_v=1)=r/n$.
 Plugging these values in~\eqref{eq:hoeffding}, we have
 \[
 \Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)\leq
@@ -487,4 +504,28 @@ r\geq \frac{1}{2\varepsilon^2}\left(\ln n + \ln 2 +\ln\frac{1}{\delta}\right)\en
 An application of the union bound over the $n$ vertices ensures a uniform
 (simultaneous) guarantee on the quality of
 all the estimation, with probability at least $1-\delta$.
+
+Another interesting aspect in which our algorithm and the one
+by~\citet{JacobKLPT05} and~\citet{BrandesP07} differ is the \emph{amount of work done
+per sample}. Our algorithm computes a single set $\mathcal{S}_{uv}$ for the
+sampled vertices $u$ and $v$ by performing a run of Dijkstra's algorithm or of
+BFS until $v$ is reached or all the vertices reachable from $u$ have been
+explored. The algorithm from~\citep{JacobKLPT05,BrandesP07} instead computes
+all the sets $\mathcal{S}_{uw}$ from the sampled vertices $u$ to all other
+vertices, again with a single run of Dijkstra's or BFS, but without the
+``early-stopping condition'' that we have when we reach $v$. Although in the
+worst case the two computations have the same time complexity\footnote{It is a
+well-known open problem whether there is an algorithm to perform a single
+$s,t$-shortest path computation between a pair of vertices with smaller time
+complexity than the Single Source Shortest Path computation.}, in practice we
+will perform much fewer operations, as we can expect $v$ not to always be very
+far from $u$ and therefore we can terminate early. This fact can have a great
+impact on the running time, especially because our algorithm touches
+\emph{much fewer} edges than the algorithm from~\citep{JacobKLPT05,BrandesP07},
+given that this one can actually touch the entire network, i.e., all the edges
+in the graph, at every sample, while our computation has a much higher
+\emph{locality}, exploring only a neighborhood of $u$ until $v$ is reached. The
+results of our experimental evaluation presented in Sect.~\ref{sec:exper}
+highlights this and other advantages of our method over the one
+from~\citep{JacobKLPT05,BrandesP07}.
 
