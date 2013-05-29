@@ -6,16 +6,17 @@ references therein.
 
 Betweenness centrality was introduced in the sociology
 literature~\citep{Anthonisse71,Freeman77}. \citet{Brandes08} presents a number
-of minor variants. A particularly interesting one, $k$-bounded-distance -betweenness, limits the
-length of the shortest paths considered when computing the
-centrality~\citep{BorgattiE06,Brandes08,PfefferC12}. This is not to be confused
-with $k$-path betweenness centrality defined by~\citet{KourtellisASIT12}, which considers
-simple random walks that are not necessarily shortest paths. \citet{DolevEP10} present
-a generalization of betweenness centrality which does not necessarily consider
-shortest paths and takes into account routing policies in the network. 
+of minor variants. A particularly interesting one, $k$-bounded-distance
+betweenness, limits the length of the shortest paths considered when computing
+the centrality~\citep{BorgattiE06,Brandes08,PfefferC12}. This is not to be
+confused with $k$-path betweenness centrality defined
+by~\citet{KourtellisASIT12}, which considers simple random walks that are not
+necessarily shortest paths. \citet{DolevEP10} present a generalization of
+betweenness centrality which does not necessarily consider shortest paths and
+takes into account routing policies in the network. 
 
 The need of fast algorithms to compute the betweenness of vertices in a graph
-arose as large online social networks developed. \citet{Brandes01} presents the
+arose as large online social networks started to appear. \citet{Brandes01} presents the
 first efficient algorithm for the task, running in time $O(nm)$ on
 unweighted graphs and $O(nm+n^2\log n)$ on weighted ones. The
 algorithm computes, for each vertex $v$, the shortest path to every other vertex
@@ -27,27 +28,28 @@ developed~\citep{JacobKLPT05,BrandesP07,BaderKMM07,GeisbergerSS08,MaiyaBW10,LimM
 The use of random sampling was one of the more natural approaches to speed up
 the computation of betweenness. Inspired by the work of~\citet{EppsteinW04},
 \citet{JacobKLPT05} and independently \citet{BrandesP07} present an algorithm
-that samples vertices at random and compute the contribution of the sampled
-vertices to the betweenness of every vertex. The number of samples needed to
-guarantee that, with probability at least $1-\delta$, the estimate for each
-vertex is within $\varepsilon$ from the real value, for some
-$\varepsilon\in(0,1)$, is $O(\log(n/\delta)/\varepsilon^2)$. The analysis uses
-Hoeffding bounds~\citep{Hoeffding63} and the union bound. The algorithm mimics
-the exact one, with the difference that, instead of computing the contribution
-of all vertices to the betweenness of the others, only it only consider the
-contribution of the sampled vertices. \citet{GeisbergerSS08} noticed that this
-can lead to an overestimation of the betweenness of vertices that are close to
-the sampled ones and introduced different unbiased estimators that are
-experimentally shown to have smaller variance and do not occur in this
-overshooting. Our algorithm is different because each sample in our case is a
-single random shortest path between two randomly chosen nodes. This leads to a
-much smaller sample size and less work done for each sample, resulting in a much
-faster way to compute approximations of the betweenness with the same
-probabilistic guarantees. Although these works can be extended to return a
-superset of the top-$K$ vertices with highest betweenness, they only offer an
-\emph{additive}  approximation guarantee, while our algorithm offers a
-\emph{multiplicative}, i.e., stricter, one. We delve more in the comparisons
-with these algorithm in Sect.~\ref{sec:discussion} and~\ref{sec:exper}. A number of works explored
+that mimics the exact one, with the difference that,
+instead of computing the contribution of all vertices to the betweenness of the
+others, it only considers the contributions of some vertices sampled uniformly
+at random. The number of samples needed to guarantee that, with probability at
+least $1-\delta$, the estimate for each vertex is within $\varepsilon$ from the
+real value, for some $\varepsilon\in(0,1)$, is
+$O(\log(n/\delta)/\varepsilon^2)$. The analysis for the derivation of the sample
+size uses Hoeffding bounds~\citep{Hoeffding63} and the union bound.
+\citet{GeisbergerSS08} noticed that this can lead to an overestimation of the
+betweenness of vertices that are close to the sampled ones and introduced
+different unbiased estimators that are experimentally shown to have smaller
+variance and do not occur in this overshooting. Our algorithm is different
+from these because we sample, each time, a single random shortest path between
+two randomly chosen nodes. This leads to a much smaller sample size and less
+work done for each sample, resulting in a much faster way to compute
+approximations of the betweenness with the same probabilistic guarantees.
+Although the algorithms by \citep{BrandesP07,JacobKLPT05,GeisbergerSS08} can be
+extended to return a superset of the top-$K$ vertices with highest betweenness,
+they only offer an \emph{additive} approximation guarantee, while our algorithm
+for the top-$K$ vertices offers a \emph{multiplicative}, i.e., stricter,
+guarantee. We delve more in the comparisons with these algorithms in
+Sect.~\ref{sec:discussion} and~\ref{sec:exper}. A number of works explored
 the use of adaptive sampling, in contrast with the previous algorithms (and
 ours) which use a fixed sample size. \citet{BaderKMM07} present an adaptive
 sampling algorithm which computes good estimations for the betweenness of
@@ -65,12 +67,13 @@ number of connections with vertices not already in the sample. Modified versions
 of this algorithm and an extensive experimental evaluation appeared
 in~\citep{LimMRTB11}. The algorithm does not offer any guarantee on the quality
 of the approximations. Compared to these adaptive sampling approaches, our
-method ensures that the betweenness of all vertices is well approximated with a
-fixed, predetermined amount of samples.  \citep{SaryuceSKC13} present an
-algorithm that pre-processes the network in multiple ways by removing degree-1
-vertices and identical vertices and splits it in separate components where the
-computation of betweenness can be performed independently and then aggregated.
-They do not present an analysis of the complexity of the algorithm. 
+methods ensures that the betweenness of all (or top-$K$) vertices is well
+approximated, while using a fixed, predetermined amount of samples.
+\citep{SaryuceSKC13} present an algorithm that pre-processes the network in
+multiple ways by removing degree-1 vertices and identical vertices and splits it
+in separate components where the computation of betweenness can be performed
+independently and then aggregated. They do not present an analysis of the
+complexity of the algorithm. 
 
 In the analysis of our algorithm we use results from VC-dimension
 theory~\citep{VapnikC71} and compute an upper bound to the VC-dimension of a

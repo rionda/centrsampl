@@ -19,30 +19,30 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
 
 %\begin{proof}
 \begin{IEEEproof}
-Let $k>\lfloor\log_2(\VD(G)-2)\rfloor+1$ and assume for the sake of contradiction
-that $\VC(\range_G)=k$. From the definition of the VC-dimension there is a set
-$Q\subseteq\mathbb{S}_G$ of size $k$ that is shattered by $\range_G$. Let $p$ be
-an element of $Q$. The path $p$ is contained in $2^{k-1}$ non-empty subsets of
-$Q$. Let us label this non-empty subsets of $Q$ containing $p$ as
-$S_1,\dotsc,S_{2^{k-1}}$, where the labelling is arbitrary.
+Let $\ell>\lfloor\log_2(\VD(G)-2)\rfloor+1$ and assume for the sake of contradiction
+that $\VC(\range_G)=\ell$. From the definition of the VC-dimension there is a set
+$Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$. Let $p$ be
+an element of $Q$. There are  $2^{\ell-1}$ non-empty subsets of
+$Q$ containing the path $p$. Let us label these non-empty subsets of $Q$ containing $p$ as
+$S_1,\dotsc,S_{2^{\ell-1}}$, where the labelling is arbitrary.
 Given that $Q$ is shattered then, for each set $S_i$ there must be a range $R_i$ in
 $\range_G$ such that $S_i=Q\cap R_i$. Since all the $S_i$'s are
 different from each other, then all the $R_i$'s must be different from each
 other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
-$R_i$, that is, there are $2^{k-1}$ distinct ranges in $\range_G$ containing
-$p$. But $p$ belongs to the ranges corresponding to the internal vertices of
+$R_i$, that is, there are $2^{\ell-1}$ distinct ranges in $\range_G$ containing
+$p$. But $p$ belongs only to the ranges corresponding to the internal vertices of
 $p$, i.e., to the vertices in $\mathsf{Int}(p)$. This means that the number of ranges
 in $\range_G$ that $p$ belongs to is equal to $|p|-2$. But $|p|\le\VD(G)$, by
 definition of $\VD(G)$, so $p$
 can belong to at most $\VD(G)-2$ ranges from $\range_G$. Given that
-$2^{k-1}>\VD(G)-2$, we reached a contradiction and there cannot be $2^{k-1}$
+$2^{\ell-1}>\VD(G)-2$, we reached a contradiction and there cannot be $2^{\ell-1}$
 distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
 $Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
 $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{proof}
 \end{IEEEproof}
 
-The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
+\XXX The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
 for each $d>2$ we can build a graph $G_d$ with vertex-diameter $d$ and such
 that the range set associated to the set of shortest path of $G_d$ has
 VC-dimension exactly $\lfloor\log_2(d-2)\rfloor+1$.
@@ -53,12 +53,14 @@ VC-dimension exactly $\lfloor\log_2(d-2)\rfloor+1$.
 \end{lemma}
 
 \begin{IEEEproof}
-  \XXX TBD Remember to take care of the cases $d=1,2$.
+  TBD Remember to take care of the cases $d=1,2$.
 \end{IEEEproof}
 
-\paragraph{Unique shortest paths}
+\subsection{Unique shortest paths}\label{sec:rangeunique}
 In the restricted case when the graph is undirected and every pair of distinct vertices
-has a unique shortest path between them, the upper bound can be improved.
+has either none or a unique shortest path between them, the VC-dimension of $\range_G$
+collapses to a constant. \XXX I wonder whether it is true also for the directed
+case.
 \begin{lemma}\label{lem:vcdimuppboundunique}
   Given an undirected graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
   pairs $(u,v)\in V\times V$, the range set $\range_G$ associated to the
@@ -68,19 +70,20 @@ has a unique shortest path between them, the upper bound can be improved.
 \begin{IEEEproof}
   First of all, notice that in this restricted setting, if two different paths
   $p_1$ and $p_2$ meet at a vertex $u$, then they either go on together or at a
-  certain point they separate never to meet again at any other vertex $v=\neq u$.
+  certain point they separate never to meet again at any other vertex $v\neq u$.
   This is easy to see: if they could separate and then meet again, then there
   would be two distinct shortest paths between $u$ and $v$, which is a
   contradiction of the hypothesis. Let us denote this fact as $\mathsf{F}$.
 
   Assume now that $\VC(\range_G)>3$, then there must be a set
   $Q=\{p_1,p_2,p_3,p_4\}$ of four shortest paths that can be shattered by
-  $\range_G$. Then there is a node $w$ such that $\mathcal{T}_w\cap Q=Q$, i.e.,
+  $\range_G$. Then there is a vertex $w$ such that $\mathcal{T}_w\cap Q=Q$, i.e.,
   all paths in $Q$ go through $w$. Let $x$ be the farthest predecessor of $w$
   along $p_1$ that $p_1$ shares with some other path from $Q$, and let $y$ be
   the farthest successor of $w$ along $p_1$ that $p_1$ shares with some other
   path from $Q$. It is easy to see that if either $x$ or $y$ (or both) do not
-  exist, then $Q$ cannot be shattered, so let us assume that $x$ and $y$ exist.
+  exist, then $Q$ cannot be shattered, as we would incur in a contradiction of
+  $\mathsf{F}$. Let us then assume that both $x$ and $y$ exist.
   Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
   Because of fact $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
   between $x$ and $w$ and all paths in $Q_y$ must go through the same vertices
@@ -143,8 +146,8 @@ has a unique shortest path between them, the upper bound can be improved.
   bound $\VC(\range_G)\le3$, so we can conclude that $\VC(\range_G)=3$.
 \end{IEEEproof}
 
-\paragraph{Range set for $k$-bounded-distance betweenness} For the case of
-$k$-bounded distance betweenness, if we let
+\subsection{Variants}\label{sec:rangevariants}
+For the case of $k$-bounded-distance betweenness, if we let
 $\range_G^{(k)}=\{\mathcal{T}_v^{(k)}~:~ v\in V\}$, it is easy to bound
 $\VC(\range_G^{(k)})$ following the same reasoning as in
 Lemma~\ref{lem:vcdimuppbound}.
@@ -152,12 +155,11 @@ Lemma~\ref{lem:vcdimuppbound}.
 $\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor$.
 \end{lemma}
 
-\paragraph{Range set for $k$-path betweenness}
-We can define another range set $\range_G^{\mathrm{r},k}$ if we are interested
-in $k$-path betweenness.  The domain $B$ of the range set now is the set of all
+We can define another range set $\range_G^{\mathrm{p},k}$ if we are interested
+in $k$-path betweenness. The domain $B$ of the range set now is the set of all
 simple random walks starting from any vertex of and of size up to $k+1$. For
 each vertex $v\in V$, the range $R_v$ is the subset of $B$ containing all and
 only the random walks from $B$ that have $v$ as internal vertex. It is easy to
-see that $\VC(\range_G^{\mathrm{r},k})$ is still at most $\lfloor\log_2(k-1)+1$
+see that $\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
 following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
 

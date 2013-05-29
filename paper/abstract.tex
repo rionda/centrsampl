@@ -1,20 +1,19 @@
 \begin{abstract}
-\XXX IEEE doesn't want symbols/math in abstract :(
+\XXX IEEE doesn't want symbols/math in abstract
 
   %We present an efficient randomized algorithm for approximating the {\sl
   %betweenness centrality} of all nodes in a network within strict probabilistic
   %guarantees.
   Betweenness centrality is a fundamental measure in social network
-  analysis, quantifying the importance or influence of individual nodes in a
-  network in terms of the number of shortest paths (between all pairs of nodes
-  in the network) that pass through that node. 
+  analysis, quantifying the importance or influence of individual vertices in a
+  network in terms of the fraction of shortest paths that pass through that node. 
   %The fastest known algorithm to
   %compute the exact betweenness of all vertices in a graph $G=(V,E)$ in
   %$O(|V|\cdot|E|)$ steps in the unweighted case and in
   %$O(|V|\cdot|E|+|V|^2\log|V|)$ steps in weighted graphs. 
-  Exact computation in large networks with millions of vertices and hundred of
-  millions of edges is prohibitively expensive and fast approximation algorithms
-  are required in these cases. 
+  Exact computation in large networks %with millions of vertices and hundred of millions of edges 
+  is prohibitively expensive and fast approximation algorithms are required in
+  these cases. 
   We present two efficient randomized algorithms that offer probabilistic
   guarantees on the quality of the approximation. One algorithm computes an
   $(\varepsilon,\delta)$-approximation of the vector of betweenness centrality
@@ -23,11 +22,11 @@
   corresponding vector with each component being within a multiplicative factor
   $\varepsilon$ from the real value, with probability at least $1-\delta$. This
   is the first algorithm that reaches such approximation for the top-K vertices.
-  Our algorithms are significantly faster than any other algorithm with similar
-  approximation guarantees. We achieve this speedup through a novel application
-  of the VC-dimension theory to optimize the sampling component of the
-  algorithms. Extensive experimental evaluation on real and artificial networks
-  demonstrate the practicality of our methods and their performances compared to
-  exact and other known approximated solutions.
+  Our algorithms are significantly faster than previously presented algorithms
+  with similar approximation guarantees. We achieve this speedup through a
+  novel application of the VC-dimension theory to optimize the sampling
+  component of the algorithms. Extensive experimental evaluation on real
+  networks demonstrate the practicality of our methods and their performances
+  compared to exact and approximated approximated solutions.
 \end{abstract}
   

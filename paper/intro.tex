@@ -3,22 +3,23 @@
 
 \paragraph{Our contributions} 
 We present two randomized algorithms to approximate the betweenness centrality
-of vertices of a graph. The first algorithm guarantees that the estimated betweenness
-values for all vertices are within an \emph{additive} factor $\varepsilon$ from the
-real values, with probability at least $1-\delta$. The second algorithm focuses
-on the top-$K$ vertices with highest betweenness and returns a set of vertices
-which includes the top-$K$, while ensuring that the estimated betweenness for
-all returned vertices is within a \emph{multiplicative} factor $\varepsilon$
-from the real value, with probability at least $1-\delta$. This is the first
-algorithm to reach such a high-quality approximation for the set of top-$K$
-vertices. The algorithms are based on random sampling of shortest paths. The
-analysis to derive the sufficient sample size uses notions and tools from
-VC-Dimension theory. This results in a much smaller sample size than that used
-by other algorithms guaranteeing the same approximation. Moreover, the amount of
-work performed by our algorithms per sample is also less than what was done in
-previous works.  We extensively evaluated our methods on real graphs and
-compared its performances to the exact algorithm for betweenness
-centrality~\citep{Brandes01} and to other sampling based
-algorithms~\citep{BrandesP07,JacobKLPT05}.
+(and some of its variants) of vertices of a graph. The first algorithm
+guarantees that the estimated betweenness values for all vertices are within an
+\emph{additive} factor $\varepsilon$ from the real values, with probability at
+least $1-\delta$. The second algorithm focuses on the top-$K$ vertices with
+highest betweenness and returns a set of vertices which includes the top-$K$,
+while ensuring that the estimated betweenness for all returned vertices is
+within a \emph{multiplicative} factor $\varepsilon$ from the real value, with
+probability at least $1-\delta$. This is the first algorithm to reach such a
+high-quality approximation for the set of top-$K$ vertices. The algorithms are
+based on random sampling of shortest paths. The analysis to derive the
+sufficient sample size uses notions and tools from VC-Dimension theory. This
+results in a much smaller sample size than that used by other algorithms
+guaranteeing the same approximation. Moreover, the amount of work performed by
+our algorithms per sample is also less than what was done in previous works.
+We extensively evaluated our methods on real graphs and compared their
+performances to the exact algorithm for betweenness
+centrality~\citep{Brandes01} and to other sampling-based approximation
+algorithms~\citep{JacobKLPT05,BrandesP07}.
 
 
