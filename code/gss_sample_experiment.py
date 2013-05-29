@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# -*- coding: iso-8859-1 -*-
 """ gss_sample_experiment.py
     
     Perform experiment to evaluate the Geisberger et al. (linear scaling)
@@ -73,13 +74,14 @@ def main():
     stats["graph"]= os.path.basename(args.graph)
     stats["runs"] = args.runs
     if args.samplesize:
-        stats["sample_size"] = args.sample_size
+        stats["sample_size"] = args.samplesize
     else:
         stats["delta"] = args.delta
         stats["epsilon"] = args.epsilon
         stats["sample_size"] = results[0][0]["sample_size"]
 
     stats_names = ["time", "forward_touched_edges", "backward_touched_edges"]
+
     for stat_name in stats_names:
         values = sorted([x[0][stat_name] for x in results])
         stats[stat_name + "_max"] = values[-1]
@@ -112,6 +114,7 @@ def main():
         with open(args.output, "wb") as output:
             logging.info("Writing stats and results to %s", args.output)
             pickle.dump((stats, results), output)
+            output.close()
     except OSError as E:
         logging.critical("Cannot write stats and results to %s: %s",
                 args.output, E.strerror)

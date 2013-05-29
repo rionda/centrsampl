@@ -1,4 +1,5 @@
 #! /usr/bin/env python3
+# -*- coding: iso-8859-1 -*-
 """ vc_sample_experiment.py
     
     Perform experiment to evaluate the VC sampling algorithm to approximate the
@@ -86,7 +87,7 @@ def main():
     stats["graph"]= os.path.basename(args.graph)
     stats["runs"] = args.runs
     if args.samplesize:
-        stats["sample_size"] = args.sample_size
+        stats["sample_size"] = args.samplesize
     else:
         stats["delta"] = args.delta
         stats["epsilon"] = args.epsilon
@@ -121,6 +122,7 @@ def main():
             for stat_name in stats_names]
     csvkeys_list = [csvkeys] + csvkeys_names
     csvkeys = ",".join(csvkeys_list)
+   # print(stats["betw_min"])   
     print(csvkeys)
     print(util.dict_to_csv(stats, csvkeys))
     # Write stats and results to output file
@@ -128,10 +130,15 @@ def main():
         with open(args.output, "wb") as output:
             logging.info("Writing stats and results to %s", args.output)
             pickle.dump((stats, results), output)
+            output.close()
+            #pkl_file = open("vc_out.picklez", 'rb')
+            #reader = pickle.load(pkl_file)
+            #print(reader[0]["diameter_touched_edges_avg"])
     except OSError as E:
         logging.critical("Cannot write stats and results to %s: %s",
                 args.output, E.strerror)
         sys.exit(2)
+
 
 
 if __name__ == "__main__":
