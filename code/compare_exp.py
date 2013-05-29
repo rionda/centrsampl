@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # -*- coding: iso-8859-1 -*-
-"""compare_exp.py
+"""compare.py
 
 Compare estimations of betweenness centralities to exact values. 
 
@@ -115,24 +115,24 @@ def main():
     # aggregates.
     
     # Normalize
-    normalizer = math.pow(G.vcount(),2)-G.vcount() 
-    norm_exact_betw = [a/normalizer for a in exact_betw]
-    norm_vc_betw = [a/normalizer for a in vc_betw]
-    norm_bp_betw = [a/normalizer for a in bp_betw]
-    norm_gss_betw = [a/normalizer for a in gss_betw]
+    #normalizer = math.pow(G.vcount(),2)-G.vcount() 
+    #norm_exact_betw = [a/normalizer for a in exact_betw]
+    #norm_vc_betw = [a/normalizer for a in vc_betw]
+    #norm_bp_betw = [a/normalizer for a in bp_betw]
+    #norm_gss_betw = [a/normalizer for a in gss_betw]
 
     #VC-STATISTICS
     logging.info("Computing error statistics")
     max_err = args.epsilon * G.vcount() * (G.vcount() - 1) / 2
-    vc_errs = sorted([abs(a - b) for a,b in zip(norm_exact_betw,norm_vc_betw)])
+    vc_errs = sorted([abs(a - b) for a,b in zip(exact_betw,vc_betw)])
     vc_stats["err_avg"] = sum(vc_errs) / G.vcount()
     vc_stats["err_max"] = vc_errs[-1]
     vc_stats["err_min"] = list(itertools.filterfalse(lambda x: x == 0, vc_errs))[0]
     vc_stats["err_stddev"] = math.sqrt(sum([math.pow(err - vc_stats["err_avg"], 2) for err in vc_errs]) / (G.vcount() -1))
-    vc_stats["euc_dist"] = math.sqrt(sum([math.pow(a - b, 2) for a,b in zip(norm_exact_betw,norm_vc_betw)]))
+    vc_stats["euc_dist"] = math.sqrt(sum([math.pow(a - b, 2) for a,b in zip(exact_betw,vc_betw)]))
     vc_stats["wrong_eps"] = 0;
     for i in range(G.vcount()):
-        err = abs(norm_exact_betw[i] - norm_vc_betw[i])
+        err = abs(exact_betw[i] - vc_betw[i])
         #if err > max_err:
             #vc_stats["wrong_eps"] += 1
             #if vc_stats["wrong_eps"] == 1:
@@ -141,15 +141,15 @@ def main():
                 #exact_betw[i], vc_betw[i], bp_betw[i],
                 #err, err / (G.vcount() * (G.vcount() -1) / 2)))
     #BP-STATISTICS
-    bp_errs = sorted([abs(a - b) for a,b in zip(norm_exact_betw,norm_bp_betw)])
+    bp_errs = sorted([abs(a - b) for a,b in zip(exact_betw,bp_betw)])
     bp_stats["err_avg"] = sum(bp_errs) / G.vcount()
     bp_stats["err_max"] = max(bp_errs)
     bp_stats["err_min"] = list(itertools.filterfalse(lambda x: x == 0, bp_errs))[0]
     bp_stats["err_stddev"] = math.sqrt(sum([math.pow(err - bp_stats["err_avg"], 2) for err in bp_errs]) / (G.vcount() -1))
-    bp_stats["euc_dist"] = math.sqrt(sum([math.pow(a - b, 2) for a,b in zip(norm_exact_betw,norm_bp_betw)]))
+    bp_stats["euc_dist"] = math.sqrt(sum([math.pow(a - b, 2) for a,b in zip(exact_betw,bp_betw)]))
     bp_stats["wrong_eps"] = 0
     for i in range(G.vcount()):
-        err = abs(norm_exact_betw[i] - norm_bp_betw[i])
+        err = abs(exact_betw[i] - bp_betw[i])
         #if err > max_err:
             #bp_stats["wrong_eps"] += 1
             #if bp_stats["wrong_eps"] == 1:
@@ -157,15 +157,15 @@ def main():
             #print("{} {} {} {} {} {} {}".format(i, G.vs[i].degree(),
                  #exact_betw[i], bp_betw[i], vc_betw[i], err, err / (G.vcount() * (G.vcount() -1) / 2)))
     #GSS-STATISTICS
-    gss_errs = sorted([abs(a - b) for a,b in zip(norm_exact_betw,norm_gss_betw)])
+    gss_errs = sorted([abs(a - b) for a,b in zip(exact_betw,gss_betw)])
     gss_stats["err_avg"] = sum(gss_errs) / G.vcount()
     gss_stats["err_max"] = max(gss_errs)
     gss_stats["err_min"] = list(itertools.filterfalse(lambda x: x == 0, gss_errs))[0]
     gss_stats["err_stddev"] = math.sqrt(sum([math.pow(err - gss_stats["err_avg"], 2) for err in gss_errs]) / (G.vcount() -1))
-    gss_stats["euc_dist"] = math.sqrt(sum([math.pow(a - b, 2) for a,b in zip(norm_exact_betw,norm_gss_betw)]))
+    gss_stats["euc_dist"] = math.sqrt(sum([math.pow(a - b, 2) for a,b in zip(exact_betw,gss_betw)]))
     gss_stats["wrong_eps"] = 0
     for i in range(G.vcount()):
-        err = abs(norm_exact_betw[i] - norm_gss_betw[i])
+        err = abs(exact_betw[i] - gss_betw[i])
         #if err > max_err:
             #gss_stats["wrong_eps"] += 1
             #if gss_stats["wrong_eps"] == 1:
