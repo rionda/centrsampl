@@ -1,3 +1,4 @@
+#! /bin/bash
 #
 #
 # $1 should be the graph dataset for the experiment
@@ -8,7 +9,7 @@
 #
 
 # Check whether the file exists
-if ! [ -f /data/people/matteo/centrsampl/$1 ]
+if [ ! -f /data/people/matteo/centrsampl/$1 ]
 then 
   echo -e "\n File $1, is not at directory /data/people/matteo/centrsampl/"
 fi
@@ -32,7 +33,7 @@ number_point=${#percentages[@]}
 #Initialize the X-axis (number of samples)
 echo "X = ["  > $path/X.txt
 iter=0
-while [ $iter -le $number_point ]
+while [ $iter -lt $number_point ]
 do
   echo "${percentages[$iter]} * $no_nodes" | bc -l >> $path/X.txt
   (( iter += 1 ))
@@ -108,7 +109,7 @@ do
 	  vc_line=$(awk 'NR==4' temp.txt)
           stringarray=($vc_line)
 	  time_vc_tmp=`echo $time_vc_tmp + ${stringarray[4]} | bc`
-          err_avg_vc_tmp=$(echo | awk '{ print $1 + $2}' <<< ${stringarray[6]},$err_avg_vc_tmp )
+          err_avg_vc_tmp=$(echo | awk '{ print $1 + $2}' <<< ${stringarray[6]},$err_avg_vc_tmp, )
           err_stddev_vc_tmp=$(echo | awk '{ print $1 + $2}' <<< ${stringarray[7]},$err_stddev_vc_tmp )
 	  touched_edges_vc_tmp=`expr $touched_edges_vc_tmp + ${stringarray[8]/\.*} + ${stringarray[9]/\.*} + ${stringarray[10]/\.*}`
           euclid_vc_tmp=$(echo | awk '{ print $1 + $2}' <<< ${stringarray[11]},$euclid_vc_tmp )
