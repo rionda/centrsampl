@@ -42,20 +42,6 @@ $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{proof}
 \end{IEEEproof}
 
-\XXX The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
-for each $d>2$ we can build a graph $G_d$ with vertex-diameter $d$ and such
-that the range set associated to the set of shortest path of $G_d$ has
-VC-dimension exactly $\lfloor\log_2(d-2)\rfloor+1$.
-
-\begin{lemma}\label{lem:vcdimlowbound}
-  Given $d>2$ there exists a graph $G$ with vertex-diameter $d$ and such that
-  $\VC(\range_G)=\lfloor\log_2(d-2)\rfloor+1$.
-\end{lemma}
-
-\begin{IEEEproof}
-  TBD Remember to take care of the cases $d=1,2$.
-\end{IEEEproof}
-
 \subsection{Unique shortest paths}\label{sec:rangeunique}
 In the restricted case when the graph is undirected and every pair of distinct vertices
 has either none or a unique shortest path between them, the VC-dimension of $\range_G$
@@ -163,4 +149,48 @@ $R_v$ is the subset of $B$ containing all and only the random walks from $B$
 that have $v$ as internal vertex. It is easy to see that
 $\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
 following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
+
+
+\subsection{Tightness result}\label{sec:tightness}
+The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
+for each $d\ge 1$ we can build a graph $G_d$ with vertex-diameter
+$\VD(G_d)=2^d+1$ and such that the range set associated to the set of
+shortest path of $G_d$ has VC-dimension exactly
+$d=\lfloor\log_2(\VD(G_d)-2)\rfloor+1$.
+
+We now introduce a class $\mathcal{G}=(G_d)_{d\ge 1}$ of graphs indexed by $d$. 
+Figure \XXX shows $G_1$, $G_2$, $G_3$, and $G_4$. The generalization
+to higher values of $d$ should be straightforward. %Given $d\ge 1$,
+%we call $G_d\in\mathcal{G}$ the \emph{$d$-th braid graph}. 
+By construction, $\VD(G_d)=2^d+1$, so that
+$\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The vertices of $G_d$ can be
+partitioned into three classes, \emph{top}, \emph{bottom}, and
+\emph{middle}, according to their location in a representation of the
+graph similar to that in Fig.\XXX . Among the middle vertices, the two
+with degree 1 are special and are called the \emph{end vertices} of
+$G_d$ and denoted as $v_\mathrm{l}$ and $v_\mathrm{r}$, where the
+labels can be arbitrarily assigned. We are now going to build a set
+$Q$ of $d$ shortest paths from $v_\mathrm{l}$ to $v_\mathrm{r}$ and
+show that it is shattered by $\range_{G_d}$, therefore proving that
+$\VC(\range_{G_d})\ge d$. This fact, together with
+Lemma~\ref{lem:vcdimuppbound}, allows us to conclude that
+$\VC(\range_{G_d})=d$.
+
+\begin{lemma}\label{lem:vcdimlowbound}
+  $\VC(\range_{G_d})\ge d$.
+\end{lemma}
+
+\begin{IEEEproof}
+  As we said, the $d$ paths in $Q$, the set to be shattered by
+  $\range_{G_d}$ go from $v_\mathrm{l}$ to $v_\mathrm{r}$. From this
+  and the definition of $G_d$ it should be clear that they go through
+  all the middle vertices of $G_d$. Consider now the set
+  $S_Q=2^Q\setminus\{Q,\emptyset\}$. We can partition $S_Q$ in two
+  sets $A_Q$ and $B_Q$ such that $A_Q\cap B_Q=\emptyset$ and $A_Q\cup
+  B_Q=Q$ in the following way: 
+\end{IEEEproof}
+
+\begin{corollary}\label{lem:vcdimequal}
+  $\VC(\range_{G_d})=d$.
+\end{corollary}
 
