@@ -51,7 +51,7 @@ repetitions_4_each_point=20
 
 
 point=1
-while [ $point -lt $number_point ]
+while [ $point -le $number_point ]
 do
     echo point:$point
     echo !!========== $point - point ==========!! 
