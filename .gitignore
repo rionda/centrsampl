@@ -35,3 +35,4 @@
 *.old
 paper/centrsampl.pdf
 *__pycache__*
+*-eps-converted-to.pdf
