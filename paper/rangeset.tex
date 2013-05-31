@@ -45,8 +45,9 @@ $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 \subsection{Unique shortest paths}\label{sec:rangeunique}
 In the restricted case when the graph is undirected and every pair of distinct vertices
 has either none or a unique shortest path between them, the VC-dimension of $\range_G$
-collapses to a constant. \XXX I wonder whether it is true also for the directed
-case.
+collapses to a constant. \XXX I don't see anything to prevent us from saying
+that this is true also for directed graphs. 
+
 \begin{lemma}\label{lem:vcdimuppboundunique}
   Given an undirected graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
   pairs $(u,v)\in V\times V$, the range set $\range_G$ associated to the
