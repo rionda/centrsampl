@@ -1454,7 +1454,7 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
 					 const igraph_vs_t vids, 
 					 igraph_bool_t directed,
 					 igraph_real_t cutoff, 
-           igraph_bool_t do_linear_scaling,
+           //igraph_bool_t do_linear_scaling,
 					 const igraph_vector_t *weights, 
 					 igraph_bool_t nobigint) {
 
@@ -1464,7 +1464,7 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
   long int no_of_edges=igraph_ecount(graph);
   long int forward_touched_edges = 0;
   long int backward_touched_edges = 0;
-  igraph_real_t linear_scaling_factor = 1.0;
+  //igraph_real_t linear_scaling_factor = 1.0;
   igraph_2wheap_t Q;
   igraph_inclist_t inclist;
   igraph_adjlist_t fathers;
@@ -1582,10 +1582,11 @@ int igraph_i_betweenness_estimate_weighted(const igraph_t *graph,
       for (j=0; j<fatv_len; j++) {
         backward_touched_edges++;
         long int f=VECTOR(*fatv)[j];
-        if (do_linear_scaling) {
-          linear_scaling_factor = VECTOR(dist)[f] / VECTOR(dist)[w]; 
-        }
-        VECTOR(tmpscore)[f] += linear_scaling_factor * VECTOR(nrgeo)[f]/VECTOR(nrgeo)[w] * (1+VECTOR(tmpscore)[w]);
+        //if (do_linear_scaling) {
+        //  linear_scaling_factor = VECTOR(dist)[f] / VECTOR(dist)[w]; 
+        //}
+        //VECTOR(tmpscore)[f] += linear_scaling_factor * VECTOR(nrgeo)[f]/VECTOR(nrgeo)[w] * (1+VECTOR(tmpscore)[w]);
+        VECTOR(tmpscore)[f] += VECTOR(nrgeo)[f]/VECTOR(nrgeo)[w] * (1+VECTOR(tmpscore)[w]);
       }
       if (w!=source) { VECTOR(*tmpres)[w] += VECTOR(tmpscore)[w]; }
 
@@ -1656,7 +1657,7 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
         igraph_vector_t *stats, igraph_strvector_t *stats_names,
         igraph_integer_t no_of_samples, const igraph_vs_t vids, 
         igraph_bool_t directed, igraph_real_t cutoff,
-        igraph_bool_t do_linear_scaling,
+        //igraph_bool_t do_linear_scaling,
         const igraph_vector_t *weights, igraph_bool_t nobigint) {
 
   igraph_rng_t *rng=NULL;
@@ -1670,7 +1671,7 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
 				       graphs for example */
   igraph_biguint_t *big_nrgeo=0;
   double *tmpscore;
-  igraph_real_t linear_scaling_factor = 1.0;
+  //igraph_real_t linear_scaling_factor = 1.0;
   igraph_stack_t stack=IGRAPH_STACK_NULL;
   long int vertex_index;
   long int j, k, nneis;
@@ -1685,7 +1686,8 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
 
   if (weights) { 
     return igraph_i_betweenness_estimate_weighted(graph, res, stats,
-        stats_names, no_of_samples, vids, directed, cutoff, do_linear_scaling, weights, nobigint);
+        stats_names, no_of_samples, vids, directed, cutoff, //do_linear_scaling, 
+        weights, nobigint);
   }
 
   if (!igraph_vs_is_all(&vids)) {
@@ -1837,28 +1839,28 @@ int igraph_i_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
       for (j=0; j<nneis; j++) {
         backward_touched_edges++;
         long int neighbor=VECTOR(*neis)[j];
-	if (nobigint) {
-        if (do_linear_scaling) {
-          linear_scaling_factor = ((double)(distance[neighbor])) / distance[actnode]; 
+        if (nobigint) {
+              //if (do_linear_scaling) {
+              // linear_scaling_factor = ((double)(distance[neighbor])) / distance[actnode]; 
+              //}
+          //tmpscore[neighbor] += linear_scaling_factor * (tmpscore[actnode]+1)*
+          tmpscore[neighbor] += (tmpscore[actnode]+1)* ((double)(nrgeo[neighbor]))/nrgeo[actnode];
+        } else {
+          if (!igraph_biguint_compare_limb(&big_nrgeo[actnode], 0)) {
+            tmpscore[neighbor] = IGRAPH_INFINITY;
+          } else {
+            double div;
+            int shift=1000000000L;
+            IGRAPH_CHECK(igraph_biguint_mul_limb(&T, &big_nrgeo[neighbor], 
+                   shift));	  
+            igraph_biguint_div(&D, &R, &T, &big_nrgeo[actnode]);
+            div=igraph_biguint_get(&D) / shift;
+            //if (do_linear_scaling) {
+            //    linear_scaling_factor = ((double)(distance[neighbor])) / distance[actnode]; 
+            //}
+            tmpscore[neighbor] += (tmpscore[actnode]+1) * div; // * linear_scaling_factor;
+          }
         }
-	  tmpscore[neighbor] += linear_scaling_factor * (tmpscore[actnode]+1)*
-	    ((double)(nrgeo[neighbor]))/nrgeo[actnode];
-	} else {
-	  if (!igraph_biguint_compare_limb(&big_nrgeo[actnode], 0)) {
-	    tmpscore[neighbor] = IGRAPH_INFINITY;
-	  } else {
-	    double div;
-	    int shift=1000000000L;
-	    IGRAPH_CHECK(igraph_biguint_mul_limb(&T, &big_nrgeo[neighbor], 
-						 shift));	  
-	    igraph_biguint_div(&D, &R, &T, &big_nrgeo[actnode]);
-	    div=igraph_biguint_get(&D) / shift;
-      if (do_linear_scaling) {
-          linear_scaling_factor = ((double)(distance[neighbor])) / distance[actnode]; 
-      }
-	    tmpscore[neighbor] += (tmpscore[actnode]+1) * div * linear_scaling_factor;
-	  }
-	}
       }
       
       if (actnode != source) { VECTOR(*tmpres)[actnode] += tmpscore[actnode]; }
@@ -1988,7 +1990,7 @@ int igraph_betweenness(const igraph_t *graph, igraph_vector_t *res,
 		       const igraph_vector_t* weights, igraph_bool_t nobigint) {
   int j;
   int ret_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names, -1,
-      vids, directed, -1, 0, weights, nobigint);
+      vids, directed, -1, weights, nobigint);
    long int no_of_nodes=igraph_vcount(graph);   
   double normalization_factor = 1.0 /  ((no_of_nodes-1) * no_of_nodes);
   for (j=0; j<no_of_nodes; j++) {
@@ -1997,19 +1999,510 @@ int igraph_betweenness(const igraph_t *graph, igraph_vector_t *res,
   return ret_code;
 }
 
+int igraph_i_betweenness_weighted_sample_gss_linear(const igraph_t *graph, 
+					 igraph_vector_t *res, 
+           igraph_vector_t *stats,
+           igraph_strvector_t *stats_names,
+           igraph_integer_t no_of_samples,
+					 const igraph_vs_t vids, 
+					 igraph_bool_t directed,
+					 igraph_real_t cutoff, 
+					 const igraph_vector_t *weights, 
+					 igraph_bool_t nobigint) {
+
+  igraph_rng_t *rng=NULL;
+  igraph_bool_t backwards=0;
+  long int no_of_nodes=igraph_vcount(graph);
+  long int no_of_edges=igraph_ecount(graph);
+  long int forward_touched_edges = 0;
+  long int backward_touched_edges = 0;
+  igraph_real_t linear_scaling_factor = 1.0;
+  igraph_2wheap_t Q;
+  igraph_inclist_t inclist;
+  igraph_inclist_t inclist_in;
+  igraph_adjlist_t fathers;
+  long int vertex_index, source, j;
+  igraph_stack_t S;
+  directed = directed && igraph_is_directed(graph);
+  igraph_integer_t mode= directed ? IGRAPH_OUT : IGRAPH_ALL;
+  igraph_vector_t dist, nrgeo, tmpscore;
+  igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
+  igraph_vit_t vit;
+  
+  if (igraph_vector_size(weights) != no_of_edges) {
+    IGRAPH_ERROR("Weight vector length does not match", IGRAPH_EINVAL);
+  }
+  if (igraph_vector_min(weights) <= 0) {
+    IGRAPH_ERROR("Weight vector must be positive", IGRAPH_EINVAL);
+  }
+
+  if (no_of_samples <= 0) {
+    IGRAPH_ERROR("Number of samples must be positive",
+        IGRAPH_EINVAL);
+  } else {
+    rng=igraph_rng_default();
+  }
+
+  IGRAPH_CHECK(igraph_2wheap_init(&Q, no_of_nodes));
+  IGRAPH_FINALLY(igraph_2wheap_destroy, &Q);
+  IGRAPH_CHECK(igraph_inclist_init(graph, &inclist, mode));  
+  IGRAPH_FINALLY(igraph_inclist_destroy, &inclist);
+  IGRAPH_CHECK(igraph_inclist_init(graph, &inclist_in, directed? IGRAPH_IN : IGRAPH_ALL));
+  IGRAPH_CHECK(igraph_adjlist_init_empty(&fathers, no_of_nodes));
+  IGRAPH_FINALLY(igraph_adjlist_destroy, &fathers);
+
+  IGRAPH_CHECK(igraph_stack_init(&S, no_of_nodes));
+  IGRAPH_FINALLY(igraph_stack_destroy, &S);
+  IGRAPH_VECTOR_INIT_FINALLY(&dist, no_of_nodes);
+  IGRAPH_VECTOR_INIT_FINALLY(&tmpscore, no_of_nodes);
+  IGRAPH_VECTOR_INIT_FINALLY(&nrgeo, no_of_nodes);
+
+  if (igraph_vs_is_all(&vids)) {
+    IGRAPH_CHECK(igraph_vector_resize(res, no_of_nodes));
+    igraph_vector_null(res);
+    tmpres=res;
+  } else {
+    IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
+  }
+
+  for (vertex_index=0; vertex_index<no_of_samples; vertex_index++) {
+    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*vertex_index/no_of_samples, 0);
+    IGRAPH_ALLOW_INTERRUPTION();
+
+    source = igraph_rng_get_integer(rng, 0, no_of_nodes -1);
+
+    backwards = igraph_rng_get_integer(rng, 0, 1);
+
+    igraph_2wheap_push_with_index(&Q, source, 0);
+    VECTOR(dist)[source]=1.0;
+    VECTOR(nrgeo)[source]=1;
+    
+    while (!igraph_2wheap_empty(&Q)) {
+      long int minnei=igraph_2wheap_max_index(&Q);
+      igraph_real_t mindist=-igraph_2wheap_delete_max(&Q);
+      igraph_vector_t *neis;
+      long int nlen;
+      
+      igraph_stack_push(&S, minnei);
+      
+      if (cutoff >=0 && VECTOR(dist)[minnei] >= cutoff+1.0) { continue; }
+      
+      /* Now check all neighbors of 'minnei' for a shorter path */
+      if (backwards) { 
+        neis=igraph_inclist_get(&inclist_in, minnei);
+      } else {
+        neis=igraph_inclist_get(&inclist, minnei);
+      }
+      nlen=igraph_vector_size(neis);
+      for (j=0; j<nlen; j++) {
+        forward_touched_edges++;
+        long int edge=VECTOR(*neis)[j];
+        long int to=IGRAPH_OTHER(graph, edge, minnei);
+        igraph_real_t altdist=mindist + VECTOR(*weights)[edge];
+        igraph_real_t curdist=VECTOR(dist)[to];
+        if (curdist==0) {
+          /* This is the first non-infinite distance */
+          igraph_vector_t *v=igraph_adjlist_get(&fathers, to);
+          igraph_vector_resize(v,1);
+          VECTOR(*v)[0]=minnei;
+          VECTOR(nrgeo)[to] = VECTOR(nrgeo)[minnei];
+          VECTOR(tmpscore)[to]=0;
+
+          VECTOR(dist)[to]=altdist+1.0;
+          IGRAPH_CHECK(igraph_2wheap_push_with_index(&Q, to, -altdist));
+        } else if (altdist < curdist-1) {
+          /* This is a shorter path */
+          igraph_vector_t *v=igraph_adjlist_get(&fathers, to);
+          igraph_vector_resize(v,1);
+          VECTOR(*v)[0]=minnei;
+          VECTOR(nrgeo)[to] = VECTOR(nrgeo)[minnei];
+
+          VECTOR(dist)[to]=altdist+1.0;
+          IGRAPH_CHECK(igraph_2wheap_modify(&Q, to, -altdist));
+        } else if (altdist == curdist-1) {
+          igraph_vector_t *v=igraph_adjlist_get(&fathers, to);
+          igraph_vector_push_back(v, minnei);
+          VECTOR(nrgeo)[to] += VECTOR(nrgeo)[minnei];
+        }
+      }
+      
+    } /* !igraph_2wheap_empty(&Q) */
+
+    while (!igraph_stack_empty(&S)) {
+      long int w=igraph_stack_pop(&S);
+      igraph_vector_t *fatv=igraph_adjlist_get(&fathers, w);
+      long int fatv_len=igraph_vector_size(fatv);
+      for (j=0; j<fatv_len; j++) {
+        backward_touched_edges++;
+        long int f=VECTOR(*fatv)[j];
+        if (backwards) {
+          linear_scaling_factor = 1.0 - (VECTOR(dist)[f] / VECTOR(dist)[w]); // XXX 
+        } else {
+          linear_scaling_factor = VECTOR(dist)[f] / VECTOR(dist)[w]; 
+        }
+        VECTOR(tmpscore)[f] += linear_scaling_factor * VECTOR(nrgeo)[f]/VECTOR(nrgeo)[w] * (1+VECTOR(tmpscore)[w]);
+      }
+      if (w!=source) { VECTOR(*tmpres)[w] += VECTOR(tmpscore)[w]; }
+
+      //VECTOR(tmpscore)[w]=0;
+      VECTOR(dist)[w]=0;
+      //VECTOR(nrgeo)[w]=0;
+      //igraph_vector_clear(igraph_adjlist_get(&fathers, w));
+    }
+    
+  } /* vertex_index < no_of_samples */
+
+  igraph_vector_push_back(stats, forward_touched_edges);
+  igraph_strvector_add(stats_names, "forward_touched_edges");
+  igraph_vector_push_back(stats, backward_touched_edges);
+  igraph_strvector_add(stats_names, "backward_touched_edges");
+
+  if (!igraph_vs_is_all(&vids)) {
+    IGRAPH_CHECK(igraph_vit_create(graph, vids, &vit));
+    IGRAPH_FINALLY(igraph_vit_destroy, &vit);
+    IGRAPH_CHECK(igraph_vector_resize(res, IGRAPH_VIT_SIZE(vit)));
+    
+    for (j=0, IGRAPH_VIT_RESET(vit); !IGRAPH_VIT_END(vit);
+	 IGRAPH_VIT_NEXT(vit), j++) {
+      long int node=IGRAPH_VIT_GET(vit);
+      VECTOR(*res)[j] = VECTOR(*tmpres)[node];
+    }
+    
+    no_of_nodes = j;
+    
+    igraph_vit_destroy(&vit);
+    igraph_vector_destroy(tmpres);
+    IGRAPH_FINALLY_CLEAN(2);
+  }
+
+  /* I don't really understand why they divide the betweenness by 2 if the graph
+   * is undirected. I never saw such definition. Matteo
+  if (!directed || !igraph_is_directed(graph)) {
+    for (j=0; j<no_of_nodes; j++) {
+      VECTOR(*res)[j] /= 2.0;
+    }
+  }
+   */
+  
+  IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
+
+  igraph_vector_destroy(&nrgeo);
+  igraph_vector_destroy(&tmpscore);
+  igraph_vector_destroy(&dist);
+  igraph_stack_destroy(&S);
+  igraph_adjlist_destroy(&fathers);
+  igraph_inclist_destroy(&inclist);
+  igraph_inclist_destroy(&inclist_in);
+  igraph_2wheap_destroy(&Q);
+  IGRAPH_FINALLY_CLEAN(8);
+  
+  return 0;
+}
+int igraph_i_betweenness_sample_gss_linear(const igraph_t *graph, igraph_vector_t *res, 
+        igraph_vector_t *stats, igraph_strvector_t *stats_names,
+        igraph_integer_t no_of_samples, const igraph_vs_t vids, 
+        igraph_bool_t directed, igraph_real_t cutoff,
+        const igraph_vector_t *weights, igraph_bool_t nobigint) {
+
+  igraph_rng_t *rng=NULL;
+  long int no_of_nodes=igraph_vcount(graph);
+  long int forward_touched_edges = 0;
+  long int backward_touched_edges = 0;
+  igraph_dqueue_t q=IGRAPH_DQUEUE_NULL;
+  long int *distance;
+  unsigned long long int *nrgeo=0;  /* must be long long; consider grid
+				       graphs for example */
+  igraph_biguint_t *big_nrgeo=0;
+  double *tmpscore;
+  igraph_bool_t backwards = 0;
+  igraph_real_t linear_scaling_factor;
+  igraph_stack_t stack=IGRAPH_STACK_NULL;
+  long int vertex_index;
+  long int j, k, nneis;
+  igraph_vector_t *neis;
+  igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
+  igraph_vit_t vit;
+
+  igraph_adjlist_t adjlist_out, adjlist_in, adjlist_fixed_in;
+  igraph_adjlist_t *adjlist_out_p, *adjlist_in_p, *adjlist_fixed_in_p;
+
+  igraph_biguint_t D, R, T;
+
+  if (weights) { 
+    return igraph_i_betweenness_weighted_sample_gss_linear(graph, res, stats,
+        stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
+  }
+
+  if (!igraph_vs_is_all(&vids)) {
+    /* subset */
+    IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
+  } else {
+    /* only  */
+    IGRAPH_CHECK(igraph_vector_resize(res, no_of_nodes));
+    igraph_vector_null(res);
+    tmpres=res;
+  }
+
+  directed=directed && igraph_is_directed(graph);
+  if (directed) {
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_out, IGRAPH_OUT));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_out);
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_in, IGRAPH_IN));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_in);
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_fixed_in, IGRAPH_IN));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_fixed_in);
+    adjlist_out_p=&adjlist_out;
+    adjlist_in_p=&adjlist_in;
+    adjlist_fixed_in_p=&adjlist_fixed_in;
+  } else {
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_out, IGRAPH_ALL));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_out);
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_in, IGRAPH_ALL));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_in);
+    IGRAPH_CHECK(igraph_adjlist_init(graph, &adjlist_fixed_in, IGRAPH_ALL));
+    IGRAPH_FINALLY(igraph_adjlist_destroy, &adjlist_fixed_in);
+    adjlist_out_p=&adjlist_out;
+    adjlist_in_p=&adjlist_in;
+    adjlist_fixed_in_p=&adjlist_fixed_in;
+  }
+  for (j=0; j<no_of_nodes; j++) {
+    igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, j));
+  }
+  
+  distance=igraph_Calloc(no_of_nodes, long int);
+  if (distance==0) {
+    IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+  }
+  IGRAPH_FINALLY(igraph_free, distance);
+  if (nobigint) {
+    nrgeo=igraph_Calloc(no_of_nodes, unsigned long long int);
+    if (nrgeo==0) {
+      IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+    }
+    IGRAPH_FINALLY(igraph_free, nrgeo);
+  } else {
+    /* +1 is to have one containing zeros, when we free it, we stop
+       at the zero */
+    big_nrgeo=igraph_Calloc(no_of_nodes+1, igraph_biguint_t);
+    if (!big_nrgeo) {
+      IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+    }
+    IGRAPH_FINALLY(igraph_i_destroy_biguints, big_nrgeo);
+    for (j=0; j<no_of_nodes; j++) {
+      IGRAPH_CHECK(igraph_biguint_init(&big_nrgeo[j]));
+    }
+    IGRAPH_CHECK(igraph_biguint_init(&D));
+    IGRAPH_FINALLY(igraph_biguint_destroy, &D);
+    IGRAPH_CHECK(igraph_biguint_init(&R));
+    IGRAPH_FINALLY(igraph_biguint_destroy, &R);
+    IGRAPH_CHECK(igraph_biguint_init(&T));
+    IGRAPH_FINALLY(igraph_biguint_destroy, &T);
+  }
+
+  tmpscore=igraph_Calloc(no_of_nodes, double);
+  if (tmpscore==0) {
+    IGRAPH_ERROR("betweenness failed", IGRAPH_ENOMEM);
+  }
+  IGRAPH_FINALLY(igraph_free, tmpscore);
+
+
+  IGRAPH_DQUEUE_INIT_FINALLY(&q, 100);
+  igraph_stack_init(&stack, no_of_nodes);
+  IGRAPH_FINALLY(igraph_stack_destroy, &stack);
+    
+  /* here we go */
+  if (no_of_samples < -1 || no_of_samples == 0) {
+    IGRAPH_ERROR("Number of samples must be positive or -1 (for no sampling)",
+        IGRAPH_EINVAL);
+  } else {
+    rng=igraph_rng_default();
+  }
+  
+  for (vertex_index=0; vertex_index<no_of_samples; vertex_index++) {
+    IGRAPH_PROGRESS("Betweenness centrality: ", 100.0*vertex_index/no_of_samples, 0);
+    IGRAPH_ALLOW_INTERRUPTION();
+
+    long int source = igraph_rng_get_integer(rng, 0, no_of_nodes - 1);
+    backwards = igraph_rng_get_integer(rng, 0, 1);
+
+    IGRAPH_CHECK(igraph_dqueue_push(&q, source));
+    if (nobigint) { 
+      nrgeo[source]=1;
+    } else {
+      igraph_biguint_set_limb(&big_nrgeo[source], 1);
+    }
+    distance[source]=1;
+    
+    while (!igraph_dqueue_empty(&q)) {
+      long int actnode=igraph_dqueue_pop(&q);
+
+      IGRAPH_CHECK(igraph_stack_push(&stack, actnode));
+
+      if (cutoff >= 0 && distance[actnode] >= cutoff+1) { continue; }
+      
+      if (backwards) {
+        neis = igraph_adjlist_get(adjlist_fixed_in_p, actnode);
+      } else {
+        neis = igraph_adjlist_get(adjlist_out_p, actnode);
+      }
+      nneis = igraph_vector_size(neis);
+      for (j=0; j<nneis; j++) {
+        forward_touched_edges++;
+        long int neighbor=VECTOR(*neis)[j];
+        if (distance[neighbor]==0) {
+          distance[neighbor]=distance[actnode]+1;
+          IGRAPH_CHECK(igraph_dqueue_push(&q, neighbor));
+          if (nobigint) { 
+            nrgeo[neighbor]=0;
+          } else {
+            igraph_biguint_set_limb(&big_nrgeo[neighbor], 0);
+          }
+          tmpscore[neighbor]=0;
+          igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, neighbor));      
+        } 
+        if (distance[neighbor]==distance[actnode]+1) {
+          igraph_vector_t *v=igraph_adjlist_get(adjlist_in_p, neighbor);
+          igraph_vector_push_back(v, actnode);
+          if (nobigint) { 
+            nrgeo[neighbor]+=nrgeo[actnode];
+          } else {
+            IGRAPH_CHECK(igraph_biguint_add(&big_nrgeo[neighbor],
+                  &big_nrgeo[neighbor], &big_nrgeo[actnode]));
+          }
+        }
+      } /* for j < nneis */
+    } /* while !igraph_dqueue_empty */
+    
+    /* Ok, we've the distance of each node and also the number of
+       shortest paths to them. Now we do an inverse search, starting
+       with the farthest nodes. */
+     
+    while (!igraph_stack_empty(&stack)) {
+      long int actnode=igraph_stack_pop(&stack);
+      neis = igraph_adjlist_get(adjlist_in_p, actnode);
+      nneis = igraph_vector_size(neis);
+      for (j=0; j<nneis; j++) {
+        backward_touched_edges++;
+        long int neighbor=VECTOR(*neis)[j];
+        if (nobigint) {
+          //if (backwards) {
+          //  linear_scaling_factor = 1.0 - (((double)(distance[neighbor])) / distance[actnode]);
+          //} else {
+            linear_scaling_factor = ((double)(distance[neighbor])) / distance[actnode]; 
+          //}
+          tmpscore[neighbor] += linear_scaling_factor * (tmpscore[actnode]+1)*
+            ((double)(nrgeo[neighbor]))/nrgeo[actnode];
+        } else {
+          if (!igraph_biguint_compare_limb(&big_nrgeo[actnode], 0)) {
+            tmpscore[neighbor] = IGRAPH_INFINITY;
+          } else {
+            double div;
+            int shift=1000000000L;
+            IGRAPH_CHECK(igraph_biguint_mul_limb(&T, &big_nrgeo[neighbor], 
+                   shift));	  
+            igraph_biguint_div(&D, &R, &T, &big_nrgeo[actnode]);
+            div=igraph_biguint_get(&D) / shift;
+            //if (backwards) {
+            //  linear_scaling_factor = 1.0 - (((double)(distance[neighbor])) / distance[actnode]);
+            //} else {
+              linear_scaling_factor = ((double)(distance[neighbor])) / distance[actnode]; 
+            //} 
+            tmpscore[neighbor] += (tmpscore[actnode]+1) * div * linear_scaling_factor;
+          }
+        }
+      }
+      
+      if (actnode != source) { VECTOR(*tmpres)[actnode] += tmpscore[actnode]; }
+
+      distance[actnode]=0;
+      /*
+      if (nobigint) { 
+        nrgeo[actnode]=0;
+      } else {
+        igraph_biguint_set_limb(&big_nrgeo[actnode], 0);
+      }
+      tmpscore[actnode]=0;
+      igraph_vector_clear(igraph_adjlist_get(adjlist_in_p, actnode));      
+      */
+    }
+
+  } /* for vertex_index < no_of_samples */
+
+  igraph_vector_push_back(stats, forward_touched_edges);
+  igraph_strvector_add(stats_names, "forward_touched_edges");
+  igraph_vector_push_back(stats, backward_touched_edges);
+  igraph_strvector_add(stats_names, "backward_touched_edges");
+
+  IGRAPH_PROGRESS("Betweenness centrality: ", 100.0, 0);
+
+  /* clean  */
+  igraph_Free(distance);
+  if (nobigint) {
+    igraph_Free(nrgeo); 
+  } else {
+    igraph_biguint_destroy(&T);
+    igraph_biguint_destroy(&R);
+    igraph_biguint_destroy(&D);
+    IGRAPH_FINALLY_CLEAN(3);
+    igraph_i_destroy_biguints(big_nrgeo);
+  }
+  igraph_Free(tmpscore);
+  
+  igraph_dqueue_destroy(&q);
+  igraph_stack_destroy(&stack);
+  IGRAPH_FINALLY_CLEAN(5);
+
+  /* Keep only the requested vertices */
+  if (!igraph_vs_is_all(&vids)) { 
+    IGRAPH_CHECK(igraph_vit_create(graph, vids, &vit));
+    IGRAPH_FINALLY(igraph_vit_destroy, &vit);
+    IGRAPH_CHECK(igraph_vector_resize(res, IGRAPH_VIT_SIZE(vit)));
+
+    for (k=0, IGRAPH_VIT_RESET(vit); !IGRAPH_VIT_END(vit);
+	 IGRAPH_VIT_NEXT(vit), k++) {
+      long int node=IGRAPH_VIT_GET(vit);
+      VECTOR(*res)[k] = VECTOR(*tmpres)[node];
+      //printf("The value of node: %lf is %lf \n", k, VECTOR(*res)[k]);
+    }
+
+    igraph_vit_destroy(&vit);
+    igraph_vector_destroy(tmpres);
+    IGRAPH_FINALLY_CLEAN(2);
+  }     
+  
+  /* I still think this makes no sense. Matteo */
+  /* divide by 2 for undirected graph */
+  
+  /*
+  if (!directed) {
+    nneis=igraph_vector_size(res);
+    for (j=0; j<nneis; j++) {
+      VECTOR(*res)[j] /= 2.0;
+    }
+  }
+  */
+  
+  igraph_adjlist_destroy(&adjlist_out);
+  igraph_adjlist_destroy(&adjlist_in);
+  igraph_adjlist_destroy(&adjlist_fixed_in);
+  IGRAPH_FINALLY_CLEAN(3);
+
+  return 0;
+}
+
 int igraph_betweenness_sample_gss_linear_sample_size(const igraph_t *graph,
            igraph_vector_t *res, igraph_vector_t *stats, igraph_strvector_t
            *stats_names, igraph_integer_t sample_size, 
            const igraph_vs_t vids, igraph_bool_t directed, 
            igraph_real_t cutoff, const igraph_vector_t* weights,
            igraph_bool_t nobigint) {
-  int ret_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
-      sample_size, vids, directed, cutoff, 1, weights, nobigint);
+  int ret_code = igraph_i_betweenness_sample_gss_linear(graph, res, stats, stats_names,
+      sample_size, vids, directed, cutoff, weights, nobigint);
   igraph_vector_push_back(stats, sample_size);
   igraph_strvector_add(stats_names, "sample_size");
   int j;
   long int no_of_nodes=igraph_vcount(graph);
-  double normalization_factor = 1.0 / ((no_of_nodes - 1) * sample_size);
+  double normalization_factor = 2.0 / ((no_of_nodes - 1) * sample_size);
   for (j=0; j<no_of_nodes; j++) {
     VECTOR(*res)[j] *= normalization_factor;
   }
@@ -2036,9 +2529,9 @@ int igraph_betweenness_sample_gss_linear(const igraph_t *graph, igraph_vector_t 
   no_of_samples=(igraph_integer_t) ceil((pow((no_of_nodes - 2) / (epsilon * (no_of_nodes - 1)), 2) * 0.5 * log(2 * no_of_nodes / delta)));
   /* Denormalize betweenness counters by n / k */
   //normalization_factor =  ((double) no_of_nodes) / no_of_samples;
-  normalization_factor = 1.0 / ((no_of_nodes - 1) * no_of_samples);
-  return_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
-      no_of_samples, vids, directed, cutoff, 1, weights, nobigint);
+  normalization_factor = 2.0 / ((no_of_nodes - 1) * no_of_samples);
+  return_code = igraph_i_betweenness_sample_gss_linear(graph, res, stats, stats_names,
+      no_of_samples, vids, directed, cutoff, weights, nobigint);
   for (j=0; j<no_of_nodes; j++) {
     VECTOR(*res)[j] *= normalization_factor;
   }
@@ -2054,7 +2547,7 @@ int igraph_betweenness_sample_bp_sample_size(const igraph_t *graph,
            igraph_real_t cutoff, const igraph_vector_t* weights,
            igraph_bool_t nobigint) {
   int ret_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
-      sample_size, vids, directed, cutoff, 0, weights, nobigint);
+      sample_size, vids, directed, cutoff, weights, nobigint);
   igraph_vector_push_back(stats, sample_size);
   igraph_strvector_add(stats_names, "sample_size");
   int j;
@@ -2098,7 +2591,7 @@ int igraph_betweenness_sample_bp(const igraph_t *graph, igraph_vector_t *res,
   //normalization_factor =  ((double) no_of_nodes) / no_of_samples;
   normalization_factor = 1.0 / ((no_of_nodes - 1) *no_of_samples);
   return_code = igraph_i_betweenness_estimate(graph, res, stats, stats_names,
-      no_of_samples, vids, directed, cutoff, 0, weights, nobigint);
+      no_of_samples, vids, directed, cutoff, weights, nobigint);
   for (j=0; j<no_of_nodes; j++) {
     VECTOR(*res)[j] *= normalization_factor;
   }
@@ -3160,7 +3653,7 @@ int igraph_betweenness_estimate(const igraph_t *graph, igraph_vector_t *res,
 				const igraph_vector_t *weights, 
 				igraph_bool_t nobigint) {
   return igraph_i_betweenness_estimate(graph, res, stats, stats_names, -1,
-      vids, directed, cutoff, 0, weights, nobigint);
+      vids, directed, cutoff, weights, nobigint);
 }
 
 int igraph_i_edge_betweenness_estimate_weighted(const igraph_t *graph, 
