@@ -1,11 +1,13 @@
 We are going to implement our code in Python3.3.1, using and extending the
 igraph library (http://igraph.sourceforge.net)
 
-Implement ALENEX paper sampling algorithm
+Implement top-K algorithm
 
 Implement adaptive sampling algorithm
 
-Implement code to automatize reports
+# DONE! Implement code to automatize reports
+
+# DONE! Implement ALENEX (GSS) paper sampling algorithm 
 
 # DONE! Download graph data from http://snap.stanford.edu/data and
 http://law.di.unimi.it/datasets.php (not done from unimi as they are not in a

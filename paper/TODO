@@ -1,3 +1,6 @@
+Check that we can actually handle the k-path (random walk) centrality by
+Kourtellis et al.
+
 Experiments
 
 Discussion of the work by Geisberger et al.
