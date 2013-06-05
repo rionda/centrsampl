@@ -1,6 +1,12 @@
 We are going to implement our code in Python3.3.1, using and extending the
 igraph library (http://igraph.sourceforge.net)
 
+Add timeout functionality in the C part of the code
+
+Use the same percentage of sample space
+
+Run the algorithm for different topologies
+
 Implement top-K algorithm
 
 Implement adaptive sampling algorithm
