@@ -3276,6 +3276,7 @@ int igraph_diameter_approximation(const igraph_t *graph,
     } // and if do_computation
   } // end for connected components
   igraph_decompose_destroy(&components);
+  IGRAPH_FINALLY_CLEAN(1);
   if (! do_computation) {
     *diameter = max_component_size - 1;
   }
@@ -3327,7 +3328,177 @@ int igraph_betweenness_sample_vc(const igraph_t *graph, igraph_vector_t *res,
   return ret_code;
 }
 
+int sel_recur(igraph_vector_t *vector, int *indexes, int start, int end, int k)
+{
+  int pivot, i, tmp;
+  igraph_real_t tmpval;
+        
+  if (start==end-1) {
+    return indexes[start];
+  }
+    
+  pivot = start;
+    
+  for(i=start+1; i<end; i++) {
+    /* put all entries greater than V[pivot] to the left of pivot*/
+    if (VECTOR(*vector)[i]>VECTOR(*vector)[pivot]) {
+      /* first move pivot value up one index */
+      tmp = indexes[pivot];
+      tmpval = VECTOR(*vector)[pivot];
+      indexes[pivot] = indexes[pivot+1];
+      VECTOR(*vector)[pivot] = VECTOR(*vector)[pivot+1];
+      indexes[pivot+1] = tmp;
+      VECTOR(*vector)[pivot+1] = tmpval;
+          
+      if (i>pivot+1) {
+          /* now we need to swap i th with pivot-1 th */
+          tmp = indexes[pivot];
+          tmpval = VECTOR(*vector)[pivot];
+          indexes[pivot] = indexes[i];
+          VECTOR(*vector)[pivot] = VECTOR(*vector)[i];
+          indexes[i] = tmp;
+          VECTOR(*vector)[i] = tmpval;
+      }
+      pivot++;            
+    }
+        
+  }
+  if (pivot==k) {
+    return indexes[pivot];
+  } else {
+    if (pivot > k) {
+      return sel_recur(vector,indexes,start,pivot,k);
+    } else {
+      return sel_recur(vector,indexes,pivot+1,end,k);
+    }
+  }
+}
 
+int quickselect(igraph_vector_t *vector, igraph_integer_t n, igraph_integer_t k)
+{
+  /* returns the index of the kth greatest value in vector */
+  igraph_vector_t v_vector_copy, *vector_copy=&v_vector_copy;
+  int i, *indexes, ret;
+
+  if (k>=n) {
+      return -1;
+  }
+  if (k<0) {
+      return -1;
+  }
+  
+  IGRAPH_VECTOR_INIT_FINALLY(vector_copy, n);
+  indexes = (int*)malloc(n*sizeof(int));
+  
+  for (i=0; i<n; i++) {
+      VECTOR(*vector_copy)[i] = VECTOR(*vector)[i];
+      indexes[i] = i;
+  }
+  
+  ret = sel_recur(vector_copy,indexes,0,n,k);
+  
+  free(indexes);
+  igraph_vector_destroy(vector_copy);
+  IGRAPH_FINALLY_CLEAN(1);
+  return ret;
+}
+
+/**
+ * \ingroup structural
+ * \function igraph_betweenness_sample_vc_topk
+ * \brief Approximate betweenness centrality of some vertices using sampling and VC-Dimension.
+ * 
+ * </para><para>
+ * TODO
+ */
+int igraph_betweenness_sample_vc_topk(const igraph_t *graph, igraph_vector_t *res,
+           igraph_vector_t *stats, igraph_strvector_t *stats_names,
+           igraph_real_t epsilon, igraph_real_t delta, 
+           igraph_integer_t k,
+           igraph_integer_t diameter, const igraph_vs_t vids, 
+           igraph_bool_t directed, igraph_real_t cutoff, 
+           const igraph_vector_t* weights, igraph_bool_t nobigint) {
+  double sample_size_constant=0.5;
+  igraph_integer_t my_diameter = diameter;
+  igraph_integer_t no_of_samples;
+  igraph_integer_t i;
+  long int no_of_nodes = igraph_vcount(graph);
+  /* Check values of epsilon, delta, k */
+  if (delta >= 1.0 || delta <= 0.0) {
+    IGRAPH_ERROR("delta must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
+  }
+  if (epsilon >= 1.0 || epsilon <= 0.0) {
+    IGRAPH_ERROR("epsilon must be greater than 0 and smaller than 1", IGRAPH_EINVAL);
+  }
+  if (k <= 0) {
+    IGRAPH_ERROR("k must be greater than 0", IGRAPH_EINVAL);
+  }
+  /* If diameter is -1, compute approximation of diameter */
+  if (my_diameter == -1) {
+    igraph_diameter_approximation(graph, &my_diameter, stats, stats_names, weights);
+  } else {
+    igraph_vector_push_back(stats, 0.0);
+    igraph_strvector_add(stats_names, "diameter_touched_edges");
+  }
+  /* Compute delta_1 and delta_2 */
+  igraph_real_t delta_partial = 1.0 - sqrt(1- delta);
+
+  /* Compute sample size for first phase */
+  no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
+          2)) * (floor(log2(my_diameter - 1)) + 1 - log(delta_partial)));
+  /* Perform first phase */
+  igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
+  IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
+  int ret_code = igraph_i_betweenness_sample_vc(graph, tmpres, stats, stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
+  if (ret_code != 0) {
+    return ret_code;
+  }
+  /*
+   * XXX TODO should save the touched edges values with a different name (or
+   * just use a different stats structure above...)
+   */
+  igraph_vector_push_back(stats, my_diameter);
+  igraph_strvector_add(stats_names, "diameter");
+  igraph_vector_push_back(stats, no_of_samples);
+  igraph_strvector_add(stats_names, "sample_size_1");
+
+  /* Compute lower bound to top-kth betweenness) */
+  igraph_real_t top_k_betw = VECTOR(*tmpres)[quickselect(tmpres, no_of_nodes, k)];
+  igraph_real_t top_k_betw_lb = top_k_betw - epsilon;
+  igraph_vector_destroy(tmpres);
+  IGRAPH_FINALLY_CLEAN(1);
+  if (top_k_betw_lb <= 0.0) {
+    IGRAPH_ERROR("negative lower bound to top-k betweenness. Decrease epsilon or k.", IGRAPH_EINVAL);
+  }
+
+  /* Compute sample size for the second phase */
+  no_of_samples=(igraph_integer_t) (ceil((sample_size_constant / (pow(epsilon,2)*top_k_betw_lb)) * ((floor(log2(my_diameter - 1)) + 1)*log(1 / top_k_betw_lb) - log(delta_partial)))); 
+  ret_code = igraph_i_betweenness_sample_vc(graph, res, stats, stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
+
+  igraph_vector_push_back(stats, no_of_samples);
+  igraph_strvector_add(stats_names, "sample_size_2");
+ 
+  /* Identify superset of the top_k */
+  igraph_real_t plus_coeff = (1 + epsilon);
+  igraph_real_t top_k_betw_2 = VECTOR(*res)[quickselect(res, no_of_nodes, k)];
+  igraph_real_t top_k_betw_lb_2 = top_k_betw_2 / plus_coeff;
+  igraph_real_t candidate_lb;
+  for (i=0; i < no_of_nodes; i++) {
+    if (VECTOR(*res)[i] >= top_k_betw_2) { 
+      candidate_lb = VECTOR(*res)[i] / plus_coeff;
+      if (candidate_lb < top_k_betw_lb_2) {
+        top_k_betw_lb_2 = candidate_lb;
+      }
+    }
+  }
+  igraph_real_t scale_coeff = plus_coeff / ( 1 - epsilon);
+  for (i=0; i < no_of_nodes; i++) {
+    if (VECTOR(*res)[i] * scale_coeff < top_k_betw_lb_2) {
+        VECTOR(*res)[i] = -1.0;
+    }
+  }
+  return ret_code;
+}
 
 int igraph_diameter_approximation_motwani(const igraph_t *graph, igraph_integer_t *diameter ){    
     
@@ -3530,9 +3701,6 @@ int igraph_diameter_approximation_motwani(const igraph_t *graph, igraph_integer_
    
 }
 
-
-
-
 igraph_bool_t bfs_callback(const igraph_t *graph,
                            igraph_integer_t vid,
                            igraph_integer_t pred,
@@ -3550,7 +3718,6 @@ igraph_bool_t bfs_callback(const igraph_t *graph,
     }
     
 }
-
 
 int igraph_kBFS(const igraph_t *graph, igraph_t *graph_augm, igraph_vector_t *ret_nodes, igraph_integer_t *ret_depth, igraph_integer_t root_index, const igraph_integer_t k_number_of_nodes){
 
@@ -3809,6 +3976,8 @@ int igraph_i_edge_betweenness_estimate_weighted(const igraph_t *graph,
   
   return 0;
 }
+
+
 
 /**
  * \ingroup structural

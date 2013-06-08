@@ -4363,6 +4363,143 @@ PyObject *igraphmodule_Graph_betweenness_sample_vc(igraphmodule_GraphObject * se
 }
 
 /** \ingroup python_interface_graph
+ * \brief Approximates the betweennesses of some vertices in a graph with sampling (VC-Dimension)
+ * \return the betweennesses as a list (or a single float)
+ * \sa igraph_betweenness_sample_vc_topk
+ */
+PyObject *igraphmodule_Graph_betweenness_sample_vc_topk(igraphmodule_GraphObject * self,
+                                         PyObject * args, PyObject * kwds)
+{
+  static char *kwlist[] = { "epsilon", "delta", "k", "diameter", "vertices", "directed", "cutoff", "weights",
+    "nobigint", NULL };
+  PyObject *directed = Py_True;
+  PyObject *vobj = Py_None, *list;
+  PyObject *cutoff = Py_None;
+  PyObject *weights_o = Py_None;
+  PyObject *nobigint = Py_True;
+  PyObject *stats_dict, *tuple;
+  igraph_integer_t diameter = 0;
+  igraph_integer_t k = 0;
+  igraph_real_t delta = 0.0;
+  igraph_real_t epsilon = 0.0;
+  igraph_vector_t res, *weights = NULL;
+  igraph_bool_t return_single = 0;
+  igraph_vs_t vs;
+  igraph_vector_t stats;
+  igraph_strvector_t stats_names;
+  int j;
+
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "ddii|OOOOO", kwlist,
+                                   &epsilon, &delta, &k, &diameter, &vobj, &directed, &cutoff, &weights_o,
+                                   &nobigint)) {
+    return NULL;
+  }
+
+  if (igraphmodule_attrib_to_vector_t(weights_o, self, &weights,
+	  ATTRIBUTE_TYPE_EDGE)) return NULL;
+
+  if (igraphmodule_PyObject_to_vs_t(vobj, &vs, &self->g, &return_single, 0)) {
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    igraphmodule_handle_igraph_error();
+    return NULL;
+  }
+
+  if (igraph_vector_init(&res, 0)) {
+    igraph_vs_destroy(&vs);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
+  if (igraph_vector_init(&stats, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
+  if (igraph_strvector_init(&stats_names, 0)) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return igraphmodule_handle_igraph_error();
+  }
+
+  if (cutoff == Py_None) {
+    if (igraph_betweenness_sample_vc_topk(&self->g, &res, &stats, &stats_names,
+          epsilon, delta, k, diameter, vs, PyObject_IsTrue(directed), -1, weights,
+          PyObject_IsTrue(nobigint))) {
+      igraph_vs_destroy(&vs);
+      igraph_vector_destroy(&res);
+      igraph_vector_destroy(&stats);
+      igraph_strvector_destroy(&stats_names);
+      if (weights) { igraph_vector_destroy(weights); free(weights); }
+      igraphmodule_handle_igraph_error();
+      return NULL;
+    }
+  } else if (PyNumber_Check(cutoff)) {
+    PyObject *cutoff_num = PyNumber_Int(cutoff);
+    if (cutoff_num == NULL) {
+      igraph_vs_destroy(&vs);
+      igraph_vector_destroy(&res);
+      igraph_vector_destroy(&stats);
+      igraph_strvector_destroy(&stats_names);
+      if (weights) { igraph_vector_destroy(weights); free(weights); }
+      return NULL;
+    }
+    if (igraph_betweenness_sample_vc_topk(&self->g, &res, &stats, &stats_names,
+          epsilon, delta, k, diameter, vs, PyObject_IsTrue(directed),
+          (igraph_integer_t)PyInt_AsLong(cutoff_num), weights,
+          PyObject_IsTrue(nobigint))) {
+      igraph_vs_destroy(&vs);
+      igraph_vector_destroy(&res);
+      igraph_vector_destroy(&stats);
+      igraph_strvector_destroy(&stats_names);
+      if (weights) { igraph_vector_destroy(weights); free(weights); }
+      Py_DECREF(cutoff_num);
+      igraphmodule_handle_igraph_error();
+      return NULL;
+    }
+    Py_DECREF(cutoff_num);
+  } else {
+    PyErr_SetString(PyExc_TypeError, "cutoff value must be None or integer");
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    igraph_vector_destroy(&stats);
+    igraph_strvector_destroy(&stats_names);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return NULL;
+  }
+
+  if (!return_single)
+    list = igraphmodule_vector_t_to_PyList(&res, IGRAPHMODULE_TYPE_FLOAT);
+  else
+    list = PyFloat_FromDouble(VECTOR(res)[0]);
+
+  stats_dict = PyDict_New();
+  if (! stats_dict) {
+    igraph_vs_destroy(&vs);
+    igraph_vector_destroy(&res);
+    igraph_vector_destroy(&stats);
+    igraph_strvector_destroy(&stats_names);
+    if (weights) { igraph_vector_destroy(weights); free(weights); }
+    return NULL;
+  }
+
+  for (j=0; j < igraph_strvector_size(&stats_names); j++) {
+    PyDict_SetItemString(stats_dict, STR(stats_names, j), PyFloat_FromDouble(VECTOR(stats)[j]));
+  }
+
+  igraph_strvector_destroy(&stats_names);
+  igraph_vector_destroy(&stats);
+  igraph_vector_destroy(&res);
+  igraph_vs_destroy(&vs);
+  if (weights) { igraph_vector_destroy(weights); free(weights); }
+
+  tuple = Py_BuildValue("(NN)", stats_dict, list);
+  return tuple;
+}
+
+/** \ingroup python_interface_graph
  * \brief Calculates the bibliographic coupling of some vertices in a graph.
  * \return the bibliographic coupling values in a matrix
  * \sa igraph_bibcoupling
@@ -12757,6 +12894,32 @@ struct PyMethodDef igraphmodule_Graph_methods[] = {
   "Estimates the betweennesses of some vertices in a graph with sampling (VC-Dimension)\n\n"
   "@param epsilon: the accuracy parameter for the estimations.\n"
   "@param delta: the confidence parameter for the estimations.\n"
+  "@param diameter: the diameter of the network. -1 for approx. computation,\n"
+  "  which is valid only for *undirected* *unweighted* graphs.\n)"
+  "Keyword arguments:\n"
+   "@param vertices: the vertices for which the betweennesses must be returned.\n"
+   "  If C{None}, assumes all of the vertices in the graph.\n"
+   "@param directed: whether to consider directed paths.\n"
+   "@param cutoff: if it is an integer, only paths less than or equal to this\n"
+   "  length are considered,  If C{None}, all paths are considered.\n"
+   "@param weights: edge weights to be used. Can be a sequence or iterable or\n"
+   "  even an edge attribute name.\n"
+   "@param nobigint: if C{True}, igraph uses the longest available integer\n"
+   "  type on the current platform to count shortest paths. For some large\n"
+   "  networks that have a specific structure, the counters may overflow.\n"
+   "  To prevent this, use C{nobigint=False}, which forces igraph to use\n"
+   "  arbitrary precision integers at the expense of increased computation\n"
+   "  time.\n"
+   "@return: the estimated betweenness of the given vertices in a list\n" },
+
+   /* interface to igraph_betweenness_sample_vc_topk*/
+  {"betweenness_sample_vc_topk", (PyCFunction) igraphmodule_Graph_betweenness_sample_vc_topk,
+  METH_VARARGS | METH_KEYWORDS,
+  "betweenness_sample_vc_topk(epsilon, delta, k, diameter, vertices=None, directed=True, cutoff=None, weights=None, nobigint=True)\n\n"
+  "Estimates the betweennesses of some vertices in a graph with sampling (VC-Dimension)\n\n"
+  "@param epsilon: the accuracy parameter for the estimations.\n"
+  "@param delta: the confidence parameter for the estimations.\n"
+  "@param k: the number of vertices to consider.\n"
   "@param diameter: the diameter of the network. -1 for approx. computation,\n"
   "  which is valid only for *undirected* *unweighted* graphs.\n)"
   "Keyword arguments:\n"
