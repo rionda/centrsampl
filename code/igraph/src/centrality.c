@@ -3440,36 +3440,50 @@ int igraph_betweenness_sample_vc_topk(const igraph_t *graph, igraph_vector_t *re
     igraph_vector_push_back(stats, 0.0);
     igraph_strvector_add(stats_names, "diameter_touched_edges");
   }
+  igraph_vector_push_back(stats, my_diameter);
+  igraph_strvector_add(stats_names, "diameter");
+
   /* Compute delta_1 and delta_2 */
   igraph_real_t delta_partial = 1.0 - sqrt(1- delta);
 
   /* Compute sample size for first phase */
-  no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon,
-          2)) * (floor(log2(my_diameter - 1)) + 1 - log(delta_partial)));
-  /* Perform first phase */
-  igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
-  IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
-  int ret_code = igraph_i_betweenness_sample_vc(graph, tmpres, stats, stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
-  if (ret_code != 0) {
-    return ret_code;
+  igraph_real_t epsilon_1 = epsilon;
+  igraph_real_t top_k_betw, top_k_betw_lb;
+
+  int ret_code;
+  for (;;) {
+    no_of_samples=(igraph_integer_t) ceil((sample_size_constant / pow(epsilon_1,
+            2)) * (floor(log2(my_diameter - 1)) + 1 - log(delta_partial)));
+    /* Perform first phase */
+    igraph_vector_t v_tmpres, *tmpres=&v_tmpres;
+    IGRAPH_VECTOR_INIT_FINALLY(tmpres, no_of_nodes);
+    ret_code = igraph_i_betweenness_sample_vc(graph, tmpres, stats, stats_names, no_of_samples, vids, directed, cutoff, weights, nobigint);
+    if (ret_code != 0) {
+      return ret_code;
+    }
+    /*
+     * XXX TODO should save the touched edges values with a different name (or
+     * just use a different stats structure above...)
+     */
+
+    /* Compute lower bound to top-kth betweenness) */
+    top_k_betw = VECTOR(*tmpres)[quickselect(tmpres, no_of_nodes, k)];
+    top_k_betw_lb = top_k_betw - epsilon_1;
+    igraph_vector_destroy(tmpres);
+    IGRAPH_FINALLY_CLEAN(1);
+    if (top_k_betw_lb <= 0.0) {
+      //IGRAPH_ERROR("negative lower bound to top-k betweenness. Decrease epsilon or k.", IGRAPH_EINVAL);
+      //setbuf(stdout,0);
+      epsilon_1 = top_k_betw / 2.0;
+      //printf("epsilon_1=%f\n", epsilon_1);
+    } else {
+      break;
+    }
   }
-  /*
-   * XXX TODO should save the touched edges values with a different name (or
-   * just use a different stats structure above...)
-   */
-  igraph_vector_push_back(stats, my_diameter);
-  igraph_strvector_add(stats_names, "diameter");
   igraph_vector_push_back(stats, no_of_samples);
   igraph_strvector_add(stats_names, "sample_size_1");
-
-  /* Compute lower bound to top-kth betweenness) */
-  igraph_real_t top_k_betw = VECTOR(*tmpres)[quickselect(tmpres, no_of_nodes, k)];
-  igraph_real_t top_k_betw_lb = top_k_betw - epsilon;
-  igraph_vector_destroy(tmpres);
-  IGRAPH_FINALLY_CLEAN(1);
-  if (top_k_betw_lb <= 0.0) {
-    IGRAPH_ERROR("negative lower bound to top-k betweenness. Decrease epsilon or k.", IGRAPH_EINVAL);
-  }
+  igraph_vector_push_back(stats, epsilon_1);
+  igraph_strvector_add(stats_names, "epsilon_1");
 
   /* Compute sample size for the second phase */
   no_of_samples=(igraph_integer_t) (ceil((sample_size_constant / (pow(epsilon,2)*top_k_betw_lb)) * ((floor(log2(my_diameter - 1)) + 1)*log(1 / top_k_betw_lb) - log(delta_partial)))); 
