@@ -59,6 +59,8 @@ def main():
     # Compute aggregate statistics about the experiments
     stats = dict(results[0][0])
     stats["graph"]= os.path.basename(args.graph)
+    stats["vertices"] = G.vcount()
+    stats["edges"] = G.ecount()
     stats["runs"] = args.runs
     del stats["time"]
     times = sorted([x[0]["time"] for x in results])

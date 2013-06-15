@@ -72,6 +72,8 @@ def main():
     # Compute aggregate statistics about the experiments
     stats = dict()
     stats["graph"]= os.path.basename(args.graph)
+    stats["vertices"] = G.vcount()
+    stats["edges"] = G.ecount()
     stats["runs"] = args.runs
     if args.samplesize:
         stats["sample_size"] = args.samplesize
