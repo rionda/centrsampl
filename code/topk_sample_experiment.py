@@ -3,7 +3,7 @@
 """ topk_sample_experiment.py
     
     Perform experiment to evaluate the VC sampling algorithm to approximate the
-    betweenness centrality of all vertices in a graph. The algorithm is run
+    betweenness centrality of the topk vertices in a graph. The algorithm is run
     multiple times. We compute aggregate statistics about the runs and save the
     stats and all the results in a single .pickle file.
 
@@ -18,7 +18,7 @@ import sys
 
 import converter
 import util
-import vc_sample
+import topk_sample
 
 def main():
     """Parse arguments, run experiments, collect results and stats, write to file."""
@@ -29,7 +29,7 @@ def main():
             help="accuracy parameter")
     parser.add_argument("delta", type=util.valid_interval_float,
             help="confidence parameter")
-    parser.add_argument("k", type=util.positive_integer,
+    parser.add_argument("k", type=util.positive_int,
             help="number of interesting vertices")
     parser.add_argument("runs", type=util.positive_int, default=20, help="number of runs")
     parser.add_argument("graph", help="graph file")
@@ -74,15 +74,15 @@ def main():
         logging.info("Run #%d", i)
         # Compute betweenness
         #if args.samplesize:
-        #    results.append(vc_sample.betweenness_sample_size(G,
+        #    results.append(top_ksample.betweenness_sample_size(G,
         #        args.samplesize, False, args.timeout))
         #else:
         if True:
             if args.diameter > 0:
-                results.append(vc_sample.betweenness(G, args.epsilon, args.delta,
+                results.append(topk_sample.betweenness(G, args.epsilon, args.delta,
                         args.k, args.diameter, False, args.timeout))
             else:
-                results.append(vc_sample.betweenness(G, args.epsilon, args.delta,
+                results.append(topk_sample.betweenness(G, args.epsilon, args.delta,
                         args.k, args.approximate, False, args.timeout))
 
     # Compute aggregate statistics about the experiments
