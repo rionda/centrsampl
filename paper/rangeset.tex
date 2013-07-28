@@ -17,8 +17,8 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
   $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.
 \end{lemma}
 
-%\begin{proof}
-\begin{IEEEproof}
+\begin{proof}
+%\begin{IEEEproof}
 Let $\ell>\lfloor\log_2(\VD(G)-2)\rfloor+1$ and assume for the sake of contradiction
 that $\VC(\range_G)=\ell$. From the definition of the VC-dimension there is a set
 $Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$. Let $p$ be
@@ -39,8 +39,8 @@ $2^{\ell-1}>\VD(G)-2$, we reached a contradiction and there cannot be $2^{\ell-1
 distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
 $Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
 $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
-%\end{proof}
-\end{IEEEproof}
+\end{proof}
+%\end{IEEEproof}
 
 \subsection{Unique shortest paths}\label{sec:rangeunique}
 In the restricted case when the graph is undirected and every pair of distinct vertices
@@ -54,7 +54,8 @@ that this is true also for directed graphs.
   shortest paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $3$.
 \end{lemma}
 
-\begin{IEEEproof}
+\begin{proof}
+%\begin{IEEEproof}
   First of all, notice that in this restricted setting, if two different paths
   $p_1$ and $p_2$ meet at a vertex $u$, then they either go on together or at a
   certain point they separate never to meet again at any other vertex $v\neq u$.
@@ -103,7 +104,8 @@ that this is true also for directed graphs.
   We showed that in all possible cases, we reached a contradiction and $Q$,
   which has size $4$ can not be shattered by $\range_G$, hence $\VC(\range_G)\le
   3$.
-\end{IEEEproof}
+%\end{IEEEproof}
+\end{proof}
 
 \begin{lemma}\label{lem:vcdimlowboundunique}
   There is an graph $G=(V,E)$ with $|\mathcal{S}_{uv}|\le1$ for all
@@ -118,7 +120,8 @@ that this is true also for directed graphs.
   \label{fig:uniquetight}
 \end{figure}
 
-\begin{IEEEproof}
+\begin{proof}
+%\begin{IEEEproof}
   Consider the graph $G$ in Fig.~\ref{fig:uniquetight}.
   Let $p_1=(a,b,c,e,i,j)$, $p_2=(m,f,e,i,k,l)$, $p_3=(d,c,e,f,g,h)$ be three
   paths. We now show that $Q=\{p_1,p_2,p_3\}$ can be shattered by $\range_G$, which
@@ -131,7 +134,8 @@ that this is true also for directed graphs.
   some range in $\range_G$ which means that $Q$ can be shattered and
   $\VC(\range_G)\ge 3$. Lemma~\ref{lem:vcdimuppboundunique} gives us an upper
   bound $\VC(\range_G)\le3$, so we can conclude that $\VC(\range_G)=3$.
-\end{IEEEproof}
+%\end{IEEEproof}
+\end{proof}
 
 \subsection{Variants}\label{sec:rangevariants}
 For the case of $k$-bounded-distance betweenness, if we let
@@ -194,7 +198,8 @@ that $\VC(\range_{G_d})=d$.
   $\VC(\range_{G_d})\ge d$.
 \end{lemma}
 
-\begin{IEEEproof}
+\begin{proof}
+%\begin{IEEEproof}
   As we said, the $d$ paths in $Q$  go from $v_\ell$ to $v_\mathrm{r}$.
   From this and the definition of $G_d$ it should be clear that they must go through
   all the middle vertices of $G_d$. Consider now the set
@@ -244,7 +249,8 @@ that $\VC(\range_{G_d})=d$.
   subsets of $Q$ can be expressed as the intersection between $Q$ and a range
   from $\range_{G_d}$, which means that $Q$ can be shattered and therefore
   $\VC(\range_{G_d})\ge d$.
-\end{IEEEproof} 
+%\end{IEEEproof} 
+\end{proof}
 
 \begin{corol}\label{lem:vcdimequal}
   $\VC(\range_{G_d})=d$.

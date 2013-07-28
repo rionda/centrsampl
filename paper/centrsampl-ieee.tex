@@ -1,0 +1,86 @@
+\documentclass[10pt,conference,compsocconf]{IEEEtran}
+\usepackage{datetime}
+\usepackage{graphicx}
+\usepackage{balance}
+\usepackage{float}
+\usepackage{xspace}
+\usepackage[numbers,sort&compress,square]{natbib}
+\usepackage{ctable}
+%\makeatletter
+%\renewcommand\bibsection%
+%{
+%  \section*{\refname
+%    \@mkboth{\MakeUppercase{\refname}}{\MakeUppercase{\refname}}}
+%}
+%\makeatother
+
+%\usepackage{times}
+\usepackage{amsfonts}
+\usepackage[cmex10]{amsmath}
+\interdisplaylinepenalty=2500
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{multirow}
+\usepackage{bigstrut}
+\usepackage{url}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{mdwlist}
+
+
+\DeclareCaptionType{copyrightbox}
+
+\newtheorem{corol}{Corollary}
+\newtheorem{conj}{Conjecture}
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{theorem}{Theorem}
+
+%\newdef{definition}{Definition}
+\newtheorem{definition}{Definition}
+
+\def\XXX{{\bf XXX}}
+\def\MR{{\bf MR}}
+\def\EK{{\bf EK}}
+
+\def\betw{\mathsf{b}}
+\def\kboundbetw{\mathsf{bb}}
+\def\kpathbetw{\mathsf{pb}}
+\def\prob{\pi}
+\def\range{\mathcal{R}}
+\def\TOPK{\mathsf{TOP}}
+\def\VC{\mathsf{VC}}
+\def\VD{\mathsf{VD}}
+
+\begin{document}
+\title{Fast Approximation of Betweenness Centrality Through Sampling}
+\author{Submitted for blind review}
+\maketitle
+
+{\bf \large \today, \currenttime}
+
+\input{abstract}
+
+\begin{IEEEkeywords}
+betweenness centrality; sampling; social networks; VC-dimension;
+\end{IEEEkeywords}
+
+\input{intro}
+\input{prevwork}
+\input{prelims}
+\input{rangeset}
+\input{algo}
+\input{exper}
+\input{concl}
+
+
+%\bibliographystyle{abbrvnat}
+%\bibliographystyle{IEEEtranS}
+\bibliographystyle{IEEEtranSN}
+\bibliography{diamapprox,vcmine,vcgraph,centrality}
+
+
+\end{document}
+

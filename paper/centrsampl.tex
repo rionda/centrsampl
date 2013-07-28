@@ -1,4 +1,5 @@
-\documentclass[10pt,conference,compsocconf]{IEEEtran}
+\documentclass{sig-alternate}
+
 \usepackage{datetime}
 \usepackage{graphicx}
 \usepackage{balance}
@@ -16,8 +17,7 @@
 
 %\usepackage{times}
 \usepackage{amsfonts}
-\usepackage[cmex10]{amsmath}
-\interdisplaylinepenalty=2500
+\usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{dsfont}
 \usepackage{mathtools}
@@ -38,8 +38,7 @@
 \newtheorem{claim}{Claim}
 \newtheorem{theorem}{Theorem}
 
-%\newdef{definition}{Definition}
-\newtheorem{definition}{Definition}
+\newdef{definition}{Definition}
 
 \def\XXX{{\bf XXX}}
 \def\MR{{\bf MR}}
@@ -55,17 +54,53 @@
 \def\VD{\mathsf{VD}}
 
 \begin{document}
+\conferenceinfo{WSDM'14,} {February 29--November 2, 2014, New York, NY, USA.}
+%\CopyrightYear{2012}
+%\crdata{978-1-4503-1156-4/12/10}
+%\clubpenalty=10000
+%\widowpenalty = 10000
+
 \title{Fast Approximation of Betweenness Centrality Through Sampling}
-\author{Submitted for blind review}
+%\numberofauthors{3} 
+\numberofauthors{1}
+\author{
+\iffalse
+$ $ \\
+\affaddr{$  $}\\
+\affaddr{$  $}\\
+\affaddr{$  $}\\
+\email{$ $}
+\alignauthor
+Matteo Riondato\titlenote{Contact Author}\\
+       \affaddr{Dept.~of Computer Science}\\
+       \affaddr{Brown University}\\
+       \affaddr{Providence, RI, USA}\\
+       \email{matteo@cs.brown.edu}
+\alignauthor
+Evgenios M. Kornaropoulos\\
+       \affaddr{Dept.~of Computer Science}\\
+       \affaddr{Brown University}\\
+       \affaddr{Providence, RI, USA}\\
+       \email{evgenios@cs.brown.edu}
+\alignauthor
+Eli Upfal\\
+       \affaddr{Dept.~of Computer Science}\\
+       \affaddr{Brown University}\\
+       \affaddr{Providence, RI, USA}\\
+       \email{eli@cs.brown.edu} 
+ \fi
+ }
+%\additionalauthors{}
+\date{8 May 2013}
+
 \maketitle
-
 {\bf \large \today, \currenttime}
-
 \input{abstract}
 
-\begin{IEEEkeywords}
-betweenness centrality; sampling; social networks; VC-dimension;
-\end{IEEEkeywords}
+\category{G.2.2}{Discrete Mathematics}{Graph Theory}[Graph algorithms]
+\category{H.2.8}{Database Management}{Database Applications}[data mining]
+\terms{Algorithms, Experimentation, Performance, Theory}
+\keywords{Betweenness centrality, Sampling, VC-Dimension}  
 
 \input{intro}
 \input{prevwork}
@@ -76,11 +111,8 @@ betweenness centrality; sampling; social networks; VC-dimension;
 \input{concl}
 
 
-%\bibliographystyle{abbrvnat}
-%\bibliographystyle{IEEEtranS}
-\bibliographystyle{IEEEtranSN}
+\bibliographystyle{abbrvnat}
 \bibliography{diamapprox,vcmine,vcgraph,centrality}
-
 
 \end{document}
 
