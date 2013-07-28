@@ -1,21 +1,26 @@
 \section{Introduction}\label{sec:intro}
-\begin{itemize}
-  \item Centrality indices are a fundamental tool for network analysis
-  \item They measure the relative importance of a vertex in the network.
-  \item A lot of them are based on shortest path computation. Betweenness
-    centrality. Used for social networks, protein network, network traffic in
-    communication networks, highway nodes identification. (see Kourtellis for references)
-  \item thanks to the amount of data collection and the rise of online social
-    networks, we now have much larger networks than in the past
-  \item Analyzing them is a challenge due to their very large size.
-  \item There are polynomial time algorithms for computing many centrality
-    indices, but they are not practical. 
-  \item There is a need for more efficient algorithms. Given that data mining is
-    exploratory in nature, approximate results can be sufficient, especially if
-    the approximation factor is guaranteed to be within user-specified limits.
-    In practice, more than the actual value of the betweenness of each vertex,
-    the user is interested in the relative ranking of the node.
-\end{itemize}
+Centrality indices are a fundamental tool for network analysis. They measure the
+relative importance of a vertex in the network. Some of them, e.g.~degree
+centrality, reflect local properties of the underlying graph, while others,
+like betweenness centrality and many others, give information about global
+properties as they are based on shortest path computation and counting. In this
+work we are interested in \emph{betweenness centrality} \XXX original paper
+reference, which counts, for every vertex in the graph, the fraction of shortest
+paths that goes through that vertex (see Section~\ref{sec:prelims} for formal
+definitions). Betweenness centrality has been used to analyze social networks,
+protein networks, to evaluate traffic in communication networks, and to identify
+important intersection in highway and road networks. \XXX Kourtellis for
+references. Despite the existence of polynomial time algorithms for computing
+the betweenness centrality~\citep{Brandes01}, these are not practical for the
+analysis of the very large networks that are of interest these days. Graphs
+representing online social networks, communication networks, and the web graph
+can have millions of nodes and billions of edges, making a polynomial time
+algorithm too expensive in practice. Given that data mining is exploratory in
+nature, approximate results can be sufficient, especially if the approximation
+factor is guaranteed to be within user-specified limits. In practice, the user
+is interested in the relative ranking of the node rather than in the actual
+value of the betweenness of each vertex, so a very good approximation of the
+value of each vertex is sufficiently informative for most purposes.
 
 \paragraph{Our contributions} 
 We present two randomized algorithms to approximate the betweenness centrality
