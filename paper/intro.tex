@@ -1,5 +1,21 @@
 \section{Introduction}\label{sec:intro}
-\XXX TBD
+\begin{itemize}
+  \item Centrality indices are a fundamental tool for network analysis
+  \item They measure the relative importance of a vertex in the network.
+  \item A lot of them are based on shortest path computation. Betweenness
+    centrality. Used for social networks, protein network, network traffic in
+    communication networks, highway nodes identification. (see Kourtellis for references)
+  \item thanks to the amount of data collection and the rise of online social
+    networks, we now have much larger networks than in the past
+  \item Analyzing them is a challenge due to their very large size.
+  \item There are polynomial time algorithms for computing many centrality
+    indices, but they are not practical. 
+  \item There is a need for more efficient algorithms. Given that data mining is
+    exploratory in nature, approximate results can be sufficient, especially if
+    the approximation factor is guaranteed to be within user-specified limits.
+    In practice, more than the actual value of the betweenness of each vertex,
+    the user is interested in the relative ranking of the node.
+\end{itemize}
 
 \paragraph{Our contributions} 
 We present two randomized algorithms to approximate the betweenness centrality
@@ -21,5 +37,4 @@ We extensively evaluated our methods on real graphs and compared their
 performances to the exact algorithm for betweenness
 centrality~\citep{Brandes01} and to other sampling-based approximation
 algorithms~\citep{JacobKLPT05,BrandesP07}.
-
 
