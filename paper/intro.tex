@@ -4,23 +4,26 @@ relative importance of a vertex in the network. Some of them, e.g.~degree
 centrality, reflect local properties of the underlying graph, while others,
 like betweenness centrality and many others, give information about global
 properties as they are based on shortest path computation and counting. In this
-work we are interested in \emph{betweenness centrality} \XXX original paper
-reference, which counts, for every vertex in the graph, the fraction of shortest
-paths that goes through that vertex (see Section~\ref{sec:prelims} for formal
-definitions). Betweenness centrality has been used to analyze social networks,
-protein networks, to evaluate traffic in communication networks, and to identify
-important intersection in highway and road networks. \XXX Kourtellis for
-references. Despite the existence of polynomial time algorithms for computing
-the betweenness centrality~\citep{Brandes01}, these are not practical for the
-analysis of the very large networks that are of interest these days. Graphs
-representing online social networks, communication networks, and the web graph
-can have millions of nodes and billions of edges, making a polynomial time
-algorithm too expensive in practice. Given that data mining is exploratory in
-nature, approximate results can be sufficient, especially if the approximation
-factor is guaranteed to be within user-specified limits. In practice, the user
-is interested in the relative ranking of the node rather than in the actual
-value of the betweenness of each vertex, so a very good approximation of the
-value of each vertex is sufficiently informative for most purposes.
+work we are interested in \emph{betweenness
+centrality}~\citep{Anthonisse71,Freeman77} which counts, for every vertex in the
+graph, the fraction of shortest paths that goes through that vertex (see
+Section~\ref{sec:prelims} for formal definitions). Betweenness centrality has
+been used to analyze social networks, protein networks, to evaluate traffic in
+communication networks, and to identify important intersection in highway and
+road networks. \XXX Kourtellis for references. Despite the existence of
+polynomial time algorithms for computing the betweenness
+centrality~\citep{Brandes01}, these are not practical for the analysis of the
+very large networks that are of interest these days. Graphs representing online
+social networks, communication networks, and the web graph can have millions of
+nodes and billions of edges, making a polynomial time algorithm too expensive in
+practice. Given that data mining is exploratory in nature, approximate results
+can be sufficient, especially if the approximation factor is guaranteed to be
+within user-specified limits. In practice, the user is interested in the
+relative ranking of the node rather than in the actual value of the betweenness
+of each vertex, so a very good approximation of the value of each vertex is
+sufficiently informative for most purposes. It is therefore natural to develop
+approximation algorithms that trade off accuracy for speed and fastly compute
+very good approximations of the betweenness of the vertices. 
 
 \paragraph{Our contributions} 
 We present two randomized algorithms to approximate the betweenness centrality
@@ -34,12 +37,16 @@ within a \emph{multiplicative} factor $\varepsilon$ from the real value, with
 probability at least $1-\delta$. This is the first algorithm to reach such a
 high-quality approximation for the set of top-$K$ vertices. The algorithms are
 based on random sampling of shortest paths. The analysis to derive the
-sufficient sample size uses notions and tools from VC-Dimension theory. This
-results in a much smaller sample size than that used by other algorithms
+sufficient sample size uses notions and tools from VC-dimension theory. We
+define a range set associated to the problem at hand and prove strict upper and
+lower bounds to its VC-dimension, which depends only on a characteristic
+quantity of the graph that we call the \emph{vertex-diameter} and not on the
+size of the graph. For some networks, we show that the VC-dimension is actually
+at most a constant, a result that is somewhat surprising. These bounds allow us
+to achieve a much smaller sample size than that used by other algorithms
 guaranteeing the same approximation. Moreover, the amount of work performed by
-our algorithms per sample is also less than what was done in previous works.
-We extensively evaluated our methods on real graphs and compared their
-performances to the exact algorithm for betweenness
-centrality~\citep{Brandes01} and to other sampling-based approximation
-algorithms~\citep{JacobKLPT05,BrandesP07}.
+our algorithms per sample is also less than what was done in previous works. We
+extensively evaluated our methods on real graphs and compared their performances
+to the exact algorithm for betweenness centrality~\citep{Brandes01} and to other
+sampling-based approximation algorithms~\citep{JacobKLPT05,BrandesP07}.
 

@@ -306,12 +306,12 @@ and~\ref{sec:exper} for more details).
 
 \subsection{High-quality approximation of the top-$K$ betweenness
 vertices}\label{sec:topk}
-\XXX It would be great to look at the paper by Ezra, ``Small-Size Relative
-$(p,\varepsilon)$-Approximations for Well-Behaved Range Spaces'', 2012,
-available on the arXiv. She presents a smaller bound to the sample size for a
-relative $(p,\varepsilon$-approximation if the range set is ``well-behaved''. We
-should check whether ours is. (Warning: the paper is not exactly an example of
-clarity\ldots)
+%\XXX It would be great to look at the paper by Ezra, ``Small-Size Relative
+%$(p,\varepsilon)$-Approximations for Well-Behaved Range Spaces'', 2012,
+%available on the arXiv. She presents a smaller bound to the sample size for a
+%relative $(p,\varepsilon$-approximation if the range set is ``well-behaved''. We
+%should check whether ours is. (Warning: the paper is not exactly an example of
+%clarity\ldots)
 
 Very often in practice one is interested only in identifying the vertices with
 the highest betweenness centrality, as they are the ``primary actors'' in the
@@ -323,9 +323,10 @@ defined as the set of vertices with betweenness at least $\betw(v_K)$:
 \[
 \TOPK(K,G)=\{(v,\betw(v)), ~:~ v\in V \mbox{ and } \betw(v)\ge\betw(v_K)\}\enspace.
 \]
-Note that $\TOPK(K,G)$ may contain more than $K$ vertices. This is in line with
-the definition of the set of top-$k$ Frequent Itemsets in the market basket
-analysis setting \XXX add reference.
+Note that $\TOPK(K,G)$ may contain more than $K$ vertices. 
+%This is in line with
+%the definition of the set of top-$k$ Frequent Itemsets in the market basket
+%analysis setting \XXX add reference.
 
 Our algorithm works in two phases. Each phase is basically a run of the
 algorithm for approximating the betweenness of all vertices presented in the
@@ -464,54 +465,54 @@ size $r$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07} rely
 on the following classical result by~\citet{Hoeffding63} for their computation
 of $r$.
 
-\begin{theorem}[\citep{Hoeffding63}]
-  Let $X_1,X_2,\dotsc,X_r$ be a sequence of independent random variables
-  such that $a_i\leq X_i\leq b_i$. Then for any $\xi > 0$
-  \begin{align}\label{eq:hoeffding}
-    \begin{split}
-      \Pr&\left(\left|\frac{|\sum_{i=1}^rX_i|}{r}-\mathbf{E}\left[\frac{|\sum_{i=1}^rX_i|}{r}\right]\right|\geq
-    \xi\right)\le \\
-      &\leq 2e^{-2r^2\xi^2/\sum_{i=1}^{r}(b_{i}-a_{i})^2}\enspace.
-    \end{split}
-  \end{align}
-\end{theorem}
-
-\citet{BrandesP07} use this result to compute a sample size $r$ sufficient to ensure that, for
-a fixed vertex $u$,
-\[ 
-\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)<\frac{\delta}{n}\enspace.
-\]
-In their setting $\xi=\varepsilon$ and there is a variable $X_i$ for
-each vertex $v_i$ in the sample:
-\[ 
-X_i=\frac{1}{n-1}\sum_{w\neq v_i,w\neq
-u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace
-.
-\]
-It is easy to see that $0\le X_i\le 1$. Moreover,
-\[
-  \mathbf{E}\left[\frac{|\sum_{i=1}^r X_i}{r}\right] = \betw(u)\enspace.
-\]
-%\begin{align*}
-%\mathbf{E}\left[\frac{|X_1+\dotsb+X_r|}{r}\right] &=
-%\frac{1}{r(n-1)}\mathbf{E}\left[\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
-%u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\right]
-%=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}\left[Y_v\sum_{w\neq v,w\neq
-%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}\right] =
-%\\
-%&=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}[Y_v]\sum_{w\neq v,w\neq
-%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
-%=\frac{1}{r(n-1)}\sum_{v\in V}\frac{r}{n}\sum_{w\neq v,w\neq
-%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
-%= \betw(u),
-%\end{align*}
-%where $Y_v$ is a Bernoulli random variable taking value 1 if $v\in S$, and 0
-%otherwise, so $\mathbf{E}[Y_v]=\Pr(Y_v=1)=r/n$.
-Plugging these values in~\eqref{eq:hoeffding}, we have
-\[
-\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)\leq
-2e^{-2r\epsilon^2}\enspace.
-\]
+%\begin{theorem}[\citep{Hoeffding63}]
+%  Let $X_1,X_2,\dotsc,X_r$ be a sequence of independent random variables
+%  such that $a_i\leq X_i\leq b_i$. Then for any $\xi > 0$
+%  \begin{align}\label{eq:hoeffding}
+%    \begin{split}
+%      \Pr&\left(\left|\frac{|\sum_{i=1}^rX_i|}{r}-\mathbf{E}\left[\frac{|\sum_{i=1}^rX_i|}{r}\right]\right|\geq
+%    \xi\right)\le \\
+%      &\leq 2e^{-2r^2\xi^2/\sum_{i=1}^{r}(b_{i}-a_{i})^2}\enspace.
+%    \end{split}
+%  \end{align}
+%\end{theorem}
+%
+%\citet{BrandesP07} use this result to compute a sample size $r$ sufficient to ensure that, for
+%a fixed vertex $u$,
+%\[ 
+%\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)<\frac{\delta}{n}\enspace.
+%\]
+%In their setting $\xi=\varepsilon$ and there is a variable $X_i$ for
+%each vertex $v_i$ in the sample:
+%\[ 
+%X_i=\frac{1}{n-1}\sum_{w\neq v_i,w\neq
+%u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace
+%.
+%\]
+%It is easy to see that $0\le X_i\le 1$. Moreover,
+%\[
+%  \mathbf{E}\left[\frac{|\sum_{i=1}^r X_i}{r}\right] = \betw(u)\enspace.
+%\]
+%%\begin{align*}
+%%\mathbf{E}\left[\frac{|X_1+\dotsb+X_r|}{r}\right] &=
+%%\frac{1}{r(n-1)}\mathbf{E}\left[\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
+%%u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\right]
+%%=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}\left[Y_v\sum_{w\neq v,w\neq
+%%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}\right] =
+%%\\
+%%&=\frac{1}{r(n-1)}\sum_{v\in V}\mathbf{E}[Y_v]\sum_{w\neq v,w\neq
+%%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
+%%=\frac{1}{r(n-1)}\sum_{v\in V}\frac{r}{n}\sum_{w\neq v,w\neq
+%%u}\sum_{p\in\mathcal{S}_{vw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{vw}|}
+%%= \betw(u),
+%%\end{align*}
+%%where $Y_v$ is a Bernoulli random variable taking value 1 if $v\in S$, and 0
+%%otherwise, so $\mathbf{E}[Y_v]=\Pr(Y_v=1)=r/n$.
+%Plugging these values in~\eqref{eq:hoeffding}, we have
+%\[
+%\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)\leq
+%2e^{-2r\epsilon^2}\enspace.
+%\]
 We want this probability to be at most $\delta/n$, so we need a sample of size
 \[
 r\geq \frac{1}{2\varepsilon^2}\left(\ln n + \ln 2 +\ln\frac{1}{\delta}\right)\enspace.
@@ -533,8 +534,8 @@ worst case the two computations have the same time complexity\footnote{It is a
 well-known open problem whether there is an algorithm to perform a single
 $s,t$-shortest path computation between a pair of vertices with smaller time
 complexity than the Single Source Shortest Path computation.}, in practice we
-will perform much fewer operations, as we can expect $v$ not to always be very
-far from $u$ and therefore we can terminate early. This fact can have a great
+perform much fewer operations, as we can expect $v$ not to always be very
+far from $u$ and therefore we can terminate early. This fact has a great
 impact on the running time, especially because our algorithm touches
 \emph{much fewer} edges than the algorithm from~\citep{JacobKLPT05,BrandesP07},
 given that this one can actually touch the entire network, i.e., all the edges

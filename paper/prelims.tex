@@ -41,7 +41,6 @@ We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$'s, for all
 pair $(u,v)\in V\times V$ of distinct nodes $u\neq v$: 
 \[ \mathbb{S}_G=\bigcup_{\substack{(u,v)\in V\times V \\ u\neq v}}\mathcal{S}_{uv}\enspace.\]
 
-\XXX Shall we move this to Sec.~\ref{sec:rangeset} where we actually use it?
 We now define a characteristic quantity of a graph that we will use throughout
 the paper.
 \begin{definition}\label{def:vertexdiam}
@@ -102,27 +101,27 @@ $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
   \]
 \end{definition}
 
-Another interesting variant of betweenness centrality does not consider
-\emph{shortest} paths, but rather \emph{simple random walks} of size up to
-$k+1$, expressing the intuition that information in a network does not
-necessarily spread across shortest paths but has a high probability of ``fading
-out'' after having touched at most a fixed number of vertices.
-
-\begin{definition}[\citep{KourtellisASIT12}]\label{def:kpathbetweenness}
- Given a graph $G=(V,E)$ and a positive integer $k$, the \emph{$k$-path
- centrality} $\kpathbetw^{(k)}(v)$ of $v\in V$ is defined as the average\footnote{We take the
- average, rather than the sum, as defined in the original work
- by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
- $[0,1]$}, over all possible source
- nodes $s$, of the probability that a simple random walk originating from
- $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
- included) goes through $v$.
-\end{definition}
-
-\citet{KourtellisASIT12} present a randomized approximation algorithm to
-estimate, with probability at least $1-1/n^2$, all the $k$-path betweenness
-values to within an additive error $n^{-1/2+\alpha}$ in time
-$O(k^3n^{2-2\alpha}\ln n)$.
+%Another interesting variant of betweenness centrality does not consider
+%\emph{shortest} paths, but rather \emph{simple random walks} of size up to
+%$k+1$, expressing the intuition that information in a network does not
+%necessarily spread across shortest paths but has a high probability of ``fading
+%out'' after having touched at most a fixed number of vertices.
+%
+%\begin{definition}[\citep{KourtellisASIT12}]\label{def:kpathbetweenness}
+% Given a graph $G=(V,E)$ and a positive integer $k$, the \emph{$k$-path
+% centrality} $\kpathbetw^{(k)}(v)$ of $v\in V$ is defined as the average\footnote{We take the
+% average, rather than the sum, as defined in the original work
+% by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
+% $[0,1]$}, over all possible source
+% nodes $s$, of the probability that a simple random walk originating from
+% $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
+% included) goes through $v$.
+%\end{definition}
+%
+%\citet{KourtellisASIT12} present a randomized approximation algorithm to
+%estimate, with probability at least $1-1/n^2$, all the $k$-path betweenness
+%values to within an additive error $n^{-1/2+\alpha}$ in time
+%$O(k^3n^{2-2\alpha}\ln n)$.
 
 \subsection{Vapnik-Chervonenkis dimension}\label{sec:prelvcdim}
 The Vapnik-Chernovenkis (VC) dimension of a class of subsets defined

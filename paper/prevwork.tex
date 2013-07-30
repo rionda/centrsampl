@@ -47,16 +47,15 @@ approximations of the betweenness with the same probabilistic guarantees.
 Although the algorithms by \citep{BrandesP07,JacobKLPT05,GeisbergerSS08} can be
 extended to return a superset of the top-$K$ vertices with highest betweenness,
 they only offer an \emph{additive} approximation guarantee, while our algorithm
-for the top-$K$ vertices offers a \emph{multiplicative}, i.e., stricter,
-guarantee. We delve more in the comparisons with these algorithms in
+for the top-$K$ vertices offers a \emph{multiplicative} factor guarantee, which
+is much stricter. We delve more in the comparisons with these algorithms in
 Sect.~\ref{sec:discussion} and~\ref{sec:exper}. A number of works explored
 the use of adaptive sampling, in contrast with the previous algorithms (and
 ours) which use a fixed sample size. \citet{BaderKMM07} present an adaptive
 sampling algorithm which computes good estimations for the betweenness of
 high-centrality vertices, by keeping track of the partial contribution of each
 sampled vertex, obtained by performing a single-source shortest paths
-computation to all other vertices. \XXX TBD Need to read this paper better and
-understand how to compare to it for our top-k algo.
+computation to all other vertices. 
 
 \citet{MaiyaBW10} use concepts from expander
 graphs to select a connected sample of vertices which includes the highest

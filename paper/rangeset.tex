@@ -43,13 +43,24 @@ $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{IEEEproof}
 
 \subsection{Unique shortest paths}\label{sec:rangeunique}
-In the restricted case when the graph is undirected and every pair of distinct vertices
-has either none or a unique shortest path between them, the VC-dimension of $\range_G$
-collapses to a constant. \XXX I don't see anything to prevent us from saying
-that this is true also for directed graphs. 
+In the restricted case when %the graph is undirected and
+every pair of distinct vertices has either none or a unique shortest path
+between them, the VC-dimension of $\range_G$ collapses to a constant. This is a
+somewhat surprising result with interesting consequences. From a theoretical
+point of view, it points out that there are probably other characteristic
+quantities of the graph different from the vertex diameter that control the
+VC-dimension of the range set of shortest paths, and these quantities are a
+constant on graph with a unique shortest path between vertices. From a more
+practical point of view, we will see in the next section that this result has an
+impact on the sample size needed for approximating the betweenness centrality of
+networks where the unique-shortest-path property is satisfied or even enforced,
+like road networks. In particular, the resulting sample size will be completely
+independent from any characteristic of the network, and will only be a function
+of the desired approximation guarantees.
 
 \begin{lemma}\label{lem:vcdimuppboundunique}
-  Given an undirected graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
+  Given a %n undirected
+  graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
   pairs $(u,v)\in V\times V$, the range set $\range_G$ associated to the
   shortest paths in $G$ has VC-Dimension $\VC(\range_G)$ at most $3$.
 \end{lemma}
@@ -106,9 +117,10 @@ that this is true also for directed graphs.
   3$.
 %\end{IEEEproof}
 \end{proof}
+This bound is actually strict, as shown by the following lemma.
 
 \begin{lemma}\label{lem:vcdimlowboundunique}
-  There is an graph $G=(V,E)$ with $|\mathcal{S}_{uv}|\le1$ for all
+  There is a graph $G=(V,E)$ with $|\mathcal{S}_{uv}|\le1$ for all
   pairs $(u,v)\in V\times V$ such that the range set $\range_G$ associated to the
   shortest paths in $G$ has VC-Dimension exactly $3$.
 \end{lemma}
@@ -137,7 +149,7 @@ that this is true also for directed graphs.
 %\end{IEEEproof}
 \end{proof}
 
-\subsection{Variants}\label{sec:rangevariants}
+%\subsection{Variants}\label{sec:rangevariants}
 For the case of $k$-bounded-distance betweenness, if we let
 $\range_G^{(k)}=\{\mathcal{T}_v^{(k)}~:~ v\in V\}$, it is easy to bound
 $\VC(\range_G^{(k)})$ following the same reasoning as in
@@ -146,15 +158,14 @@ Lemma~\ref{lem:vcdimuppbound}.
 $\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor$+1.
 \end{lemma}
 
-\paragraph{$k$-path betweenness} We can define another range set
-$\range_G^{\mathrm{p},k}$ if we are interested in $k$-path betweenness. The
-domain $B$ of the range set now is the set of all simple random walks starting
-from any vertex of and of size up to $k+1$. For each vertex $v\in V$, the range
-$R_v$ is the subset of $B$ containing all and only the random walks from $B$
-that have $v$ as internal vertex. It is easy to see that
-$\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
-following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
-
+%\paragraph{$k$-path betweenness} We can define another range set
+%$\range_G^{\mathrm{p},k}$ if we are interested in $k$-path betweenness. The
+%domain $B$ of the range set now is the set of all simple random walks starting
+%from any vertex of and of size up to $k+1$. For each vertex $v\in V$, the range
+%$R_v$ is the subset of $B$ containing all and only the random walks from $B$
+%that have $v$ as internal vertex. It is easy to see that
+%$\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
+%following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
 
 \subsection{Tightness}\label{sec:tightness}
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
