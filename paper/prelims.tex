@@ -59,11 +59,13 @@ shortest paths that $v$ is \emph{internal} to:
 \]
 In this work we are interested in the \emph{betweenness centrality} of the
 vertices of a graph.
-\begin{definition}[\citep{Anthonisse71,Freeman77}]\label{def:betwenness}
-  Given a graph $G=(V,E)$, the \emph{betweenness centrality of a vertex $v\in
-  V$} is defined as\footnote{We use the normalized
-version of betweenness as we believe it to be more suitable for presenting approximation
-results.}
+
+%\begin{definition}[\citep{Anthonisse71,Freeman77}]\label{def:betwenness}
+\begin{definition}\label{def:betwenness}
+  \citep{Anthonisse71,Freeman77} Given a graph $G=(V,E)$, the \emph{betweenness
+  centrality of a vertex $v\in V$} is defined as\footnote{We use the normalized
+  version of betweenness as we believe it to be more suitable for presenting
+  approximation results.}
   \[
   \betw(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{\sigma_{uv}}%=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}
   \enspace.
@@ -87,10 +89,11 @@ union of all the $\mathcal{S}^{(k)}_{uv}$. Let
 $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
 \emph{of size up to $k$} that $v$ is internal to, for each $v\in V$.
 
-\begin{definition}[\citep{BorgattiE06,Brandes08}]\label{def:kboundbetweenness}
- 
-  Given a graph $G=(V,E)$ and an integer $k>1$, the \emph{$k$-bounded-distance betweenness
-  centrality of a vertex $v\in V$} is defined as
+%\begin{definition}[\citep{BorgattiE06,Brandes08}]\label{def:kboundbetweenness}
+\begin{definition}\label{def:kboundbetweenness}
+  \citep{BorgattiE06,Brandes08} Given a graph $G=(V,E)$ and an integer $k>1$,
+  the \emph{$k$-bounded-distance betweenness centrality of a vertex $v\in V$} is
+  defined as
   \[
   %\betw(v)=\sum_{(u,w)\in V\times
   %V}\sum_{p\in\mathcal{S}_{uw}}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
