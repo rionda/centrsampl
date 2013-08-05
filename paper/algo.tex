@@ -195,17 +195,17 @@ of Alg.~\ref{alg:algorithm} can be reduced to
 and the computation of the shortest paths on line~\ref{algline:shortestpaths}
 can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$
 
-\paragraph{$k$-path betweenness}
-For the case of $k$-path betweenness, the algorithm is slightly different:
-for 
-\[
-  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
-\]
-iterations, rather than sampling a pair of vertices $(uv)$, computing
-$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
-single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-perform a random walk touching $\ell$ vertices, while updating the estimated
-betweenness of each touched vertex by adding $1/r$ to its estimation.
+%\paragraph{$k$-path betweenness}
+%For the case of $k$-path betweenness, the algorithm is slightly different:
+%for 
+%\[
+%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+%\]
+%iterations, rather than sampling a pair of vertices $(uv)$, computing
+%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
+%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
+%perform a random walk touching $\ell$ vertices, while updating the estimated
+%betweenness of each touched vertex by adding $1/r$ to its estimation.
 
 \subsection{Approximating the vertex-diameter}\label{sec:diam}
 The algorithm presented in the previous section requires the value of the
