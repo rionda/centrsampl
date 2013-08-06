@@ -32,13 +32,13 @@ between $u$ and $v$, $d_{uv}=\infty$. We call a path between $u$ and $v$ with
 weight $d_{uv}$ a \emph{shortest path between $u$ and $v$}. There can be
 multiple shortest paths between $u$ and $v$ and we denote the set of these paths
 as $\mathcal{S}_{uv}$ and the number of these paths as
-$\sigma_{uv}=|\mathcal{S}_{uv}$. If there is no path between $u$ and $v$, then
+$\sigma_{uv}=|\mathcal{S}_{uv}|$. If there is no path between $u$ and $v$, then
 $\mathcal{S}_{uv}=\{p_\emptyset\}$\footnote{Note that even if
 $p_\emptyset=\emptyset$, the set $\{p_\emptyset\}$ is not empty. It contains
 one element.}.
 %By definition, $\mathcal{S}_{vv}=\emptyset$.
 We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$'s, for all
-pair $(u,v)\in V\times V$ of distinct nodes $u\neq v$: 
+pairs $(u,v)\in V\times V$ of distinct nodes $u\neq v$: 
 \[ \mathbb{S}_G=\bigcup_{\substack{(u,v)\in V\times V \\ u\neq v}}\mathcal{S}_{uv}\enspace.\]
 
 We now define a characteristic quantity of a graph that we will use throughout
@@ -49,6 +49,8 @@ the paper.
   \[
   \VD(G) = \max\left\{|p| ~:~ p\in \mathbb{S}_G\right\}\enspace.\]
 \end{definition}
+\XXX Explain better what this is.
+
 If all the edge weights are unitary, then $\VD(G)$ is equal to
 $\mathsf{diam}(G)+1$, where $\mathsf{diam}(G)$ is the number of edges composing the
 longest shortest path in $G$.
@@ -84,7 +86,7 @@ the contribution of shortest paths of size up to $k+1$~\citep{BorgattiE06,Brande
 For $k>1$ and any pair of distinct vertices $u,v\in V$, $u\neq V$, let
 $\mathcal{S}^{(k)}_{uv}\subseteq\mathcal{S}_{uv}$ be the set of shortest paths
 from $u$ to $v$ of size at most $k+1$, with
-$\sigma^{(k)}_{uv}=|\mathcal{S}^{(k)}_{uv}$, and let $\mathbb{S}^{(k)}_G$ be the
+$\sigma^{(k)}_{uv}=|\mathcal{S}^{(k)}_{uv}|$, and let $\mathbb{S}^{(k)}_G$ be the
 union of all the $\mathcal{S}^{(k)}_{uv}$. Let
 $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
 \emph{of size up to $k$} that $v$ is internal to, for each $v\in V$.
@@ -156,18 +158,17 @@ $P_\range(B)=\{ B\cap A ~:~ A\in\range\}$. We say that the set $B$ is
 
 The main application of VC-dimension in statistics and learning
 theory is in computing the number of samples needed to approximate the
-probabilities associated to the ranges through their empirical averages.
-Formally, let $X_1^k=(X_1,\dotsc,X_k)$ be a collection of independent
-identically distributed random variables taking values in $D$, sampled 
-according to some distribution $\phi$ defined on the elements of $D$.
+probabilities associated to the ranges using their empirical averages as
+estimators. Formally, let $X_1^k=(X_1,\dotsc,X_k)$ be a collection of
+independent identically distributed random variables taking values in $D$,
+sampled according to some distribution $\phi$ defined on the elements of $D$.
 For a set $A\subseteq D$, let $\phi(A)$ be the probability that a sample from
-$\phi$ belongs to the set $A$, and let
+$\phi$ belongs to the set $A$, and let the \emph{empirical average} of $\phi(A)$
+on $X_1^k$ be 
 \[
 \phi_{X_1^k}(A)=\frac{1}{k}\sum_{j=1}^k\mathds{1}_A(X_j)\enspace.%, 
 \]
 %where $\mathds{1}_A$ is the indicator function for the set $A$. 
-The function
-$\phi_{X_1^k}(A)$ is the \emph{empirical average} of $\phi(A)$ on $X_1^k$.
 
 \begin{definition}\label{def:eapprox}
   Let $\range$ be a range set on %a domain
@@ -194,8 +195,12 @@ the domain according to the distribution $\phi$:
   $\varepsilon$-approximation to $(\range,\phi)$ with probability at least
   $1-\delta$.
 \end{theorem}
+\XXX This is always a weird sentence that reviewers don't get. We should phrase it differently.
 \citet{LofflerP09} showed experimentally that the constant $c$ is approximately
 $0.5$. We used this value in our experiments.
+
+\XXX Mention that if $d$ doesn't depend on the size of the domain $|D|$, neither
+does $|S|$.
 
 A similar definition offers relative guarantees on the approximation.
 \begin{definition}\label{def:releapprox}
