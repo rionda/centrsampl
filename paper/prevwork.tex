@@ -35,29 +35,28 @@ at random. The number of samples needed to guarantee that, with probability at
 least $1-\delta$, the estimate for each vertex is within $\varepsilon$ from the
 real value, for some $\varepsilon\in(0,1)$, is
 $O(\log(n/\delta)/\varepsilon^2)$. The analysis for the derivation of the sample
-size uses Hoeffding bounds~\citep{Hoeffding63} and the union bound.
-\citet{GeisbergerSS08} noticed that this can lead to an overestimation of the
-betweenness of vertices that are close to the sampled ones and introduced
-different unbiased estimators that are experimentally shown to have smaller
-variance and do not occur in this overshooting. Our algorithm is different
-from these because we sample, each time, a single random shortest path between
-two randomly chosen nodes. This leads to a much smaller sample size and less
-work done for each sample, resulting in a much faster way to compute
-approximations of the betweenness with the same probabilistic guarantees.
-Although the algorithms by \citep{BrandesP07,JacobKLPT05,GeisbergerSS08} can be
-extended to return a superset of the top-$K$ vertices with highest betweenness,
-they only offer an \emph{additive} approximation guarantee, while our algorithm
-for the top-$K$ vertices offers a \emph{multiplicative} factor guarantee, which
-is much stricter. We delve more in the comparisons with these algorithms in
+size uses Hoeffding bounds~\citep{Hoeffding63} and the union
+bound~\citep{MitzenmacherU05}. \citet{GeisbergerSS08} noticed that this can lead
+to an overestimation of the betweenness of vertices that are close to the
+sampled ones and introduced different unbiased estimators that are
+experimentally shown to have smaller variance and do not occur in this
+overshooting. Our algorithm is different from these because we sample, each
+time, a single random shortest path between two randomly chosen nodes. This
+leads to a much smaller sample size and less work done for each sample,
+resulting in a much faster way to compute approximations of the betweenness with
+the same probabilistic guarantees.  Although the algorithms by
+\citep{BrandesP07,JacobKLPT05,GeisbergerSS08} can be extended to return a
+superset of the top-$K$ vertices with highest betweenness, they only offer an
+\emph{additive} approximation guarantee, while our algorithm for the top-$K$
+vertices offers a \emph{multiplicative} factor guarantee, which is much
+stricter. We delve more in the comparisons with these algorithms in
 Sect.~\ref{sec:discussion} and~\ref{sec:exper}. A number of works explored
 the use of adaptive sampling, in contrast with the previous algorithms (and
 ours) which use a fixed sample size. \citet{BaderKMM07} present an adaptive
 sampling algorithm which computes good estimations for the betweenness of
 high-centrality vertices, by keeping track of the partial contribution of each
 sampled vertex, obtained by performing a single-source shortest paths
-computation to all other vertices. 
-
-\citet{MaiyaBW10} use concepts from expander
+computation to all other vertices. \citet{MaiyaBW10} use concepts from expander
 graphs to select a connected sample of vertices which includes the highest
 centrality ones and such that the betweenness computed on the induced sample
 subgraph is close to the real one.  They achieve these by repeatedly including
@@ -75,11 +74,12 @@ independently and then aggregated. They do not present an analysis of the
 complexity of the algorithm. 
 
 In the analysis of our algorithm we use results from VC-dimension
-theory~\citep{VapnikC71} and compute an upper bound to the VC-dimension of a
-range set defined on shortest paths. \citet{KranakisKRUW97} present a number of
-results on the VC-dimension of various range sets for graphs (stars, connected
-sets of vertices, sets of edges), but do not deal with shortest paths.
-\citet{AbrahamDFGW11} use VC-dimension to speed up shortest path computation.
-Their range set is different from the one we use, as their ground set is the
-set of vertices, while ours is defined on shortest paths.
+theory~\citep{VapnikC71}, a key component of statistical learning theory. We
+compute an upper bound to the VC-dimension of a range set defined on shortest
+paths. \citet{KranakisKRUW97} present a number of results on the VC-dimension of
+various range sets for graphs (stars, connected sets of vertices, sets of
+edges), but do not deal with shortest paths. \citet{AbrahamDFGW11} use
+VC-dimension to speed up shortest path computation.  Their range set is
+different from the one we use, as their ground set is the set of vertices, while
+ours is defined on shortest paths.
 
