@@ -13,25 +13,30 @@
   Exact computation in large networks %with millions of vertices and hundred of millions of edges 
   is prohibitively expensive and fast approximation algorithms are required in
   these cases. 
-  We present two efficient randomized algorithms that offer probabilistic
-  guarantees on the quality of the approximation. %One algorithm computes an
-  %$(\varepsilon,\delta)$-approximation of the vector of betweenness centrality
-  %of all the vertices in the graph.
-  The first algorithm computes an approximation of the betweenness for all vertices. All 
-  approximated values are within an additive factor $\varepsilon$ from the real values,  
-  with probability at least $1-\delta$. The second algorithm focuses on the
-  top-K vertices with highest betweenness and computes an approximation for the
-  corresponding values, with all approximated values being within a multiplicative factor
-  $\varepsilon$ from the real ones, with probability at least $1-\delta$. This
-  is the first algorithm that reaches such approximation for the top-K vertices.
-  Our algorithms are significantly faster than previously presented algorithms
-  with similar approximation guarantees. We achieve this speedup through a
-  novel application of the VC-dimension theory to optimize the sampling
-  component of the algorithms: we prove upper and lower bounds to the
-  VC-dimension of a range set associated to the problem at hand.
-  Extensive experimental evaluation on real and artificial networks demonstrate
-  the practicality of our methods and their performances compared to exact and
-  approximated approximated algorithms.
-  \XXX Too many repetitions of ``approximation''. Mention scalability and work.
+  We present two efficient randomized approximation algorithms for betweenness
+  estimation. The algorithms are based on random sampling of shortest paths and
+  offer probabilistic guarantees on the quality of the approximation. 
+  %One algorithm computes an $(\varepsilon,\delta)$-approximation of the vector
+  %of betweenness centrality of all the vertices in the graph.
+  The first algorithm estimates the betweenness of all vertices. All
+  approximated values are within an additive factor $\varepsilon$ from the real
+  values, with probability at least $1-\delta$. The second algorithm focuses on
+  the top-K vertices with highest betweenness and approximate their betweenness
+  within a multiplicative factor $\varepsilon$, with probability at least
+  $1-\delta$. This is the first algorithm that reaches such approximation for
+  the top-K vertices. We use results from the VC-dimension theory to develop
+  bounds to the sample size needed to obtain the desired approximations. By
+  proving upper and lower bounds to the VC-dimension of a range set associated
+  to the problem at hand, we obtain a sample size that is independent from the
+  number of vertices in the network and only depends on a characteristic
+  quantity that we call the vertex-diameter, that is the maximum number of
+  vertices in a shortest path. 
+  %Extensive experimental evaluation on real and artificial networks demonstrate
+  %the practicality of our methods and their performances compared to exact and
+  %approximated approximated algorithms.
+  The extensive experimental evaluation that we performed using real and
+  artificial networks shows that our algorithms are significantly faster and
+  much more scalable as the number of vertices in the network grows than
+  previously presented algorithms with similar approximation guarantees.
 \end{abstract}
   
