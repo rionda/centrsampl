@@ -10,7 +10,7 @@ with vertex-diameter $\VD(G)$ and two parameters $\varepsilon,\delta\in(0,1)$
 we first compute a sample size $r$ using~\eqref{eq:vceapprox} with
 $d=\lfloor\log_2(\VD(G)-2)\rfloor+1$:
 \begin{equation}\label{eq:samplesize}
-r=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\Delta_G-2)\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
+r=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\VD(G)-2)\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
 \end{equation}
 The sample size is sufficient to achieve the desired accuracy
 (expressed through $\varepsilon$) with the desired confidence (expressed through
@@ -32,16 +32,16 @@ is
 
 There are two crucial steps in this algorithm: the computation of $\VD(G)$ and
 the sampling of a path uniformly at random from $\mathcal{S}_{uv}$. We first
-deal with the latter, and then present an approximation algorithm for $\VD(G)$
-in Sect.~\ref{sec:diam}. Algorithm~\ref{alg:algorithm} presents the
-pseudocode of the algorithm, including the steps to select a random path.
-The \texttt{computeAllShortestPaths(}$u,v$\texttt{)}  on
+deal with the latter, and then present an approximation algorithm for $\VD(G)$.
+%in Sect.~\ref{sec:diam}. 
+Algorithm~\ref{alg:algorithm} presents the pseudocode of the algorithm,
+including the steps to select a random path.  The
+\texttt{computeAllShortestPaths(}$u,v$\texttt{)}  on
 line~\ref{algline:shortestpaths} is a call to a modified Dijkstra's (or BFS)
 algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
-as~\citet{Brandes01}.
-The \texttt{getDiameterApprox()} procedure is an approximation algorithm for
-computing an approximation for $\VD(G)$ (see Sect.~\ref{sec:diam} for details
-(see Sect.~\ref{sec:diam} for details).
+as~\citet{Brandes01}. The \texttt{getDiameterApprox()} procedure is an
+approximation algorithm for computing an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
+
 \paragraph{Sampling a shortest path}
 Our procedure to select a random shortest path from $\mathcal{S}_{uv}$ is
 inspired by the dependencies accumulation procedure used in Brandes' exact
@@ -49,17 +49,17 @@ algorithm~\citep{Brandes01}.
 %Given a vertex $w$, ~\citet{Brandes01} showed how
 %to compute, for every vertex $z$, the amount $\sigma_{wz}$ of shortest paths
 %from $w$ to $z$, while computing the set $\mathcal{S}_{wz}$. 
-Let $u$ and $v$ be the vertices sampled by our algorithm, and let $y$ be any
-vertex belonging to at least one shortest path from $u$ to $v$. We can,
-following~\citet{Brandes01}, compute $\sigma_{uy}$ and $\mathcal{S}_{uy}$ while
-we compute the set $\mathcal{S}_{uv}$  of all the shortest paths from $u$ to $v$. We
-can then use this information to select a shortest path $p$ uniformly at random from
-$\mathcal{S}_{uv}$. We assume that $u$ and $v$ are connected, otherwise, the
-only possibility is to select the empty path $p_\emptyset$. For each vertex $w$
-let $P_u(w)$ be the subset of neighbors of $w$ that are \emph{predecessors} of
-$w$ along the shortest paths from $u$ to $w$. Let $p^*=\{v\}$. Starting from $v$,
-we select one of its predecessors $z\in P_u(v)$ using a weighted random sampling
-where each $z\in P_u(v)$ has probability $\sigma_{uz}/\sum_{w\in
+Let $u$ and $v$ be the vertices sampled by our algorithm. We assume that $u$ and
+$v$ are connected otherwise the only possibility is to select the empty path
+$p_\emptyset$. Let $y$ be any vertex belonging to at least one shortest path
+from $u$ to $v$. Following~\citet{Brandes01}, we can compute $\sigma_{uy}$ and
+$\mathcal{S}_{uy}$ while we compute the set $\mathcal{S}_{uv}$ of all the
+shortest paths from $u$ to $v$. We can then use this information to select a
+shortest path $p$ uniformly at random from $\mathcal{S}_{uv}$. For each vertex
+$w$ let $P_u(w)$ be the subset of neighbors of $w$ that are \emph{predecessors}
+of $w$ along the shortest paths from $u$ to $w$. Let $p^*=\{v\}$. Starting from
+$v$, we select one of its predecessors $z\in P_u(v)$ using weighted random
+sampling: each $z\in P_u(v)$ has probability $\sigma_{uz}/\sum_{w\in
 P_u(v)}\sigma_{uw}$ of being sampled. We add $z$ to $p^*$ and  then repeat the
 procedure for $z$, selecting one of its predecessors from $P_u(z)$ and adding it
 to $p^*$, and so on until we reach $u$. Note that we can update the estimation
@@ -67,7 +67,7 @@ of the betweenness of the internal vertices that are added to $p^*$ (the only
 ones for which the estimation is updated) as we compute $p^*$.
 
 \begin{lemma}\label{lem:samplpath}
-  The path $p*$ built according to the above procedure is selected uniformly at
+  The path $p^*$ built according to the above procedure is selected uniformly at
   random among the paths in $\mathcal{S}_{uv}$.
 \end{lemma}
 
@@ -132,89 +132,14 @@ ones for which the estimation is updated) as we compute $p^*$.
   \label{alg:algorithm}
 \end{algorithm}
 
-The algorithm we described offers probabilistic guarantees on the quality of all
-approximations of the betweenness centrality.
-\begin{lemma}\label{lem:correctness}
-  With probability at least $1-\delta$, all the approximations computed by the
-  algorithm are within $\varepsilon$ from their real value:
-  \[
-  \Pr\left(\exists v\in V \mbox{ s.t. }
-  |\betw(v)-\tilde\betw(v)|>\varepsilon\right)<\delta\enspace .
-  \]
-\end{lemma}
-
-\begin{proof}
-%\begin{IEEEproof}
-  For each $p_{uv}\in\mathbb{S}_G$ let
-  \[
-  \pi_G(p_{uv})=\frac{1}{n(n-1)}\frac{1}{\sigma_{uv}}\enspace.
-  \]
-  It is easy to see that $\pi_G$ is a probability distribution and
-  $\pi_G(p_{uv})$ is the probability of sampling the path $p_{uv}$ during an
-  execution of the loop on line~\ref{algline:forloop} in
-  Alg.~\ref{alg:algorithm}, given the way that the vertices $u$ and $v$ are
-  selected and Lemma~\ref{lem:samplpath}.
-  
-  Consider the range set $\range_G$ and the probability distribution $\prob_G$.
-  Let $S$ be the set of paths sampled during the execution of the algorithm.
-  For $r$ as in~\eqref{eq:samplesize}, Thm.~\ref{thm:eapprox} tells us that the sample $S$ is a
-  $\varepsilon$-approximation to $(\range_G,\prob_G)$ with probability at least
-  $1-\delta$. Suppose that this is indeed the case, then from
-  Def.~\ref{def:eapprox} and the definition of $\range_G$ we have that
-  \[
-  \left|\prob_G(\mathcal{T}_v) - \frac{1}{r}\sum_{p\in
-  S}\mathds{1}_{\mathcal{T}_v}(p)\right|=\left|\prob_G(\mathcal{T}_v) -
-  \tilde\betw(v)\right|\le\varepsilon, \forall v\in
-  V\enspace.
-  \]
-  From the definition of $\prob_G$ we have
-  \[
-  \prob_G(\mathcal{T}_v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{\sigma_{uw}}=\betw(v),
-  \]
-  which concludes the proof.
-%\end{IEEEproof}
-\end{proof}
-
-\paragraph{Unique shortest paths case} When the graph $G$ is undirected and
-there is an unique shortest path between each pair of node, then one can apply
-Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
-\[
-  r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
-\]
-to approximate the betweenness values of all the vertices. Unique shortest
-paths are common or even enforced in road networks by
-slightly perturbing the edge weights or having a deterministic tie breaking
-policy~\citep{GeisbergerSS08}.
-
-\paragraph{$k$-bounded-distance betweenness} For the case of
-$k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
-of Alg.~\ref{alg:algorithm} can be reduced to 
-\[ 
-  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
-\]
-and the computation of the shortest paths on line~\ref{algline:shortestpaths}
-can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$
-
-%\paragraph{$k$-path betweenness}
-%For the case of $k$-path betweenness, the algorithm is slightly different:
-%for 
-%\[
-%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
-%\]
-%iterations, rather than sampling a pair of vertices $(uv)$, computing
-%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
-%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-%perform a random walk touching $\ell$ vertices, while updating the estimated
-%betweenness of each touched vertex by adding $1/r$ to its estimation.
-
-\subsection{Approximating the vertex-diameter}\label{sec:diam}
+\paragraph{Approximating the vertex-diameter}%\label{sec:diam}
 The algorithm presented in the previous section requires the value of the
 vertex-diameter $\VD(G)$ of the graph $G$ (line
 \ref{alg:diamcomp} of Alg.~\ref{alg:algorithm}). 
 Computing the exact value of $\VD(G)$ could be done by solving the All Pair
 Shortest Paths (APSP) problem, and taking the shortest path with the maximum size.
 Algorithms for exactly solving APSP problem such as Johnson's which runs in
-$O(V^2\log V+VE)$, Floyd-Warshall's runs in $\Theta(V^3)$, would defeat our
+$O(V^2\log V+VE)$ or Floyd-Warshall's ($\Theta(V^3)$), would defeat our
 purposes: once we have all the shortest paths for the computation of
 the diameter, we can also compute the betweenness of all the vertices exactly. 
 Given that Thm.~\ref{thm:eapprox} (and Thm.~\ref{thm:releapprox} too) only
@@ -303,6 +228,83 @@ comparable with that proposed by~\citet{BrandesP07}, but the amount of work done
 per sample in our algorithm is still much smaller, in practice, than that done
 by the algorithm they presented (see Sect.~\ref{sec:discussion}
 and~\ref{sec:exper} for more details).
+
+\subsection{Analysis}\label{sec:analysis}
+The algorithm we described and presented in Algorithm~\ref{alg:algorithm} offers
+probabilistic guarantees on the quality of all approximations of the betweenness
+centrality.
+\begin{lemma}\label{lem:correctness}
+  With probability at least $1-\delta$, all the approximations computed by the
+  algorithm are within $\varepsilon$ from their real value:
+  \[
+  \Pr\left(\exists v\in V \mbox{ s.t. }
+  |\betw(v)-\tilde\betw(v)|>\varepsilon\right)<\delta\enspace .
+  \]
+\end{lemma}
+
+\begin{proof}
+%\begin{IEEEproof}
+  For each $p_{uv}\in\mathbb{S}_G$ let
+  \[
+  \pi_G(p_{uv})=\frac{1}{n(n-1)}\frac{1}{\sigma_{uv}}\enspace.
+  \]
+  It is easy to see that $\pi_G$ is a probability distribution and
+  $\pi_G(p_{uv})$ is the probability of sampling the path $p_{uv}$ during an
+  execution of the loop on line~\ref{algline:forloop} in
+  Alg.~\ref{alg:algorithm}, given the way that the vertices $u$ and $v$ are
+  selected and Lemma~\ref{lem:samplpath}.
+  
+  Consider the range set $\range_G$ and the probability distribution $\prob_G$.
+  Let $S$ be the set of paths sampled during the execution of the algorithm.
+  For $r$ as in~\eqref{eq:samplesize}, Thm.~\ref{thm:eapprox} tells us that the sample $S$ is a
+  $\varepsilon$-approximation to $(\range_G,\prob_G)$ with probability at least
+  $1-\delta$. Suppose that this is indeed the case, then from
+  Def.~\ref{def:eapprox} and the definition of $\range_G$ we have that
+  \[
+  \left|\prob_G(\mathcal{T}_v) - \frac{1}{r}\sum_{p\in
+  S}\mathds{1}_{\mathcal{T}_v}(p)\right|=\left|\prob_G(\mathcal{T}_v) -
+  \tilde\betw(v)\right|\le\varepsilon, \forall v\in
+  V\enspace.
+  \]
+  From the definition of $\prob_G$ we have
+  \[
+  \prob_G(\mathcal{T}_v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{\sigma_{uw}}=\betw(v),
+  \]
+  which concludes the proof.
+%\end{IEEEproof}
+\end{proof}
+
+\paragraph{Unique shortest paths case} When the graph $G$ is undirected and
+there is an unique shortest path between each pair of node, then one can apply
+Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
+\[
+  r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
+\]
+to approximate the betweenness values of all the vertices. Unique shortest
+paths are common or even enforced in road networks by
+slightly perturbing the edge weights or having a deterministic tie breaking
+policy~\citep{GeisbergerSS08}.
+
+\paragraph{$k$-bounded-distance betweenness} For the case of
+$k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
+of Alg.~\ref{alg:algorithm} can be reduced to 
+\[ 
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+\]
+and the computation of the shortest paths on line~\ref{algline:shortestpaths}
+can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$
+
+%\paragraph{$k$-path betweenness}
+%For the case of $k$-path betweenness, the algorithm is slightly different:
+%for 
+%\[
+%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+%\]
+%iterations, rather than sampling a pair of vertices $(uv)$, computing
+%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
+%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
+%perform a random walk touching $\ell$ vertices, while updating the estimated
+%betweenness of each touched vertex by adding $1/r$ to its estimation.
 
 \subsection{High-quality approximation of the top-$K$ betweenness
 vertices}\label{sec:topk}
@@ -448,6 +450,7 @@ for all the vertices.
 
 \subsection{Discussion}\label{sec:discussion}
 \XXX TBD: running time, worst case, comparison with best previous work.
+Bidirectional Dijkstra.
 
 \citet{JacobKLPT05} and independently~\citet{BrandesP07} present an algorithm
 that also uses sampling to approximate the betweenness centrality of all the
