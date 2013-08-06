@@ -49,11 +49,11 @@ the paper.
   \[
   \VD(G) = \max\left\{|p| ~:~ p\in \mathbb{S}_G\right\}\enspace.\]
 \end{definition}
-\XXX Explain better what this is.
+The vertex-diameter is the maximum number of vertices in a shortest path. If all
+the edge weights are unitary, then $\VD(G)$ is equal to $\mathsf{diam}(G)+1$,
+where $\mathsf{diam}(G)$ is the number of edges composing the longest shortest
+path in $G$. 
 
-If all the edge weights are unitary, then $\VD(G)$ is equal to
-$\mathsf{diam}(G)+1$, where $\mathsf{diam}(G)$ is the number of edges composing the
-longest shortest path in $G$.
 Given a vertex $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
 shortest paths that $v$ is \emph{internal} to:
 \[
@@ -199,8 +199,9 @@ the domain according to the distribution $\phi$:
 \citet{LofflerP09} showed experimentally that the constant $c$ is approximately
 $0.5$. We used this value in our experiments.
 
-\XXX Mention that if $d$ doesn't depend on the size of the domain $|D|$, neither
-does $|S|$.
+It is important to mention that if $\VC(\range)$ and/or the upper bound $d$ do
+not depend on $|D|$ or on $|\range|$ neither does the sample size. This fact
+will make our algorithms very scalable as function of the network size.
 
 A similar definition offers relative guarantees on the approximation.
 \begin{definition}\label{def:releapprox}
