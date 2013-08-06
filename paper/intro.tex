@@ -1,5 +1,5 @@
 \section{Introduction}\label{sec:intro}
-Centrality indices are a fundamental tool for network analysis. They measure the
+Centrality indices are fundamental metrics for network analysis. They express the
 relative importance of a vertex in the network. Some of them, e.g.~degree
 centrality, reflect local properties of the underlying graph, while others,
 like betweenness centrality and many others, give information about global
@@ -17,17 +17,18 @@ very large networks that are of interest these days. Graphs representing online
 social networks, communication networks, and the web graph can have millions of
 nodes and billions of edges, making a polynomial time algorithm too expensive in
 practice. Given that data mining is exploratory in nature, approximate results
-can be sufficient, especially if the approximation factor is guaranteed to be
+can be sufficient, especially if the approximation error is guaranteed to be
 within user-specified limits. In practice, the user is interested in the
 relative ranking of the node rather than in the actual value of the betweenness
 of each vertex, so a very good approximation of the value of each vertex is
 sufficiently informative for most purposes. It is therefore natural to develop
 approximation algorithms that trade off accuracy for speed and fastly compute
 very good approximations of the betweenness of the vertices. 
+\XXX Talk about scalability.
 
 \paragraph{Our contributions} 
 We present two randomized algorithms to approximate the betweenness centrality
-(and some of its variants) of vertices of a graph. The first algorithm
+(and some of its variants) of the vertices of a graph. The first algorithm
 guarantees that the estimated betweenness values for all vertices are within an
 \emph{additive} factor $\varepsilon$ from the real values, with probability at
 least $1-\delta$. The second algorithm focuses on the top-$K$ vertices with
@@ -49,4 +50,5 @@ our algorithms per sample is also less than what was done in previous works. We
 extensively evaluated our methods on real graphs and compared their performances
 to the exact algorithm for betweenness centrality~\citep{Brandes01} and to other
 sampling-based approximation algorithms~\citep{JacobKLPT05,BrandesP07}.
+\XXX Talk about scalability.
 
