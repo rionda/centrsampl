@@ -42,6 +42,40 @@ algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
 as~\citet{Brandes01}. The \texttt{getDiameterApprox()} procedure is an
 approximation algorithm for computing an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
 
+\paragraph{Unique shortest paths case} When there is an unique (or no) shortest
+path between each pair of vertices of $G$, then one can apply
+Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
+\[
+  r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
+\]
+to approximate the betweenness values of all the vertices. 
+This is an interesting result: the number of samples needed to compute a good
+approximation to all vertices is a \emph{constant} and completely
+\emph{independent from $G$}. Unique shortest paths are common or even enforced
+in road networks by slightly perturbing the edge weights or having a
+deterministic tie breaking policy~\citep{GeisbergerSS08}.
+
+\paragraph{$k$-bounded-distance betweenness} For the case of
+$k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
+of Alg.~\ref{alg:algorithm} can be reduced to 
+\[ 
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+\]
+and the computation of the shortest paths on line~\ref{algline:shortestpaths}
+can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$
+
+%\paragraph{$k$-path betweenness}
+%For the case of $k$-path betweenness, the algorithm is slightly different:
+%for 
+%\[
+%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+%\]
+%iterations, rather than sampling a pair of vertices $(uv)$, computing
+%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
+%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
+%perform a random walk touching $\ell$ vertices, while updating the estimated
+%betweenness of each touched vertex by adding $1/r$ to its estimation.
+
 \paragraph{Sampling a shortest path}
 Our procedure to select a random shortest path from $\mathcal{S}_{uv}$ is
 inspired by the dependencies accumulation procedure used in Brandes' exact
@@ -273,38 +307,6 @@ centrality.
   which concludes the proof.
 %\end{IEEEproof}
 \end{proof}
-
-\paragraph{Unique shortest paths case} When the graph $G$ is undirected and
-there is an unique shortest path between each pair of node, then one can apply
-Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
-\[
-  r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
-\]
-to approximate the betweenness values of all the vertices. Unique shortest
-paths are common or even enforced in road networks by
-slightly perturbing the edge weights or having a deterministic tie breaking
-policy~\citep{GeisbergerSS08}.
-
-\paragraph{$k$-bounded-distance betweenness} For the case of
-$k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
-of Alg.~\ref{alg:algorithm} can be reduced to 
-\[ 
-  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
-\]
-and the computation of the shortest paths on line~\ref{algline:shortestpaths}
-can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$
-
-%\paragraph{$k$-path betweenness}
-%For the case of $k$-path betweenness, the algorithm is slightly different:
-%for 
-%\[
-%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
-%\]
-%iterations, rather than sampling a pair of vertices $(uv)$, computing
-%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
-%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-%perform a random walk touching $\ell$ vertices, while updating the estimated
-%betweenness of each touched vertex by adding $1/r$ to its estimation.
 
 \subsection{High-quality approximation of the top-$K$ betweenness
 vertices}\label{sec:topk}
