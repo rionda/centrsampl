@@ -42,7 +42,7 @@ algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
 as~\citet{Brandes01}. The \texttt{getDiameterApprox()} procedure is an
 approximation algorithm for computing an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
 
-\paragraph{Unique shortest paths case} When there is an unique (or no) shortest
+\paragraph{Unique shortest paths} When there is an unique (or no) shortest
 path between each pair of vertices of $G$, then one can apply
 Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
 \[
@@ -55,7 +55,7 @@ approximation to all vertices is a \emph{constant} and completely
 in road networks by slightly perturbing the edge weights or having a
 deterministic tie breaking policy~\citep{GeisbergerSS08}.
 
-\paragraph{$k$-bounded-distance betweenness} For the case of
+\paragraph{Bounded-distance betweenness} For the case of
 $k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
 of Alg.~\ref{alg:algorithm} can be reduced to 
 \[ 
