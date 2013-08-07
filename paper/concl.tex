@@ -5,16 +5,20 @@ graph, with high probability.
 %For very large graphs, exact computation of the
 %betweenness centrality is impossible, so one has to resort to an approximation.
 Our algorithms take a different approach than previous ones achieving the same
-guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05} as they are based on a
-completely novel application of results from VC-dimension theory. These results
-allow us to show that the number of samples needed to approximate the
-betweenness with the desired accuracy and confidence is much smaller than that
-suggested by previous works. Moreover, our algorithms perform much less work
-than other algorithms. We tested our algorithms on many real and artificial
-graphs and showed that they are many times faster than other proposed methods.
-In future work we would like to explore the possibility of extending our methods
-to generalizations of betweenness centrality~\citep{KourtellisASIT12,DolevEP10}
-and to other centrality measures.
+guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05}. They are based on a
+completely novel application of results from VC-dimension theory. We show that
+the number of samples needed to approximate the betweenness with the desired
+accuracy and confidence does not depend on the number of vertices in the graph,
+but rather on a characteristic quantity of the network that we call
+\emph{vertex-diameter}. In some cases, the sample size is actually completely
+independent from any property graph, which is very interesting and unexpected.
+Our algorithms perform much less work than previously presented methods offering
+the same approximation guarantee. As a consequence, they are much faster and
+scalable. These claims were verified during our extensive experimental
+evaluation using many real and artificial graphs. In future work we would like
+to explore the possibility of extending our methods to generalizations of
+betweenness centrality~\citep{KourtellisASIT12,DolevEP10} and to other
+centrality measures.
 
 \XXX Mention Bidirectional Dijkstra.
 
