@@ -51,9 +51,11 @@ Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
 to approximate the betweenness values of all the vertices. 
 This is an interesting result: the number of samples needed to compute a good
 approximation to all vertices is a \emph{constant} and completely
-\emph{independent from $G$}. Unique shortest paths are common or even enforced
-in road networks by slightly perturbing the edge weights or having a
-deterministic tie breaking policy~\citep{GeisbergerSS08}.
+\emph{independent from $G$}. Intuitively, this means that our algorithm will be
+extremely efficient and scalable on graphs with this property. Unique shortest
+paths are common or even enforced in road networks by slightly perturbing the
+edge weights or having a deterministic tie breaking
+policy~\citep{GeisbergerSS08}.
 
 \paragraph{Bounded-distance betweenness} For the case of
 $k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
@@ -261,7 +263,10 @@ logarithm. This has the effect of making our sample size comparable with that
 proposed by~\citet{BrandesP07} when there is a single WCC, as it would depend on
 $\log n$, but the amount of work done per sample in our algorithm is still much
 smaller, in practice, than that performed by the algorithm they presented (see
-Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more details).
+Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more details). We believe
+that in practical situation, a much better upper bound to the diameter of the
+graph is available, resulting in a smaller sample size than what suggested by
+the worst case we just presented
 
 \subsection{Analysis}\label{sec:analysis}
 The algorithm we described and presented in Algorithm~\ref{alg:algorithm} offers
@@ -451,12 +456,9 @@ the cost of an additional run of our algorithm to compute good approximations
 for all the vertices.
 
 \subsection{Discussion}\label{sec:discussion}
-\XXX TBD: running time, worst case, comparison with best previous work.
-Bidirectional Dijkstra.
-
 \citet{JacobKLPT05} and independently~\citet{BrandesP07} present an algorithm
 that also uses sampling to approximate the betweenness centrality of all the
-vertices of the graph. The algorithm create a sample $S=\{v_1,\dotsc,v_r\}$ of
+vertices of the graph. The algorithm creates a sample $S=\{v_1,\dotsc,v_r\}$ of
 $r$ vertices drawn uniformly at random and computes all the shortest paths
 between each $v_i$ to all other vertices in the graph. The estimation
 $\tilde\betw'(u)$ for the betweenness centrality $\betw(u)$ is
@@ -469,7 +471,6 @@ approximation for the betweenness centrality is the computation of the sample
 size $r$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07} rely
 on the following classical result by~\citet{Hoeffding63} for their computation
 of $r$.
-
 %\begin{theorem}[\citep{Hoeffding63}]
 %  Let $X_1,X_2,\dotsc,X_r$ be a sequence of independent random variables
 %  such that $a_i\leq X_i\leq b_i$. Then for any $\xi > 0$
@@ -518,22 +519,28 @@ of $r$.
 %\Pr\left(|\betw(u)-\tilde\betw'(u)|>\varepsilon\right)\leq
 %2e^{-2r\epsilon^2}\enspace.
 %\]
-We want this probability to be at most $\delta/n$, so we need a sample of size
+%We want this probability to be at most $\delta/n$, so we need a sample of size
+They prove that, to obtain good (within $\pm\varepsilon$) estimations for the
+betweenness of all vertices with probability at least $1-\delta$, it must be
 \[
 r\geq \frac{1}{2\varepsilon^2}\left(\ln n + \ln 2 +\ln\frac{1}{\delta}\right)\enspace.
 \]
-An application of the union bound over the $n$ vertices ensures a uniform
-(simultaneous) guarantee on the quality of
-all the estimation, with probability at least $1-\delta$.
+%An application of the union bound over the $n$ vertices ensures a uniform
+%(simultaneous) guarantee on the quality of
+%all the estimation, with probability at least $1-\delta$.
+From this expression it should be clear that this sample size is usually much
+larger than ours, as in practice $\VD(G)\ll n$. For the same reason, the
+algorithm would not scale well with the size of the network, as we also evaluate
+experimentally (see Sect.~\ref{sec:exper}.
 
 Another interesting aspect in which our algorithm and the one
-by~\citet{JacobKLPT05} and~\citet{BrandesP07} differ is the \emph{amount of work done
-per sample}. Our algorithm computes a single set $\mathcal{S}_{uv}$ for the
+by~\citet{JacobKLPT05} and~\citet{BrandesP07} differ is the \emph{amount of work
+done per sample}. Our algorithm computes a single set $\mathcal{S}_{uv}$ for the
 sampled vertices $u$ and $v$ by performing a run of Dijkstra's algorithm or of
 BFS until $v$ is reached or all the vertices reachable from $u$ have been
 explored. The algorithm from~\citep{JacobKLPT05,BrandesP07} instead computes
 all the sets $\mathcal{S}_{uw}$ from the sampled vertices $u$ to all other
-vertices, again with a single run of Dijkstra's or BFS, but without the
+vertices, again with a single run of Dijkstra or BFS, but without the
 ``early-stopping condition'' that we have when we reach $v$. Although in the
 worst case the two computations have the same time complexity\footnote{It is a
 well-known open problem whether there is an algorithm to perform a single
@@ -548,5 +555,8 @@ in the graph, at every sample, while our computation has a much higher
 \emph{locality}, exploring only a neighborhood of $u$ until $v$ is reached. The
 results of our experimental evaluation presented in Sect.~\ref{sec:exper}
 highlights this and other advantages of our method over the one
-from~\citep{JacobKLPT05,BrandesP07}.
+from~\citep{JacobKLPT05,BrandesP07}. In the future, we plan to investigate the
+possibility of using \emph{bidirectional A$^*$
+search}~\citep{Pohl69,KaindlK97} to further speed up the computation for each
+sample of our algorithms.
 

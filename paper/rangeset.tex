@@ -43,20 +43,23 @@ $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{IEEEproof}
 
 \paragraph{Unique shortest paths}\label{sec:rangeunique}
+\XXX I really need to check whether this is only for undirected case
+
 In the restricted case when %the graph is undirected and
 every pair of distinct vertices has either none or a unique shortest path
-between them, the VC-dimension of $\range_G$ collapses to a constant. This is a
+between them, the VC-dimension of $\range_G$ collapses to a \emph{constant}. This is a
 somewhat surprising result with interesting consequences. From a theoretical
-point of view, it points out that there are probably other characteristic
+point of view, it suggests out that there sohuld be other characteristic
 quantities of the graph different from the vertex diameter that control the
-VC-dimension of the range set of shortest paths, and these quantities are a
-constant on graph with a unique shortest path between vertices. From a more
+VC-dimension of the range set of shortest paths, and these quantities are
+constant on graph with unique shortest paths between vertices. From a more
 practical point of view, we will see in Sect.~\ref{sec:algo} that this result has an
 impact on the sample size needed for approximating the betweenness centrality of
 networks where the unique-shortest-path property is satisfied or even enforced,
 like road networks~\citep{GeisbergerSS08}. In particular, the resulting sample
-size will be completely independent from any characteristic of the network, and
-will only be a function of the desired approximation guarantees.
+size will be \emph{completely independent} from any characteristic of the
+network, and will only be a function of the parameters controlling the desired
+approximation guarantees.
 
 \begin{lemma}\label{lem:vcdimuppboundunique}
   Given a %n undirected
@@ -67,12 +70,13 @@ will only be a function of the desired approximation guarantees.
 
 \begin{proof}
 %\begin{IEEEproof}
-  First of all, notice that in this restricted setting, if two different paths
-  $p_1$ and $p_2$ meet at a vertex $u$, then they either go on together or at a
-  certain point they separate never to meet again at any other vertex $v\neq u$.
-  This is easy to see: if they could separate and then meet again, then there
-  would be two distinct shortest paths between $u$ and $v$, which is a
-  contradiction of the hypothesis. Let us denote this fact as $\mathsf{F}$.
+  First of all, notice that in this restricted setting, if two different
+  shortest paths $p_1$ and $p_2$ meet at a vertex $u$, then they either go on
+  together or at a certain point they separate never to meet again at any other
+  vertex $v\neq u$.  This is easy to see: if they could separate and then meet
+  again, then there would be two distinct shortest paths between $u$ and $v$,
+  which is a contradiction of the hypothesis. Let us denote this fact as
+  $\mathsf{F}$.
 
   Assume now that $\VC(\range_G)>3$, then there must be a set
   $Q=\{p_1,p_2,p_3,p_4\}$ of four shortest paths that can be shattered by
