@@ -1,11 +1,15 @@
-Check that we can actually handle the k-path (random walk) centrality by
-Kourtellis et al.
+[JOURNAL] Check that we can actually handle the k-path (random walk) centrality
+by Kourtellis et al.
 
-Experiments
+[JOURNAL] Bidirectional search
 
-Discussion of the work by Geisberger et al.
+Experiments for Topk 
 
-Introduction
+Experiments for unique shortest paths
+
+!DONE Discussion of the work by Geisberger et al.
+
+!DONE Introduction
 
 !DONE Tight bound construction
 
