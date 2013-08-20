@@ -6,7 +6,6 @@ algorithms~\citep{Brandes01,BrandesP07,JacobKLPT05,GeisbergerSS08}, in terms of
 accuracy of the estimation, execution time, work performed, and scalability as
 function of the network size. 
 
-
 \paragraph{Implementation and environment}
 We implemented\footnote{We plan to make our software available after
 acceptance.} our algorithms, the one presented in~\citep{BrandesP07,JacobKLPT05}
@@ -20,7 +19,7 @@ Python 3.3.1, which was used for running the simulations. We run the experiments
 on a quad-core AMD Phenom\texttrademark II X4 955 Processor with 16GB of RAM,
 running Debian \emph{wheezy} with a Linux kernel version 3.2.0.
 
-\paragraph{Datasets} We used a number of datasets from the Stanford Large
+\paragraph{Datasets} We used a number of graphs from the Stanford Large
 Network Dataset
 Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}. These are
 all real world networks including online social networks, communication (email)
@@ -129,7 +128,7 @@ soc-Epinions1 & 75,879 & 508,837 & 13  & 3.06&  3.11 & 4.20 & 4.25 & 1.00 & 1.03
 \caption{\XXX} \label{fig:email:error}
 \end{minipage}
 \end{figure*}
-In Figure \ref{fig:gnutella:error} \ref{fig:email:error}
+In~\cref{fig:gnutella:error,fig:email:error} \XXX TODO
 
 \subsection{Runtime}\label{sec:runtime}
 We use two metrics in order to measure the amount of computations that the
