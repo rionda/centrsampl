@@ -7,13 +7,13 @@
 \usepackage{xspace}
 \usepackage[numbers,sort&compress,square]{natbib}
 \usepackage{ctable}
-%\makeatletter
-%\renewcommand\bibsection%
-%{
-%  \section*{\refname
-%    \@mkboth{\MakeUppercase{\refname}}{\MakeUppercase{\refname}}}
-%}
-%\makeatother
+\makeatletter
+\renewcommand\bibsection%
+{
+  \section{\MakeUppercase{\refname}
+    \@mkboth{\MakeUppercase{\refname}}{\MakeUppercase{\refname}}}
+}
+\makeatother
 
 %\usepackage{times}
 \usepackage{amsfonts}
