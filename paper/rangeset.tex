@@ -43,9 +43,7 @@ $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{IEEEproof}
 
 \paragraph{Unique shortest paths}\label{sec:rangeunique}
-\XXX I really need to check whether this is only for undirected case
-
-In the restricted case when %the graph is undirected and
+In the restricted case when the graph is undirected and
 every pair of distinct vertices has either none or a unique shortest path
 between them, the VC-dimension of $\range_G$ collapses to a \emph{constant}. This is a
 somewhat surprising result with interesting consequences. From a theoretical
@@ -62,7 +60,7 @@ network, and will only be a function of the parameters controlling the desired
 approximation guarantees.
 
 \begin{lemma}\label{lem:vcdimuppboundunique}
-  Given a %n undirected
+  Given an undirected
   graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
   pairs $(u,v)\in V\times V$, the range set $\range_G$ associated to the
   shortest paths in $G$ has VC-Dimension $\VC(\range_G)\le3$.
@@ -72,11 +70,12 @@ approximation guarantees.
 %\begin{IEEEproof}
   First of all, notice that in this restricted setting, if two different
   shortest paths $p_1$ and $p_2$ meet at a vertex $u$, then they either go on
-  together or at a certain point they separate never to meet again at any other
-  vertex $v\neq u$.  This is easy to see: if they could separate and then meet
-  again, then there would be two distinct shortest paths between $u$ and $v$,
-  which is a contradiction of the hypothesis. Let us denote this fact as
-  $\mathsf{F}$.
+  together or %at a certain point 
+  they separate never to meet again at any other
+  vertex $v\neq u$. This is easy to see: if they could separate at $u$ and then
+  meet again at some $v$, then there would be two distinct shortest paths
+  between $u$ and $v$, which is a contradiction of the hypothesis. Let us denote
+  this fact as $\mathsf{F}$.
 
   Assume now that $\VC(\range_G)>3$, then there must be a set
   $Q=\{p_1,p_2,p_3,p_4\}$ of four shortest paths that can be shattered by
