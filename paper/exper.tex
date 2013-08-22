@@ -260,7 +260,21 @@ paths between a sampled source and all the rest of the nodes.
 \end{figure*}
 
 \subsection{Scalability}\label{sec:scalability}
-\XXX TODO.
+In Sect.~\ref{sec:discussion} we argued about the reasons why our algorithm is
+more scalable than the sampling one offering the same approximation
+guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05}. To evaluate our
+argument in practice, we created a number of graphs of increasing size (1,000 to
+100,000 vertices) using the Barabasi-Albert~\citep{BarabasiA99} and the
+algorithms on them, measuring the running time and the number of touched
+edges. We report the results in~\cref{fig:random:time,fig:random:edges}. The
+theoretically best algorithm would be completely independent from the size
+(number of vertices) of the graph, corresponding to a flat (horizontal) line in
+the plot. Therefore, the less steep the line, the more independent from the
+network size would be the corresponding algorithm. From the figures, we can
+appreciate that this is the case for our algorithm, which is much more scalable
+and independent from the size of the sample than $\mathsf{BP}$. This is very
+important, as today's networks are not only huge, but they also grow rapidly,
+and algorithms to mine them need to scale well as the graph sizes increase.
 
 \XXX The figures below are converted from jpg. Need native eps.
 
@@ -273,7 +287,7 @@ paths between a sampled source and all the rest of the nodes.
 \begin{minipage}[b]{0.5\linewidth}
 \centering
 \includegraphics[width=3.8in, keepaspectratio]{random-edges.eps}
-\caption{\XXX} \label{fig:random:error}
+\caption{\XXX} \label{fig:random:edges}
 \end{minipage}
 \end{figure*}
 
