@@ -25,40 +25,28 @@ Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}. These are
 all real world datasets including online social networks, communication (email)
 networks, scientific citation and academic collaboration networks, road
 networks, Amazon frequent co-purchased product networks, and more. Basic
-information about the graphs we used are reported in the leftmost part of
-Tables~\ref{tab:expDir}~and~\ref{tab:expUndir} \XXX May I suggest we use package
+information about the graphs we used are reported in the leftmost part
+of~\cref{tab:expDir,tab:expUndir} \XXX May I suggest we use package
 ctable for the tables? They look much better. We refer the
-reader to the SLNDC website for additional details about each dataset. \XXX We
-also used some artificial datasets. Describe how they were generated.
+reader to the SLNDC website for additional details about each dataset. 
+To evaluate scalability we also created a number of artificial graphs of
+different sizes (1,000 to 100,000 vertices) using the Barab\'asi-Albert
+model~\citep{BarabasiA99} as implemented by igraph~\citep{igraph}. \XXX Are
+there parameters of the Barabasi-Albert model we should mention?
+
+\paragraph{Diameter approximation}
+As we discussed in the previous sections the number of samples that the proposed
+algorithm requires depends on the vertex-diameter of the graph. 
+For the computation of the vertex-diameter in case of undirected graphs we used
+the 2-approximation algorithm that we briefly described in Sect.~\ref{sec:algo}.
+We denote this as ``diam-2-approx'' when reporting results in this section. For
+directed graphs, we computed the number of samples using both the exact value of
+the vertex-diameter (indicated as diam-exact) as well as the trivial upper bound
+$|V|-1$ (indicated as diam-UB). 
 
 \XXX In the rest of the section we never say which of our algorithms we are
 evaluating. We should be more explicit, especially if we include results for
 multiple algorithms/variants.
-
-\begin{figure*}
-\begin{minipage}[b]{0.5\linewidth}
-\flushleft
-\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
-\caption{\XXX} \label{fig:gnutella:time}
-\end{minipage}%
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
-\caption{\XXX} \label{fig:email:time}
-\end{minipage}
-\end{figure*}
-\begin{figure*}
-\begin{minipage}[b]{0.5\linewidth}
-\flushleft
-\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-edges.eps}
-\caption{\XXX} \label{fig:gnutella:edges}
-\end{minipage}%
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-\includegraphics[width=3.8in, keepaspectratio]{email-Enron-edges.eps}
-\caption{\XXX} \label{fig:email:edges}
-\end{minipage}
-\end{figure*}
 
 \begin{table*}[ht]
 %\caption{Experiments on Undirected Graphs} % title of Table
@@ -120,8 +108,38 @@ soc-Epinions1 & 75,879 & 508,837 & 13  & 3.06&  3.11 & 4.20 & 4.25 & 1.00 & 1.03
 \label{tab:expDir} % is used to refer this table in the text
 \end{table*}
 \subsection{Accuracy}\label{sec:accuracy}
+Our theoretical results from Sect.~\ref{sec:algo} guarantee that, with probability
+at least $1-\delta$, all estimations of the betweenness values for all vertices
+in the graph are within $\varepsilon$ for their real value, that is
+\[
+\Pr(\exists v\in V \mbox{ s.t. }
+|\betw(v)-\tilde\betw(v)|>\varepsilon)<\delta\enspace.
+\]
+We run our algorithm five times for each graph and each value of $\varepsilon$.
+As far as the \emph{confidence} is concerned, we report that in all the
+hundreds of runs we performed, the guarantee on the deviation was \emph{always}
+satisfied, not just with probability $1-\delta$ (0.9). We evaluated how good the
+estimated values are is by computing the average \emph{estimation error}
+$(\sum_{v\in V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm
+and taking the average and the standard deviation of this measure, for different values of
+$\varepsilon$. We also compute the maximum error computed. The results are
+reported in~\cref{fig:gnutella:error} for the directed graph p2p-Gnutella30, and
+in~\cref{fig:email:error} for the undirected graph email-Enron. It is evident
+that the maximum error is an error of magnitude smaller than the guaranteed value
+of $\varepsilon$ and that the average error is almost two orders of magnitude
+smaller than the guarantees, and the average+standard deviation points show that
+the estimation are quite concentrated around the average. We can conclude that
+in practice the algorithm performs even better than guaranteed, achieving higher
+accuracy and confidence than what the theoretical analysis indicates. This may
+be due to a number of factors, including the fact that the vertex-diameter is an
+\emph{upper bound} to the VC-dimension of the rangeset and the inherent
+looseness of the bound to the sample size~\eqref{eq:vceapprox}.
 
-\begin{figure*}
+\XXX IS THERE SOMETHING WRONG WITH THIS FIGURES? IT SEEMS STRANGE TO ME THAT IN
+FIG 4, THE ESTIMATION USING THE EXACT DIAMETER IS BETTER THAN WITH THE UPPER
+BOUND.
+
+\begin{figure*}[ht]
 \begin{minipage}[b]{0.5\linewidth}
 \flushleft
 \includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-error.eps}
@@ -133,13 +151,12 @@ soc-Epinions1 & 75,879 & 508,837 & 13  & 3.06&  3.11 & 4.20 & 4.25 & 1.00 & 1.03
 \caption{\XXX} \label{fig:email:error}
 \end{minipage}
 \end{figure*}
-In~\cref{fig:gnutella:error,fig:email:error} \XXX TODO
 
 \subsection{Runtime}\label{sec:runtime}
 We use two metrics in order to measure the amount of computations that the
 algorithms perform. The first metric is the execution time, or \textit{time}, in
 seconds, the second metric is the number of edges that the algorithm
-touched/traversed, or \textit{touched edges}, during the execution.  The number
+touched/traversed, or \textit{touched edges}, during the execution. The number
 of touched edges is a graph theoretic metric \XXX What do you mean by that? that
 does not depend on the specifications of the implementation environment and
 gives a perspective of the amount of work that the algorithm requires. It is
@@ -161,10 +178,7 @@ estimator for the betweenness of a vertex. Because of this, it takes the same
 amount of time and touches the same number of edges as the one
 from~\citep{BrandesP07}.
 
-As we discussed in the previous sections the number of samples that the proposed
-algorithm requires depends on the vertex-diameter of the graph. For the computation of
-the vertex-diameter in case of undirected graphs we used the 2-approximation
-algorithm that we briefly described. In~\cref{tab:expUndir}, for each of
+In~\cref{tab:expUndir}, for each of
 the 7 values of $\varepsilon$, we present the minimum and maximum ratio of the
 average touched edges of $\mathsf{BP}$ over $\mathsf{VC}$, as well as the
 minimum and maximum ratio of the average running time %of BP over VC. 
@@ -172,9 +186,7 @@ As it can be seen from this table our algorithm performs significantly faster,
 more than 300\%, in both measures. In~\cref{tab:expDir} we compare the
 algorithms on a set of directed graphs. As in the case of the undirected graphs,
 we present the minimum and maximum ratios of corresponding measures for the
-different values of $\varepsilon$. We computed the number of samples using both
-the exact value of the vertex-diameter (indicated as diam-exact) as well as the
-trivial upper bound $|V|-1$ (indicated as diam-UB). From the table we can see
+different values of $\varepsilon$. From the table we can see
 that the value for the vertex-diameter that we consider in the case of diam-UB
 is many orders of magnitudes greater than the actual value, which translates in
 a significant increase of the number of samples. But even in the case of this
@@ -222,6 +234,46 @@ paths between a sampled source and all the rest of the nodes.
 
 \XXX Mention bidirectional search and the improvements it can give us.
 
+\begin{figure*}[ht]
+\begin{minipage}[b]{0.5\linewidth}
+\flushleft
+\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
+\caption{\XXX} \label{fig:gnutella:time}
+\end{minipage}%
+\begin{minipage}[b]{0.5\linewidth}
+\centering
+\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
+\caption{\XXX} \label{fig:email:time}
+\end{minipage}
+\end{figure*}
+\begin{figure*}[ht]
+\begin{minipage}[b]{0.5\linewidth}
+\flushleft
+\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-edges.eps}
+\caption{\XXX} \label{fig:gnutella:edges}
+\end{minipage}%
+\begin{minipage}[b]{0.5\linewidth}
+\centering
+\includegraphics[width=3.8in, keepaspectratio]{email-Enron-edges.eps}
+\caption{\XXX} \label{fig:email:edges}
+\end{minipage}
+\end{figure*}
+
 \subsection{Scalability}\label{sec:scalability}
 \XXX TODO.
+
+\XXX The figures below are converted from jpg. Need native eps.
+
+\begin{figure*}
+\begin{minipage}[b]{0.5\linewidth}
+\flushleft
+\includegraphics[width=3.8in, keepaspectratio]{random-time.eps}
+\caption{\XXX} \label{fig:random:time}
+\end{minipage}%
+\begin{minipage}[b]{0.5\linewidth}
+\centering
+\includegraphics[width=3.8in, keepaspectratio]{random-edges.eps}
+\caption{\XXX} \label{fig:random:error}
+\end{minipage}
+\end{figure*}
 
