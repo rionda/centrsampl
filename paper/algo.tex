@@ -22,8 +22,8 @@ increases by $1/r$ the betweenness estimation of each vertex in
 $\mathsf{Int}(p)$. Note that if the sampled vertices $u$ and $v$ are not
 connected, we defined $\mathcal{S}_{uv}=\{p_\emptyset\}$ so nothing is done in
 steps 3 and 4. Denoting with $S$ the set of the sampled shortest paths, the
-estimator $\tilde\betw(w)$ for the betweenness $\betw(w)$ of a vertex $w$
-is 
+unbiased estimator $\tilde\betw(w)$ for the betweenness $\betw(w)$ of a vertex
+$w$ is the sample average 
 \[
 \tilde\betw(w) = \frac{1}{r}\sum_{p\in S}
 \mathds{1}_{\mathsf{Int}(p)}(w) = \frac{1}{r}\sum_{p\in S}

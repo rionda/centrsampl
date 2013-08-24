@@ -160,7 +160,7 @@ $P_\range(B)=\{ B\cap A ~:~ A\in\range\}$. We say that the set $B$ is
 The main application of VC-dimension in statistics and learning
 theory is in computing the number of samples needed to approximate the
 probabilities associated to the ranges using their empirical averages as
-estimators. Formally, let $X_1^k=(X_1,\dotsc,X_k)$ be a collection of
+unbiased estimators. Formally, let $X_1^k=(X_1,\dotsc,X_k)$ be a collection of
 independent identically distributed random variables taking values in $D$,
 sampled according to some distribution $\phi$ defined on the elements of $D$.
 For a set $A\subseteq D$, let $\phi(A)$ be the probability that a sample from
@@ -170,6 +170,8 @@ on $X_1^k$ be
 \phi_{X_1^k}(A)=\frac{1}{k}\sum_{j=1}^k\mathds{1}_A(X_j)\enspace.%, 
 \]
 %where $\mathds{1}_A$ is the indicator function for the set $A$. 
+The empirical average of $\phi(A)$ can be used as an \emph{unbiased} estimator
+for $\phi(A)$.
 
 \begin{definition}\label{def:eapprox}
   Let $\range$ be a range set on %a domain
