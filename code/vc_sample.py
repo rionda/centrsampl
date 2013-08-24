@@ -58,42 +58,22 @@ def betweenness_sample_size(graph, sample_size, set_attributes=True, time_out=0)
 
     return (stats, betw)
     
-def do_betweenness(graph, epsilon, delta, weights_list, use_approx_diameter):
-    if not weights_list:
-      if use_approx_diameter == 1:
-          start_time = time.process_time()
-          (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, -1)
-      elif use_approx_diameter == 0:
-          start_time = time.process_time()
-          diam = graph.diameter()
-          (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, diam)
-      else:
-          start_time = time.process_time()
-
-          (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, use_approx_diameter)
-      end_time = time.process_time()
-      stats["time"] = end_time - start_time
+def do_betweenness(graph, epsilon, delta, weights_list=None, use_approx_diameter=True):
+    if use_approx_diameter == 1:
+        start_time = time.process_time()
+        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, -1, weights=weights_list)
+    elif use_approx_diameter == 0:
+        start_time = time.process_time()
+        diam = graph.diameter()
+        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, diam, weights=weights_list)
     else:
-      if use_approx_diameter == 1:
-          start_time = time.process_time()
-          (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, -1, weights=weights_list)
-      elif use_approx_diameter == 0:
-          start_time = time.process_time()
-          diam = graph.diameter()
-          (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, diam, weights=weights_list)
-      else:
-          start_time = time.process_time()
-
-          (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, use_approx_diameter, weights=weights_list)
-      end_time = time.process_time()
-      stats["time"] = end_time - start_time
-
-
-
+        start_time = time.process_time()
+        (stats, betw) = graph.betweenness_sample_vc(epsilon, delta, use_approx_diameter, weights=weights_list)
+    end_time = time.process_time()
+    stats["time"] = end_time - start_time
     return (stats, betw)    
-    
 
-def betweenness(graph, epsilon, delta, weights, use_approx_diameter=True,
+def betweenness(graph, epsilon, delta, weights=None, use_approx_diameter=True,
         set_attributes=True, time_out=0):
     """Compute approximate betweenness using VC-Dimension.
     
@@ -114,7 +94,6 @@ def betweenness(graph, epsilon, delta, weights, use_approx_diameter=True,
     as vertex attributes, and the time as a graph attribute.
     
     """
-
     logging.info("Computing approximate betweenness using VC-Dimension.")
     if not time_out:
         logging.info("No timeout")
@@ -131,9 +110,9 @@ def betweenness(graph, epsilon, delta, weights, use_approx_diameter=True,
             logging.info("Betweenness computed in %s seconds", stats['time'])
             stats["timed_out"] = 0
         else:
-            logging.info("Betweenness computation timer expired after %d seconds", time_out)
+            logging.info("Betweenness computation timer expired after %d seconds.", time_out)
 
-            #We need the partial results een if we have timeout
+            #We need the partial results even if we have timeout
             #betw = [0] * graph.vcount()
             (stats, betw) = timeout_betweenness.value
             logging.info("Storing partial outcome.")
@@ -156,7 +135,6 @@ def betweenness(graph, epsilon, delta, weights, use_approx_diameter=True,
         graph.vs["vc_betw"] = betw
 
     return (stats, betw)
-
 
 def main():
     """Parse arguments, call betweenness(), write to file."""
@@ -191,6 +169,8 @@ def main():
             help="increase verbosity (use multiple times for more verbosity)")
     parser.add_argument("-w", "--write", nargs="?", default=False, const="auto",
             help="write graph (and computed attributes) to file.")
+    parser.add_argument("-l", "--weightFile", default="-",
+            help="random weights within the interval 0 to 1, must have as many entries as the number of edges")
 
     args = parser.parse_args()
 
@@ -206,9 +186,15 @@ def main():
     else:
         G = converter.convert(args.graph, not args.undirected, args.maxconn)
 
-
     if args.exact:
         args.approximate = False
+
+    # Read the weights    
+    weights_list=[]
+    if args.weightFile != "-":
+        with open(args.weightFile,'r') as weight_file:
+            for line in weight_file:
+                weights_list.append(float(line.strip()))
 
     # Compute betweenness
     if args.samplesize:
@@ -216,11 +202,10 @@ def main():
     else:
         if args.diameter > 0:
             (stats, betw) = betweenness(G, args.epsilon, args.delta,
-                    args.diameter, args.write)
+                    weights_list, args.diameter, args.write)
         else:
             (stats, betw) = betweenness(G, args.epsilon, args.delta,
-                    args.approximate, args.write)
-
+                    weights_list, args.approximate, args.write)
 
     # If specified, write betweenness as vertex attributes, and time as graph
     # attribute back to file
@@ -237,4 +222,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
+
