@@ -52,7 +52,7 @@ def main():
             help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
-    parser.add_argument("-w", "--weightFile",
+    parser.add_argument("-w", "--weightFile", default="-",
             help="random weights within the interval 0 to 1, must have as many entries as the number of edges")
 
     args = parser.parse_args()
@@ -70,11 +70,11 @@ def main():
 
 
     # Read the weights    
-    f = open(args.weightFile,'r')
     weights_list=[]
-    lines=f.readlines()
-    for line in lines:
-        weights_list.append(float(line.strip()))
+    if args.weightFile != "-":
+        with open(args.weightFile,'r') as weight_file:
+            for line in weight_file:
+                weights_list.append(float(line.strip()))
 
 
 
