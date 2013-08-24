@@ -75,6 +75,9 @@ def main():
         with open(args.weightFile,'r') as weight_file:
             for line in weight_file:
                 weights_list.append(float(line.strip()))
+    else:
+        logging.critical("Must pass a weight file")
+        sys.exit(2)
 
 
 
