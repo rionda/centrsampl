@@ -51,6 +51,8 @@ def main():
             help="consider the graph as undirected ")
     parser.add_argument("-v", "--verbose", action="count", default=0,
             help="increase verbosity (use multiple times for more verbosity)")
+    parser.add_argument("-w", "--weightFile", default="-",
+            help="random weights within the interval 0 to 1, must have as many entries as the number of edges")
 
     args = parser.parse_args()
 
@@ -66,6 +68,13 @@ def main():
     if args.exact:
         args.approximate = False
 
+    # Read the weights    
+    weights_list=[]
+    if args.weightFile != "-":
+        with open(args.weightFile,'r') as weight_file:
+            for line in weight_file:
+                weights_list.append(float(line.strip()))
+
     # Perform experiment multiple times
     results = []
     for i in range(args.runs):
@@ -77,10 +86,10 @@ def main():
         else:
             if args.diameter > 0:
                 results.append(vc_sample.betweenness(G, args.epsilon, args.delta,
-                        args.diameter, False, args.timeout))
+                        weights_list, args.diameter, False, args.timeout))
             else:
                 results.append(vc_sample.betweenness(G, args.epsilon, args.delta,
-                        args.approximate, False, args.timeout))
+                        weights_list, args.approximate, False, args.timeout))
 
     # Compute aggregate statistics about the experiments
     stats = dict()
