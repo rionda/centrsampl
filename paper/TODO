@@ -1,3 +1,6 @@
+[JOURNAL] Compare the two algorithms in terms of how many updates they do. This would highlight that they do a great amount 
+of unneccesarry updates and that is why they achieve better approximation that the user asked for
+
 [JOURNAL] Check that we can actually handle the k-path (random walk) centrality
 by Kourtellis et al.
 
