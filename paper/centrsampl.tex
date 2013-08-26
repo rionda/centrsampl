@@ -15,10 +15,19 @@
 }
 \makeatother
 
+% space saving commands and packages
+\usepackage{times} 
+\usepackage[small]{caption} 
+\setlength{\bibsep}{0.0pt} % natbib
+\renewcommand\floatpagefraction{.9}
+\renewcommand\topfraction{.9}
+\renewcommand\bottomfraction{.9}
+\renewcommand\textfraction{.1}   
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
 
-\setlength{\bibsep}{0.0pt} % space saving
 
-\usepackage{times} % really just to save space.
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -109,7 +118,7 @@ Evgenios M. Kornaropoulos\\
 \input{algo}
 \input{exper}
 \input{concl}
-\include{biblio}
+\input{biblio}
 
 %\bibliographystyle{abbrvnat}
 %\bibliography{bidirectionalsearch,centrality,diamapprox,various,vcmine,vcgraph}
