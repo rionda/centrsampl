@@ -189,13 +189,15 @@ for our purposes.
 
 Let $G=(V,E)$ be an \emph{undirected} graph where \emph{all the edge weights are
 equal}.
-We can obtain a $2$-approximation $\widetilde\VD(G)$ of the vertex-diameter $\VD(G)$ of
-$G$ in time $O(V+E)$ in the following way: 1.~select a vertex $v\in V$ uniformly
-at random, 2.~compute the shortest paths from $v$ to all other vertices in $V$,
-and 3.~finally take $\widetilde\VD(G)$ to be the sum of the lengths of the two
-shortest paths with maximum size (which equals to the two longest shortest
-paths) from $v$ to two distinct other nodes $u$ and $w$. The approximation
-guarantee follows from the next lemma.
+It is a folklore result that one can obtain a $2$-approximation
+$\widetilde\VD(G)$ of the vertex-diameter $\VD(G)$ of $G$ in time $O(V+E)$ in
+the following way: 1.~select a vertex $v\in V$ uniformly at random, 2.~compute
+the shortest paths from $v$ to all other vertices in $V$, and 3.~finally take
+$\widetilde\VD(G)$ to be the sum of the lengths of the two shortest paths with
+maximum size (which equals to the two longest shortest paths) from $v$ to two
+distinct other nodes $u$ and $w$. 
+\ifproof
+The approximation guarantee follows from the next lemma.
 
 \begin{lemma}\label{lem:diam}
   $\VD(G)\le\widetilde\VD(G)\le 2\VD(G)$.
@@ -226,7 +228,7 @@ guarantee follows from the next lemma.
   %$\qed$
 %\end{IEEEproof}
 \end{proof}
-
+\fi
 In case we have multiple connected components in $G$, we compute an upper bound
 to the vertex diameter of each component separately by running the above
 algorithm on each component, and then taking the maximum. 
@@ -374,6 +376,7 @@ $\tilde\betw''(v)*(1+\varepsilon)/(1-\varepsilon)\ge\ell''$:
 \widetilde\TOPK(K,G)= \left\{v\in V ~:~
 \tilde\betw''(v)\frac{1+\varepsilon}{1-\varepsilon}\ge\ell''\right\}\enspace.
 \]
+\ifproof
 The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
 
 \begin{algorithm}[ht]
@@ -412,6 +415,7 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
   \caption{High-quality approximation of the top-$K$ betweenness vertices}
   \label{alg:topk}
 \end{algorithm}
+\fi
 
 \paragraph{Analysis}
 The following lemma shows the properties of the collection $\widetilde\TOPK(K,G)$.

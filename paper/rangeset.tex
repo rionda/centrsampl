@@ -59,6 +59,11 @@ size will be \emph{completely independent} from any characteristic of the
 network, and will only be a function of the parameters controlling the desired
 approximation guarantees. We are currently investigating whether this result can
 be extended to the case of directed graphs.
+\ifproof
+\else
+Due to space constraints, we defer the proof to the extended online version of
+the paper.
+\fi
 
 \begin{lemma}\label{lem:vcdimuppboundunique}
   Given an undirected
@@ -67,6 +72,7 @@ be extended to the case of directed graphs.
   shortest paths in $G$ has VC-Dimension $\VC(\range_G)\le3$.
 \end{lemma}
 
+\ifproof
 \begin{proof}
 %\begin{IEEEproof}
   First of all, notice that in this restricted setting, if two different
@@ -121,6 +127,7 @@ be extended to the case of directed graphs.
   3$.
 %\end{IEEEproof}
 \end{proof}
+\fi
 
 %\subsection{Variants}\label{sec:rangevariants}
 \paragraph{Bounded-distance betweenness}
@@ -182,7 +189,13 @@ that $\VC(\range_{G_d})=d$.
 \begin{lemma}\label{lem:vcdimlowbound}
   $\VC(\range_{G_d})=d$.
 \end{lemma}
+\ifproof
+\else
+Due to space constraints, we defer the proof to the extended online version of
+the paper.
+\fi
 
+\ifproof
 \begin{proof}
 %\begin{IEEEproof}
   As we said, the $d$ paths in $Q$  go from $v_\ell$ to $v_\mathrm{r}$.
@@ -239,9 +252,14 @@ that $\VC(\range_{G_d})=d$.
   it must be $\VC(\range_{G_d})=d$.
 %\end{IEEEproof} 
 \end{proof}
+\fi
 
 Even for the case of unique shortest paths, the upper bound presented in
 Lemma~\ref{lem:vcdimuppboundunique} is strict in the same sense.
+\ifproof
+\else
+The proof can be found in the extended online version of the paper.
+\fi
 
 \begin{lemma}\label{lem:vcdimlowboundunique}
   There is a graph $G=(V,E)$ with $|\mathcal{S}_{uv}|\le1$ for all
@@ -249,6 +267,7 @@ Lemma~\ref{lem:vcdimuppboundunique} is strict in the same sense.
   shortest paths in $G$ has VC-Dimension exactly $3$.
 \end{lemma}
 
+\ifproof
 \begin{figure}[ht]
   \centering
   \includegraphics[scale=0.35]{uniqueshortestpathtight}
@@ -272,4 +291,5 @@ Lemma~\ref{lem:vcdimuppboundunique} is strict in the same sense.
   bound $\VC(\range_G)\le3$, so we can conclude that $\VC(\range_G)=3$.
 %\end{IEEEproof}
 \end{proof}
+\fi
 

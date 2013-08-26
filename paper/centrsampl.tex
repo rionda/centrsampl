@@ -15,7 +15,10 @@
 }
 \makeatother
 
-%\usepackage{times}
+
+\setlength{\bibsep}{0.0pt} % space saving
+
+\usepackage{times} % really just to save space.
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -34,9 +37,7 @@
 \DeclareCaptionType{copyrightbox}
 
 \newtheorem{corol}{Corollary}
-\newtheorem{conj}{Conjecture}
 \newtheorem{lemma}{Lemma}
-\newtheorem{claim}{Claim}
 \newtheorem{theorem}{Theorem}
 
 \newdef{definition}{Definition}
@@ -54,8 +55,11 @@
 \def\VC{\mathsf{VC}}
 \def\VD{\mathsf{VD}}
 
+\newif\ifproof
+\prooffalse
+
 \begin{document}
-\conferenceinfo{WSDM} {'14, February 25--27, 2014, New York, NY, USA.}
+\conferenceinfo{WSDM} {'14, February 24--28, 2014, New York, NY, USA.}
 %\CopyrightYear{2014}
 %\crdata{978-1-4503-1156-4/12/10}
 %\clubpenalty=10000
@@ -105,11 +109,10 @@ Evgenios M. Kornaropoulos\\
 \input{algo}
 \input{exper}
 \input{concl}
-
+\include{biblio}
 
 %\bibliographystyle{abbrvnat}
 %\bibliography{bidirectionalsearch,centrality,diamapprox,various,vcmine,vcgraph}
-\include{biblio}
 
 \end{document}
 
