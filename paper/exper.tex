@@ -211,7 +211,7 @@ performs uniformly faster than $\mathsf{BP}$. In the case where the exact value
 of the diameter was used, we can see that our algorithm computes an estimation
 of the betweenness that satisfies the desired accuracy and confidence guarantees
 \emph{3 to 5 times faster} than~\citep{BrandesP07}. \XXX-(COMMENT ON THE
-RELATION TOPOLOGY-SPEED) 
+RELATION TOPOLOGY-SPEED) \MR I have no idea what you meant by that.
 
 In~\cref{fig:gnutella:time} we study the directed graph \texttt{p2p-Gnutella30}
 and we present the measurements of the average running time of the algorithms in
@@ -247,8 +247,12 @@ the state of the art, as our algorithm needs to find the shortest path between a
 sampled pair of vertices whereas both 
 algorithms from~\citep{GeisbergerSS08,BrandesP07}  need to compute the shortest
 paths between a sampled source and all the rest of the nodes.
-
-\XXX Mention bidirectional search and the improvements it can give us.
+The use of bidirectional A\textsuperscript{*} search~\citep{Pohl69,KaindlK97}
+can help in lowering the number of touched edges and therefore the runtime of
+our algorithm. We plan to explore this in future work.the runtime of our
+algorithm. We plan to explore this in future work.the runtime of our algorithm.
+We plan to explore this in future work.the runtime of our algorithm. We plan to
+explore this in future work.
 
 \begin{figure*}[ht]
   \centering
