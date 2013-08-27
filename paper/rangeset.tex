@@ -189,23 +189,9 @@ Figure~\ref{fig:tightgraphs} shows $G_1$, $G_2$, $G_3$, and $G_4$. The
 generalization to higher values of $d$ should be straightforward. Each graph
 $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
 \fi
-
-\begin{figure}[ht]
-  \centering
-  \includegraphics[scale=0.3]{tight}
-  \caption{Examples of concertina graphs $G_d$ for $d=1,2,3,4$.}
-  \label{fig:tightgraphs}
-\end{figure}
-
 \begin{lemma}\label{lem:vcdimlowbound}
   $\VC(\range_{G_d})=d$.
 \end{lemma}
-\ifproof
-\else
-Due to space constraints, we defer the proof to the extended online version of
-the paper.
-\fi
-
 \ifproof
 \begin{proof}
 %\begin{IEEEproof}
@@ -263,7 +249,17 @@ the paper.
   it must be $\VC(\range_{G_d})=d$.
 %\end{IEEEproof} 
 \end{proof}
+\else
+Due to space constraints, we defer the proof to the extended online version of
+the paper.
 \fi
+
+\begin{figure}[th]
+  \centering
+  \includegraphics[scale=0.3]{tight}
+  \caption{Examples of concertina graphs $G_d$ for $d=1,2,3,4$.}
+  \label{fig:tightgraphs}
+\end{figure}
 
 Even for the case of unique shortest paths, the upper bound presented in
 Lemma~\ref{lem:vcdimuppboundunique} is strict in the same sense.
