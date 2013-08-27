@@ -550,8 +550,8 @@ vertices, again with a single run of Dijkstra or BFS, but without the
 ``early-stopping condition'' that we have when we reach $v$. Although in the
 worst case the two computations have the same time complexity\footnote{It is a
 well-known open problem whether there is an algorithm to perform a single
-$s,t$-shortest path computation between a pair of vertices with smaller time
-complexity than the Single Source Shortest Path computation.}, in practice we
+$s,t$-shortest path computation between a pair of vertices with smaller
+worst-case time complexity than the Single Source Shortest Path computation.}, in practice we
 perform much fewer operations, as we can expect $v$ not to always be very
 far from $u$ and therefore we can terminate early. This fact has a great
 impact on the running time, especially because our algorithm touches
