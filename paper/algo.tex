@@ -39,7 +39,7 @@ including the steps to select a random path.  The
 \texttt{computeAllShortestPaths(}$u,v$\texttt{)}  on
 line~\ref{algline:shortestpaths} is a call to a modified Dijkstra's (or BFS)
 algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
-as~\citet{Brandes01}. The \texttt{getDiameterApprox()} procedure is an
+as~\citep{Brandes01}. The \texttt{getDiameterApprox()} procedure is an
 approximation algorithm for computing an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
 
 \paragraph{Unique shortest paths} When there is an unique (or no) shortest
@@ -99,7 +99,7 @@ sampling: each $z\in P_u(v)$ has probability $\sigma_{uz}/\sum_{w\in
 P_u(v)}\sigma_{uw}$ of being sampled. We add $z$ to $p^*$ and  then repeat the
 procedure for $z$, selecting one of its predecessors from $P_u(z)$ and adding it
 to $p^*$, and so on until we reach $u$. Note that we can update the estimation
-of the betweenness of the internal vertices that are added to $p^*$ (the only
+of the betweenness of the internal vertices along $p^*$ (the only
 ones for which the estimation is updated) as we compute $p^*$.
 
 \begin{lemma}\label{lem:samplpath}
@@ -182,7 +182,8 @@ Given that Thm.~\ref{thm:eapprox} (and Thm.~\ref{thm:releapprox} too) only
 requires an upper bound to the VC-dimension of the range set, an approximation
 of the vertex-diameter would be sufficient for our purposes. Several refined
 algorithms for approximating the diameter are
-known~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12}, with various running times
+known~\citep{AingwordCIM99,BoitmanisFL06,RodittyW12} \XXX Do we really have to
+reference all three?, with various running times
 and quality of approximations. We briefly present a well-known and simple
 approximation algorithm that has the right balance of accuracy and speed
 for our purposes.
