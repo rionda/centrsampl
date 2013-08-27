@@ -133,7 +133,7 @@ ones for which the estimation is updated) as we compute $p^*$.
   \SetKwFunction{PairShortestPaths}{computeAllShortestPaths}
    \DontPrintSemicolon
   %\dontprintsemicolon
-  \Input{a graph $G=(V,E)$ with $|V|=n$, real values $\varepsilon,\delta\in(0,1)$}
+  \Input{Graph $G=(V,E)$ with $|V|=n$, $\varepsilon,\delta\in(0,1)$}
   \Output{A set of approximations of the betweenness centrality of the vertices
   in $V$}
   \ForEach{$w\in V$}
@@ -360,10 +360,11 @@ r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1+\log\
 \]
 Let $\tilde\betw'_k$ be the $K$-th highest estimated betweenness obtained using
 Algorithm~\ref{alg:algorithm} where $r=r'$, and let
-\[
-  \ell'=\tilde\betw_K-\varepsilon.
-\]
-Let
+%\[
+  $\ell'=\tilde\betw_K-\varepsilon$, %.
+%\]
+%Let
+and
 \[
 r''=\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)\enspace.
 \]
@@ -416,10 +417,11 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
   \caption{High-quality approximation of the top-$K$ betweenness vertices}
   \label{alg:topk}
 \end{algorithm}
-\fi
 
 \paragraph{Analysis}
 The following lemma shows the properties of the collection $\widetilde\TOPK(K,G)$.
+\fi
+
 \begin{lemma}
   With probability at least $1-\delta$, 
   \begin{enumerate*}
@@ -430,6 +432,7 @@ The following lemma shows the properties of the collection $\widetilde\TOPK(K,G)
       betweenness greater than $\ell'(1+\varepsilon)$.
   \end{enumerate*}
 \end{lemma}
+\ifproof
 \begin{proof}
 %\begin{IEEEproof}
   We start by proving 1. From Thm.~\ref{thm:eapprox} we know that, with probability at least
@@ -449,6 +452,10 @@ The following lemma shows the properties of the collection $\widetilde\TOPK(K,G)
   $(\ell',\varepsilon)$-approximation (Def.~\ref{def:releapprox}).
 %\end{IEEEproof}
 \end{proof}
+\else
+We refer the reader interested in the proof to the extended online version of
+the paper.
+\fi
 
 The advantage of using our algorithm to approximate the collection of top-$K$
 betweenness vertices consists in the very high-quality approximation of the
@@ -475,9 +482,10 @@ u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{
 \]
 As it was for our algorithm, the key ingredient to ensure a correct
 approximation for the betweenness centrality is the computation of the sample
-size $r$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07} rely
-on the following classical result by~\citet{Hoeffding63} for their computation
-of $r$.
+size $r$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07} 
+%rely
+%on the following classical result by~\citet{Hoeffding63} for their computation
+%of $r$.
 %\begin{theorem}[\citep{Hoeffding63}]
 %  Let $X_1,X_2,\dotsc,X_r$ be a sequence of independent random variables
 %  such that $a_i\leq X_i\leq b_i$. Then for any $\xi > 0$
@@ -527,7 +535,8 @@ of $r$.
 %2e^{-2r\epsilon^2}\enspace.
 %\]
 %We want this probability to be at most $\delta/n$, so we need a sample of size
-They prove that, to obtain good (within $\pm\varepsilon$) estimations for the
+%They
+prove that, to obtain good (within $\varepsilon$) estimations for the
 betweenness of all vertices with probability at least $1-\delta$, it must be
 \[
 r\geq \frac{1}{2\varepsilon^2}\left(\ln n + \ln 2 +\ln\frac{1}{\delta}\right)\enspace.
