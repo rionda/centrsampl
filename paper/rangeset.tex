@@ -153,10 +153,12 @@ The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
 for each $d\ge 1$ we can build a graph $G_d$ with vertex-diameter
 $\VD(G_d)=2^d+1$ and such that the range set $\range_{G_d}$ associated to the set of
 shortest paths of $G_d$ has VC-dimension exactly
-$d=\lfloor\log_2(\VD(G_d)-2)\rfloor+1$. For the sake of clarity, we will discuss
-only the case of undirected graphs with equal edge weights, but all we say can
-be easily adapted to the general case.
+$d=\lfloor\log_2(\VD(G_d)-2)\rfloor+1$. 
+%For the sake of clarity, we will discuss
+%only the case of undirected graphs with equal edge weights, but all we say can
+%be easily adapted to the general case.
 
+\ifproof
 We now introduce a class $\mathcal{G}=(G_d)_{d\ge 1}$ of graphs indexed by $d$.
 The graphs in $\mathcal{G}$ are the ones for which we can show the tightness of
 the bound to the VC-dimension of the associated range set.
@@ -178,6 +180,15 @@ shortest paths from $v_\ell$ to $v_\mathrm{r}$ and show that it is
 shattered by $\range_{G_d}$, therefore proving that $\VC(\range_{G_d})\ge d$.
 This fact, together with Lemma~\ref{lem:vcdimuppbound}, allows us to conclude
 that $\VC(\range_{G_d})=d$. 
+\else
+There is a class $\mathcal{G}=(G_d)_{d\ge 1}$ of graphs indexed by d, such that
+the graphs in $\mathcal{G}$ are the ones for which we can show the tightness of
+the bound to the VC-dimension of the associated range set. We call the graph
+$G_d\in\mathcal{G}$ the \emph{$d$-th concertina graph}.
+Figure~\ref{fig:tightgraphs} shows $G_1$, $G_2$, $G_3$, and $G_4$. The
+generalization to higher values of $d$ should be straightforward. Each graph
+$G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
+\fi
 
 \begin{figure}[ht]
   \centering

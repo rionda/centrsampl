@@ -17,7 +17,7 @@
 
 % space saving commands and packages
 \usepackage{times} 
-\usepackage[small]{caption} 
+\usepackage[font=small]{caption,subfig}
 \setlength{\bibsep}{0.0pt} % natbib
 \renewcommand\floatpagefraction{.9}
 \renewcommand\topfraction{.9}
@@ -34,7 +34,7 @@
 \usepackage{dsfont}
 \usepackage{mathtools}
 \usepackage{graphicx}
-\usepackage{subfig}
+%%\usepackage{subfig}
 \usepackage{multirow}
 \usepackage{bigstrut}
 \usepackage{url}
@@ -103,13 +103,13 @@ Evgenios M. Kornaropoulos\\
 \date{30 July 2013}
 
 \maketitle
-{\bf \large \today, \currenttime}
+%{\bf \large \today, \currenttime}
 \input{abstract}
 
 \category{G.2.2}{Discrete Mathematics}{Graph Theory}[Graph algorithms]
 \category{H.2.8}{Database Management}{Database Applications}[Data mining]
-\terms{Algorithms, Experimentation, Performance, Theory}
-\keywords{Betweenness centrality, Sampling, VC-Dimension}  
+\terms{Algorithms, Theory, Performance, Experimentation}
+\keywords{Betweenness centrality, sampling, VC-dimension}  
 
 \input{intro}
 \input{prevwork}

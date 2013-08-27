@@ -51,6 +51,7 @@ multiple algorithms/variants.
 \begin{table*}[ht]
 %\caption{Experiments on Undirected Graphs} % title of Table
 \centering % used for centering table
+  \begin{small}
 \begin{tabular}{|c c c c |c c |c  c |} % centered columns (5 columns)
 \hline\hline %inserts double horizontal lines
 Graph & Node & Edges & Diameter  & \multicolumn{2}{|c|}{$\frac{\varepsilon\mbox{-Edges-BP}}{ \varepsilon\mbox{-Edges-VC}}$} & \multicolumn{2}{c|}{$\frac{\varepsilon\mbox{-Time-BP}}{\varepsilon\mbox{-Time-VC}}$}\\ [0.5ex] % inserts table 
@@ -69,6 +70,7 @@ ca-CondMat & 23,133 & 186,936 & 15  & 3.24 & 3.26 & 3.75 & 4.08\\
 email-Enron & 36,692 & 421,578 & 12  & 2.98 & 3.18 & 3.60 & 4.16\\[1ex] % inserting body of the table
 \hline %inserts single line
 \end{tabular}
+\end{small}
 \caption{\XXX
 %For each graph efficiency measures generated  for a given input  as the average of 5 runs for a  pair of given values $\varepsilon,\delta$.
 %The value of $\delta$ was 0.1 and $\varepsilon$ took values 0.01, 0.015, 0.02, 0.04, 0.06, 0.08, 0.1.
@@ -81,6 +83,7 @@ email-Enron & 36,692 & 421,578 & 12  & 2.98 & 3.18 & 3.60 & 4.16\\[1ex] % insert
 \begin{table*}[ht]
 %\caption{Experiments on Directed Graphs} % title of Table
 \centering % used for centering table
+\begin{small}
 \begin{tabular}{|c c c c | c c | c c | c c | c c | c c | c c|} % centered columns (5 columns)
 \hline\hline %inserts double horizontal lines
 Graph & Node & Edges & Diameter  & \multicolumn{2}{|c|}{$\frac{\varepsilon\mbox{-Edges-BP}}{ \varepsilon\mbox{-Edges-VC}}$} & \multicolumn{2}{c|}{$\frac{\varepsilon\mbox{-Time-BP}}{\varepsilon\mbox{-Time-VC}}$} & \multicolumn{2}{c|}{$\frac{\varepsilon\mbox{-Edges-BP}}{ \varepsilon\mbox{-Edges-VC}}$} & \multicolumn{2}{c|}{$\frac{\varepsilon\mbox{-Time-BP}}{\varepsilon\mbox{-Time-VC}}$} & \multicolumn{2}{c|}{$\frac{\varepsilon\mbox{-Edges-BP}}{ \varepsilon\mbox{-Edges-VC}}$} & \multicolumn{2}{c|}{$\frac{\varepsilon\mbox{-Time-BP}}{\varepsilon\mbox{-Time-VC}}$}\\ [0.5ex] % inserts table 
@@ -99,6 +102,7 @@ p2p-Gnutella30 & 36,682 & 88,328 & 10  & 5.33 & 5.63 & 5.02 & 5.46 & 1.92 & 1.99
 soc-Epinions1 & 75,879 & 508,837 & 13  & 3.06&  3.11 & 4.20 & 4.25 & 1.00 & 1.03 & 1.35 & 1.38 & - &  - & - & -\\ [1ex] % [1ex] adds vertical space
 \hline %inserts single line
 \end{tabular}
+\end{small}
 \caption{\XXX
 %For each graph efficiency measures generated  for a given input  as the average of 5 runs for a  pair of given values $\varepsilon,\delta$.
 %The value of $\delta$ was 0.1 and $\varepsilon$ took values 0.01, 0.015, 0.02, 0.04, 0.06, 0.08, 0.1.
@@ -125,7 +129,7 @@ probability $1-\delta$ (0.9). We evaluated how good the estimated values are is
 by computing the average \emph{estimation error} $(\sum_{v\in
 V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm and taking
 the average and the standard deviation of this measure, for different values of
-$\varepsilon$. We also compute the maximum error computed. The results are
+$\varepsilon$. We also compute the maximum error overall. The results are
 reported in~\cref{fig:gnutella:error} for the directed graph p2p-Gnutella30, and
 in~\cref{fig:email:error} for the undirected graph email-Enron. It is evident
 that the maximum error is an error of magnitude smaller than the guaranteed
@@ -143,16 +147,25 @@ FIG 4, THE ESTIMATION USING THE EXACT DIAMETER IS BETTER THAN WITH THE UPPER
 BOUND.
 
 \begin{figure*}[ht]
-\begin{minipage}[b]{0.5\linewidth}
-\flushleft
-\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-error.eps}
-\caption{Error evaluation on p2p-Gnutella30} \label{fig:gnutella:error}
-\end{minipage}%
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-\includegraphics[width=3.8in, keepaspectratio]{email-Enron-error.eps}
-\caption{Error evaluation on email-Enron} \label{fig:email:error}
-\end{minipage}
+  \centering
+  \hfill
+  \subfloat[p2p-Gnutella30 (directed)]{\label{fig:gnutella:error}\includegraphics[width=0.45\textwidth,keepaspectratio]{p2p-Gnutella30-error}}
+  \hfill
+  \subfloat[email-Enron (undirected)]{\label{fig:email:error}\includegraphics[width=0.45\textwidth,keepaspectratio]{email-Enron-error}}
+  \hfill
+  \caption{Betweenness estimation error $|\tilde\betw(v)-\betw(v)|$ evaluation
+  for directed and undirected graphs} 
+  \label{fig:error}
+%\begin{minipage}[b]{0.5\linewidth}
+%\flushleft
+%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-error.eps}
+%\caption{Error evaluation on p2p-Gnutella30} \label{fig:gnutella:error}
+%\end{minipage}%
+%\begin{minipage}[b]{0.5\linewidth}
+%\centering
+%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-error.eps}
+%\caption{Error evaluation on email-Enron} \label{fig:email:error}
+%\end{minipage}
 \end{figure*}
 
 \subsection{Runtime}\label{sec:runtime}
@@ -238,28 +251,51 @@ paths between a sampled source and all the rest of the nodes.
 \XXX Mention bidirectional search and the improvements it can give us.
 
 \begin{figure*}[ht]
-\begin{minipage}[b]{0.5\linewidth}
-\flushleft
-\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
-\caption{Running time comparison on p2p-Gnutella30} \label{fig:gnutella:time}
-\end{minipage}%
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
-\caption{Running time comparison on email-Enron} \label{fig:email:time}
-\end{minipage}
+  \centering
+  \hfill
+  \subfloat[p2p-Gnutella30
+  (directed)]{\label{fig:gnutella:time}\includegraphics[width=.45\textwidth,keepaspectratio]{p2p-Gnutella30-time}}
+  \hfill
+  \subfloat[email-Enron
+  (undirected)]{\label{fig:email:time}\includegraphics[width=.45\textwidth,keepaspectratio]{email-Enron-time}}
+  \label{fig:time}
+  \caption{Running time comparison between $\mathsf{VC}$, $\mathsf{BP}$, and the
+  exact algorihtm.}
+%\begin{minipage}[b]{0.5\linewidth}
+%\flushleft
+%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
+%\caption{Running time comparison on p2p-Gnutella30} \label{fig:gnutella:time}
+%\end{minipage}%
+%\begin{minipage}[b]{0.5\linewidth}
+%\centering
+%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
+%\caption{Running time comparison on email-Enron} \label{fig:email:time}
+%\end{minipage}
 \end{figure*}
+
+
 \begin{figure*}[ht]
-\begin{minipage}[b]{0.5\linewidth}
-\flushleft
-\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-edges.eps}
-\caption{Touched edges comparison on p2p-Gnutella30} \label{fig:gnutella:edges}
-\end{minipage}%
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-\includegraphics[width=3.8in, keepaspectratio]{email-Enron-edges.eps}
-\caption{Touched edges comparison on email-Enron}\label{fig:email:edges}
-\end{minipage}
+  \centering
+  \hfill
+  \subfloat[p2p-Gnutella30
+  (directed)]{\label{fig:gnutella:edges}\includegraphics[width=.45\textwidth,keepaspectratio]{p2p-Gnutella30-edges}}
+  \hfil
+  \subfloat[email-Enron
+  (undirected)]{\label{fig:email:edges}\includegraphics[width=.45\textwidth,keepaspectratio]{email-Enron-edges}}
+  \hfill
+  \label{fig:edges}
+  \caption{Touched edges comparison between $\mathsf{VC}$, $\mathsf{BP}$, and
+  the exact algorithm.}
+%\begin{minipage}[b]{0.5\linewidth}
+%\flushleft
+%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-edges.eps}
+%\caption{Touched edges comparison on p2p-Gnutella30} \label{fig:gnutella:edges}
+%\end{minipage}%
+%\begin{minipage}[b]{0.5\linewidth}
+%\centering
+%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-edges.eps}
+%\caption{Touched edges comparison on email-Enron}\label{fig:email:edges}
+%\end{minipage}
 \end{figure*}
 
 \subsection{Scalability}\label{sec:scalability}
@@ -282,17 +318,25 @@ and algorithms to mine them need to scale well as the graph sizes increase.
 \XXX The figures below are converted from jpg. Need native eps.
 
 \begin{figure*}
-\begin{minipage}[b]{0.5\linewidth}
-\flushleft
-\includegraphics[width=3.8in, keepaspectratio]{random-time.eps}
-\caption{Scalability on random~\citep{BarabasiA99} graphs (time)}
-\label{fig:random:time}
-\end{minipage}%
-\begin{minipage}[b]{0.5\linewidth}
-\centering
-\includegraphics[width=3.8in, keepaspectratio]{random-edges.eps}
-\caption{Scalability on random~\citep{BarabasiA99} graphs (touched edges)}
-\label{fig:random:edges}
-\end{minipage}
+  \centering
+  \hfill
+  \subfloat[Time]{\label{fig:random:time}\includegraphics[width=.45\textwidth,keepaspectratio]{random-time}}
+  \hfill
+  \subfloat[Edges]{\label{fig:random:edges}\includegraphics[width=.45\textwidth,keepaspectratio]{random-edges}}
+  \hfill
+  \label{fig:random}
+  \caption{Scalability comparison on random~\citep{BarabasiA99} graphs}
+%\begin{minipage}[b]{0.5\linewidth}
+%\flushleft
+%\includegraphics[width=3.8in, keepaspectratio]{random-time.eps}
+%\caption{Scalability on random~\citep{BarabasiA99} graphs (time)}
+%\label{fig:random:time}
+%\end{minipage}%
+%\begin{minipage}[b]{0.5\linewidth}
+%\centering
+%\includegraphics[width=3.8in, keepaspectratio]{random-edges.eps}
+%\caption{Scalability on random~\citep{BarabasiA99} graphs (touched edges)}
+%\label{fig:random:edges}
+%\end{minipage}
 \end{figure*}
 
