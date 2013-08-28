@@ -34,8 +34,8 @@ others, it only considers the contributions of some vertices sampled uniformly
 at random. To guarantee that all estimates are within $\varepsilon$ from their
 real value with probability at least $1-\delta$, the algorithm
 from~\citep{JacobKLPT05,BrandesP07} needs $O(\log(n/\delta)/\varepsilon^2)$
-samples. The analysis for the derivation of the sample size uses Hoeffding bounds %~\citep{Hoeffding63} 
-and the union bound. %~\citep{MitzenmacherU05}. 
+samples. The analysis for the derivation of the sample size uses Hoeffding bounds~\citep{Hoeffding63} 
+and the union bound~\citep{MitzenmacherU05}. 
 \citet{GeisbergerSS08} noticed that this can lead
 to an overestimation of the betweenness of vertices that are close to the
 sampled ones and introduced different unbiased estimators that are
