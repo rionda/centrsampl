@@ -396,12 +396,7 @@ work.
 %\end{figure*}
 
 \subsection{Scalability}\label{sec:scalability}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/random-time}
-  \caption{Scalability on random~\citep{BarabasiA99} graphs.}
-  \label{fig:random:time}
-\end{figure}
+
 In Sect.~\ref{sec:discussion} we argued about the reasons why
 Algorithm~\ref{alg:algorithm} is more scalable than $\mathsf{BP}$, while still
 offering the same approximation guarantees. To evaluate our argument in practice, we
@@ -417,6 +412,12 @@ and independent from the size of the sample than $\mathsf{BP}$. This is very
 important, as today's networks are not only huge, but they also grow rapidly,
 and algorithms to mine them need to scale well as
 the graph sizes increase.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/random-time}
+  \caption{Scalability on random~\citep{BarabasiA99} graphs.}
+  \label{fig:random:time}
+\end{figure}
 
 %\begin{figure*}
 %  \centering
