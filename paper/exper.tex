@@ -284,7 +284,6 @@ so we do not report those.
 %estimator for the betweenness of a vertex. Because of this, it takes the same
 %amount of time and touches the same number of edges as the one
 %from~\citep{BrandesP07}.
-
 %We use two metrics in order to measure the amount of computations that the
 %algorithms perform. The first metric is the execution time, or \textit{time}, in
 %seconds, the second metric is the number of edges that the algorithm
@@ -394,6 +393,12 @@ work.
 %\end{figure*}
 
 \subsection{Scalability}\label{sec:scalability}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/random-time}
+  \caption{Scalability on random~\citep{BarabasiA99} graphs.}
+  \label{fig:random:time}
+\end{figure}
 In Sect.~\ref{sec:discussion} we argued about the reasons why
 Algorithm~\ref{alg:algorithm} is more scalable than $\mathsf{BP}$, while still
 offering the same approximation guarantees. To evaluate our argument in practice, we
@@ -410,12 +415,6 @@ important, as today's networks are not only huge, but they also grow rapidly,
 and algorithms to mine them need to scale well as
 the graph sizes increase.
 
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/random-time}
-  \caption{Scalability on random~\citep{BarabasiA99} graphs.}
-  \label{fig:random:time}
-\end{figure}
 %\begin{figure*}
 %  \centering
 %  \hfill
