@@ -1,50 +1,3 @@
-\section{Experimental evaluation}\label{sec:exper}
-We conducted an experimental evaluation of our algorithms, with two major
-driving goals in mind: to study the behavior of the algorithms presented in this
-paper and to compare it with that of other related
-algorithms~\citep{Brandes01,BrandesP07,JacobKLPT05,GeisbergerSS08}, in terms of
-accuracy of the estimation, execution time, work performed, and scalability as
-function of the network size. Due to space limitations, we only report a subset
-of our results and refer the reader to the extended online version of the
-paper~\citep{Anonymous13}.
-
-\paragraph{Implementation and environment}
-We implemented\footnote{We plan to make our software available after
-acceptance.} our algorithms, the one presented in~\citep{BrandesP07,JacobKLPT05}
-and the linear scaling version from~\citep{GeisbergerSS08} in C, by extending
-the implementation of the exact algorithm~\citep{Brandes01} contained in
-igraph~\citep{igraph}. The implementations are similarly engineered, given that
-they are based on the same subroutines for the computation of the shortest path
-(Dijkstra's algorithm for weighted graphs, BFS for unweighted ones), and they
-received similar amounts of optimization. We exposed our implementations through
-Python 3.3.1, which was used for running the simulations. We run the experiments
-on a quad-core AMD Phenom\texttrademark II X4 955 Processor with 16GB of RAM,
-running Debian \emph{wheezy} with a Linux kernel version 3.2.0.
-
-\paragraph{Datasets} We used a number of graphs from the Stanford Large
-Network Dataset
-Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}. These are
-all real world datasets including online social networks, communication (email)
-networks, scientific citation and academic collaboration networks, road
-networks, Amazon frequent co-purchased product networks, and more. Basic
-information about the graphs we used are reported in the leftmost part
-of~\cref{tab:expDir,tab:expUndir}. We refer the
-reader to the SLNDC website for additional details about each dataset. 
-To evaluate scalability we also created a number of artificial graphs of
-different sizes (1,000 to 100,000 vertices) using the Barab\'asi-Albert
-model~\citep{BarabasiA99} as implemented by igraph~\citep{igraph}. \XXX Are
-there parameters of the Barabasi-Albert model we should mention?
-
-\paragraph{Diameter approximation}
-As we discussed in the previous sections the number of samples that the proposed
-algorithm requires depends on the vertex-diameter of the graph. 
-For the computation of the vertex-diameter in case of undirected graphs we used
-the 2-approximation algorithm that we briefly described in Sect.~\ref{sec:algo}.
-We denote this as ``diam-2-approx'' when reporting results in this section. For
-directed graphs, we computed the number of samples using both the exact value of
-the vertex-diameter (indicated as diam-exact) as well as the trivial upper bound
-$|V|-2$ (indicated as diam-UB). 
-
 \begin{figure*}
   \centering
   \subfloat[Undirected graphs]{
@@ -93,6 +46,54 @@ $|V|-2$ (indicated as diam-UB).
   \caption{Graph properties and running time ratios.}
   \label{fig:tables}
 \end{figure*}
+
+\section{Experimental evaluation}\label{sec:exper}
+We conducted an experimental evaluation of our algorithms, with two major
+driving goals in mind: to study the behavior of the algorithms presented in this
+paper and to compare it with that of other related
+algorithms~\citep{Brandes01,BrandesP07,JacobKLPT05,GeisbergerSS08}, in terms of
+accuracy of the estimation, execution time, work performed, and scalability as
+function of the network size. Due to space limitations, we only report a subset
+of our results and refer the reader to the extended online version of the
+paper~\citep{Anonymous13}.
+
+\paragraph{Implementation and environment}
+We implemented\footnote{We plan to make our software available after
+acceptance.} our algorithms, the one presented in~\citep{BrandesP07,JacobKLPT05}
+and the linear scaling version from~\citep{GeisbergerSS08} in C, by extending
+the implementation of the exact algorithm~\citep{Brandes01} contained in
+igraph~\citep{igraph}. The implementations are similarly engineered, given that
+they are based on the same subroutines for the computation of the shortest path
+(Dijkstra's algorithm for weighted graphs, BFS for unweighted ones), and they
+received similar amounts of optimization. We exposed our implementations through
+Python 3.3.1, which was used for running the simulations. We run the experiments
+on a quad-core AMD Phenom\texttrademark II X4 955 Processor with 16GB of RAM,
+running Debian \emph{wheezy} with a Linux kernel version 3.2.0.
+
+\paragraph{Datasets} We used a number of graphs from the Stanford Large
+Network Dataset
+Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}. These are
+all real world datasets including online social networks, communication (email)
+networks, scientific citation and academic collaboration networks, road
+networks, Amazon frequent co-purchased product networks, and more. Basic
+information about the graphs we used are reported in the leftmost part
+of~\cref{tab:expDir,tab:expUndir}. We refer the
+reader to the SLNDC website for additional details about each dataset. 
+To evaluate scalability we also created a number of artificial graphs of
+different sizes (1,000 to 100,000 vertices) using the Barab\'asi-Albert
+model~\citep{BarabasiA99} as implemented by igraph~\citep{igraph}. \XXX Are
+there parameters of the Barabasi-Albert model we should mention?
+
+\paragraph{Diameter approximation}
+As we discussed in the previous sections the number of samples that the proposed
+algorithm requires depends on the vertex-diameter of the graph. 
+For the computation of the vertex-diameter in case of undirected graphs we used
+the 2-approximation algorithm that we briefly described in Sect.~\ref{sec:algo}.
+We denote this as ``diam-2-approx'' when reporting results in this section. For
+directed graphs, we computed the number of samples using both the exact value of
+the vertex-diameter (indicated as diam-exact) as well as the trivial upper bound
+$|V|-2$ (indicated as diam-UB). 
+
 
 %\begin{table*}[ht]
 %  \centering   
@@ -244,6 +245,28 @@ sample size~\eqref{eq:vceapprox}.
 %\end{minipage}
 \end{figure*}
 
+\begin{figure*}[ht]
+  \centering
+  \subfloat[p2p-Gnutella30
+  (directed)]{\label{fig:gnutella:time}\includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-time}}
+  \hfill
+  \subfloat[email-Enron
+  (undirected)]{\label{fig:email:time}\includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/email-Enron-time}}
+  \label{fig:time}
+  \caption{Running time (seconds) comparison between $\mathsf{VC}$, $\mathsf{BP}$, and the
+  exact algorihtm.}
+%\begin{minipage}[b]{0.5\linewidth}
+%\flushleft
+%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
+%\caption{Running time comparison on p2p-Gnutella30} \label{fig:gnutella:time}
+%\end{minipage}%
+%\begin{minipage}[b]{0.5\linewidth}
+%\centering
+%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
+%\caption{Running time comparison on email-Enron} \label{fig:email:time}
+%\end{minipage}
+\end{figure*}
+
 \subsection{Runtime}\label{sec:runtime}
 We compared the running time of Algorithm~\ref{alg:algorithm} (denoted in the
 following as $\mathsf{VC}$ to that of the algorithm
@@ -344,27 +367,7 @@ for $\mathsf{VC}$ and therefore the runtime of our algorithm ($\mathsf{BP}$
 would not benefit from this improvement). We plan to explore this in future
 work.
 
-\begin{figure*}[ht]
-  \centering
-  \subfloat[p2p-Gnutella30
-  (directed)]{\label{fig:gnutella:time}\includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-time}}
-  \hfill
-  \subfloat[email-Enron
-  (undirected)]{\label{fig:email:time}\includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/email-Enron-time}}
-  \label{fig:time}
-  \caption{Running time comparison between $\mathsf{VC}$, $\mathsf{BP}$, and the
-  exact algorihtm.}
-%\begin{minipage}[b]{0.5\linewidth}
-%\flushleft
-%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
-%\caption{Running time comparison on p2p-Gnutella30} \label{fig:gnutella:time}
-%\end{minipage}%
-%\begin{minipage}[b]{0.5\linewidth}
-%\centering
-%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
-%\caption{Running time comparison on email-Enron} \label{fig:email:time}
-%\end{minipage}
-\end{figure*}
+
 
 %\begin{figure*}[ht]
 %  \centering
