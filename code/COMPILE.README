@@ -1,0 +1,15 @@
+In the following IGRAPH_DIR is wherever you have your igraph original sources,
+and PY_IGRAPH_DIR is wherever you have your python-igraph original source.
+
+1) Copy igraph/src/centrality.c to $IGRAPH_DIR/src/
+2) Copy igraph/include/igraph_centrality.h to $IGRAPH_DIR/include
+3) Copy python-igraph/src/graphobject.c to $PY_IGRAPH_DIR/src
+(I actually made links to our files from these directories, so I don't have to
+copy the files every time)
+4) cd $IGRAPH_DIR
+5) ./configure --prefix=$HOME  <= this only needs to be done once, as long as
+you don't call "make clean"
+6) make install
+7) cd $PY_IGRAPH_DIR
+8) python3 setup.py install 
+
