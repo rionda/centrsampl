@@ -342,10 +342,10 @@ Note that $\TOPK(K,G)$ may contain more than $K$ vertices.
 
 Our algorithm works in two phases. Each phase is basically a run of the
 algorithm for approximating the betweenness of all vertices presented in the
-previous section, with some additional computation at the end of each phase and
-different ways to compute the number of paths to sample. In the first phase,
-we compute a lower bound $\ell'$ to $\betw(v_K)$. In the second phase we use
-$\ell'$ to compute the number of samples needed to obtain a relative
+previous section, but with different ways to compute the number of paths to
+sample and some additional computation at the end of each phase. In the first
+phase, we compute a lower bound $\ell'$ to $\betw(v_K)$. In the second phase we
+use $\ell'$ to compute the number of samples needed to obtain a relative
 $(\ell',\varepsilon)$-approximation to the $(\range_G,\pi_G)$. Then we use this
 number of samples to approximate the betweenness of all vertices again, and
 return a collection of vertices that is, with high probability, a superset of
@@ -478,7 +478,7 @@ $\tilde\betw'(u)$ for the betweenness centrality $\betw(u)$ is
 \tilde\betw'(u)= \frac{1}{(n-1)r}\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
 u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace.
 \]
-As it was for our algorithm, the key ingredient to ensure a correct
+As it was for Algorithm~\ref{alg:algorithm}, the key ingredient to ensure a correct
 approximation for the betweenness centrality is the computation of the sample
 size $r$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07} 
 %rely
