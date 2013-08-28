@@ -8,22 +8,23 @@ The intuition behind the algorithm to approximate the betweenness values of all
 vertices is the following. Given a graph $G=(V,E)$
 with vertex-diameter $\VD(G)$ and two parameters $\varepsilon,\delta\in(0,1)$
 we first compute a sample size $r$ using~\eqref{eq:vceapprox} with
-$d=\lfloor\log_2(\VD(G)-2)\rfloor+1$:
+\[d=\lfloor\log_2(\VD(G)-2)\rfloor+1\enspace.\]
+The resulting sample size is
 \begin{equation}\label{eq:samplesize}
 r=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\VD(G)-2)\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
 \end{equation}
-The sample size is sufficient to achieve the desired accuracy
+This is sufficient to achieve the desired accuracy
 (expressed through $\varepsilon$) with the desired confidence (expressed through
-$1-\delta$). Then the algorithm repeats, for $r$ times, the following steps:
+$1-\delta$). Then the algorithm repeats the following steps $r$ times:
 1.~it samples a pair $u,v$ of distinct vertices uniformly at random, 2.~it
 computes the set $\mathcal{S}_{uv}$ of all shortest paths between $u$ and $v$,
 3.~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random, 4.~ it
 increases by $1/r$ the betweenness estimation of each vertex in
 $\mathsf{Int}(p)$. Note that if the sampled vertices $u$ and $v$ are not
-connected, we defined $\mathcal{S}_{uv}=\{p_\emptyset\}$ so nothing is done in
-steps 3 and 4. Denoting with $S$ the set of the sampled shortest paths, the
-unbiased estimator $\tilde\betw(w)$ for the betweenness $\betw(w)$ of a vertex
-$w$ is the sample average 
+connected, we can skip steps 3 and 4 because we defined
+$\mathcal{S}_{uv}=\{p_\emptyset\}$. Denoting with $S$ the set of the sampled
+shortest paths, the \emph{unbiased} estimator $\tilde\betw(w)$ for the betweenness
+$\betw(w)$ of a vertex $w$ is the sample average 
 \[
 \tilde\betw(w) = \frac{1}{r}\sum_{p\in S}
 \mathds{1}_{\mathsf{Int}(p)}(w) = \frac{1}{r}\sum_{p\in S}
@@ -42,20 +43,24 @@ algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
 as~\citep{Brandes01}. The \texttt{getDiameterApprox()} procedure is an
 approximation algorithm for computing an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
 
-\paragraph{Unique shortest paths} When there is an unique (or no) shortest
-path between each pair of vertices of $G$, then one can apply
-Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller sample size
+\paragraph{Unique shortest paths} 
+When, for each pair $(u,v)$ of vertices of $G$, either there is a unique
+shortest path from $u$ to $v$ or $v$ is unreachable from $u$, 
+%When each pair $(u,v)$ of vertices of $G$ has a unique shortest path connecting them or
+%When there is an unique shortest
+%path between each pair of vertices of $G$, 
+ then one can apply Lemma~\ref{lem:vcdimuppboundunique} and obtain a smaller
+sample size
 \[
   r= \frac{c}{\varepsilon^2}\left(3+\ln\frac{1}{\delta}\right)
 \]
 to approximate the betweenness values of all the vertices. 
 This is an interesting result: the number of samples needed to compute a good
 approximation to all vertices is a \emph{constant} and completely
-\emph{independent from $G$}. Intuitively, this means that our algorithm will be
-extremely efficient and scalable on graphs with this property. Unique shortest
-paths are common or even enforced in road networks by slightly perturbing the
-edge weights or having a deterministic tie breaking
-policy~\citep{GeisbergerSS08}.
+\emph{independent from $G$}. Intuitively, this means that the algorithm is
+extremely fast on graphs with this property. Unique shortest paths are common or
+even enforced in road networks by slightly perturbing the edge weights or having
+a deterministic tie breaking policy~\citep{GeisbergerSS08}.
 
 \paragraph{Bounded-distance betweenness} For the case of
 $k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
@@ -96,11 +101,11 @@ $w$ let $P_u(w)$ be the subset of neighbors of $w$ that are \emph{predecessors}
 of $w$ along the shortest paths from $u$ to $w$. Let $p^*=\{v\}$. Starting from
 $v$, we select one of its predecessors $z\in P_u(v)$ using weighted random
 sampling: each $z\in P_u(v)$ has probability $\sigma_{uz}/\sum_{w\in
-P_u(v)}\sigma_{uw}$ of being sampled. We add $z$ to $p^*$ and  then repeat the
-procedure for $z$, selecting one of its predecessors from $P_u(z)$ and adding it
+P_u(v)}\sigma_{uw}$ of being sampled. We add $z$ to $p^*$ and then repeat the
+procedure for $z$. That is, we select one of $z$'s predecessors from $P_u(z)$ and add it
 to $p^*$, and so on until we reach $u$. Note that we can update the estimation
-of the betweenness of the internal vertices along $p^*$ (the only
-ones for which the estimation is updated) as we compute $p^*$.
+of the betweenness of the internal vertices along $p^*$ (the only ones for which
+the estimation is updated) as we compute $p^*$.
 
 \begin{lemma}\label{lem:samplpath}
   The path $p^*$ built according to the above procedure is selected uniformly at
@@ -177,7 +182,7 @@ Shortest Paths (APSP) problem, and taking the shortest path with the maximum siz
 Algorithms for exactly solving APSP problem such as Johnson's which runs in
 $O(V^2\log V+VE)$ or Floyd-Warshall's ($\Theta(V^3)$), would defeat our
 purposes: once we have all the shortest paths for the computation of
-the diameter, we can also compute the betweenness of all the vertices exactly. 
+the diameter, we could as well compute the betweenness of all the vertices exactly. 
 Given that Thm.~\ref{thm:eapprox} (and Thm.~\ref{thm:releapprox} too) only
 requires an upper bound to the VC-dimension of the range set, an approximation
 of the vertex-diameter would be sufficient for our purposes. Several refined
@@ -246,30 +251,30 @@ individual components is $n$ and the sum of edges is $m$.
 The use of the above $2$-approximation in the computation of the
 sample size from line~\ref{algline:forloop} of Alg.~\ref{alg:algorithm} results
 in at most $c/\varepsilon^2$ additional samples than if we
-used the exact value $\VD(G)$. Furthermore, the computation of $\widetilde\VD(G)$
-does not affect the running time of our algorithm since for the construction of
-the first sample we can reuse the already computed shortest paths from the
-vertex $v$ used to obtain the approximation. Specifically, we can sample a new
-vertex $u\neq v$ and then choose with uniform probability one of the
+used the exact value $\VD(G)$. The computation of $\widetilde\VD(G)$
+does not affect the running time of our algorithm: for the construction of
+the first sample we can reuse the shortest paths from the sampled
+vertex $v$ that we used to obtain the approximation. Specifically, we can sample
+a new vertex $u\neq v$ and then choose with uniform probability one of the
 (already computed) shortest paths between $v$ and $u$.
 
-If the graph is directed and/or not all edge weights are equal, the computation of a good
-approximation to $\VD(G)$ becomes more problematic. In particular, notice that
-there is no relationship between $\VD(G)$ and $\mathsf{diam}(G)$ when $G$ is
-weighted, as the shortest path with maximum size may not be the shortest path
-with maximum weight. In these cases, one can use the size (number of vertices)
-of the largest Weakly Connected Component (WCC) , as upper bound to $\VD(G)$.
-The WCC's can again be computed in $O(n+m)$ using BFS. Although this quantity
-can be as high as $n$, in the computation of the sample size we use its
-logarithm. This has the effect of making our sample size comparable with that
-proposed by~\citet{BrandesP07} when there is a single WCC, as it would depend on
-$\log n$, but the amount of work done per sample in our algorithm is still much
-smaller, in practice, than that performed by the algorithm they presented (see
-Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more details). We believe
-that in practical situation, a much better upper bound to the diameter of the
-graph is available, resulting in a smaller sample size than what suggested by
-the worst case we just presented
-
+If the graph is directed and/or not all edge weights are equal, the computation
+of a good approximation to $\VD(G)$ becomes more problematic. In particular,
+notice that there is no relationship between $\VD(G)$ and $\mathsf{diam}(G)$
+when $G$ is weighted, as the shortest path with maximum size may not be the
+shortest path with maximum weight. In these cases, one can use the size (number
+of vertices) of the largest Weakly Connected Component (WCC), as a loose upper
+bound to $\VD(G)$. The WCC's can again be computed in $O(n+m)$ using BFS.
+This quantity can be as high as $n$ but for the computation of the sample
+size we use its logarithm, mitigating the crudeness of the bound. In this case
+our sample size is comparable to that proposed
+by~\citet{BrandesP07}. 
+%when there is a single WCC, as it would depend on $\log n$,
+Nevertheless the amount of work done per sample by our algorithm is still much
+smaller (see Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more
+details). In practice, it is possible that the nature of the network suggests a
+much better upper bound to the vertex-diameter of the graph, resulting in a
+smaller sample size. %than what suggested by the worst case we just presented.  
 
 \paragraph{Analysis}\label{sec:analysis}
 %The algorithm we described and presented in 
@@ -342,9 +347,9 @@ Note that $\TOPK(K,G)$ may contain more than $K$ vertices.
 %analysis setting \XXX add reference.
 
 Our algorithm works in two phases. Each phase is basically a run of the
-algorithm for approximating the betweenness of all vertices presented in the
-previous section, but with different ways to compute the number of paths to
-sample and some additional computation at the end of each phase. In the first
+algorithm for approximating the betweenness of all vertices. %presented in the previous section. 
+The two phases differ by the way they compute the number of paths to sample and
+the additional operations at the end of each phase. In the first
 phase, we compute a lower bound $\ell'$ to $\betw(v_K)$. In the second phase we
 use $\ell'$ to compute the number of samples needed to obtain a relative
 $(\ell',\varepsilon)$-approximation to the $(\range_G,\pi_G)$. Then we use this
@@ -544,16 +549,16 @@ r\geq \frac{1}{2\varepsilon^2}\left(\ln n + \ln 2 +\ln\frac{1}{\delta}\right)\en
 %(simultaneous) guarantee on the quality of
 %all the estimation, with probability at least $1-\delta$.
 From this expression it should be clear that this sample size is usually much
-larger than ours, as in practice $\VD(G)\ll n$. For the same reason, the
-algorithm would not scale well with the size of the network, as we also evaluate
-experimentally (see Sect.~\ref{sec:exper}).
+larger than ours, as in practice $\VD(G)\ll n$. For the same reason, this
+algorithm would not scale well as the network size increases (see also
+Sect.~\ref{sec:exper}).
 
 Another interesting aspect in which our algorithm and the one
 by~\citet{JacobKLPT05} and~\citet{BrandesP07} differ is the \emph{amount of work
 done per sample}. Our algorithm computes a single set $\mathcal{S}_{uv}$ for the
-sampled vertices $u$ and $v$ by performing a run of Dijkstra's algorithm or of
-BFS until $v$ is reached or all the vertices reachable from $u$ have been
-explored. The algorithm from~\citep{JacobKLPT05,BrandesP07} instead computes
+sampled pair of vertices $(u,v)$: it performs a run of Dijkstra's algorithm (or of
+BFS) from $u$, stopping when $v$ is reached. The algorithm
+from~\citep{JacobKLPT05,BrandesP07} instead computes
 all the sets $\mathcal{S}_{uw}$ from the sampled vertices $u$ to all other
 vertices, again with a single run of Dijkstra or BFS, but without the
 ``early-stopping condition'' that we have when we reach $v$. Although in the
@@ -563,15 +568,14 @@ $s,t$-shortest path computation between a pair of vertices with smaller
 worst-case time complexity than the Single Source Shortest Path computation.}, in practice we
 perform much fewer operations, as we can expect $v$ not to always be very
 far from $u$ and therefore we can terminate early. This fact has a great
-impact on the running time, especially because our algorithm touches
-\emph{much fewer} edges than the algorithm from~\citep{JacobKLPT05,BrandesP07},
-given that this one can actually touch the entire network, i.e., all the edges
-in the graph, at every sample, while our computation has a much higher
-\emph{locality}, exploring only a neighborhood of $u$ until $v$ is reached. The
-results of our experimental evaluation presented in Sect.~\ref{sec:exper}
-highlights this and other advantages of our method over the one
-from~\citep{JacobKLPT05,BrandesP07}. In the future, we plan to investigate the
-possibility of using \emph{bidirectional A$^*$
+impact on the running time. Our algorithm touches
+\emph{much fewer} edges than the one from~\citep{JacobKLPT05,BrandesP07}.
+The latter can touch all the edges in the graph \emph{at every sample}, while
+our computation has a much higher \emph{locality}, exploring only a neighborhood
+of $u$ until $v$ is reached. The results of our experimental evaluation
+presented in Sect.~\ref{sec:exper} highlights this and other advantages of our
+method over the one from~\citep{JacobKLPT05,BrandesP07}. In the future, we plan
+to investigate the possibility of using \emph{bidirectional A$^*$
 search}~\citep{Pohl69,KaindlK97} to further speed up the computation for each
 sample of our algorithms.
 

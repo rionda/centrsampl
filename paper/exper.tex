@@ -70,8 +70,8 @@ Python 3.3.1, which was used for running the simulations. We run the experiments
 on a quad-core AMD Phenom\texttrademark II X4 955 Processor with 16GB of RAM,
 running Debian \emph{wheezy} with a Linux kernel version 3.2.0.
 
-\paragraph{Datasets} We used a number of graphs from the Stanford Large
-Network Dataset
+\paragraph{Datasets} In our evaluation we used a number of graphs from the
+Stanford Large Network Dataset
 Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}. These are
 all real world datasets including online social networks, communication (email)
 networks, scientific citation and academic collaboration networks, road
@@ -81,7 +81,8 @@ of~\cref{tab:expDir,tab:expUndir}. We refer the
 reader to the SLNDC website for additional details about each dataset. 
 To evaluate scalability we also created a number of artificial graphs of
 different sizes (1,000 to 100,000 vertices) using the Barab\'asi-Albert
-model~\citep{BarabasiA99} as implemented by igraph~\citep{igraph}. \XXX Are
+model~\citep{BarabasiA99} as implemented by igraph~\citep{igraph}. 
+\XXX Are
 there parameters of the Barabasi-Albert model we should mention?
 
 \paragraph{Diameter approximation}
@@ -205,7 +206,7 @@ compute the sample size, as suggested by~\citet{LofflerP09}. As far as the
 \emph{confidence} is concerned, we report that in all the hundreds of runs we
 performed, the guarantee on the deviation was \emph{always} satisfied, not just
 with probability $1-\delta$ ($=0.9$). We evaluated how good the estimated values
-are is by computing the average \emph{estimation error} $(\sum_{v\in
+are by computing the average \emph{estimation error} $(\sum_{v\in
 V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm and taking
 the average and the standard deviation of this measure, for different values of
 $\varepsilon$. We also compute the maximum error $|\betw(v)-\tilde\betw(v)|$
@@ -214,14 +215,13 @@ graph p2p-Gnutella30, and in~\cref{fig:email:error} for the undirected graph
 email-Enron. Results for other graphs are similar~\citep{Anonymous13}. It is
 evident that the maximum error is an error of magnitude smaller than the
 guaranteed value of $\varepsilon$ and that the average error is almost two
-orders of magnitude smaller than the guarantees, and the average+standard
-deviation points show that the estimation are quite concentrated around the
+orders of magnitude smaller than the guarantees, and the \texttt{Avg+Stddev}
+points show that the estimation are quite concentrated around the
 average. We can conclude that in practice the algorithm performs even \emph{better
 than guaranteed}, achieving higher accuracy and confidence than what the
-theoretical analysis indicates. This is due to a number of factors, including
-the fact that the vertex-diameter is an \emph{upper bound} to the VC-dimension
-of the rangeset and the inherent looseness of the bound to the
-sample size~\eqref{eq:vceapprox}.
+theoretical analysis indicates. This is due to a number of factors, e.g., we use
+an \emph{upper bound} to the VC-dimension of the range set. 
+%Morev the inherent looseness of the formula of the sample size~\eqref{eq:vceapprox}.
 
 \begin{figure*}[ht]
   \centering
@@ -276,7 +276,7 @@ algorithm~\citep{Brandes01}. As $\mathsf{VC}$ and $\mathsf{BP}$ give the same
 guarantees on the accuracy and confidence of the computed estimations, it makes
 sense to compare their running times to evaluate which is faster in achieving
 the goal. The performances of the algorithm proposed in~\citep{GeisbergerSS08}
-takes the same time as as $\mathsf{BP}$, because it follows the same sampling
+takes the same time as $\mathsf{BP}$, because it follows the same sampling
 approach and only differs in the definiton of the estimator for the betweenness,
 so we do not report those.
 %as the one
@@ -294,21 +294,22 @@ so we do not report those.
 %worth mentioning that we count an edge as many times as it is touched during
 %a run of an algorithm, so we might count a single edge more than once.
 The algorithms $\mathsf{VC}$ and $\mathsf{BP}$ take parameters $\varepsilon$ and
-$\delta$ and compute the sample size accordingly. For our experiments we used
-$\delta=0.1$, while $\varepsilon$ takes value in $\{0.01, 0.015, 0.02, 0.04,
-0.06, 0.08, 0.1\}$. We run each experiments five times for each value of
-$\varepsilon$, and measured the average running time across the runs.
+$\delta$ and compute the sample size accordingly. 
+%For our experiments we used
+%$\delta=0.1$, while $\varepsilon$ takes value in $\{0.01, 0.015, 0.02, 0.04,
+%0.06, 0.08, 0.1\}$.
+ We run each experiments five times for each value of $\varepsilon$, and
+measured the average running time across the runs.
 %as well as the average number of touched edges.  
 The results are presented in~\cref{tab:expUndir,tab:expDir}
 %and~\cref{fig:gnutella:time,fig:gnutella:edges,fig:email:time,fig:email:edges}.
 and~\cref{fig:gnutella:time,fig:email:time}. 
 %
-In~\cref{tab:expUndir} we report, for some of the undirected graphs we tested
-and for $\varepsilon=$\XXX WHAT?, the minimum and the maximum ratio of the
-running time of $\mathsf{BP}$ over $\mathsf{VC}$, over \XXX how many? runs. As
-it can be seen from this table our algorithm performs significantly faster, more
-than 300\%, in both measures. Similar results are reported for some directed
-graphs in~\cref{tab:expDir}.
+In~\cref{tab:expUndir} we report the minimum and the maximum ratio of the
+running time of $\mathsf{BP}$ over $\mathsf{VC}$, taken over the ratios obtained
+by running the algorithms with the different values of $\varepsilon$. As it can
+be seen from this table our algorithm performs significantly faster, more than
+300\%. Similar results are reported for directed graphs in~\cref{tab:expDir}.
 %In~\cref{tab:expDir} we compare the
 %algorithms on a set of directed graphs. As in the case of the undirected graphs,
 %we present the minimum and maximum ratios of corresponding measures for the
@@ -328,8 +329,9 @@ vertex-diameter approximation (diam-UB), the $\mathsf{VC}$ algorithm performs un
 $\mathsf{BP}$. In the case where the exact value of the diameter was used, we
 can see that our algorithm computes an estimation of the betweenness that
 satisfies the desired accuracy and confidence guarantees \emph{3 to 5 times
-faster} than~\citep{BrandesP07}. \XXX-(COMMENT ON THE RELATION TOPOLOGY-SPEED)
-\MR I have no idea what you meant by that. In~\cref{fig:gnutella:time} we study
+faster} than~\citep{BrandesP07}. 
+%\XXX-(COMMENT ON THE RELATION TOPOLOGY-SPEED) \MR I have no idea what you meant by that. 
+ In~\cref{fig:gnutella:time} we study
 the directed graph p2p-Gnutella30 and we present the measurements of
 the average running time of the algorithms for different values of
 $\varepsilon$, using the exact algorithm from~\citep{Brandes01} as baseline. The
@@ -337,13 +339,11 @@ $\mathsf{VC}$ algorithm requires significantly less time than the $\mathsf{BP}$
 algorithm. The figure also shows that there are values of $\varepsilon$ for
 which $\mathsf{BP}$ takes more time than the exact algorithm, because the
 resulting sample size is larger than the graph size. Given that $\mathsf{VC}$
-uses fewer samples and does fewer operations per sample, it can be used for
-to achieve higher quality approximations (lower $\varepsilon$) than
-$\mathsf{BP}$, while still saving time compared to the exact computation.
-\Cref{fig:email:time} shows the average running time of the
-algorithms for the undirected graph email-Enron, and we can see that the
-we can make similar conclusions.
-%In this case our
+uses fewer samples and does fewer operations per sample, it can be used with
+lower $\varepsilon$ than $\mathsf{BP}$, while still saving time compared to the
+exact computation. \Cref{fig:email:time} shows the average running time of the
+algorithms for the undirected graph email-Enron. The behavior is  similar to
+that for the undirected case. %In this case our
 %algorithm not only performs better but also \emph{scales} better than the one
 %from~\citep{BrandesP07} \XXX WHAT DO YOU MEAN SCALES BETTER?. 
 %For the computation of the sample size we use the 2-approximation algorithm
@@ -356,14 +356,14 @@ we can make similar conclusions.
 %From the above Figures and Tables we see that for the tested values of
 %$\varepsilon$, the proposed algorithm is faster (at least 3x speedup in case of
 %exact diameter on the tested graphs). 
-Algorithm~\ref{alg:algorithm} is faster than $\mathsf{BP}$ for two reasons, both
+ Algorithm~\ref{alg:algorithm} is faster than $\mathsf{BP}$ for two reasons, both
 originating from from our use of results from the VC-dimension theory: 1) we use
-a significantly smaller amount of samples and 2) only in the worst case does
-$\mathsf{VC}$ the same amount of computations \emph{per sample} as
-$\mathsf{BP}$, because our algorithm needs only to find the shortest path
-between a sampled pair of vertices whereas the algorithms
+a significantly smaller amount of samples and 2) $\mathsf{VC}$ performs the
+same amount of computations \emph{per sample} as $\mathsf{BP}$ only in the worst
+case. Indeed our algorithm needs only to find the shortest path between a
+sampled pair of vertices, whereas the algorithms
 from~\citep{GeisbergerSS08,BrandesP07} need to compute the shortest paths
-between a sampled source and all the other vertices. Indeed in our experimental
+between a sampled source and all the other vertices. In our experimental
 evaluation we found out that the running time of the algorithms is directly
 proportional to the number of edges touched during the shortest path
 computation. The use of bidirectional A\textsuperscript{*}
@@ -371,8 +371,6 @@ search~\citep{Pohl69,KaindlK97} can help in lowering the number of touched edges
 for $\mathsf{VC}$ and therefore the runtime of our algorithm ($\mathsf{BP}$
 would not benefit from this improvement). We plan to explore this in future
 work.
-
-
 
 %\begin{figure*}[ht]
 %  \centering

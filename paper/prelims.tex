@@ -1,6 +1,6 @@
 \section{Preliminaries}\label{sec:prelims}
 In this section we introduce the definitions and lemmas that we will use to
-develop and analyze our results in the remainder of the paper.
+develop and analyze our results throughout the paper.
 
 \subsection{Graphs and betweenness centrality}\label{sec:graphprelims}
 Let $G=(V,E)$ be a graph, where $E\subseteq V\times V$, with $n=|V|$ vertices
@@ -45,14 +45,14 @@ We now define a characteristic quantity of a graph that we will use throughout
 the paper.
 \begin{definition}\label{def:vertexdiam}
   Given a graph $G=(V,E)$, the \emph{vertex-diameter $\VD(G)$ of $G$} is the
-  maximum size of a shortest path between a pair of vertices of $V$:
+  size of the shortest path in $G$ with maximum size:
   \[
   \VD(G) = \max\left\{|p| ~:~ p\in \mathbb{S}_G\right\}\enspace.\]
 \end{definition}
-The vertex-diameter is the maximum number of vertices in a shortest path. If all
-the edge weights are unitary, then $\VD(G)$ is equal to $\mathsf{diam}(G)+1$,
-where $\mathsf{diam}(G)$ is the number of edges composing the longest shortest
-path in $G$. 
+The vertex-diameter is the maximum number of vertices among all shortest paths
+in $G$. If all the edge weights are unitary, then $\VD(G)$ is equal to
+$\mathsf{diam}(G)+1$, where $\mathsf{diam}(G)$ is the number of edges composing
+the longest shortest path in $G$. 
 %\XXX Shall we make an example with a figure?
 
 Given a vertex $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
@@ -135,9 +135,9 @@ on a set of points is a measure of the complexity or expressiveness of such
 class~\citep{VapnikC71}. Given a probability distribution on the set of points,
 a finite bound on the VC-dimension of the class of subsets implies a bound on
 the number of random samples required to approximate the probability of each
-subsets its empirical average. We outline here some basic definitions and
-results and refer the reader to the book of~\citet{MohriRT12} for an in-depth
-presentation.
+subset in the class with its empirical average. We outline here some basic
+definitions and results and refer the reader to the book of~\citet{MohriRT12}
+for an in-depth presentation.
 %works of~\citet[Sect.~14.4]{AlonS08} and
 %\citet[Sect.~3]{BoucheronBL05} for an introduction of VC-dimension and a survey
 %of recent developments. \XXX Cite book Foundations of ML instead.
@@ -159,7 +159,7 @@ $P_\range(B)=\{ B\cap A ~:~ A\in\range\}$. We say that the set $B$ is
 
 The main application of VC-dimension in statistics and learning
 theory is in computing the number of samples needed to approximate the
-probabilities associated to the ranges using their empirical averages as
+probabilities of the ranges using their empirical averages as
 unbiased estimators. Formally, let $X_1^k=(X_1,\dotsc,X_k)$ be a collection of
 independent identically distributed random variables taking values in $D$,
 sampled according to some distribution $\phi$ defined on the elements of $D$.
@@ -203,8 +203,8 @@ The constant $c$ is approximately $0.5$~\citep{LofflerP09}.
 %\citet{LofflerP09} showed experimentally that the constant $c$ is approximately
 %$0.5$. We used this value in our experiments.
 It is important to mention that if $\VC(\range)$ and/or the upper bound $d$ do
-not depend on $|D|$ or on $|\range|$ neither does the sample size. This fact
-will make our algorithms very scalable as function of the network size.
+not depend on $|D|$ or on $|\range|$ neither does the sample size. This will
+make our algorithms scale well as the size of the network increases.
 
 %A similar definition offers relative guarantees on the approximation.
 It is possible to obtain \emph{relative} guarantees on the approximation.
