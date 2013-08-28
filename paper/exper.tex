@@ -334,7 +334,13 @@ the directed graph p2p-Gnutella30 and we present the measurements of
 the average running time of the algorithms for different values of
 $\varepsilon$, using the exact algorithm from~\citep{Brandes01} as baseline. The
 $\mathsf{VC}$ algorithm requires significantly less time than the $\mathsf{BP}$
-algorithm. \Cref{fig:email:time} shows the average running time of the
+algorithm. The figure also shows that there are values of $\varepsilon$ for
+which $\mathsf{BP}$ takes more time than the exact algorithm, because the
+resulting sample size is larger than the graph size. Given that $\mathsf{VC}$
+uses fewer samples and does fewer operations per sample, it can be used for
+to achieve higher quality approximations (lower $\varepsilon$) than
+$\mathsf{BP}$, while still saving time compared to the exact computation.
+\Cref{fig:email:time} shows the average running time of the
 algorithms for the undirected graph email-Enron, and we can see that the
 we can make similar conclusions.
 %In this case our
