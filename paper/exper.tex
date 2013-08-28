@@ -43,7 +43,7 @@ the 2-approximation algorithm that we briefly described in Sect.~\ref{sec:algo}.
 We denote this as ``diam-2-approx'' when reporting results in this section. For
 directed graphs, we computed the number of samples using both the exact value of
 the vertex-diameter (indicated as diam-exact) as well as the trivial upper bound
-$|V|-1$ (indicated as diam-UB). 
+$|V|-2$ (indicated as diam-UB). 
 
 \begin{figure*}
   \centering
@@ -203,22 +203,24 @@ $\delta$ was fixed to $0.1$ and we used $c=0.5$ in~\eqref{eq:vceapprox} to
 compute the sample size, as suggested by~\citet{LofflerP09}. As far as the
 \emph{confidence} is concerned, we report that in all the hundreds of runs we
 performed, the guarantee on the deviation was \emph{always} satisfied, not just
-with probability $1-\delta$ (0.9). We evaluated how good the estimated values
+with probability $1-\delta$ ($=0.9$). We evaluated how good the estimated values
 are is by computing the average \emph{estimation error} $(\sum_{v\in
 V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm and taking
 the average and the standard deviation of this measure, for different values of
-$\varepsilon$. We also compute the maximum error overall. The results are
-reported in~\cref{fig:gnutella:error} for the directed graph p2p-Gnutella30, and
-in~\cref{fig:email:error} for the undirected graph email-Enron. It is evident
-that the maximum error is an error of magnitude smaller than the guaranteed
-value of $\varepsilon$ and that the average error is almost two orders of
-magnitude smaller than the guarantees, and the average+standard deviation points
-show that the estimation are quite concentrated around the average. We can
-conclude that in practice the algorithm performs even better than guaranteed,
-achieving higher accuracy and confidence than what the theoretical analysis
-indicates. This is due to a number of factors, including the fact that the
-vertex-diameter is an \emph{upper bound} to the VC-dimension of the rangeset and
-the inherent looseness of the bound to the sample size~\eqref{eq:vceapprox}.
+$\varepsilon$. We also compute the maximum error $|\betw(v)-\tilde\betw(v)|$
+overall. The results are reported in~\cref{fig:gnutella:error} for the directed
+graph p2p-Gnutella30, and in~\cref{fig:email:error} for the undirected graph
+email-Enron. Results for other graphs are similar~\citep{Anonymous13}. It is
+evident that the maximum error is an error of magnitude smaller than the
+guaranteed value of $\varepsilon$ and that the average error is almost two
+orders of magnitude smaller than the guarantees, and the average+standard
+deviation points show that the estimation are quite concentrated around the
+average. We can conclude that in practice the algorithm performs even \emph{better
+than guaranteed}, achieving higher accuracy and confidence than what the
+theoretical analysis indicates. This is due to a number of factors, including
+the fact that the vertex-diameter is an \emph{upper bound} to the VC-dimension
+of the rangeset and the inherent looseness of the bound to the
+sample size~\eqref{eq:vceapprox}.
 
 \begin{figure*}[ht]
   \centering
@@ -244,12 +246,16 @@ the inherent looseness of the bound to the sample size~\eqref{eq:vceapprox}.
 
 \subsection{Runtime}\label{sec:runtime}
 We compared the running time of Algorithm~\ref{alg:algorithm} (denoted in the
-following as $\mathsf{VC}$ to that of the algorithm from~\citep{BrandesP07}
-(denotes as $\mathsf{BP}$), and to that of the exact
-algorithm~\citep{Brandes01}. The performances of the algorithm proposed
-in~\citep{GeisbergerSS08} takes the same time as as $\mathsf{BP}$, because it
-follows the same sampling approach and only differs in the definiton of the
-estimator for the betweenness, so we do not report those.
+following as $\mathsf{VC}$ to that of the algorithm
+from~\citep{JacobKLPT05,BrandesP07,GeisbergerSS08}
+(denoted as $\mathsf{BP}$), and to that of the exact
+algorithm~\citep{Brandes01}. As $\mathsf{VC}$ and $\mathsf{BP}$ give the same
+guarantees on the accuracy and confidence of the computed estimations, it makes
+sense to compare their running times to evaluate which is faster in achieving
+the goal. The performances of the algorithm proposed in~\citep{GeisbergerSS08}
+takes the same time as as $\mathsf{BP}$, because it follows the same sampling
+approach and only differs in the definiton of the estimator for the betweenness,
+so we do not report those.
 %as the one
 %from~\citep{BrandesP07,JacobKLPT05} and only differs in the definition of the
 %estimator for the betweenness of a vertex. Because of this, it takes the same
@@ -292,8 +298,8 @@ we have as few samples as possible (for $\mathsf{VC}$) since we use the exact
 value of the vertex-diameter, whereas in the case of diam-UB we have as many
 samples as possibles because we use the worst case estimation for the
 vertex-diameter of the graph.  %(that is when the graph has a hamiltonian path) <= not correct.  
-From~cref{tab:expUndir} we can see that the value for the
-vertex-diameter that we consider in the case of diam-UB is many orders of
+From~\cref{tab:expUndir} we can see that the value for the
+vertex-diameter that we consider in the case of diam-UB $(|V|-2)$ is many orders of
 magnitudes greater than the actual value, which translates in a significant
 increase of the number of samples. But even in the case of this crude
 vertex-diameter approximation (diam-UB), the $\mathsf{VC}$ algorithm performs uniformly faster than
@@ -307,9 +313,11 @@ the average running time of the algorithms for different values of
 $\varepsilon$, using the exact algorithm from~\citep{Brandes01} as baseline. The
 $\mathsf{VC}$ algorithm requires significantly less time than the $\mathsf{BP}$
 algorithm. \Cref{fig:email:time} shows the average running time of the
-algorithms for the undirected graph email-Enron. In this case our
-algorithm not only performs better but also \emph{scales} better than the one
-from~\citep{BrandesP07} \XXX WHAT DO YOU MEAN SCALES BETTER?. 
+algorithms for the undirected graph email-Enron, and we can see that the
+we can make similar conclusions.
+%In this case our
+%algorithm not only performs better but also \emph{scales} better than the one
+%from~\citep{BrandesP07} \XXX WHAT DO YOU MEAN SCALES BETTER?. 
 %For the computation of the sample size we use the 2-approximation algorithm
 %which is enough since what we really use for the computation of sample size is
 %the logarithm of the diameter. 
@@ -383,20 +391,20 @@ work.
 %\end{figure*}
 
 \subsection{Scalability}\label{sec:scalability}
-In Sect.~\ref{sec:discussion} we argued about the reasons why our algorithm is
-more scalable than the sampling one offering the same approximation
-guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05}. To evaluate our
-argument in practice, we created a number of graphs of increasing size (1,000 to
-100,000 vertices) using the Barab\'asi-Albert~\citep{BarabasiA99} and run the
-algorithms on them, measuring their running time. We report the results
-in~\cref{fig:random:time}. The most-scalable algorithm would be completely
-independent from the size (number of vertices) of the graph, corresponding to a
-flat (horizontal) line in the plot. Therefore, the less steep the line, the more
-independent from the network size would be the corresponding algorithm. From the
-figure, we can appreciate that this is the case for our algorithm, which is
-much more scalable and independent from the size of the sample than
-$\mathsf{BP}$. This is very important, as today's networks are not only huge,
-but they also grow rapidly, and algorithms to mine them need to scale well as
+In Sect.~\ref{sec:discussion} we argued about the reasons why
+Algorithm~\ref{alg:algorithm} is more scalable than $\mathsf{BP}$, while still
+offering the same approximation guarantees. To evaluate our argument in practice, we
+created a number of graphs of increasing size (1,000 to 100,000 vertices) using
+the Barab\'asi-Albert~\citep{BarabasiA99} and run the algorithms on them,
+measuring their running time. We report the results in~\cref{fig:random:time}.
+The most-scalable algorithm would be completely independent from the size
+(number of vertices) of the graph, corresponding to a flat (horizontal) line in
+the plot. Therefore, the less steep the line, the more independent from the
+network size would be the corresponding algorithm. From the figure, we can
+appreciate that this is the case for $\mathsf{VC}$, which is much more scalable
+and independent from the size of the sample than $\mathsf{BP}$. This is very
+important, as today's networks are not only huge, but they also grow rapidly,
+and algorithms to mine them need to scale well as
 the graph sizes increase.
 
 \begin{figure}[ht]
