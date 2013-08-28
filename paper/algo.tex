@@ -462,12 +462,11 @@ betweenness vertices consists in the very high-quality approximation of the
 betweenness values for the returned set of vertices: they are all within a
 multiplicative factor $\varepsilon$ from their exact values. By reverse-sorting
 them according to the approximated betweenness, one can obtain a ranking that is
-very similar to the original exact one.\XXX Experiments should show this
-Previous algorithms did not offer such a good ranking as they were only able to
-approximate the betweenness values to within an additive error $\varepsilon$.
-The cost of computing the high quality approximation for the top-$K$ vertices is
-the cost of an additional run of our algorithm to compute good approximations
-for all the vertices.
+very similar to the original exact one. Previous algorithms could not achieve such a
+good ranking as they were only able to approximate the betweenness values to
+within an additive error $\varepsilon$. The cost of computing the high quality
+approximation for the top-$K$ vertices is the cost of an additional run of our
+algorithm to compute good approximations for all the vertices.
 
 \subsection{Discussion}\label{sec:discussion}
 \citet{JacobKLPT05} and independently~\citet{BrandesP07} present an algorithm
