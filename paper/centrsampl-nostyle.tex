@@ -28,6 +28,7 @@
 \usepackage{bigstrut}
 \usepackage{url}
 \usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{mdwlist}
 %\usepackage{mathptmx}      % use Times fonts in math if available on your TeX system
 %\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n} % Use standard fonts for calligraphic
 
@@ -44,14 +45,23 @@
 \def\MR{{\bf MR}}
 \def\EK{{\bf EK}}
 
+\def\betw{\mathsf{b}}
+\def\kboundbetw{\mathsf{bb}}
+\def\kpathbetw{\mathsf{pb}}
 \def\prob{\pi}
 \def\range{\mathcal{R}}
+\def\TOPK{\mathsf{TOP}}
 \def\VC{\mathsf{VC}}
-\def\betw{\mathsf{b}}
+\def\VD{\mathsf{VD}}
+
+\newif\ifproof
+\prooftrue
 
 \title{Approximating Betweenness Centrality through Sampling with the
 VC-Dimension}
-\author{ }
+\author{Matteo Riondato and Evgenios M.~Kornaropoulos\\
+Department of Computer Science -- Brown University \\
+\url{{matteo,evgenios}@cs.brown.edu}}
 \begin{document}
 \maketitle
 
@@ -65,7 +75,7 @@ VC-Dimension}
 \input{concl}
 
 \bibliographystyle{abbrvnat}
-\bibliography{diamapprox,vcmine,vcgraph,centrality}
+\bibliography{bidirectionalsearch,diamapprox,vcmine,vcgraph,centrality,various}
 
 
 \end{document}
