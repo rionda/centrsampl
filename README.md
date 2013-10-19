@@ -1,4 +1,4 @@
 centrsampl
 ==========
 
-Paper, Biblio, and Code for the Betweenness Centrality Sampling paper.
+Paper, Biblio, Presentations, and Code for the Betweenness Centrality Sampling paper.
