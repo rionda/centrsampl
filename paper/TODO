@@ -1,17 +1,20 @@
-[JOURNAL] Tighter analysis for BP
-
-[JOURNAL] Compare the two algorithms in terms of how many updates they do. This
-would highlight that they do a great amount of unnecessary updates and that is
-why they achieve better approximation that the user asked for
+[JOURNAL] Tighter analysis for BP as per Eli. Also: can we use s-t connectivity
+for BP?
 
 [JOURNAL] Check that we can actually handle the k-path (random walk) centrality
 by Kourtellis et al.
 
-[JOURNAL] Bidirectional search
+[JOURNAL] Bidirectional / A* search
+
+[JOURNAL] Edge betweenness (it can be done)
 
 Experiments for Topk 
 
-Experiments for unique shortest paths
+[JOURNAL] Compare the two algorithms in terms of how many updates they do. This
+would highlight that they do a great amount of unnecessary updates and that is
+why they achieve better approximation that the user asked for. WHAT?
+
+!DONE Experiments for unique shortest paths
 
 !DONE Discussion of the work by Geisberger et al.
 
