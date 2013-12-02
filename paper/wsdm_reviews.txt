@@ -1,0 +1,182 @@
+----------------------- REVIEW 1 ---------------------
+PAPER: 134
+TITLE: Fast Approximation of Betweenness Centrality Through Sampling
+AUTHORS: Matteo Riondato and Evgenios M. Kornaropoulos
+
+OVERALL EVALUATION: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 4 (high)
+Presentation Suggestion: 3 (No preference / can't decide.)
+Nominate for best paper award?: 2 (No)
+
+----------- REVIEW -----------
+The authors suggest a sampling based technique for measuring betweenness
+centrality. They suggest to sample shortest paths independently and approximate
+betweenness centrality via the sample.
+
+To the best of my understanding the paper is correct. It is also well written
+and referenced. The authors claim that it is the best known theoretical result.
+I cannot verify that claim.
+
+
+My main problem with this paper is the definition of the betweenness centrality.
+It is, the *fraction* of shortest paths going through the node. This, in my
+opinion, renders an additive epsilon error result irrelevant.
+
+To substantiate my claim we need to do some back of the envelope calculations.
+Assume, for simplicity, there are not multiple shorts paths between any two
+nodes (maybe by perturbing the edge weights a little bit). Now, assume the
+diameter of the graph is d, let's bound from above the expected betweenness
+centrality.
+n(n-1) Sum_v b(v) =  sum_{u,v,w} c(v,u,w)
+Where c(v,u,w) =1 is v is on the shortest path between u and w and 0 else.
+Now,
+sum_{u,v,w} c(v,u,w) < n(n-1) d
+This is because there are less than n(n-1) paths and each contributes at most d to this sum.
+
+So, the expected betweenness is:
+E[b(v)] = Sum_v b(v)/n <= d/n
+
+Which is, in fact, much much smaller than eps. Or put another way. The number of
+nodes whose betweenness centrality can be more than epsilon is at most d/epsilon
+(by Markov on the above)
+
+I think my calculations are correct. I'll be happy to know if they are not.
+
+
+----------------------- REVIEW 2 ---------------------
+PAPER: 134
+TITLE: Fast Approximation of Betweenness Centrality Through Sampling
+AUTHORS: Matteo Riondato and Evgenios M. Kornaropoulos
+
+OVERALL EVALUATION: 1 (weak accept)
+REVIEWER'S CONFIDENCE: 4 (high)
+Presentation Suggestion: 1 (The contribution is of general interest to most WSDM attendees and should be presented as a standard talk.)
+Nominate for best paper award?: 2 (No)
+
+----------- REVIEW -----------
+* Summary of the contribution.
+
+The authors propose a new algorithm to approximate betweenness centrality
+via random sampling. They show the consistency and asymptotic convergence
+of their estimator using the VC dimension of the problem as well as an
+standard results about sampling using the VC dimension.  They demonstrate
+the benefits of their approach on graphs up to 100,000 vertices. It seems
+to be about 4 times as fast as the next best sampling scheme, and about an
+order of magnitude faster than the exact scale with about 1.5 digits of
+accuracy in the solution.
+
+* Main strengths of the paper - What are the arguments that
+could be given for accepting this paper, number as S1, S2,
+S3,... Place the most important first.
+
+S1 Betweenness centrality is hard to compute, the best exact algorithms are
+O(mn) for unweighted graphs. The new sampling scheme presented here is much
+more efficient, albeit approximate. It depends on  and depends on a
+sampling parameter that scales with the log of the vertex diameter.
+For many graphs, this is basically a small constant.
+
+S2 The analysis seems okay, modulo the details that have been left out
+(see below), although these seem to have more to do with extensions.
+
+S3 It's a well written paper that does a nice job of discussing background
+results.
+
+* Main weaknesses of the paper - What are the arguments that
+could be given for rejecting this paper, number as W1, W2,
+W3, ... Place the most important first.
+
+W1 The experiments aren't entirely conclusive. How does the algorithm for
+getting the top-k set work compared with the exact algorithm -- in the
+regime of eps = 0.01, this algorithm is only a few times faster than
+exact and it'd be hard to recommend it in that area. So the question is, can
+we get away with eps = 0.05, where it is a few orders of magnitude faster?
+Also, how do these results scale with dataset size? It'd be nice to see
+some analysis of the approximation beyond just a few accuracy and time plots.
+
+W2 It's really hard to advocate for a paper when there authors constantly
+refer to a mystery "extended" draft that has been anonymized.
+While this paper is generally well written,
+and I acknowledge that this takes space, it's really hard to advocate for
+a paper when some of the results are theoretical and the proofs
+cannot be checked.
+
+* Concrete suggestions for improvements - In order of
+importance, what are concrete suggestions for improving this
+paper, either in the camera-ready version or on a resubmission
+elsewhere.
+
+- It's hardly folklore that you can approximate the diameter by doubling any
+breadth-first search distance. Perhaps this is an English mistake? Folklore
+is generally used to refer to something that isn't quite entirely true but is
+mostly true. I'd edit this statement to be "a standard result is ..."
+
+- Show results from the top-k experiments.
+
+* Other details/comments for the authors.
+
+
+----------------------- REVIEW 3 ---------------------
+PAPER: 134
+TITLE: Fast Approximation of Betweenness Centrality Through Sampling
+AUTHORS: Matteo Riondato and Evgenios M. Kornaropoulos
+
+OVERALL EVALUATION: 2 (accept)
+REVIEWER'S CONFIDENCE: 4 (high)
+Presentation Suggestion: 3 (No preference / can't decide.)
+Nominate for best paper award?: 2 (No)
+
+----------- REVIEW -----------
+The paper presents a new approach to approximate Betweenness Centrality in
+large graphs with sampling using the notion of the VC dimension. This is a
+completely new approach that improves the state of the art by at least a loglog
+factor. But more importantly it sheds new light to the problem of approximating
+this quantity in large graphs through a novel point of view: using the VC
+dimension of this concept.
+
+The authors present a detailed analysis of their approach and they show that the
+sampling size matches a lower bound and at the same time uses simpler queries
+than the best existing approach (source destination query versus source-all
+queries.)
+
+Furthermore, they present an experimental evaluation that compare their approach
+against the previous best sampling approach. The proposed approach is very
+accurate and runs much faster than the previous approach for the same accuracy.
+
+I think that the same idea can be used to compute the Betweenness centrality of
+edges and not only nodes. It would be nice to add this in the paper if possible.
+
+
+-------------------------  METAREVIEW  ------------------------
+PAPER: 134
+TITLE: Fast Approximation of Betweenness Centrality Through Sampling
+
+The paper proposes new sampling algorithms to compute betweenness centrality.
+One algorithm approximate the centrality of all nodes, and improves on the
+trivial approach (sampling stages of Brandes's algorithm) by having a bound
+depending on the logarithm of the diameter, rather than on the logarithm of the
+number of nodes. An interesting and new technical idea is the usage of the VC
+dimension. Moreover, the result on the top-k node is the first result of this
+kind that bounds the *relative*, rather than the absolute error.
+
+The paper could be improved in the following ways:
+
+- It should be clearly stated that the absolute error bound is a kind of "best
+  effort", but it is essentially meaningless for a real computation. The same
+  can be said of the original sampling algorithm. To turn the absolute error
+  into a relative error O(n^2) samples are necessary, which makes the technique
+  of little use. In this paper, in particular, the problem is hidden by the
+  usage of a "relative" definition of betweenness. The original sampling paper
+  by Brandes et al. uses the standard definition, and as a result they can just
+  bound the error by eps*n*(n-1), which makes the problem clear.
+
+- One of the main result could not be checked as it refers to an anonymized
+  technical report. This problem will be solved when the paper will no longer be
+  anonymous.
+
+- The experimental part on the top-k algorithm is not entirely convincing.
+  Probably a good experiment would be showing that choosing an eps for which the
+  algorithm is significantly (e.g., an order of magnitude) faster than the exact
+  algorithm gives a ranking of the top-k nodes that is not very different from
+  the exact one on a real network, using some top-k correlation measure (there
+  are plenty).
+
