@@ -1,8 +1,6 @@
 \section{Related work}\label{sec:prevwork}
-Over the years, a number of centrality measures have been defined. In this work
-we are only concerned with betweenness centrality and some of its variants. We
-refer the reader interested in other measures to the book by~\citet{Newman10} and
-references therein.
+Over the years, a number of centrality measures have been defined~\citep{Newman10}. In this work
+we focus on betweenness centrality and some of its variants. 
 
 Betweenness centrality was introduced in the sociology
 literature~\citep{Anthonisse71,Freeman77}. \citet{Brandes08} presents a number
@@ -12,8 +10,7 @@ the centrality~\citep{BorgattiE06,Brandes08,PfefferC12}. This is not to be
 confused with $k$-path betweenness centrality defined
 by~\citet{KourtellisASIT12}, which considers simple random walks that are not
 necessarily shortest paths. \citet{DolevEP10} present a generalization of
-betweenness centrality which does not necessarily consider shortest paths and
-takes into account routing policies in the network. 
+betweenness centrality which takes into account routing policies in the network. 
 
 The need of fast algorithms to compute the betweenness of vertices in a graph
 arose as large online social networks started to appear. \citet{Brandes01} presents the
@@ -41,8 +38,8 @@ to an overestimation of the betweenness of vertices that are close to the
 sampled ones and introduced different unbiased estimators that are
 experimentally shown to have smaller variance and do not occur in this
 overshooting. Our algorithm is different from these because we sample, each
-time, a single random shortest path between two randomly chosen nodes. This
-leads to a much smaller sample size and less work done for each sample,
+time, a single random shortest path. %between two randomly chosen nodes. 
+This leads to a much smaller sample size and less work done for each sample,
 resulting in a much faster way to compute approximations of the betweenness with
 the same probabilistic guarantees. 
 \ifproof
