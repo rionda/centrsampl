@@ -1,21 +1,21 @@
 \section{Introduction}\label{sec:intro}
 Centrality indices are fundamental metrics for network analysis. They express the
-relative importance of a vertex in the network. Some of them, e.g.~degree
+relative importance of a vertex in the network. Some of them, e.g., degree
 centrality, reflect local properties of the underlying graph, while others,
-like betweenness centrality, give information about the global network structure
-as they are based on shortest path computation and counting~\citep{Newman10}. In
+like betweenness centrality, give information about the global network
+structure, as they are based on shortest path computation and counting~\citep{Newman10}. In
 this work we are interested in \emph{betweenness
 centrality}~\citep{Anthonisse71,Freeman77}, that is, for every vertex in the
 graph, the fraction of shortest paths that goes through that vertex (see
 Section~\ref{sec:prelims} for formal definitions). Betweenness centrality has
 been used to analyze social and protein networks, to evaluate traffic in
-communication networks, and to identify important intersection in highway and
-road networks~\citep{Newman10,GeisbergerSS08}. There exist polynomial time
+communication networks, and to identify important intersections in highway and
+road networks~\citep{Newman10,GeisbergerSS08}. There exist polynomial-time
 algorithms to compute the exact betweenness centrality~\citep{Brandes01}, but
 they are not practical for the analysis of the very large networks that are of
 interest these days. Graphs representing online social networks, communication
 networks, and the web graph have millions of nodes and billions of edges,
-making a polynomial time algorithm too expensive in practice. Given that data
+making a polynomial-time algorithm too expensive in practice. Given that data
 mining is exploratory in nature, approximate results are usually sufficient,
 especially if the approximation error is guaranteed to be within user-specified
 limits. In practice, the user is interested in the relative ranking of the
@@ -43,16 +43,17 @@ based on random sampling of shortest paths. The analysis to derive the
 sufficient sample size is novel and uses notions and results from VC-dimension
 theory. We define a range set associated with the problem at hand and prove strict
 upper and lower bounds to its VC-dimension. The resulting sample size \emph{does not
-depend on the size of the graph}, but only on a \emph{characteristic quantity} of it
-that we call the \emph{vertex-diameter}, that is, the maximum number of vertices
-in a shortest path. For some networks, we show that the VC-dimension is actually
+depend on the size of the graph}, but only on the maximum number of vertices
+in a shortest path, a \emph{characteristic quantity} of the graph that we call
+the \emph{vertex-diameter}. For some networks, we show that the VC-dimension is
+actually
 at most a constant and so the sample size depends \emph{only on the approximation
 parameters} and not on any property of the graph, a somewhat surprising fact
 that points out interesting insights. Thanks to the lower runtime dependency on
 the size of the network, our algorithms are \emph{much faster and more scalable}
 than previous contributions~\citep{JacobKLPT05,BrandesP07,GeisbergerSS08}, while
 offering the same approximation guarantees. Moreover, the amount of work
-performed by our algorithms per sample is also less than of others algorithms.
+performed by our algorithms per sample is also less than that of others algorithms.
 We extensively evaluated our methods on real graphs and compared their
 performances to the exact algorithm for betweenness centrality~\citep{Brandes01}
 and to other sampling-based approximation
@@ -61,9 +62,9 @@ methods achieve a huge speedup (3 to 4 times faster) and scale much better as
 the number of vertices in the network grows.
 
 We present related work in Sect.~\ref{sec:prevwork}. Section~\ref{sec:prelims}
-contains all the basic definitions and results that we will use throughout the
-paper. A rangeset for the problem at hand and the bounds to its VC-dimension
-are presented in Sec.~\ref{sec:rangeset}. Based on these results we develop and
+introduces all the basic definitions and results that we will use throughout the
+paper. A range set for the problem at hand and the bounds to its VC-dimension
+are presented in Sect.~\ref{sec:rangeset}. Based on these results we develop and
 analyze algorithms for betweenness estimation that we present in
 Sect.~\ref{sec:algo}. Section~\ref{sec:exper} reports the methodology and
 the results of our extensive experimental evaluation.
