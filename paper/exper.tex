@@ -49,8 +49,8 @@
 
 \section{Experimental evaluation}\label{sec:exper}
 We conducted an experimental evaluation of our algorithms, with two major
-driving goals in mind: to study the behavior of the algorithms presented in this
-paper and to compare it with that of other related
+driving goals in mind: study the behavior of the algorithms presented in this
+paper and compare it with that of other related
 algorithms~\citep{Brandes01,BrandesP07,JacobKLPT05,GeisbergerSS08}, in terms of
 accuracy of the estimation, execution time, work performed, and scalability as
 function of the network size. Due to space limitations, we only report a subset
@@ -203,7 +203,7 @@ $\varepsilon$ in $\{0.01, 0.015, 0.02, 0.04, 0.06, 0.08, 0.1\}$. The parameter
 $\delta$ was fixed to $0.1$ and we used $c=0.5$ in~\eqref{eq:vceapprox} to
 compute the sample size, as suggested by~\citet{LofflerP09}. As far as the
 \emph{confidence} is concerned, we report that in all the hundreds of runs we
-performed, the guarantee on the deviation was \emph{always} satisfied, not just
+performed, the guarantee on the quality of approximation was \emph{always} satisfied, not just
 with probability $1-\delta$ ($=0.9$). We evaluated how good the estimated values
 are by computing the average \emph{estimation error} $(\sum_{v\in
 V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm and taking
@@ -218,8 +218,8 @@ orders of magnitude smaller than the guarantees, and the \texttt{Avg+Stddev}
 points show that the estimation are quite concentrated around the
 average. We can conclude that in practice the algorithm performs even \emph{better
 than guaranteed}, achieving higher accuracy and confidence than what the
-theoretical analysis indicates. This is due to a number of factors, e.g., we use
-an \emph{upper bound} to the VC-dimension of the range set. 
+theoretical analysis indicates. This is due to a number of factors, like the
+fact that we use an \emph{upper bound} to the VC-dimension of the range set. 
 %Morev the inherent looseness of the formula of the sample size~\eqref{eq:vceapprox}.
 
 \begin{figure*}[ht]
