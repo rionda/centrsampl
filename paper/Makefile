@@ -16,7 +16,7 @@ $(MAINFILE).blg: *.bib $(MAINFILE).aux
 	$(LATEX) $(MAINFILE).tex
 	$(LATEX) $(MAINFILE).tex
 
-$(MAINFILE).pdf: *.tex *.bib *.eps
+$(MAINFILE).pdf: *.tex *.bib figures/*eps
 	$(LATEX) $(MAINFILE).tex
 	bibtex --min-crossrefs=20 $(MAINFILE)
 	$(LATEX) $(MAINFILE).tex
