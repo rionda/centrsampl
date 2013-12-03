@@ -1,7 +1,7 @@
 \section{A range set of shortest paths}\label{sec:rangeset}
 We now define a range set of the shortest paths of a graph $G=(V,E)$, and present 
-an upper bound to its VC-dimension. We show that this upper bound is strict. We
-use the range set and the bound in the analysis of our algorithm for estimating
+a strict upper bound to its VC-dimension. %We show that this upper bound is strict. 
+We use the range set and the bound in the analysis of our algorithm for estimating
 the betweenness centrality of vertices of $G$.
 
 The range set $\range_G$ is defined on the set $\mathbb{S}_G$ of all shortest
@@ -53,7 +53,8 @@ quantities of the graph different from the vertex diameter that control the
 VC-dimension of the range set of shortest paths, and these quantities are
 constant on graph with unique shortest paths between vertices. From a more
 practical point of view, we will see in Sect.~\ref{sec:algo} that this result has an
-impact on the sample size needed for approximating the betweenness centrality of
+impact on the sample size needed to approximate %for approximating 
+the betweenness centrality of
 networks where the unique-shortest-path property is satisfied or even enforced,
 like road networks~\citep{GeisbergerSS08}. In particular, the resulting sample
 size will be \emph{completely independent} from any characteristic of the
@@ -169,8 +170,8 @@ generalization to higher values of $d$ should be straightforward.
 By construction, $\VD(G_d)=2^d+1$, so that
 $\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The $3(2^{d-1})$ vertices of $G_d$ can
 be partitioned into three classes, \emph{top}, \emph{bottom}, and \emph{middle},
-according to their location in a drawing of the graph similar to that in
-Fig.~\ref{fig:tightgraphs}. $G_d$ $2^{d-1}-1$ top vertices, $2^{d-1}-1$ bottom vertices, and
+according to their location in a drawing of the graph similar to those in
+Fig.~\ref{fig:tightgraphs}. $G_d$ has $2^{d-1}-1$ top vertices, $2^{d-1}-1$ bottom vertices, and
 $2^{d-1}+2$ middle vertices. For each top vertex $v$, let $\mathsf{f}(v)$ be the
 \emph{corresponding bottom vertex}, i.e., the bottom vertex $u$ whose neighbors
 are the same middle vertices that are neighbors of $v$. Among the middle
@@ -200,16 +201,17 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   From this and the definition of $G_d$ it should be clear that they must go through
   all the middle vertices of $G_d$. Consider now the set
   $S=2^Q\setminus\{Q,\emptyset\}$. We are now going to build a map $\mathsf{r}$
-  from the elements of $S$ to the set of top and bottom vertices of $G_d$ We can
+  from the elements of $S$ to the set of top and bottom vertices of $G_d$. We can
   partition $S$ in two sets $A$ and $B$ such that $A\cap B=\emptyset$ and $A\cup
   B=Q$ in the following way: for each unordered pair $(s',s'')$ of
   elements in $S$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=Q$
-  we put $s'$ in $A$ and $s''$ in $B$. The map $\mathsf{r}$ will map the
-  elements of $A$ to the top vertices of $G_d$ and the elements of $B$ to the
-  bottom vertices. For each $s'\in A$, let $\mathsf{c}(s')$ be the element $s''$
-  of $B$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=Q$. It is
+  we put $s'$ in $A$ and $s''$ in $B$. It is
   easy to see that the size of $A$ ($|A|=2^{d-1}-1$) equals the number of top
-  vertices of $G_d$, and analogously for $B$ and the number of bottom vertices.
+  vertices of $G_d$, and analogously for $B$ and the number of bottom vertices. The map $\mathsf{r}$ will map the
+  elements of $A$ to the top vertices of $G_d$ and the elements of $B$ to the
+  bottom vertices. For each $s'\in A$, let $\mathsf{c}(s')$ be the unique element $s''$
+  of $B$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=Q$ (i.e.,
+  $\mathsf{c}(s')=Q\setminus s'$). 
   Let $\mathsf{r}_A$ be an arbitrary one-to-one map from the elements of $A$ to
   the top vertices of $G_d$. Consider now the inverse map $\mathsf{r}^{-1}_A$
   from the top vertices to the elements of $A$. We can create another map
@@ -262,8 +264,8 @@ the paper~\citep{Anonymous13}.
   \label{fig:tightgraphs}
 \end{figure}
 
-Even for the case of unique shortest paths, the upper bound presented in
-Lemma~\ref{lem:vcdimuppboundunique} is strict in the same sense.
+The upper bound presented in Lemma~\ref{lem:vcdimuppboundunique}  for the case
+of unique shortest paths is also strict in the same sense.
 \ifproof
 \else
 The proof can be found in the extended online version of the
@@ -280,7 +282,7 @@ paper~\citep{Anonymous13}.
 \begin{figure}[ht]
   \centering
   \includegraphics[scale=0.35]{figures/eps/uniqueshortestpathtight}
-  \caption{Graph $G$ with $\VC(\range_G)\ge 3$.}
+  \caption{Graph $G$ with $\VC(\range_G)= 3$.}
   \label{fig:uniquetight}
 \end{figure}
 
