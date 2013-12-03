@@ -15,10 +15,10 @@ r=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\VD(G)-2)\rfloor+1+\ln\frac{1}{\del
 \end{equation}
 This is sufficient to achieve the desired accuracy
 (expressed through $\varepsilon$) with the desired confidence (expressed through
-$1-\delta$). Then the algorithm repeats the following steps $r$ times:
+$1-\delta$). The algorithm then repeats the following steps $r$ times:
 1.~it samples a pair $u,v$ of distinct vertices uniformly at random, 2.~it
 computes the set $\mathcal{S}_{uv}$ of all shortest paths between $u$ and $v$,
-3.~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random, 4.~ it
+3.~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random, 4.~it
 increases by $1/r$ the betweenness estimation of each vertex in
 $\mathsf{Int}(p)$. Note that if the sampled vertices $u$ and $v$ are not
 connected, we can skip steps 3 and 4 because we defined
@@ -183,7 +183,7 @@ Algorithms for exactly solving APSP problem such as Johnson's which runs in
 $O(V^2\log V+VE)$ or Floyd-Warshall's ($\Theta(V^3)$), would defeat our
 purposes: once we have all the shortest paths for the computation of
 the diameter, we could as well compute the betweenness of all the vertices exactly. 
-Given that Thm.~\ref{thm:eapprox} (and Thm.~\ref{thm:releapprox} too) only
+Given that Thm.~\ref{thm:eapprox} (and Thm.~\ref{thm:releapprox})  only
 requires an upper bound to the VC-dimension of the range set, an approximation
 of the vertex-diameter would be sufficient for our purposes. Several refined
 algorithms for approximating the diameter are
@@ -194,7 +194,7 @@ for our purposes.
 
 Let $G=(V,E)$ be an \emph{undirected} graph where \emph{all the edge weights are
 equal}.
-It is a folklore result that one can obtain a $2$-approximation
+It is a well-known result that one can obtain a $2$-approximation
 $\widetilde\VD(G)$ of the vertex-diameter $\VD(G)$ of $G$ in time $O(V+E)$ in
 the following way: 1.~select a vertex $v\in V$ uniformly at random, 2.~compute
 the shortest paths from $v$ to all other vertices in $V$, and 3.~finally take
