@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage{dsfont}
+\usepackage{fullpage}
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage{datetime}
+\usepackage{natbib}
+\newtheorem{lemma}{Lemma}
+\def\betw{\mathsf{b}}
+\def\XXX{{\bf XXX}}
+\def\MR{{\bf MR}}
+\def\EK{{\bf EK}}
+\title{}
+\author{}
+\begin{document}
+%\maketitle
+{\bf \large \today, \currenttime}
+
+\section{Tighter Analysis for the BP Algorithm}
+The analysis of Algorithm 1 allow us to obtain a tighter analysis for the
+algorithm by~\citet{BrandesP07}.
+
+\begin{lemma}
+  If Algorithm 1 computes an $(\varepsilon,\delta)$-approximation with $r$
+  samples, then the algorithm by~\citep{BrandesP07} does the same with the same
+  number of samples.
+\end{lemma}
+
+\begin{proof}
+Consider a simple coupling of the executions of the two algorithms. When
+the Algorithm 1 samples a shortest path from a vertex $v$ to a vertex $u$, the
+algorithm by~\citep{BrandesP07} samples the vertex $v$.
+
+Let $X_v$ be the number of times that vertex $v$ is the starting point of a
+sampled path. 
+
+The estimation for the betweenness of vertex $w$ computed by the algorithm
+by\citep{BrandesP07} is
+\[
+\tilde\betw_{\mathrm{BP}}(w)=\frac{1}{r}\sum_{v\in V}
+X_v\underbrace{\left(\frac{1}{n-1}\sum_{\substack{u\in V \\u\neq
+v}}\sum_{p\in\mathcal{S}_{uv}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{u,v}|}\right)}_{Y_v(w)}\enspace.
+\]
+The estimation for the betweenness of vertex $w$ computed by Algorithm 1
+is
+\[
+\tilde\betw_{\mathrm{RK}}(w)=\frac{1}{r}Z_w,
+\]
+where $Z_w$ is the number of times that a path containing the vertex $w$ gets
+sampled. Now, for each $v$ and for $1\le i\le X_v$, let $p_v^{(i)}$ be the path
+sampled the $i$\textsuperscript{th} time that the sampled path had $v$ as
+starting vertex, and let $A_v^{(i)}(w)=1$ if $w\in\mathsf{Int}(p_v^{(i)}$, and
+$A_v^{(i)}(w)=0$ otherwise. Then it is clear that 
+\[
+\tilde\betw_{\mathrm{RK}}(w)=\frac{1}{r}\sum_{v\in V}
+X_v\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\enspace.
+\]
+We claim that
+\[
+\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right]=Y_v(w)\enspace.\]
+To see this, consider $\mathbb{E}\left[\left.A_v^{(i)}(w)\right|X_v\right]$. It
+is clear that $A^{(i)}(w)$ and $X_v$ are independent, for $1\le i\le X_v$. By applying the definition of probability we have 
+\[
+\mathbb{E}\left[\left.A_v^{(i)}(w)\right|X_v\right] =
+\mathbb{E}\left[A_v^{(i)}(w)\right]=\frac{1}{n-1}\sum_{\substack{u\in V
+\\u\neq v}}\sum_{p\in\mathcal{S}_{uv}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{u,v}|}
+=Y_v(w)\enspace.
+\]
+This expression does not depend on $i$.
+
+The claim then follows easily from the linearity of expectation:
+\[
+\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right] =
+\sum_{i=1}^{X_v}\mathbb{E}\left[\left.\frac{A^{(i)}_v(w)}{X_v}\right|X_v\right]=\sum_{i=1}^{X_v}\frac{1}{X_v}\mathbb{E}\left[A_v^{(i)}(w)\right]=\mathbb{E}\left[A_v^{(i)}(w)\right]=Y_v(w)\enspace.
+\]
+This implies that the estimator $\tilde\betw_{\mathrm{BP}}(w)$ has lower variance than the estimator
+$\tilde\betw_{\mathrm{RK}}(w)$, for all vertices $w$. Since both estimators have the same
+expectation $\betw(w)$, this means that for any $a\in[0,1]$ we have
+\[
+\Pr\left(|\tilde\betw_{\mathrm{BP}}(w)-\betw(w)|>a\right)\le\Pr(\left(|\tilde\betw_{\mathrm{RK}}(w)-\betw(w)|>a\right),
+\]
+which implies the thesis.
+
+\end{proof}
+
+The estimator $\tilde\betw_{\mathrm{BP}}(w)$ has lower variance than
+$\tilde\betw_{\mathrm{RK}}(w)$ but before always opting for the algorithm
+by~\citet{BrandesP07}, one should take into account the fact that, per sample,
+the computation of $\tilde\betw_{\mathrm{BP}}(w)$ requires more time than the
+one for $\tilde\betw_{\mathrm{RK}}(w)$. The difference is even larger if
+Algorithm 1 uses bidirectional search~\citep{KaindlK97,Pohl69}. We can then see
+that Algorithm 1 and the algorithm by~\citet{BrandesP07} share the same design
+principles, but choose different trade-offs between accuracy and speed.
+
+\MR: my intuition is that we can actually analyze the algorithm
+by~\citet{BrandesP07} using the VC-dimension and showing that what they do is an
+ergodic sampling. Recent results show that the VC-dimension can be used when the
+sampling process is ergodic~\citep{AdamsN10}.
+
+\bibliographystyle{abbrvnat}
+\bibliography{bidirectionalsearch,diamapprox,vcmine,vcgraph,centrality,various}
+
+\end{document}
+
