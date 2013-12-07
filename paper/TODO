@@ -1,4 +1,10 @@
+[WSDM] Add Acknowledgements Eli, reviewers.
+
+[WSDM] Include more experimental results in extended version.
+
 Tighter analysis for BP as per Eli. 
+
+[JOURNAL] Extend Lemma 2 to directed graphs.
 
 [JOURNAL] Check that we can actually handle the k-path (random walk) centrality
 by Kourtellis et al.
