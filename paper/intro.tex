@@ -8,9 +8,9 @@ this work we are interested in \emph{betweenness
 centrality}~\citep{Anthonisse71,Freeman77}, that is, for every vertex in the
 graph, the fraction of shortest paths that goes through that vertex (see
 Section~\ref{sec:prelims} for formal definitions). Betweenness centrality has
-been used to analyze social and protein networks, to evaluate traffic in
-communication networks, and to identify important intersections in highway and
-road networks~\citep{Newman10,GeisbergerSS08}. There exist polynomial-time
+been used to analyze social and protein interaction networks, to evaluate traffic in
+communication networks, and to identify important intersections in road
+networks~\citep{Newman10,GeisbergerSS08}. There exist polynomial-time
 algorithms to compute the exact betweenness centrality~\citep{Brandes01}, but
 they are not practical for the analysis of the very large networks that are of
 interest these days. Graphs representing online social networks, communication
@@ -42,7 +42,7 @@ high-quality approximation for the set of top-$K$ vertices. The algorithms are
 based on random sampling of shortest paths. The analysis to derive the
 sufficient sample size is novel and uses notions and results from VC-dimension
 theory. We define a range set associated with the problem at hand and prove strict
-upper and lower bounds to its VC-dimension. The resulting sample size \emph{does not
+bounds to its VC-dimension. The resulting sample size \emph{does not
 depend on the size of the graph}, but only on the maximum number of vertices
 in a shortest path, a \emph{characteristic quantity} of the graph that we call
 the \emph{vertex-diameter}. For some networks, we show that the VC-dimension is

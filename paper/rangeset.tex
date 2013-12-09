@@ -1,7 +1,7 @@
 \section{A range set of shortest paths}\label{sec:rangeset}
 We now define a range set of the shortest paths of a graph $G=(V,E)$, and present 
 a strict upper bound to its VC-dimension. %We show that this upper bound is strict. 
-We use the range set and the bound in the analysis of our algorithm for estimating
+We use the range set and the bound in the analysis of our algorithms for estimating
 the betweenness centrality of vertices of $G$.
 
 The range set $\range_G$ is defined on the set $\mathbb{S}_G$ of all shortest
@@ -25,19 +25,19 @@ $Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$. Let $p$
 an element of $Q$. There are  $2^{\ell-1}$ non-empty subsets of
 $Q$ containing the path $p$. Let us label these non-empty subsets of $Q$ containing $p$ as
 $S_1,\dotsc,S_{2^{\ell-1}}$, where the labelling is arbitrary.
-Given that $Q$ is shattered then, for each set $S_i$ there must be a range $R_i$ in
+Given that $Q$ is shattered, for each set $S_i$ there must be a range $R_i$ in
 $\range_G$ such that $S_i=Q\cap R_i$. Since all the $S_i$'s are
 different from each other, then all the $R_i$'s must be different from each
 other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
 $R_i$, that is, there are $2^{\ell-1}$ distinct ranges in $\range_G$ containing
-$p$. But $p$ belongs only to the ranges corresponding to the internal vertices of
-$p$, i.e., to the vertices in $\mathsf{Int}(p)$. This means that the number of ranges
+$p$. But $p$ belongs only to the ranges corresponding to internal vertices of
+$p$, i.e., to vertices in $\mathsf{Int}(p)$. This means that the number of ranges
 in $\range_G$ that $p$ belongs to is equal to $|p|-2$. But $|p|\le\VD(G)$, by
 definition of $\VD(G)$, so $p$
 can belong to at most $\VD(G)-2$ ranges from $\range_G$. Given that
 $2^{\ell-1}>\VD(G)-2$, we reached a contradiction and there cannot be $2^{\ell-1}$
 distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
-$Q\cap R_i$ for some $R_i\in\range_G$, but then $Q$ cannot be shattered and
+$Q\cap R_i$ for some $R_i\in\range_G$. Then $Q$ cannot be shattered and
 $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 \end{proof}
 %\end{IEEEproof}
@@ -68,10 +68,12 @@ the paper~\citep{RiondatoK13}.
 \fi
 
 \begin{lemma}\label{lem:vcdimuppboundunique}
-  Given an undirected
-  graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
-  pairs $(u,v)\in V\times V$, the range set $\range_G$ of the
-  shortest paths in $G$ has VC-Dimension $\VC(\range_G)\le3$.
+  Let $G=(V,E)$ be an undirected graph with $|\mathcal{S}_{uv}|\le1$ for all
+  pairs $(u,v)\in V\times V$. Then $\VC(\range_G)\le 3$.
+%  Given an undirected
+%  graph $G=(V,E)$ such that $|\mathcal{S}_{uv}|\le1$ for all
+%  pairs $(u,v)\in V\times V$, the range set $\range_G$ of the
+%  shortest paths in $G$ has VC-Dimension $\VC(\range_G)\le3$.
 \end{lemma}
 
 \ifproof
@@ -94,16 +96,20 @@ the paper~\citep{RiondatoK13}.
   the farthest successor of $w$ along $p_1$ that $p_1$ shares with some other
   path from $Q$. It is easy to see that if either $x$ or $y$ (or both) do not
   exist, then $Q$ cannot be shattered, as we would incur in a contradiction of
-  $\mathsf{F}$. Let us then assume that both $x$ and $y$ exist.
+  fact $\mathsf{F}$. 
+  
+  Let us then assume that both $x$ and $y$ exist.
   Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
   Because of fact $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
   between $x$ and $w$ and all paths in $Q_y$ must go through the same vertices
   between $w$ and $y$. This also means that all paths in $Q_x\cap Q_y$ must go
   through the same vertices between $x$ and $y$. If $Q_x\cup Q_y\neq Q$, let
-  $p^*\in Q\setminus(Q_x\cup Q_y)$ then from the definition of $x$ and $y$ and
+  $p^*\in Q\setminus(Q_x\cup Q_y)$. Then from the definition of $x$ and $y$ and
   from fact $\mathsf{F}$ we have that there is no vertex $v$ such that
   $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, which implies that $Q$ can not be
-  shattered. Suppose from now on that $Q_x\cup Q_y=Q$.  If $Q_x\cap Q_y=Q$, then
+  shattered. 
+  
+  Suppose from now on that $Q_x\cup Q_y=Q$.  If $Q_x\cap Q_y=Q$, then
   all the paths in $Q$ go through the same vertices between $x$ and $y$. From
   this and the definition of $x$ and $y$ we have that there is no vertex $v$
   such that, for example, $\mathcal{T}_v\cap Q=\{p_1,p_2\}$, hence $Q$ cannot be
@@ -164,9 +170,9 @@ $d=\lfloor\log_2(\VD(G_d)-2)\rfloor+1$.
 We now introduce a class $\mathcal{G}=(G_d)_{d\ge 1}$ of graphs indexed by $d$.
 The graphs in $\mathcal{G}$ are the ones for which we can show the tightness of
 the bound to the VC-dimension of the associated range set.
-We call the graph $G_d\in\mathcal{G}$ the \emph{$d$-th concertina graph}.
+We call the graph $G_d\in\mathcal{G}$ the \emph{$d$\textsuperscript{th} concertina graph}.
 Figure~\ref{fig:tightgraphs} shows $G_1$, $G_2$, $G_3$, and $G_4$. The
-generalization to higher values of $d$ should be straightforward.
+generalization to higher values of $d$ is be straightforward.
 By construction, $\VD(G_d)=2^d+1$, so that
 $\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The $3(2^{d-1})$ vertices of $G_d$ can
 be partitioned into three classes, \emph{top}, \emph{bottom}, and \emph{middle},
@@ -177,7 +183,7 @@ $2^{d-1}+2$ middle vertices. For each top vertex $v$, let $\mathsf{f}(v)$ be the
 are the same middle vertices that are neighbors of $v$. Among the middle
 vertices, the two with degree 1 are special and are called the \emph{end
 vertices} of $G_d$ and denoted as $v_\ell$ and $v_\mathrm{r}$, where the
-labels can be arbitrarily assigned. We are now going to build a set $Q$ of $d$
+labels can be arbitrarily assigned. We now build a set $Q$ of $d$
 shortest paths from $v_\ell$ to $v_\mathrm{r}$ and show that it is
 shattered by $\range_{G_d}$, therefore proving that $\VC(\range_{G_d})\ge d$.
 This fact, together with Lemma~\ref{lem:vcdimuppbound}, allows us to conclude
@@ -200,14 +206,16 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   As we said, the $d$ paths in $Q$  go from $v_\ell$ to $v_\mathrm{r}$.
   From this and the definition of $G_d$ it should be clear that they must go through
   all the middle vertices of $G_d$. Consider now the set
-  $S=2^Q\setminus\{Q,\emptyset\}$. We are now going to build a map $\mathsf{r}$
+  $S=2^Q\setminus\{Q,\emptyset\}$. We now build a map $\mathsf{r}$
   from the elements of $S$ to the set of top and bottom vertices of $G_d$. We can
-  partition $S$ in two sets $A$ and $B$ such that $A\cap B=\emptyset$ and $A\cup
-  B=Q$ in the following way: for each unordered pair $(s',s'')$ of
+  partition $S$ in two sets $A$ and $B$ as follows: %such that $A\cap
+  %B=\emptyset$ and $A\cup B=Q$ in the following way: 
+  for each unordered pair $(s',s'')$ of
   elements in $S$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=Q$
   we put $s'$ in $A$ and $s''$ in $B$. It is
   easy to see that the size of $A$ ($|A|=2^{d-1}-1$) equals the number of top
-  vertices of $G_d$, and analogously for $B$ and the number of bottom vertices. The map $\mathsf{r}$ will map the
+  vertices of $G_d$, and analogously for $B$ and the number of bottom vertices.
+  The bijection $\mathsf{r}$ will map the
   elements of $A$ to the top vertices of $G_d$ and the elements of $B$ to the
   bottom vertices. For each $s'\in A$, let $\mathsf{c}(s')$ be the unique element $s''$
   of $B$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=Q$ (i.e.,
@@ -238,7 +246,7 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   is easy to see as $\mathsf{r}(s)$ is internal to all paths in $s$, by
   definition of $\mathsf{r}(s)$ and of the paths in $Q$. On the other end, no
   path from $\mathsf{c}(s)$ goes through $\mathsf{r}(s)$ because it goes through
-  the corresponding vertex of $\mathsf{r}(s)$ (top, if $\mathsf{r}(s)$ is a
+  the corresponding vertex of $\mathsf{r}(s)$ (top if $\mathsf{r}(s)$ is a
   bottom vertex, bottom otherwise). It is also straightforward to see that,
   if we let $v_Q$ be any arbitrary middle vertex different from $v_\ell$
   or $v_\mathrm{r}$, we have $Q=Q\cap\mathcal{T}_{v_Q}$, given that all paths in
@@ -292,7 +300,7 @@ paper~\citep{RiondatoK13}.
   Let $p_1=(a,b,c,e,i,j)$, $p_2=(m,f,e,i,k,l)$, $p_3=(d,c,e,f,g,h)$ be three
   paths. We now show that $Q=\{p_1,p_2,p_3\}$ can be shattered by $\range_G$, which
   implies $\VC(\range_G)\ge 3$. We have $\emptyset=Q\cap\mathcal{T}_a$,
-  $\{p_1\}=Q\cap\mathcal{T}_b$,$\{p_2\}=Q\cap\mathcal{T}_k$,
+  $\{p_1\}=Q\cap\mathcal{T}_b$, $\{p_2\}=Q\cap\mathcal{T}_k$,
   $\{p_3\}=Q\cap\mathcal{T}_g$, $\{p_1,p_2\}=Q\cap\mathcal{T}_i$,
   $\{p_1,p_3\}=Q\cap\mathcal{T}_c$, $\{p_2,p_3\}=Q\cap\mathcal{T}_f$,
   $\{p_1,p_2,p_3\}=Q\cap\mathcal{T}_e$,  

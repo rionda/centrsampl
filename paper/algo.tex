@@ -15,11 +15,12 @@ r=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\VD(G)-2)\rfloor+1+\ln\frac{1}{\del
 \end{equation}
 This is sufficient to achieve the desired accuracy
 (expressed through $\varepsilon$) with the desired confidence (expressed through
-$1-\delta$). The algorithm then repeats the following steps $r$ times:
-1.~it samples a pair $u,v$ of distinct vertices uniformly at random, 2.~it
+$1-\delta$). The algorithm repeats the following steps $r$ times:
+\emph{1.}~it samples a pair $u,v$ of distinct vertices uniformly at random,
+\emph{2.}~it
 computes the set $\mathcal{S}_{uv}$ of all shortest paths between $u$ and $v$,
-3.~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random, 4.~it
-increases by $1/r$ the betweenness estimation of each vertex in
+\emph{3.}~it selects a path $p$ from $\mathcal{S}_{uv}$ uniformly at random,
+\emph{4.}~it increases by $1/r$ the betweenness estimation of each vertex in
 $\mathsf{Int}(p)$. Note that if the sampled vertices $u$ and $v$ are not
 connected, we can skip steps 3 and 4 because we defined
 $\mathcal{S}_{uv}=\{p_\emptyset\}$. Denoting with $S$ the set of the sampled
@@ -33,15 +34,14 @@ $\betw(w)$ of a vertex $w$ is the sample average
 
 There are two crucial steps in this algorithm: the computation of $\VD(G)$ and
 the sampling of a path uniformly at random from $\mathcal{S}_{uv}$. We first
-deal with the latter, and then present an approximation algorithm for $\VD(G)$.
+deal with the latter, and then present a linear-time constant-factor approximation algorithm for $\VD(G)$.
 %in Sect.~\ref{sec:diam}. 
 Algorithm~\ref{alg:algorithm} presents the pseudocode of the algorithm,
 including the steps to select a random path.  The
 \texttt{computeAllShortestPaths(}$u,v$\texttt{)}  on
 line~\ref{algline:shortestpaths} is a call to a modified Dijkstra's (or BFS)
 algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
-as~\citep{Brandes01}. The \texttt{getDiameterApprox()} procedure is an
-approximation algorithm for computing an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
+as~\citep{Brandes01}. The \texttt{getDiameterApprox()} procedure computes an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
 
 \paragraph{Unique shortest paths} 
 When, for each pair $(u,v)$ of vertices of $G$, either there is a unique
@@ -90,22 +90,24 @@ algorithm~\citep{Brandes01}.
 %Given a vertex $w$, ~\citet{Brandes01} showed how
 %to compute, for every vertex $z$, the amount $\sigma_{wz}$ of shortest paths
 %from $w$ to $z$, while computing the set $\mathcal{S}_{wz}$. 
-Let $u$ and $v$ be the vertices sampled by our algorithm. We assume that $u$ and
+Let $u$ and $v$ be the vertices sampled by our algorithm
+(Step~\ref{algline:samplevertices} of Alg.~\ref{alg:algorithm}). We assume that $u$ and
 $v$ are connected otherwise the only possibility is to select the empty path
 $p_\emptyset$. Let $y$ be any vertex belonging to at least one shortest path
 from $u$ to $v$. Following~\citet{Brandes01}, we can compute $\sigma_{uy}$ and
 $\mathcal{S}_{uy}$ while we compute the set $\mathcal{S}_{uv}$ of all the
 shortest paths from $u$ to $v$. We can then use this information to select a
-shortest path $p$ uniformly at random from $\mathcal{S}_{uv}$. For each vertex
+shortest path $p$ uniformly at random from $\mathcal{S}_{uv}$ as follows. For each vertex
 $w$ let $P_u(w)$ be the subset of neighbors of $w$ that are \emph{predecessors}
 of $w$ along the shortest paths from $u$ to $w$. Let $p^*=\{v\}$. Starting from
 $v$, we select one of its predecessors $z\in P_u(v)$ using weighted random
 sampling: each $z\in P_u(v)$ has probability $\sigma_{uz}/\sum_{w\in
 P_u(v)}\sigma_{uw}$ of being sampled. We add $z$ to $p^*$ and then repeat the
-procedure for $z$. That is, we select one of $z$'s predecessors from $P_u(z)$ and add it
-to $p^*$, and so on until we reach $u$. Note that we can update the estimation
-of the betweenness of the internal vertices along $p^*$ (the only ones for which
-the estimation is updated) as we compute $p^*$.
+procedure for $z$. That is, we select one of $z$'s predecessors from $P_u(z)$
+using weighted sampling and add it to $p^*$, and so on until we reach $u$. Note
+that we can update the estimation of the betweenness of the internal vertices
+along $p^*$ (the only ones for which the estimation is updated) as we compute
+$p^*$.
 
 \begin{lemma}\label{lem:samplpath}
   The path $p^*$ built according to the above procedure is selected uniformly at
@@ -149,7 +151,7 @@ the estimation is updated) as we compute $p^*$.
   $r\leftarrow (c/\varepsilon^2)(\lfloor\log_2(\VD(G)-2)\rfloor+\ln(1/\delta))$\;
   \For{$i\leftarrow 1$ to $r$}
   {\label{algline:forloop}
-  $(u,v)\leftarrow$\SamplePair{$V$}\;
+  $(u,v)\leftarrow$\SamplePair{$V$}\label{algline:samplevertices}\;
   $\mathcal{S}_{uv}\leftarrow$\PairShortestPaths{$u,v$}\label{algline:shortestpaths}\;
   \If{$\mathcal{S}_{uv}\neq\{p_\emptyset\}$}
   {
@@ -348,12 +350,11 @@ Note that $\TOPK(K,G)$ may contain more than $K$ vertices.
 
 Our algorithm works in two phases. Each phase is basically a run of the
 algorithm for approximating the betweenness of all vertices. %presented in the previous section. 
-The two phases differ by the way they compute the number of paths to sample and
+The two phases differ in the way they compute the number of paths to sample and
 the additional operations at the end of each phase. In the first
 phase, we compute a lower bound $\ell'$ to $\betw(v_K)$. In the second phase we
-use $\ell'$ to compute the number of samples needed to obtain a relative
-$(\ell',\varepsilon)$-approximation to the $(\range_G,\pi_G)$. Then we use this
-number of samples to approximate the betweenness of all vertices again, and
+use $\ell'$ to compute the number of samples $r$ needed to obtain a relative
+$(\ell',\varepsilon)$-approximation to $(\range_G,\pi_G)$. We use $r$ samples to approximate the betweenness of all vertices again, and
 return a collection of vertices that is, with high probability, a superset of
 $\TOPK(K,G)$.
 
@@ -432,7 +433,7 @@ The following lemma shows the properties of the collection $\widetilde\TOPK(K,G)
   \begin{enumerate*}
     \item $\TOPK(K,G)\subseteq \widetilde\TOPK(K,G)$, and
     \item for all $v\in\TOPK(K,G)$ we have
-      $|\tilde\betw''(v)-\betw(v)|\le\varepsilon\betw(v)$.
+      $|\tilde\betw''(v)-\betw(v)|\le\varepsilon\betw(v)$, and
     \item no vertex $u\in\widetilde\TOPK(K,G)\setminus\TOPK(K,G)$ has an estimated
       betweenness greater than $\ell'(1+\varepsilon)$.
   \end{enumerate*}
@@ -474,12 +475,12 @@ approximation for the top-$K$ vertices is the cost of an additional run of our
 algorithm to compute good approximations for all the vertices.
 
 \subsection{Discussion}\label{sec:discussion}
-\citet{JacobKLPT05} and independently~\citet{BrandesP07} present an algorithm
-that also uses sampling to approximate the betweenness centrality of all the
+\citet{JacobKLPT05} and independently~\citet{BrandesP07} present a
+sampling-based algorithm to approximate the betweenness centrality of all the
 vertices of the graph. The algorithm creates a sample $S=\{v_1,\dotsc,v_r\}$ of
 $r$ vertices drawn uniformly at random and computes all the shortest paths
-between each $v_i$ to all other vertices in the graph. The estimation
-$\tilde\betw'(u)$ for the betweenness centrality $\betw(u)$ is
+between each $v_i$ to all other vertices in the graph. Their estimation
+$\tilde\betw'(u)$ for $\betw(u)$ is
 \[ 
 \tilde\betw'(u)= \frac{1}{(n-1)r}\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
 u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace.
@@ -566,12 +567,12 @@ worst case the two computations have the same time complexity\footnote{It is a
 well-known open problem whether there is an algorithm to perform a single
 $s,t$-shortest path computation between a pair of vertices with smaller
 worst-case time complexity than the Single Source Shortest Path computation.}, in practice we
-perform much fewer operations, as we can expect $v$ not to always be very
-far from $u$ and therefore we can terminate early. This fact has a great
-impact on the running time. Our algorithm touches
-\emph{much fewer} edges than the one from~\citep{JacobKLPT05,BrandesP07}.
+perform many fewer operations, as we can expect $v$ not to always be very
+far from $u$ and therefore we can terminate early. This fact has a huge 
+impact on the running time. Our algorithm also touches
+\emph{many fewer} edges than the one from~\citep{JacobKLPT05,BrandesP07}.
 The latter can touch all the edges in the graph \emph{at every sample}, while
-our computation has a much higher \emph{locality}, exploring only a neighborhood
+our computation exhibits a much higher \emph{locality}, exploring only a neighborhood
 of $u$ until $v$ is reached. The results of our experimental evaluation
 presented in Sect.~\ref{sec:exper} highlights this and other advantages of our
 method over the one from~\citep{JacobKLPT05,BrandesP07}. In the future, we plan

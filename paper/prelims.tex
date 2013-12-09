@@ -4,11 +4,10 @@ develop and analyze our results throughout the paper.
 
 \subsection{Graphs and betweenness centrality}\label{sec:graphprelims}
 Let $G=(V,E)$ be a graph, where $E\subseteq V\times V$, with $n=|V|$ vertices
-and $m=|E|$ edges. Each edge
-$e\in E$ has a non-negative weight $\mathsf{w}(e)$. The graph
-$G$ can be directed or undirected. We assume
-that there are no self-loops from one vertex to itself and no multiple edges
-between a pair of vertices. Given a pair of distinct vertices $(u,v)\in V\times V$,
+and $m=|E|$ edges. The graph $G$ can be directed or undirected. We assume that
+there are no self-loops from one vertex to itself and no multiple edges between
+a pair of vertices. Each edge $e\in E$ has a non-negative weight
+$\mathsf{w}(e)$. Given a pair of distinct vertices $(u,v)\in V\times V$,
 $u\neq v$, a \emph{path $p_{uv}\subseteq V$ from $u$ to $v$} is an ordered sequence of
 vertices $p_{uv}=(w_1,\dotsc,w_{|p_{uv}|})$ such that $w_1=u$, $w_{|p_{uv}|}=v$ and
 for each $1\le i < |p_{uv}|$, $(w_i,w_{i+1})\in E$. The vertices $u$ and $v$ are
@@ -202,10 +201,6 @@ the domain according to the distribution $\phi$.
 The constant $c$ is approximately $0.5$~\citep{LofflerP09}.
 %\citet{LofflerP09} showed experimentally that the constant $c$ is approximately
 %$0.5$. We used this value in our experiments.
-It is important to mention that if $\VC(\range)$ and/or the upper bound $d$ do
-not depend on $|D|$ or on $|\range|$ neither does the sample size. This will
-make our algorithms scale well as the size of the network increases.
-
 %A similar definition offers relative guarantees on the approximation.
 It is possible to obtain \emph{relative} guarantees on the approximation.
 \begin{definition}\label{def:releapprox}
@@ -233,4 +228,9 @@ It is possible to obtain \emph{relative} guarantees on the approximation.
   $(p,\varepsilon)$-approximation to $(\range,\phi)$ with probability at least
   $1-\delta$.
 \end{theorem}
+
+It is important to mention that if $\VC(\range)$ and/or the upper bound $d$ do
+not depend on $|D|$ or on $|\range|$ neither do the sample sizes presented in
+Thm.~\ref{thm:eapprox} and~\ref{thm:releapprox}. This will make our algorithms
+scale well as the size of the network increases.
 

@@ -53,9 +53,13 @@ driving goals in mind: study the behavior of the algorithms presented in this
 paper and compare it with that of other related
 algorithms~\citep{Brandes01,BrandesP07,JacobKLPT05,GeisbergerSS08}, in terms of
 accuracy of the estimation, execution time, work performed, and scalability as
-function of the network size. Due to space limitations, we only report a subset
+function of the network size.
+\ifproof 
+\else
+Due to space limitations, we only report a subset
 of our results and refer the reader to the extended online version of the
 paper~\citep{RiondatoK13}.
+\fi
 
 \paragraph{Implementation and environment}
 We implemented\footnote{We plan to make our software available after
@@ -76,7 +80,7 @@ Collection\footnote{\url{http://snap.stanford.edu/data/index.html}}. These are
 all real world datasets including online social networks, communication (email)
 networks, scientific citation and academic collaboration networks, road
 networks, Amazon frequent co-purchased product networks, and more. Basic
-information about the graphs we used are reported in the leftmost part
+information about the graphs we used are reported in the two leftmost columns 
 of Figs.~\ref{tab:expDir} and~\ref{tab:expUndir}. We refer the
 reader to the SLNDC website for additional details about each dataset. 
 To evaluate scalability we also created a number of artificial graphs of
@@ -328,7 +332,7 @@ vertex-diameter approximation (diam-UB), the $\mathsf{VC}$ algorithm performs un
 $\mathsf{BP}$. In the case where the exact value of the diameter was used, we
 can see that our algorithm computes an estimation of the betweenness that
 satisfies the desired accuracy and confidence guarantees \emph{3 to 5 times
-faster} than~\citep{BrandesP07}. 
+faster} than~$\mathsf{BP}$. 
 %\XXX-(COMMENT ON THE RELATION TOPOLOGY-SPEED) \MR I have no idea what you meant by that. 
  In Fig.~\ref{fig:gnutella:time} we study
 the directed graph p2p-Gnutella30 and we present the measurements of
@@ -410,8 +414,7 @@ network size would be the corresponding algorithm. From the figure, we can
 appreciate that this is the case for $\mathsf{VC}$, which is much more scalable
 and independent from the size of the sample than $\mathsf{BP}$. This is very
 important, as today's networks are not only huge, but they also grow rapidly,
-and algorithms to mine them need to scale well as
-the graph sizes increase.
+and algorithms to mine them must scale well with graph size.
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/random-time}

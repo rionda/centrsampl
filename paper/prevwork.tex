@@ -36,15 +36,14 @@ and the union bound~\citep{MitzenmacherU05}.
 \citet{GeisbergerSS08} noticed that this can lead
 to an overestimation of the betweenness of vertices that are close to the
 sampled ones and introduced different unbiased estimators that are
-experimentally shown to have smaller variance and do not occur in this
+experimentally shown to have smaller variance and do not suffer from this
 overshooting. Our algorithm is different from these because we sample, each
 time, a single random shortest path. %between two randomly chosen nodes. 
 This leads to a much smaller sample size and less work done for each sample,
 resulting in a much faster way to compute approximations of the betweenness with
 the same probabilistic guarantees. 
 \ifproof
-Although the algorithms by
-\citep{BrandesP07,JacobKLPT05,GeisbergerSS08} can be extended to return a
+Although existing algorithms \citep{BrandesP07,JacobKLPT05,GeisbergerSS08} can be extended to return a
 superset of the top-$K$ vertices with highest betweenness, they only offer an
 \emph{additive} approximation guarantee, while our algorithm for the top-$K$
 vertices offers a \emph{multiplicative} factor guarantee, which is much
@@ -67,10 +66,10 @@ connections with vertices not already in the sample. Modified versions
 of this algorithm and an extensive experimental evaluation appeared
 in~\citep{LimMRTB11}. The algorithm does not offer any guarantee on the quality
 of the approximations. Compared to these adaptive sampling approaches, our
-methods ensures that the betweenness of all (or top-$K$) vertices is well
+methods ensure that the betweenness of all (or top-$K$) vertices is well
 approximated, while using a fixed, predetermined amount of samples.
-\citep{SaryuceSKC13} present an algorithm that pre-processes the network in
-multiple ways by removing degree-1 vertices and identical vertices and splits it
+\citet{SaryuceSKC13} present an algorithm that pre-processes the network in
+multiple ways by removing degree-1 vertices and identical vertices, and splits it
 in separate components where the computation of betweenness can be performed
 independently and then aggregated. They do not present an analysis of the
 complexity of the algorithm. 
