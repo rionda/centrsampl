@@ -1,4 +1,3 @@
-[WSDM] Add Acknowledgements Eli, reviewers.
 
 [WSDM] Include more experimental results in extended version.
 
@@ -28,6 +27,8 @@ only give an upper bound, which doesn't seem to help much, imho)
 [JOURNAL] Compare the two algorithms in terms of how many updates they do. This
 would highlight that they do a great amount of unnecessary updates and that is
 why they achieve better approximation that the user asked for. WHAT?
+
+!DONE [WSDM] Add Acknowledgements Eli, reviewers.
 
 !DONE Experiments for unique shortest paths
 
