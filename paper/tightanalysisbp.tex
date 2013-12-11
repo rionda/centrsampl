@@ -9,6 +9,8 @@
 \def\XXX{{\bf XXX}}
 \def\MR{{\bf MR}}
 \def\EK{{\bf EK}}
+\def\exp{\mathbb{E}}
+\def\var{\mathrm{Var}}
 \title{}
 \author{}
 \begin{document}
@@ -122,6 +124,87 @@ principles, but choose different trade-offs between accuracy and speed.
 \MR: my intuition is that we can actually analyze \textsf{BP} using the
 VC-dimension and showing that their sampling is ergodic. Recent results show
 that the VC-dimension can be used when the sampling process is ergodic~\citep{AdamsN10}.
+
+
+\begin{lemma}
+  $\var[\tilde\betw_\mathsf{BP}(w)]\le\var[\tilde\betw_\mathrm{A1}(w)]$.
+\end{lemma}
+
+\begin{proof}
+  Consider the quantity
+  \[
+  \var[\tilde\betw_\mathrm{A1}(w)]-\var[\tilde\betw_\mathsf{BP}(w)]\enspace.\]
+  We will show that the above quantity is greater than or equal to 0, proving
+  the thesis.
+  Since
+  $\exp[\tilde\betw_\mathrm{A1}(w)]=\exp[\tilde\betw_\mathsf{BF}(w)]=\betw(w)$
+  and using the definition of variance, we only need to show 
+  \begin{equation}\label{eq:inequal}
+    \exp[(\tilde\betw_\mathrm{A1}(w))^2]-\exp[(\tilde\betw_\mathsf{BF}(w))^2]\ge
+    0\enspace.
+  \end{equation}
+
+  Let start from computing $\exp[(\tilde\betw_\mathsf{BF}(w))^2]$. For every
+  vertex $v$, we define $\alpha_v$ as
+  \[
+  \alpha_v=\frac{1}{n-1}\sum_{\substack{u\in V
+  \\u\neq v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{\sigma_{uv}}\enspace.
+  \]
+  Note that 
+  \begin{equation}\label{eq:betwalpha}
+    \betw(w)=\frac{1}{n}\sum_{v\in V}\alpha(v)\enspace.
+  \end{equation}
+  Consider, for $1\le i \le r$, the contribution $X_i$ to $\tilde\betw_\mathsf{BP}(w)$
+  of the paths computed from the $i$\textsuperscript{th} sampled vertex. $X_i$
+  is a random variable that takes value $\alpha_v$ with probability $1/n$, for
+  all $v\in V$. We have
+  \begin{equation}\label{eq:xiexpvar}
+    \exp[X_i]=\sum_{v\in V}\frac{1}{n}\alpha_v=\betw(w) \mbox{ and }
+    \exp[X_i^2]=\frac{1}{n}\sum_{v\in V}\alpha_v^2, \forall 1\le i\le r\enspace.
+  \end{equation}
+  Clearly
+  \[
+  \tilde\betw_\mathsf{BP}(w)=\frac{1}{r}\sum_{i=1}^r X_i\enspace.
+  \]
+  The variables $X_i$'s are independent and identically distributed so
+  \begin{align}\label{eq:expxisquared}
+    \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)=\frac{1}{r}\frac{1}{n}\sum_{v\in
+    V}\alpha_v^2+\frac{r-1}{r}(\betw(w))^2,
+\end{align}
+where we used~\eqref{eq:xiexpvar}.
+
+We now compute $\exp[(\tilde\betw_\mathrm{A1}(w))^2]$. 
+Consider the contribution $Y_i$ to $\tilde\betw_\mathrm{A1}(w)$ of the
+$i$\textsuperscript{th} sampled path by Algorithm 1, for $1\le i\le r$. $Y_i$ is a random variable that takes value
+$\mathds{1}_{\mathsf{Int}(p)}(w)$ with probability $\pi(p)$, for every shortest
+path $p\in\mathbb{S}_G$. We have
+\begin{equation}\label{eq:yiexpvar}
+  \exp[Y_i]=\exp[Y_i^2]=\betw(w), \forall 1\le i \le r\enspace.
+\end{equation}
+By definition, 
+\[
+\tilde\betw_\mathrm{A1}(w)=\frac{1}{r}\sum_{i=1}^rY_i\enspace.
+\]
+The random variables $Y_i$ are independent and identically distributed so
+\begin{align}\label{eq:expyisquared}
+  \exp[(\tilde\betw_\mathrm{A1}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^r
+  Y_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[Y_i^2]+\sum_{j=i+1}^r\exp[Y_i]\exp[Y_j]\right)=\frac{1}{r}\betw(w)+\frac{r-1}{r}(\betw(w))^2,
+\end{align}
+where we used~\eqref{eq:yiexpvar}.
+
+We can now rewrite the left side of~\eqref{eq:inequal} using
+~\eqref{eq:betwalpha},~\eqref{eq:expxisquared},~and~\eqref{eq:expyisquared}:
+\begin{align*}
+  \exp[(\tilde\betw_\mathrm{A1}(w))^2]-\exp[(\tilde\betw_\mathsf{BF}(w))^2] &=
+  \frac{1}{r}\betw(w)+\frac{r-1}{r}(\betw(w))^2 - \frac{1}{r}\frac{1}{n}\sum_{v\in
+    V}\alpha_v^2
+   -\frac{r-1}{r}(\betw(w))^2 =
+    \frac{1}{r}\frac{1}{n}\sum_{v\in V}(\alpha_v - \alpha_v^2)\enspace. 
+\end{align*}
+Since $\alpha_v\in[0,1]$, we have $\alpha_v-\alpha_v^2\ge 0$ for all $v$, and our proof
+is complete.
+\end{proof}
+
 
 \bibliographystyle{abbrvnat}
 \bibliography{bidirectionalsearch,diamapprox,vcmine,vcgraph,centrality,various}
