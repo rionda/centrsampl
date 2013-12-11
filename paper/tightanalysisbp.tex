@@ -11,6 +11,7 @@
 \def\EK{{\bf EK}}
 \def\exp{\mathbb{E}}
 \def\var{\mathrm{Var}}
+\def\mse{\mathrm{MSE}}
 \title{}
 \author{}
 \begin{document}
@@ -126,7 +127,7 @@ VC-dimension and showing that their sampling is ergodic. Recent results show
 that the VC-dimension can be used when the sampling process is ergodic~\citep{AdamsN10}.
 
 
-\begin{lemma}
+\begin{lemma}\label{lem:variance}
   $\var[\tilde\betw_\mathsf{BP}(w)]\le\var[\tilde\betw_\mathrm{A1}(w)]$.
 \end{lemma}
 
@@ -204,6 +205,37 @@ We can now rewrite the left side of~\eqref{eq:inequal} using
 Since $\alpha_v\in[0,1]$, we have $\alpha_v-\alpha_v^2\ge 0$ for all $v$, and our proof
 is complete.
 \end{proof}
+
+\begin{lemma}\label{lem:MSE}
+  \textsf{BP} has lower expected Mean Squared Error than Algorithm~1:
+  \[
+  \exp[\mse_\mathsf{BP}]\le \exp[\mse_\mathrm{A1}]\enspace.
+  \]
+\end{lemma}
+
+\begin{proof}
+  We have
+  \[ 
+  \exp[\mse_\mathsf{BP}] = \exp\left[\frac{1}{n}\sum_{v\in
+  V}\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
+  V}\exp\left[\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
+  V}\var[\tilde\betw_\mathsf{BP}(w)],
+  \]
+  where we used the linearity of expectation and the fact that the estimator
+  $\tilde\betw_\mathsf{BP}(w)$ is unbiased for $\betw(w)$ ($\exp[\tilde\betw_\mathsf{BP}(w)]=\betw(w)]$).
+  Analogously for Algorithm~1:
+  \[
+  \exp[\mse_\mathrm{A1}] = \frac{1}{n}\sum_{v\in V}\var[\tilde\betw_\mathrm{A1}(w)]\enspace.
+  \]
+  Hence
+  \[
+  \exp[\mse_\mathrm{A1}]-\exp[\mse_\mathsf{BP}]=\frac{1}{n}\sum_{v\in
+  V}\left(\var[\tilde\betw_\mathrm{A1}(w)]-\var[\tilde\betw_\mathsf{BP}(w)]\right),
+  \]
+  and from Lemma~\ref{lem:variance} we have that each addend of the sum is
+  non-negative and so is the above expression, concluding our proof.
+\end{proof}
+
 
 
 \bibliographystyle{abbrvnat}
