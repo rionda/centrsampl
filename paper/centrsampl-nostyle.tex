@@ -1,8 +1,10 @@
 \documentclass[10pt]{article}
-\usepackage[T1]{fontenc}
-\usepackage{ae,aecompl}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc} 
+\usepackage{textcomp}
+%\usepackage{ae,aecompl}
 \usepackage[utf8x]{inputenc}
-\usepackage[cm]{fullpage}
+\usepackage{fullpage}
 %\usepackage{mdwlist}
 %\usepackage[small]{caption}
 \usepackage[numbers,sort&compress,square]{natbib}
@@ -16,7 +18,7 @@
 %\makeatother
 
 %\usepackage{times}
-\usepackage{amsfonts}
+%\usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
@@ -29,6 +31,9 @@
 \usepackage{url}
 \usepackage[ruled,linesnumbered]{algorithm2e}
 \usepackage{mdwlist}
+\usepackage[pdftex,bookmarks=true,pdfstartview={FitH},pdfauthor={Matteo Riondato
+and Evgenios M. Kornaropoulos},pdftitle={Fast Approximation of Betweenness
+Centrality through Sampling},pdfsubject={Social Network Analysis}]{hyperref}
 %\usepackage{mathptmx}      % use Times fonts in math if available on your TeX system
 %\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n} % Use standard fonts for calligraphic
 
@@ -61,7 +66,10 @@
 \title{Fast Approximation of Betweenness Centrality Through Sampling
 \thanks{This work is supported in part by the National Science Foundation, under
 award IIS-1247581.}\ \footnote{This is the extended version of the article
-accepted for publication at WSDM'14.}}
+accepted for publication at WSDM'14. The most up-to-date version of this
+document can be downloaded from
+\protect\url{http://cs.brown.edu/\textasciitilde
+matteo/papers/RiondatoKornarop-BetweennessSampling.pdf}.}}
 \author{Matteo Riondato\footnote{Contact author} and Evgenios M.~Kornaropoulos\\
 Department of Computer Science -- Brown University \\
 \url{{matteo, evgenios}@cs.brown.edu}}
