@@ -1,4 +1,7 @@
 \documentclass{article}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc} 
+\usepackage{textcomp}
 \usepackage{dsfont}
 \usepackage{fullpage}
 \usepackage{amssymb,amsmath,amsthm}
@@ -22,113 +25,13 @@
 The analysis of Algorithm 1 allow us to obtain a tighter analysis for the
 algorithm by~\citet{BrandesP07}  (which we denote as \textsf{BP}).
 
-\begin{lemma}
-  Let $G=(V,E)$ be a graph, and $\varepsilon,\delta\in(0,1)$. Let
-  \[
-  r =
-  \frac{c}{\varepsilon^2}\left(\lfloor\log_2(\mathsf{VD}(G)-2\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
-  \]
-  and let $S$ be a set of vertices of $G$ sampled uniformly at random with
-  replacement from $V$. Let $\tilde\betw_{\mathsf{BP}}(w)$ be the estimated
-  value for $\betw(w)$ computed by \textsf{BP} using $S$. Then
-  \[
-  \Pr(\exists w\in V \mbox{ s.t. }
-  |\tilde\betw_{\mathsf{BP}}(w)-\betw(w)|>\varepsilon)<\delta\enspace.
-  \]
-  %If Algorithm 1 computes an $(\varepsilon,\delta)$-approximation with $r$
-  %samples, then the algorithm by~\citet{BrandesP07} does the same with the same
-  %number of samples.
-\end{lemma}
-
-\begin{proof}
-  Consider a simple coupling of the executions of Algorithm 1 and \textsf{BP}
-  for $r$ samples: when Algorithm 1 samples a shortest path from a vertex $v$ to a vertex $u$,
-  \textsf{BP} samples the vertex $v$. 
-
-Consider an execution of the algorithms and let $X_v$ be the number of times
-that vertex $v$ is the starting point of a sampled path. 
-
-The estimation for the betweenness of vertex $w$ computed by \textsf{BP} is
-\[
-\tilde\betw_{\mathsf{BP}}(w)=\frac{1}{r}\sum_{v\in V}
-X_v\underbrace{\left(\frac{1}{n-1}\sum_{\substack{u\in V \\u\neq
-v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{vu}|}\right)}_{Y_v(w)}\enspace.
-\]
-The estimation for the betweenness of vertex $w$ computed by Algorithm 1
-is
-\[
-\tilde\betw_{\mathrm{A1}}(w)=\frac{1}{r}Z_w,
-\]
-where $Z_w$ is the number of times that a path containing the vertex $w$ gets
-sampled. Now, for each $v$ and for $1\le i\le X_v$, let $p_v^{(i)}$ be the path
-sampled the $i$\textsuperscript{th} time that the sampled path had $v$ as
-starting vertex, and let $A_v^{(i)}(w)=1$ if $w\in\mathsf{Int}(p_v^{(i)}$, and
-$A_v^{(i)}(w)=0$ otherwise. Then it is clear that 
-\[
-\tilde\betw_{\mathrm{A1}}(w)=\frac{1}{r}\sum_{v\in V}
-X_v\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\enspace.
-\]
-We claim that
-\[
-\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right]=Y_v(w),\]
-where the expectation is taken over the choice of the paths, which are sampled
-according to the distribution $\pi$.
-To see this, consider $\mathbb{E}[A_v^{(i)}(w) ~|~ X_v]$. It
-is clear that $A^{(i)}(w)$ and $X_v$ are independent, for $1\le i\le X_v$. From
-this and the definition of expectation we have 
-\[
-\mathbb{E}\left[\left.A_v^{(i)}(w)\right|X_v\right] =
-\mathbb{E}\left[A_v^{(i)}(w)\right]=\frac{1}{n-1}\sum_{\substack{u\in V
-\\u\neq
-v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{vu}|}
-=Y_v(w)\enspace.
-\]
-This expression does not depend on $i$.
-
-The claim then follows easily from the linearity of expectation:
-\[
-\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right] =
-\sum_{i=1}^{X_v}\mathbb{E}\left[\left.\frac{A^{(i)}_v(w)}{X_v}\right|X_v\right]=\sum_{i=1}^{X_v}\frac{1}{X_v}\mathbb{E}\left[A_v^{(i)}(w)\right]=\mathbb{E}\left[A_v^{(1)}(w)\right]=Y_v(w)\enspace.
-\]
-This implies that the estimator $\tilde\betw_{\mathsf{BP}}(w)$ has lower variance than the estimator
-$\tilde\betw_{\mathrm{A1}}(w)$, for all vertices $w$. Since both estimators have the same
-expectation $\betw(w)$, this means that for any $a\in[0,1]$ we have
-\[
-\Pr\left(|\tilde\betw_{\mathsf{BP}}(w)-\betw(w)|>a\right)\le\Pr(\left(|\tilde\betw_{\mathrm{A1}}(w)-\betw(w)|>a\right)\enspace.
-\]
-
-This means that for every collection of $r$ samples for which Algorithm 1 computes estimates
-$\tilde\betw_\mathrm{A1}(w)$ such that
-\begin{equation}\label{eq:edapprox}
-|\tilde\betw_\mathrm{A1}(w)-\betw(w)|\le\varepsilon, \forall w\in W,
-\end{equation}
-so would \textsf{BP} using the $r$ samples according to the coupling. For
-Algorithm $1$ the event in~\eqref{eq:edapprox} occurs with probability at least
-$1-\delta$ over the choice of samples, and so would be for \textsf{BP},
-concluding our proof.
-\end{proof}
-
-The estimator $\tilde\betw_{\mathsf{BP}}(w)$ has lower variance than
-$\tilde\betw_{\mathrm{A1}}(w)$, which means that it converges faster to the
-expectation $\betw(w)$, achieving at least the same guarantees with the same
-number of samples. Before always opting for \textsf{BP} (or for the algorithm
-by~\citet{GeisbergerSS08}, whose estimators have even lower variance than those
-of \textsf{BP}), one should nevertheless take
-into account the fact that, per sample, the
-computation of $\tilde\betw_{\mathsf{BP}}(w)$ requires more time than the one
-for $\tilde\betw_{\mathrm{A1}}(w)$. The difference is even larger if Algorithm 1
-uses bidirectional search~\citep{KaindlK97,Pohl69}. We can then see that
-Algorithm 1, \textsf{BP}, and the algorithm
-by~\citet{GeisbergerSS08} share the same design
-principles, but choose different trade-offs between accuracy and speed.  
-
-\MR: my intuition is that we can actually analyze \textsf{BP} using the
-VC-dimension and showing that their sampling is ergodic. Recent results show
-that the VC-dimension can be used when the sampling process is ergodic~\citep{AdamsN10}.
-
-
 \begin{lemma}\label{lem:variance}
-  $\var[\tilde\betw_\mathsf{BP}(w)]\le\var[\tilde\betw_\mathrm{A1}(w)]$.
+  The estimator $\tilde\betw_\mathsf{BP}(w)$ is \emph{uniformly better} than the
+  estimator $\tilde\betw_\mathrm{A1}(w)$. I.e., for any value of $\betw(w)$, we
+  have
+  \[
+  \var[\tilde\betw_\mathsf{BP}(w)]\le\var[\tilde\betw_\mathrm{A1}(w)]\enspace.
+  \]
 \end{lemma}
 
 \begin{proof}
@@ -207,6 +110,8 @@ Since $\alpha_v\in[0,1]$, we have $\alpha_v-\alpha_v^2\ge 0$ for all $v$, and ou
 is complete.
 \end{proof}
 
+The following lemma is an easy consequence of the above.
+
 \begin{lemma}\label{lem:MSE}
   \textsf{BP} has lower expected Mean Squared Error than Algorithm~1:
   \[
@@ -236,6 +141,114 @@ is complete.
   and from Lemma~\ref{lem:variance} we have that each addend of the sum is
   non-negative and so is the above expression, concluding our proof.
 \end{proof}
+
+
+\begin{lemma}
+  Let $G=(V,E)$ be a graph, and $\varepsilon,\delta\in(0,1)$. Let
+  \[
+  r =
+  \frac{c}{\varepsilon^2}\left(\lfloor\log_2(\mathsf{VD}(G)-2\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
+  \]
+  and let $S$ be a set of vertices of $G$ sampled uniformly at random with
+  replacement from $V$. Let $\tilde\betw_{\mathsf{BP}}(w)$ be the estimated
+  value for $\betw(w)$ computed by \textsf{BP} using $S$. Then
+  \[
+  \Pr(\exists w\in V \mbox{ s.t. }
+  |\tilde\betw_{\mathsf{BP}}(w)-\betw(w)|>\varepsilon)<\delta\enspace.
+  \]
+  %If Algorithm 1 computes an $(\varepsilon,\delta)$-approximation with $r$
+  %samples, then the algorithm by~\citet{BrandesP07} does the same with the same
+  %number of samples.
+\end{lemma}
+
+\begin{proof}
+  Consider a simple coupling of the executions of Algorithm 1 and \textsf{BP}
+  for $r$ samples: when Algorithm 1 samples a shortest path from a vertex $v$ to a vertex $u$,
+  \textsf{BP} samples the vertex $v$. 
+
+Consider an execution of the algorithms and let $X_v$ be the number of times
+that vertex $v$ is the starting point of a sampled path. 
+
+The estimation for the betweenness of vertex $w$ computed by \textsf{BP} is
+\[
+\tilde\betw_{\mathsf{BP}}(w)=\frac{1}{r}\sum_{v\in V}
+X_v\underbrace{\left(\frac{1}{n-1}\sum_{\substack{u\in V \\u\neq
+v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{vu}|}\right)}_{Y_v(w)}\enspace.
+\]
+The estimation for the betweenness of vertex $w$ computed by Algorithm 1
+is
+\[
+\tilde\betw_{\mathrm{A1}}(w)=\frac{1}{r}Z_w,
+\]
+where $Z_w$ is the number of times that a path containing the vertex $w$ gets
+sampled. Now, for each $v$ and for $1\le i\le X_v$, let $p_v^{(i)}$ be the path
+sampled the $i$\textsuperscript{th} time that the sampled path had $v$ as
+starting vertex, and let $A_v^{(i)}(w)=1$ if $w\in\mathsf{Int}(p_v^{(i)}$, and
+$A_v^{(i)}(w)=0$ otherwise. Then it is clear that 
+\[
+\tilde\betw_{\mathrm{A1}}(w)=\frac{1}{r}\sum_{v\in V}
+X_v\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\enspace.
+\]
+We claim that
+\[
+\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right]=Y_v(w),\]
+where the expectation is taken over the choice of the paths, which are sampled
+according to the distribution $\pi$.
+To see this, consider $\mathbb{E}[A_v^{(i)}(w) ~|~ X_v]$. It
+is clear that $A^{(i)}(w)$ and $X_v$ are independent, for $1\le i\le X_v$. From
+this and the definition of expectation we have 
+\[
+\mathbb{E}\left[\left.A_v^{(i)}(w)\right|X_v\right] =
+\mathbb{E}\left[A_v^{(i)}(w)\right]=\frac{1}{n-1}\sum_{\substack{u\in V
+\\u\neq
+v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{vu}|}
+=Y_v(w)\enspace.
+\]
+This expression does not depend on $i$.
+
+The claim then follows easily from the linearity of expectation:
+\[
+\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right] =
+\sum_{i=1}^{X_v}\mathbb{E}\left[\left.\frac{A^{(i)}_v(w)}{X_v}\right|X_v\right]=\sum_{i=1}^{X_v}\frac{1}{X_v}\mathbb{E}\left[A_v^{(i)}(w)\right]=\mathbb{E}\left[A_v^{(1)}(w)\right]=Y_v(w)\enspace.
+\]
+Recall from Lemma~\ref{lem:variance} that the estimator
+$\tilde\betw_{\mathsf{BP}}(w)$ has lower variance than the estimator
+$\tilde\betw_{\mathrm{A1}}(w)$, for all vertices $w$. 
+
+\XXX: The following is not actually true \MR. Since both estimators have
+the same expectation $\betw(w)$, this means that for any $a\in[0,1]$ we have
+\[
+\Pr\left(|\tilde\betw_{\mathsf{BP}}(w)-\betw(w)|>a\right)\le\Pr(\left(|\tilde\betw_{\mathrm{A1}}(w)-\betw(w)|>a\right)\enspace.
+\]
+
+This means that for every collection of $r$ samples for which Algorithm 1 computes estimates
+$\tilde\betw_\mathrm{A1}(w)$ such that
+\begin{equation}\label{eq:edapprox}
+|\tilde\betw_\mathrm{A1}(w)-\betw(w)|\le\varepsilon, \forall w\in W,
+\end{equation}
+so would \textsf{BP} using the $r$ samples according to the coupling. For
+Algorithm $1$ the event in~\eqref{eq:edapprox} occurs with probability at least
+$1-\delta$ over the choice of samples, and so would be for \textsf{BP},
+concluding our proof.
+\end{proof}
+
+The estimator $\tilde\betw_{\mathsf{BP}}(w)$ has lower variance than
+$\tilde\betw_{\mathrm{A1}}(w)$, which means that it converges faster to the
+expectation $\betw(w)$, achieving at least the same guarantees with the same
+number of samples. Before always opting for \textsf{BP} (or for the algorithm
+by~\citet{GeisbergerSS08}, whose estimators have even lower variance than those
+of \textsf{BP}), one should nevertheless take
+into account the fact that, per sample, the
+computation of $\tilde\betw_{\mathsf{BP}}(w)$ requires more time than the one
+for $\tilde\betw_{\mathrm{A1}}(w)$. The difference is even larger if Algorithm 1
+uses bidirectional search~\citep{KaindlK97,Pohl69}. We can then see that
+Algorithm 1, \textsf{BP}, and the algorithm
+by~\citet{GeisbergerSS08} share the same design
+principles, but choose different trade-offs between accuracy and speed.  
+
+\MR: my intuition is that we can actually analyze \textsf{BP} using the
+VC-dimension and showing that their sampling is ergodic. Recent results show
+that the VC-dimension can be used when the sampling process is ergodic~\citep{AdamsN10}.
 
 
 
