@@ -62,11 +62,11 @@ paper~\citep{RiondatoK13}.
 \fi
 
 \paragraph{Implementation and environment}
-We implemented\footnote{We plan to make our software available after
-acceptance.} our algorithms, the one presented in~\citep{BrandesP07,JacobKLPT05}
+We implemented our algorithms, the one presented in~\citep{BrandesP07,JacobKLPT05}
 and the linear scaling version from~\citep{GeisbergerSS08} in C, by extending
 the implementation of the exact algorithm~\citep{Brandes01} contained in
-igraph~\citep{igraph}. The implementations are similarly engineered, given that
+igraph~\citep{igraph}\footnote{The implementations are available at
+\url{http://cs.brown.edu/~matteo/centrsampl.tar.bz2}.}. The implementations are similarly engineered, given that
 they are based on the same subroutines for the computation of the shortest path
 (Dijkstra's algorithm for weighted graphs, BFS for unweighted ones), and they
 received similar amounts of optimization. We exposed our implementations through
