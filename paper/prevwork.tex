@@ -10,7 +10,12 @@ the centrality~\citep{BorgattiE06,Brandes08,PfefferC12}. This is not to be
 confused with $k$-path betweenness centrality defined
 by~\citet{KourtellisASIT12}, which considers simple random walks that are not
 necessarily shortest paths. \citet{DolevEP10} present a generalization of
-betweenness centrality which takes into account routing policies in the network. 
+betweenness centrality which takes into account routing policies in the network. %
+\ifproof
+\citet{OpsahlAS10} define a new distance function between pair of vertices in
+order to penalize paths with a high number of hops in weighted network. This
+function induces a generalized and parametrized definition of betweenness.
+\fi
 
 The need of fast algorithms to compute the betweenness of vertices in a graph
 arose as large online social networks started to appear. \citet{Brandes01} presents the

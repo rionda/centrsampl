@@ -7,22 +7,27 @@ structure, as they are based on shortest path computation and counting~\citep{Ne
 this work we are interested in \emph{betweenness
 centrality}~\citep{Anthonisse71,Freeman77}, that is, for every vertex in the
 graph, the fraction of shortest paths that goes through that vertex (see
-Section~\ref{sec:prelims} for formal definitions). Betweenness centrality has
-been used to analyze social and protein interaction networks, to evaluate traffic in
-communication networks, and to identify important intersections in road
-networks~\citep{Newman10,GeisbergerSS08}. There exist polynomial-time
-algorithms to compute the exact betweenness centrality~\citep{Brandes01}, but
-they are not practical for the analysis of the very large networks that are of
-interest these days. Graphs representing online social networks, communication
-networks, and the web graph have millions of nodes and billions of edges,
-making a polynomial-time algorithm too expensive in practice. Given that data
-mining is exploratory in nature, approximate results are usually sufficient,
-especially if the approximation error is guaranteed to be within user-specified
-limits. In practice, the user is interested in the relative ranking of the
-vertices according to their betweenness, rather than the actual value of the
-betweenness, so a very good estimation of the value of each vertex is
-sufficiently informative for most purposes. It is therefore natural to develop
-algorithms that trade off accuracy for speed and efficiently compute
+Section~\ref{sec:prelims} for formal definitions)
+\ifproof
+, and on some variants of it~\citep{OpsahlAS10,BorgattiE06,Brandes08}. %
+\else
+. %
+\fi
+Betweenness centrality has been used to analyze social and protein interaction
+networks, to evaluate traffic in communication networks, and to identify
+important intersections in road networks~\citep{Newman10,GeisbergerSS08}. There
+exist polynomial-time algorithms to compute the exact betweenness
+centrality~\citep{Brandes01}, but they are not practical for the analysis of the
+very large networks that are of interest these days. Graphs representing online
+social networks, communication networks, and the web graph have millions of
+nodes and billions of edges, making a polynomial-time algorithm too expensive in
+practice. Given that data mining is exploratory in nature, approximate results
+are usually sufficient, especially if the approximation error is guaranteed to
+be within user-specified limits. In practice, the user is interested in the
+relative ranking of the vertices according to their betweenness, rather than the
+actual value of the betweenness, so a very good estimation of the value of each
+vertex is sufficiently informative for most purposes. It is therefore natural to
+develop algorithms that trade off accuracy for speed and efficiently compute
 high-quality approximations of the betweenness of the vertices.  Nevertheless,
 in order for these algorithms to be practical it is extremely important that
 they scale well and have a low runtime dependency on the size of the network

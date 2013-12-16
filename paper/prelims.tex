@@ -106,6 +106,30 @@ $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
   \]
 \end{definition}
 
+\ifproof
+\citet{OpsahlAS10} defined a parametric variant of betweenness centrality for
+weighted networks that can be seen as a generalization of the classical 
+definition. The goal behind this new definition is to give the analyst the
+possibility of ``penalizing'' shortest paths with many vertices, given the
+intuition that there is a cost to be paid to have a message go through a vertex.
+The core of the new definition is a different weight function of a path
+$p_{uv}=(w_1=u,w_2,\dotsc,w_{|p_{uv}|}=v)$ between two vertices $(u,v)$,
+parametrized by a real parameter $\alpha\ge 0$:
+\begin{equation}\label{eq:generalizeddistance}
+d_{\alpha,uv}=\sum_{i=1}^{|p_{uv}|-1}(\mathsf{w}((w_i,w_{i+1})))^\alpha\enspace. 
+\end{equation}
+Clearly for $\alpha=0$, the weights are considered all equal to $1$, and for
+$\alpha=1$, the definition falls back to $d_{uv}$. For $0<\alpha<1$, paths with
+fewer vertices and higher weights are favored over longer paths with lighter
+edges\citep{OpsahlAS10}. The definition of shortest path distance, shortest
+path, and of betweenness centrality follow as before
+from~\eqref{eq:generalizeddistance}. Dijkstra's shortest paths algorithm can be
+adapted to compute shortest paths according to the distance function
+in~\eqref{eq:generalizeddistance}. To avoid confusion, we call the betweenness
+centrality computed using the shortest paths according to the distance function
+in~\eqref{eq:generalizeddistance}, the \emph{$\alpha$-weighted betweenness} and
+denote it with $\betw_\alpha(w)$. 
+\fi
 %Another interesting variant of betweenness centrality does not consider
 %\emph{shortest} paths, but rather \emph{simple random walks} of size up to
 %$k+1$, expressing the intuition that information in a network does not
