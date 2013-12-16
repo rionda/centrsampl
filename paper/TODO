@@ -1,26 +1,46 @@
+TODO LIST FOR THE PAPER
+
+# TOP PRIORITY
+
 [WSDM] Include more experimental results in extended version.
 
-Tighter analysis for BP as per Eli. 
 
-[JOURNAL] Mention Newmann 2001? 
 
-[JOURNAL] Take well care of variants, including the JACM one and the one in
-SocNet.
+# HIGH PRIORITY
 
-[JOURNAL] Check Kleinberg's dispersion. Can we do anything about it?
+Tighter analysis for BP 
 
-[JOURNAL] Report analysis 1st reviewer WSDM to motivate top-k algo.
+Implement Bidirectional / A* search
 
-[JOURNAL] Extend Lemma 2 to directed graphs.
+Experiments for Topk 
 
-[JOURNAL] Check that we can actually handle the k-path (random walk) centrality
+Check that we can actually handle the k-path (random walk) centrality
 by Kourtellis et al.
 
-[JOURNAL] Bidirectional / A* search
+## Low Hanging
 
-[JOURNAL] Edge betweenness (it can be done)
+Mention what is changed from WSDM version
 
-[JOURNAL] Experiments for Topk 
+Take well care of variants, including the JACM one and the one in
+SocNet.
+
+Edge betweenness (it can be done)
+
+
+
+# NORMAL PRIORITY
+
+Mention Newmann 2001? 
+
+Check Kleinberg's dispersion. Can we do anything about it?
+
+Report analysis 1st reviewer WSDM to motivate top-k algo.
+
+Extend Lemma 2 to directed graphs.
+
+
+
+# LOW PRIORITY
 
 [JOURNAL] New definition of Betweenness for sets of nodes. This time the ranges
 are the shortest paths that pass through at least one of the nodes. Paths that
@@ -36,13 +56,17 @@ only give an upper bound, which doesn't seem to help much, imho)
 would highlight that they do a great amount of unnecessary updates and that is
 why they achieve better approximation that the user asked for. WHAT?
 
-!DONE [WSDM] Add Acknowledgements Eli, reviewers.
 
-!DONE Experiments for unique shortest paths
 
-!DONE Discussion of the work by Geisberger et al.
+# DONE
 
-!DONE Introduction
+[WSDM] Add Acknowledgements Eli, reviewers.
 
-!DONE Tight bound construction
+Experiments for unique shortest paths
+
+Discussion of the work by Geisberger et al.
+
+Introduction
+
+Tight bound construction
 
