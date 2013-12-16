@@ -5,6 +5,13 @@ TODO LIST FOR THE PAPER
 [WSDM] Include more experimental results in extended version.
 
 
+## Low Hanging
+
+Mention what is changed from WSDM version
+
+Edge betweenness (it can be done)
+
+
 
 # HIGH PRIORITY
 
@@ -15,16 +22,7 @@ Implement Bidirectional / A* search
 Experiments for Topk 
 
 Check that we can actually handle the k-path (random walk) centrality
-by Kourtellis et al.
-
-## Low Hanging
-
-Mention what is changed from WSDM version
-
-Take well care of variants, including the JACM one and the one in
-SocNet.
-
-Edge betweenness (it can be done)
+by Kourtellis et al, and the other variants (JACM, SocNets)
 
 
 
@@ -55,18 +53,4 @@ only give an upper bound, which doesn't seem to help much, imho)
 [JOURNAL] Compare the two algorithms in terms of how many updates they do. This
 would highlight that they do a great amount of unnecessary updates and that is
 why they achieve better approximation that the user asked for. WHAT?
-
-
-
-# DONE
-
-[WSDM] Add Acknowledgements Eli, reviewers.
-
-Experiments for unique shortest paths
-
-Discussion of the work by Geisberger et al.
-
-Introduction
-
-Tight bound construction
 
