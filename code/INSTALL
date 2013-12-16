@@ -1,5 +1,5 @@
-To use this software you need the igraph-0.6 source files and the py-igraph-
-source files. They can be downloaded from http://igraph.sf.net
+To use this software you need the igraph-0.6.5 source files and the
+py-igraph-0.6.5 source files. They can be downloaded from http://igraph.sf.net
 
 In the following, IGRAPH_DIR is the location of the igraph original sources,
 and PY_IGRAPH_DIR is the location of the python-igraph original sources.
