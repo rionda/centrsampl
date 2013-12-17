@@ -62,6 +62,8 @@ extremely fast on graphs with this property. Unique shortest paths are common or
 even enforced in road networks by slightly perturbing the edge weights or having
 a deterministic tie breaking policy~\citep{GeisbergerSS08}.
 
+\ifproof
+\else
 \paragraph{Bounded-distance betweenness} For the case of
 $k$-bounded-distance betweenness, the sample size on line~\ref{algline:forloop}
 of Alg.~\ref{alg:algorithm} can be reduced to 
@@ -70,24 +72,7 @@ of Alg.~\ref{alg:algorithm} can be reduced to
 \]
 and the computation of the shortest paths on line~\ref{algline:shortestpaths}
 can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$.
-
-\ifproof
-\paragraph{$\alpha$-weighted betweenness} No special arrangements are needed to
-obtain an approximation of $\alpha$-weighted betweenness for all vertices. The
-sample size is the same as in~\eqref{eq:samplesize}.
 \fi
-
-%\paragraph{$k$-path betweenness}
-%For the case of $k$-path betweenness, the algorithm is slightly different:
-%for 
-%\[
-%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
-%\]
-%iterations, rather than sampling a pair of vertices $(uv)$, computing
-%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
-%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-%perform a random walk touching $\ell$ vertices, while updating the estimated
-%betweenness of each touched vertex by adding $1/r$ to its estimation.
 
 \paragraph{Sampling a shortest path}
 Our procedure to select a random shortest path from $\mathcal{S}_{uv}$ is
@@ -266,20 +251,17 @@ vertex $v$ that we used to obtain the approximation. Specifically, we can sample
 a new vertex $u\neq v$ and then choose with uniform probability one of the
 (already computed) shortest paths between $v$ and $u$.
 
-If the graph is directed and/or not all edge weights are equal, %
-\ifproof
-or we are considering $\alpha$-weighted betweenness for $\alpha\neq 0$, %
-\fi
-the computation of a good approximation to $\VD(G)$ becomes more problematic. In
-particular, notice that there is no relationship between $\VD(G)$ and
-$\mathsf{diam}(G)$ when $G$ is weighted, as the shortest path with maximum size
-may not be the shortest path with maximum weight. In these cases, one can use
-the size (number of vertices) of the largest Weakly Connected Component (WCC),
-as a loose upper bound to $\VD(G)$. The WCC's can again be computed in $O(n+m)$
-using BFS.  This quantity can be as high as $n$ but for the computation of the
-sample size we use its logarithm, mitigating the crudeness of the bound. In this
-case our sample size is comparable to that proposed by~\citet{BrandesP07}. 
-%when there is a single WCC, as it would depend on $\log n$,
+If the graph is directed and/or not all edge weights are equal, the computation
+of a good approximation to $\VD(G)$ becomes more problematic. In particular,
+notice that there is no relationship between $\VD(G)$ and $\mathsf{diam}(G)$
+when $G$ is weighted, as the shortest path with maximum size may not be the
+shortest path with maximum weight. In these cases, one can use the size (number
+of vertices) of the largest Weakly Connected Component (WCC), as a loose upper
+bound to $\VD(G)$. The WCC's can again be computed in $O(n+m)$ using BFS.  This
+quantity can be as high as $n$ but for the computation of the sample size we use
+its logarithm, mitigating the crudeness of the bound. In this case our sample
+size is comparable to that proposed by~\citet{BrandesP07}. %when there is a
+%single WCC, as it would depend on $\log n$,
 Nevertheless the amount of work done per sample by our algorithm is still much
 smaller (see Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more
 details). In practice, it is possible that the nature of the network suggests a

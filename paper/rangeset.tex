@@ -137,6 +137,8 @@ the paper~\citep{RiondatoK13}.
 \end{proof}
 \fi
 
+\ifproof
+\else
 %\subsection{Variants}\label{sec:rangevariants}
 \paragraph{Bounded-distance betweenness}
 For the case of $k$-bounded-distance betweenness, if we let
@@ -146,25 +148,7 @@ Lemma~\ref{lem:vcdimuppbound}.
 \begin{lemma}\label{lem:vcdimuppboundk}
 $\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor+1$.
 \end{lemma}
-
-\ifproof
-\paragraph{$\alpha$-weighted betweenness}
-For $\alpha$-weighted betweenness we have that the VC-dimension of the range set
-defined on the shortest paths according to the distance
-from~\eqref{eq:generalizeddistance} is still bounded by
-$\lfloor\log_2(\VD(G)-1)\rfloor+1$. Clearly, the vertex-diameter $\VD(G)$ is now
-defined as the maximum number of vertices in a shortest path according
-to~\eqref{eq:generalizeddistance}.
 \fi
-
-%\paragraph{$k$-path betweenness} We can define another range set
-%$\range_G^{\mathrm{p},k}$ if we are interested in $k$-path betweenness. The
-%domain $B$ of the range set now is the set of all simple random walks starting
-%from any vertex of and of size up to $k+1$. For each vertex $v\in V$, the range
-%$R_v$ is the subset of $B$ containing all and only the random walks from $B$
-%that have $v$ as internal vertex. It is easy to see that
-%$\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
-%following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
 
 \subsection{Tightness}\label{sec:tightness}
 The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that

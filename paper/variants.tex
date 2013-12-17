@@ -1,0 +1,131 @@
+\ifproof
+%\section{Edge Betweenness and Variants of Vertex Betweenness}\label{sec:variants}
+\section{Variants of Betweenness Centrality}\label{sec:variants}
+In this section we discuss how to extends our results to some variants of
+betweenness centrality.
+
+\subsection{$k$-bounded-distance betweenness}
+A ``local'' variant of betweenness, called \emph{$k$-bounded-distance
+betweenness}\footnote{Bounded-distance betweenness is also known as
+$k$-betweenness. We prefer the former denomination to avoid confusion with
+$k$-path betweenness from~\citep{KourtellisASIT12}.} only considers
+the contribution of shortest paths of size up to $k+1$~\citep{BorgattiE06,Brandes08}.
+For $k>1$ and any pair of distinct vertices $u,v\in V$, $u\neq V$, let
+$\mathcal{S}^{(k)}_{uv}\subseteq\mathcal{S}_{uv}$ be the set of shortest paths
+from $u$ to $v$ of size at most $k+1$, with
+$\sigma^{(k)}_{uv}=|\mathcal{S}^{(k)}_{uv}|$, and let $\mathbb{S}^{(k)}_G$ be the
+union of all the $\mathcal{S}^{(k)}_{uv}$. Let
+$\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
+\emph{of size up to $k$} that $v$ is internal to, for each $v\in V$.
+
+%\begin{definition}[\citep{BorgattiE06,Brandes08}]\label{def:kboundbetweenness}
+\begin{definition}\label{def:kboundbetweenness}
+  \citep{BorgattiE06,Brandes08} Given a graph $G=(V,E)$ and an integer $k>1$,
+  the \emph{$k$-bounded-distance betweenness centrality of a vertex $v\in V$} is
+  defined as
+  \[
+  %\betw(v)=\sum_{(u,w)\in V\times
+  %V}\sum_{p\in\mathcal{S}_{uw}}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
+  %\betw(v)=\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{|\mathcal{S}_{uw}|}\enspace.
+  \kboundbetw^{(k)}(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}^{(k)}_G}\frac{\mathds{1}_{\mathcal{T}^{(k)}_v}(p)}{\sigma^{(k)}_{uw}}
+  %=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}^{(k)}_v}\frac{1}{\left|\mathcal{S}^{(k)}_{uw}\right|}
+  \enspace.
+  \]
+\end{definition}
+
+For the case of $k$-bounded-distance betweenness, if we let
+$\range_G^{(k)}=\{\mathcal{T}_v^{(k)}~:~ v\in V\}$, it is easy to bound
+$\VC(\range_G^{(k)})$ following the same reasoning as in
+Lemma~\ref{lem:vcdimuppbound}.
+\begin{lemma}\label{lem:vcdimuppboundk}
+$\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor+1$.
+\end{lemma}
+
+Given this result, the sample size on line~\ref{algline:forloop}
+of Alg.~\ref{alg:algorithm} can be reduced to 
+\[ 
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+\]
+and the computation of the shortest paths on line~\ref{algline:shortestpaths}
+can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$.
+
+\subsection{$\alpha$-weighted betweenness}
+\citet{OpsahlAS10} defined a parametric variant of betweenness centrality for
+weighted networks that can be seen as a generalization of the classical 
+definition. The goal behind this new definition is to give the analyst the
+possibility of ``penalizing'' shortest paths with many vertices, given the
+intuition that there is a cost to be paid to have a message go through a vertex.
+The core of the new definition is a different weight function of a path
+$p_{uv}=(w_1=u,w_2,\dotsc,w_{|p_{uv}|}=v)$ between two vertices $(u,v)$,
+parametrized by a real parameter $\alpha\ge 0$:
+\begin{equation}\label{eq:generalizeddistance}
+d_{\alpha,uv}=\sum_{i=1}^{|p_{uv}|-1}(\mathsf{w}((w_i,w_{i+1})))^\alpha\enspace. 
+\end{equation}
+Clearly for $\alpha=0$, the weights are considered all equal to $1$, and for
+$\alpha=1$, the definition falls back to $d_{uv}$. For $0<\alpha<1$, paths with
+fewer vertices and higher weights are favored over longer paths with lighter
+edges\citep{OpsahlAS10}. The definition of shortest path distance, shortest
+path, and of betweenness centrality follow as before
+from~\eqref{eq:generalizeddistance}. Dijkstra's shortest paths algorithm can be
+adapted to compute shortest paths according to the distance function
+in~\eqref{eq:generalizeddistance}. To avoid confusion, we call the betweenness
+centrality computed using the shortest paths according to the distance function
+in~\eqref{eq:generalizeddistance}, the \emph{$\alpha$-weighted betweenness} and
+denote it with $\betw_\alpha(w)$. 
+
+For $\alpha$-weighted betweenness we have that the VC-dimension of the range set
+defined on the shortest paths according to the distance
+from~\eqref{eq:generalizeddistance} is still bounded by
+$\lfloor\log_2(\VD(G)-1)\rfloor+1$. Clearly, the vertex-diameter $\VD(G)$ is now
+defined as the maximum number of vertices in a shortest path according
+to~\eqref{eq:generalizeddistance}.
+
+No special arrangements are needed to obtain an approximation of
+$\alpha$-weighted betweenness for all vertices. The sample size is the same as in~\eqref{eq:samplesize}.
+
+%\subsection{$k$-path betweenness}
+%Another interesting variant of betweenness centrality does not consider
+%\emph{shortest} paths, but rather \emph{simple random walks} of size up to
+%$k+1$, expressing the intuition that information in a network does not
+%necessarily spread across shortest paths but has a high probability of ``fading
+%out'' after having touched at most a fixed number of vertices.
+%
+%\begin{definition}[\citep{KourtellisASIT12}]\label{def:kpathbetweenness}
+% Given a graph $G=(V,E)$ and a positive integer $k$, the \emph{$k$-path
+% centrality} $\kpathbetw^{(k)}(v)$ of $v\in V$ is defined as the average\footnote{We take the
+% average, rather than the sum, as defined in the original work
+% by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
+% $[0,1]$}, over all possible source
+% nodes $s$, of the probability that a simple random walk originating from
+% $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
+% included) goes through $v$.
+%\end{definition}
+%
+%\citet{KourtellisASIT12} present a randomized approximation algorithm to
+%estimate, with probability at least $1-1/n^2$, all the $k$-path betweenness
+%values to within an additive error $n^{-1/2+\alpha}$ in time
+%$O(k^3n^{2-2\alpha}\ln n)$.
+
+%\paragraph{$k$-path betweenness} We can define another range set
+%$\range_G^{\mathrm{p},k}$ if we are interested in $k$-path betweenness. The
+%domain $B$ of the range set now is the set of all simple random walks starting
+%from any vertex of and of size up to $k+1$. For each vertex $v\in V$, the range
+%$R_v$ is the subset of $B$ containing all and only the random walks from $B$
+%that have $v$ as internal vertex. It is easy to see that
+%$\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
+%following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
+
+%\paragraph{$k$-path betweenness}
+%For the case of $k$-path betweenness, the algorithm is slightly different:
+%for 
+%\[
+%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+%\]
+%iterations, rather than sampling a pair of vertices $(uv)$, computing
+%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
+%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
+%perform a random walk touching $\ell$ vertices, while updating the estimated
+%betweenness of each touched vertex by adding $1/r$ to its estimation.
+
+\fi
+
