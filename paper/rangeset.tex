@@ -147,6 +147,16 @@ Lemma~\ref{lem:vcdimuppbound}.
 $\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor+1$.
 \end{lemma}
 
+\ifproof
+\paragraph{$\alpha$-weighted betweenness}
+For $\alpha$-weighted betweenness we have that the VC-dimension of the range set
+defined on the shortest paths according to the distance
+from~\eqref{eq:generalizeddistance} is still bounded by
+$\lfloor\log_2(\VD(G)-1)\rfloor+1$. Clearly, the vertex-diameter $\VD(G)$ is now
+defined as the maximum number of vertices in a shortest path according
+to~\eqref{eq:generalizeddistance}.
+\fi
+
 %\paragraph{$k$-path betweenness} We can define another range set
 %$\range_G^{\mathrm{p},k}$ if we are interested in $k$-path betweenness. The
 %domain $B$ of the range set now is the set of all simple random walks starting
