@@ -33,6 +33,6 @@
 *.tar.bz2
 *.swp
 *.old
-paper/centrsampl.pdf
+paper/centrsampl*.pdf
 *__pycache__*
 *-eps-converted-to.pdf
