@@ -83,49 +83,48 @@ to~\eqref{eq:generalizeddistance}.
 No special arrangements are needed to obtain an approximation of
 $\alpha$-weighted betweenness for all vertices. The sample size is the same as in~\eqref{eq:samplesize}.
 
-%\subsection{$k$-path betweenness}
-%Another interesting variant of betweenness centrality does not consider
-%\emph{shortest} paths, but rather \emph{simple random walks} of size up to
-%$k+1$, expressing the intuition that information in a network does not
-%necessarily spread across shortest paths but has a high probability of ``fading
-%out'' after having touched at most a fixed number of vertices.
-%
-%\begin{definition}[\citep{KourtellisASIT12}]\label{def:kpathbetweenness}
-% Given a graph $G=(V,E)$ and a positive integer $k$, the \emph{$k$-path
-% centrality} $\kpathbetw^{(k)}(v)$ of $v\in V$ is defined as the average\footnote{We take the
-% average, rather than the sum, as defined in the original work
-% by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
-% $[0,1]$}, over all possible source
-% nodes $s$, of the probability that a simple random walk originating from
-% $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
-% included) goes through $v$.
-%\end{definition}
-%
-%\citet{KourtellisASIT12} present a randomized approximation algorithm to
-%estimate, with probability at least $1-1/n^2$, all the $k$-path betweenness
-%values to within an additive error $n^{-1/2+\alpha}$ in time
-%$O(k^3n^{2-2\alpha}\ln n)$.
+\subsection{$k$-path betweenness}
+Another interesting variant of betweenness centrality does not consider
+\emph{shortest} paths, but rather \emph{simple random walks} of size up to
+$k+1$, expressing the intuition that information in a network does not
+necessarily spread across shortest paths but has a high probability of ``fading
+out'' after having touched at most a fixed number of vertices.
 
-%\paragraph{$k$-path betweenness} We can define another range set
-%$\range_G^{\mathrm{p},k}$ if we are interested in $k$-path betweenness. The
-%domain $B$ of the range set now is the set of all simple random walks starting
-%from any vertex of and of size up to $k+1$. For each vertex $v\in V$, the range
-%$R_v$ is the subset of $B$ containing all and only the random walks from $B$
-%that have $v$ as internal vertex. It is easy to see that
-%$\VC(\range_G^{\mathrm{p},k})$ is still at most $\lfloor\log_2(k-1)+1$
-%following the same reasoning as in Lemma~\ref{lem:vcdimuppbound}.
+\begin{definition}[\citep{KourtellisASIT12}]\label{def:kpathbetweenness}
+ Given a graph $G=(V,E)$ and a positive integer $k$, the \emph{$k$-path
+ centrality} $\kpathbetw^{(k)}(v)$ of $v\in V$ is defined as the average\footnote{We take the
+ average, rather than the sum, as defined in the original work
+ by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
+ $[0,1]$}, over all possible source
+ nodes $s$, of the probability that a simple random walk originating from
+ $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
+ included) goes through $v$.
+\end{definition}
 
-%\paragraph{$k$-path betweenness}
-%For the case of $k$-path betweenness, the algorithm is slightly different:
-%for 
-%\[
-%  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
-%\]
-%iterations, rather than sampling a pair of vertices $(uv)$, computing
-%$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
-%single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-%perform a random walk touching $\ell$ vertices, while updating the estimated
-%betweenness of each touched vertex by adding $1/r$ to its estimation.
+We can define another range set $\range_G^{\mathrm{p},k}$ if we are interested
+in $k$-path betweenness. The domain $B$ of the range set now is the set of all
+simple random walks starting from any vertex of and of size up to $k+1$. For
+each vertex $v\in V$, the range $R_v$ is the subset of $B$ containing all and
+only the random walks from $B$ that have $v$ as internal vertex. It is easy to
+see that $\VC(\range_G^{\mathrm{p},k})$ is at most $\lfloor\log_2(k-1)+1$
+following the same reasoning as in Lemma~\ref{lem:vcdimuppbound} and
+Lemma~\ref{lem:vcdimuppboundk}.
+
+For the case of $k$-path betweenness, the algorithm is slightly different:
+for 
+\[
+  r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
+\]
+iterations, rather than sampling a pair of vertices $(uv)$, computing
+$\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
+single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
+perform a random walk touching $\ell$ vertices, while updating the estimated
+betweenness of each touched vertex by adding $1/r$ to its estimation.
+
+\citet{KourtellisASIT12} show that this algorithm can estimate, with probability
+at least $1-1/n^2$, all the $k$-path betweenness values to within an additive
+error $n^{-3/2+\alpha}/(n-1)$ using $2k^2n^{1/2+\alpha}\ln n$ samples. We can
+obtain the same guarantees with \ldots
 
 \subsection{Edge betweenness}
 Until now we focused on computing the betweenness centrality of vertices. It is
