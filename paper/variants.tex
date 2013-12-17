@@ -130,18 +130,22 @@ $\alpha$-weighted betweenness for all vertices. The sample size is the same as i
 \subsection{Edge betweenness}
 Until now we focused on computing the betweenness centrality of vertices. It is
 also possible to define a betweenness centrality index for \emph{edges} of a
-graph $G=(V,E)$. Given $e\in E$, the edge betweenness $\mathsf{eb}(e)$ of $e$ is
-defined as :
+graph $G=(V,E)$~\citep{Anthonisse71,Brandes08}. Edge betweenness is useful, for
+example, to develop heuristics for community detection~\citep{NewmanG04}. Given
+$e\in E$, the edge betweenness $\mathsf{eb}(e)$ of $e$ is defined as the
+fraction of shortest paths that \emph{contain} $e$, meaning that if $e=(u,v)$,
+then a path $p$ contains $e$ if $u$ and $v$ appear consecutively in $p$.
+Formally,
 \[
-\mathsf{eb}(e)=, \forall e\in E\enspace.
+\mathsf{eb}(e)=\frac{1}{n(n-1)}\sum_{p_{uv}\in\mathbb{S}_G}\frac{\mathds{1}_{p_{uv}}(e)}{\sigma_{uv}}, \forall e\in E\enspace.
 \]
 
-We can then define a range space $ER_G$ that contains $|E|$ ranges $R_e$, one
+We can then define a range space $\mathcal{ER}_G$ that contains $|E|$ ranges $R_e$, one
 for each $e\in E$, where $R_e$ is the set of shortest paths containing the edge
-$e$. By following the same reasoning as Lemma~\ref{lem:} we have that
-$\VC(ER_G)\le $. Using this result we can adapt the sample sizes for
-Alg.~\ref{alg:} and~\ref{alg:} to compute good approximations of betweenness for
-the (top-$k$) edges.
+$e$. By following the same reasoning as Lemma~\ref{lem:vcdimuppbound} we have that
+$\VC(\mathcal{ER}_G)\le\lfloor(\log_2(\VD(G) - 1)\rfloor + 1$. Using this result we can
+adapt the sample sizes for Alg.~\ref{alg:algorithm} and~\ref{alg:topk} to
+compute good approximations of betweenness for the (top-$k$) edges.
 
 \fi
 
