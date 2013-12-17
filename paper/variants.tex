@@ -127,5 +127,21 @@ $\alpha$-weighted betweenness for all vertices. The sample size is the same as i
 %perform a random walk touching $\ell$ vertices, while updating the estimated
 %betweenness of each touched vertex by adding $1/r$ to its estimation.
 
+\subsection{Edge betweenness}
+Until now we focused on computing the betweenness centrality of vertices. It is
+also possible to define a betweenness centrality index for \emph{edges} of a
+graph $G=(V,E)$. Given $e\in E$, the edge betweenness $\mathsf{eb}(e)$ of $e$ is
+defined as :
+\[
+\mathsf{eb}(e)=, \forall e\in E\enspace.
+\]
+
+We can then define a range space $ER_G$ that contains $|E|$ ranges $R_e$, one
+for each $e\in E$, where $R_e$ is the set of shortest paths containing the edge
+$e$. By following the same reasoning as Lemma~\ref{lem:} we have that
+$\VC(ER_G)\le $. Using this result we can adapt the sample sizes for
+Alg.~\ref{alg:} and~\ref{alg:} to compute good approximations of betweenness for
+the (top-$k$) edges.
+
 \fi
 
