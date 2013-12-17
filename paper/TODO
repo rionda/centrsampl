@@ -1,11 +1,5 @@
 TODO LIST FOR THE PAPER
 
-# PRESENTATION
-
-Variants should be presented in a separate section after Sect.5
-
-
-
 # TOP PRIORITY
 
 [WSDM] Include more experimental results in extended version.
@@ -14,9 +8,15 @@ Variants should be presented in a separate section after Sect.5
 
 ## Low Hanging
 
-Mention what is changed from WSDM version
+Mention what is new in extended version (In Previous works)
 
 Edge betweenness (it can be done)
+
+Complete the discussion for the other variants (JACM, SocNets (done))
+
+Report analysis 1st reviewer WSDM to motivate top-k algo.
+
+Running time, memory use
 
 
 
@@ -24,12 +24,14 @@ Edge betweenness (it can be done)
 
 Tighter analysis for BP 
 
-Implement Bidirectional / A* search
-
 Experiments for Topk 
 
+Implement Bidirectional / A* search
+
 Check that we can actually handle the k-path (random walk) centrality
-by Kourtellis et al, and the other variants (JACM, SocNets)
+by Kourtellis et al. The question is whether we can just sample a random simple
+walk of length \ell\in[1,k] at random from a random vertex s and increment the
+counters of the vertices along that path.
 
 
 
@@ -38,8 +40,6 @@ by Kourtellis et al, and the other variants (JACM, SocNets)
 Mention Newmann 2001? 
 
 Check Kleinberg's dispersion. Can we do anything about it?
-
-Report analysis 1st reviewer WSDM to motivate top-k algo.
 
 Extend Lemma 2 to directed graphs.
 
