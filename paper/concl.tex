@@ -4,25 +4,31 @@ efficiently estimate the betweenness centrality of the (top-$K$) vertices in a
 graph, with high probability.
 %For very large graphs, exact computation of the
 %betweenness centrality is impossible, so one has to resort to an approximation.
-Our algorithms take a different approach than previous ones achieving the same
-guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05}. They are based on a
-completely novel application of results from VC-dimension theory. We show that
-the number of samples needed to approximate the betweenness with the desired
-accuracy and confidence does not depend on the number of vertices in the graph,
-but rather on a characteristic quantity of the network that we call
-\emph{vertex-diameter}. In some cases, the sample size is actually completely
-independent from any property graph, which is interesting and unexpected.
-Our algorithms perform much less work than previously presented methods offering
-the same approximation guarantee. As a consequence, they are much faster and
-scalable. These claims were verified during our extensive experimental
+Our algorithms are based on a novel application of VC-dimension theory, and
+therefore take a different approach than previous ones achieving the same
+guarantees~\citep{BrandesP07,GeisbergerSS08,JacobKLPT05}. The number of samples
+needed to approximate the betweenness with the desired accuracy and confidence
+does not depend on the number of vertices in the graph, but rather on a
+characteristic quantity of the network that we call
+\emph{vertex-diameter}. In some cases, the sample size is completely
+independent from any property of the graph. %, which is interesting and unexpected. %
+\ifproof
+Our methods can be applied to many variants of betweenness, including edge
+betweenness. %
+\fi
+Our algorithms perform much less work than previously presented methods. %offering
+%the same approximation guarantee. 
+As a consequence, they are much faster and
+scalable, as verified in the extensive experimental
 evaluation using many real and artificial graphs. In future work we would like
 to explore the possibility of using bidirectional A\textsuperscript{*}
-search~\citep{Pohl69,KaindlK97} to further speed up our algorithms.  We are also
-interested in extending our methods to generalizations of betweenness
-centrality~\citep{KourtellisASIT12,DolevEP10} and to other centrality measures. 
+search~\citep{Pohl69,KaindlK97} to further speed up our algorithms.  
+%We are also
+%interested in extending our methods to generalizations of betweenness
+%centrality~\citep{KourtellisASIT12,DolevEP10} and to other centrality measures. 
 
 \paragraph*{Acknowledgements} This project was supported, in part, by the
 National Science Foundation under award IIS-1247581. We are thankful to Eli
-Upfal for his guidance and support and to the anonymous reviewers whose comments
-helped us improving this work.
+Upfal for his guidance and to the anonymous reviewers whose comments helped us
+improving this work.
 
