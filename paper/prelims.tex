@@ -137,6 +137,31 @@ $P_\range(B)=\{ B\cap A ~:~ A\in\range\}$. We say that the set $B$ is
   shattered by $\range$.
 \end{definition}
 
+\ifproof
+Note that a range space $(X,R)$ with an arbitrary large set of points $X$ and
+an arbitrary large family of ranges $R$ can have a bounded VC-dimension. A simple
+example is the family of intervals in $[0,1]$ (i.e. $X$ is all the points in
+$[0,1]$ and $R$ all the intervals $[a,b]$, such that $0\leq a\leq b\leq 1$). Let
+$A=\{x,y,z\}$ be the set of three points $0<x<y<z<1$. No interval in $R$ can
+define the subset $\{x,z\}$ so the VC-dimension of this range space is less than
+3~\citep[Lemma 10.3.1]{Matousek02}. Another example is shown in
+Fig.~\ref{fig:rectangles}.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=.7\textwidth,keepaspectratio]{figures/rectangles}
+  \caption{Example of range space and VC-dimension. The space of points is the
+  plane $\mathbb{R}^2$ and the set of ranges is the set of all
+  \emph{axis-aligned rectangles}. The figure on the left shows graphically that
+  it is possible to shatter a set of four points using 16 rectangles. On the
+  right instead, one can see that it is impossible to shatter five points, as,
+  for any choice of the five points, there will always be one (the red point in
+  the figure) that is internal to the convex hull of the other four, so it would
+  be impossible to find an axis-aligned rectangle containing the four points
+  but not the internal one. Hence $\VC((X,R))=4$.}
+  \label{fig:rectangles}
+\end{figure}
+\fi
+
 The main application of VC-dimension in statistics and learning
 theory is in computing the number of samples needed to approximate the
 probabilities of the ranges using their empirical averages as
