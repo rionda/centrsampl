@@ -95,8 +95,8 @@ out'' after having touched at most a fixed number of vertices.
  centrality} $\kpathbetw^{(k)}(v)$ of $v\in V$ is defined as the average\footnote{We take the
  average, rather than the sum, as defined in the original work
  by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
- $[0,1]$}, over all possible source
- nodes $s$, of the probability that a simple random walk originating from
+ $[0,1]$. This has no consequences on the results.}, over all possible source
+ vertices $s$, of the probability that a simple random walk originating from
  $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
  included) goes through $v$.
 \end{definition}
@@ -118,13 +118,20 @@ for
 iterations, rather than sampling a pair of vertices $(uv)$, computing
 $\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
 single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-perform a random walk touching $\ell$ vertices, while updating the estimated
-betweenness of each touched vertex by adding $1/r$ to its estimation.
+sample a simple random walk touching $\ell$ vertices, while updating the estimated
+betweenness of each touched vertex by adding $1/r$ to its estimation. The method
+to sample a simple random walk is described in~\citep{KourtellisASIT12}.
 
 \citet{KourtellisASIT12} show that this algorithm can estimate, with probability
 at least $1-1/n^2$, all the $k$-path betweenness values to within an additive
-error $n^{-3/2+\alpha}/(n-1)$ using $2k^2n^{1/2+\alpha}\ln n$ samples. We can
-obtain the same guarantees with \ldots
+error $n^{-1/2+\alpha}/(n-1)$ using $2n^{1-2\alpha}k^2\ln n$ samples, for
+$\alpha\in[-1/2,1/2]$. We can obtain the same guarantees with a \emph{much
+lower} number $r$ of samples, precisely
+\[
+r=2n^{1-2\alpha}\left(\lnn+\frac{\lfloor\log_2(k-1)\rfloor+1}{2}\right)\enspace.
+\]
+In conclusion, we presented a tighter analysis of the algorithm
+by~\citet{KourtellisASIT12}.
 
 \subsection{Edge betweenness}
 Until now we focused on computing the betweenness centrality of vertices. It is

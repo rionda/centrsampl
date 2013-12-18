@@ -8,14 +8,7 @@ TODO LIST FOR THE PAPER
 
 ## Low Hanging
 
-Review edge betweenness 
-
 Complete the discussion for the other variants (JACM, SocNets (done))
-
-Check that we can actually handle the k-path (random walk) centrality
-by Kourtellis et al. The question is whether we can just sample a random simple
-walk of length \ell\in[1,k] at random from a random vertex s and increment the
-counters of the vertices along that path.
 
 Report analysis 1st reviewer WSDM to motivate top-k algo.
 
