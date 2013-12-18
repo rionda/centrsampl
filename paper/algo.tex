@@ -314,6 +314,17 @@ centrality.
 %\end{IEEEproof}
 \end{proof}
 
+\ifproof
+\paragraph{Time and space complexity.} Clearly the runtime of the algorithm is
+dominated by the computation of the shortest path at each step, which takes time
+$O(|V|+|M|)$ if the graph is unweighted (BFS algorithm) and time
+$O(|E|+|V|\log|V|)$ otherwise (Dijkstra's algorithm with Fibonacci heap).
+This time must then be multiplied by $r$ as in~\eqref{eq:samplesize} to obtain
+the final time complexity. The space requirements are dominated by the amount of
+memory needed to store the graph, so they are either $O(|V|^2)$ if using an
+adjacency matrix, or $O(|V|+|E|)$ if using $|V|$ adjacency lists.
+\fi
+
 \subsection{High-quality approximation of the top-$K$ betweenness
 vertices}\label{sec:topk}
 %\XXX It would be great to look at the paper by Ezra, ``Small-Size Relative

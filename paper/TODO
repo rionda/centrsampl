@@ -10,9 +10,8 @@ TODO LIST FOR THE PAPER
 
 Discuss JACM variant
 
-Running time, memory use
-
 In prelims, add a figure of a graph with betweenness values computed as example.
+
 
 
 # HIGH PRIORITY
@@ -23,19 +22,19 @@ Experiments for Topk
 
 Implement Bidirectional / A* search
 
-
-
-# NORMAL PRIORITY
-
-Mention Newmann 2001? 
-
-Check Kleinberg's dispersion. Can we do anything about it?
-
 Extend Lemma 2 to directed graphs.
 
 
 
 # LOW PRIORITY
+
+Mention Newmann 2001? 
+
+Check Kleinberg's dispersion. Can we do anything about it?
+
+
+
+# UNDETERMINED PRIORITY
 
 Report analysis 1st reviewer WSDM to motivate top-k algo.
 
