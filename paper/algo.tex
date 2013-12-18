@@ -467,13 +467,14 @@ algorithm to compute good approximations for all the vertices.
 \subsection{Discussion}\label{sec:discussion}
 \citet{JacobKLPT05} and independently~\citet{BrandesP07} present a
 sampling-based algorithm to approximate the betweenness centrality of all the
-vertices of the graph. The algorithm creates a sample $S=\{v_1,\dotsc,v_r\}$ of
-$r$ vertices drawn uniformly at random and computes all the shortest paths
-between each $v_i$ to all other vertices in the graph. Their estimation
-$\tilde\betw'(u)$ for $\betw(u)$ is
+vertices of the graph. The algorithm (which we call \textsf{BP}) creates a
+sample $S=\{v_1,\dotsc,v_r\}$ of $r$ vertices drawn uniformly at random and
+computes all the shortest paths between each $v_i$ to all other vertices in the
+graph. Their estimation $\tilde\betw_\mathsf{BP}(u)$ for $\betw(u)$ is
 \[ 
-\tilde\betw'(u)= \frac{1}{(n-1)r}\sum_{v_i\in S}\sum_{w\neq v_i,w\neq
-u}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace.
+\tilde\betw_\mathsf{BP}(u)= \frac{1}{(n-1)r}\sum_{v_i\in S}\sum_{\substack{w\neq
+v_i\\w\neq
+u}}\sum_{p\in\mathcal{S}_{v_iw}}\frac{\mathds{1}_{\mathsf{Int}(p)}(u)}{|\mathcal{S}_{v_iw}|}\enspace.
 \]
 As it was for Algorithm~\ref{alg:algorithm}, the key ingredient to ensure a correct
 approximation for the betweenness centrality is the computation of the sample
@@ -544,29 +545,264 @@ larger than ours, as in practice $\VD(G)\ll n$. For the same reason, this
 algorithm would not scale well as the network size increases (see also
 Sect.~\ref{sec:exper}).
 
-Another interesting aspect in which our algorithm and the one
-by~\citet{JacobKLPT05} and~\citet{BrandesP07} differ is the \emph{amount of work
-done per sample}. Our algorithm computes a single set $\mathcal{S}_{uv}$ for the
-sampled pair of vertices $(u,v)$: it performs a run of Dijkstra's algorithm (or of
-BFS) from $u$, stopping when $v$ is reached. The algorithm
-from~\citep{JacobKLPT05,BrandesP07} instead computes
-all the sets $\mathcal{S}_{uw}$ from the sampled vertices $u$ to all other
-vertices, again with a single run of Dijkstra or BFS, but without the
-``early-stopping condition'' that we have when we reach $v$. Although in the
-worst case the two computations have the same time complexity\footnote{It is a
-well-known open problem whether there is an algorithm to perform a single
-$s,t$-shortest path computation between a pair of vertices with smaller
-worst-case time complexity than the Single Source Shortest Path computation.}, in practice we
-perform many fewer operations, as we can expect $v$ not to always be very
-far from $u$ and therefore we can terminate early. This fact has a huge 
-impact on the running time. Our algorithm also touches
-\emph{many fewer} edges than the one from~\citep{JacobKLPT05,BrandesP07}.
-The latter can touch all the edges in the graph \emph{at every sample}, while
-our computation exhibits a much higher \emph{locality}, exploring only a neighborhood
-of $u$ until $v$ is reached. The results of our experimental evaluation
-presented in Sect.~\ref{sec:exper} highlights this and other advantages of our
-method over the one from~\citep{JacobKLPT05,BrandesP07}. In the future, we plan
-to investigate the possibility of using \emph{bidirectional A$^*$
+Another interesting aspect in which our algorithm and \textsf{BP} differ is the
+\emph{amount of work done per sample}. Our algorithm computes a single set
+$\mathcal{S}_{uv}$ for the sampled pair of vertices $(u,v)$: it performs a run
+of Dijkstra's algorithm (or of BFS) from $u$, stopping when $v$ is reached.
+\textsf{BP} instead computes all the sets $\mathcal{S}_{uw}$ from the sampled
+vertices $u$ to all other vertices, again with a single run of Dijkstra or BFS,
+but without the ``early-stopping condition'' that we have when we reach $v$.
+Although in the worst case the two computations have the same time
+complexity\footnote{It is a well-known open problem whether there is an
+algorithm to perform a single $s,t$-shortest path computation between a pair of
+vertices with smaller worst-case time complexity than the Single Source Shortest
+Path computation.}, in practice we perform many fewer operations, as we can
+expect $v$ not to always be very far from $u$ and therefore we can terminate
+early. This fact has a huge impact on the running time. Our algorithm also
+touches \emph{many fewer} edges than \textsf{BP}. The latter can touch all the
+edges in the graph \emph{at every sample}, while our computation exhibits a much
+higher \emph{locality}, exploring only a neighborhood of $u$ until $v$ is
+reached. The results of our experimental evaluation presented in
+Sect.~\ref{sec:exper} highlights this and other advantages of our method over
+the one from~\citep{JacobKLPT05,BrandesP07}. In the future, we plan to
+investigate the possibility of using \emph{bidirectional A$^*$
 search}~\citep{Pohl69,KaindlK97} to further speed up the computation for each
 sample of our algorithms.
+
+\ifproof
+The analysis of Algorithm 1 allow us to obtain a tighter analysis for the
+algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
+
+\begin{lemma}\label{lem:variance}
+  Fix $r>0$ and let $w\in V$. Let $\tilde\betw_\mathsf{BP}(w)$ be the estimation
+  of the betweenness $\betw(w)$ computed by \textsf{BP} using $r$ samples, and
+  let $\tilde\betw(w)$ be the estimation computed by
+  Algorithm~\ref{alg:algorithm} using $r$ samples. The estimator
+  $\tilde\betw_\mathsf{BP}(w)$ is \emph{uniformly better} than the estimator
+  $\tilde\betw(w)$. I.e., for any value of $\betw(w)$ and $r$, we have
+  \[
+  \var[\tilde\betw_\mathsf{BP}(w)]\le\var[\tilde\betw(w)]\enspace.
+  \]
+\end{lemma}
+
+\begin{proof}
+  Consider the quantity
+  \[
+  \var[\tilde\betw(w)]-\var[\tilde\betw_\mathsf{BP}(w)]\enspace.\]
+  We will show that the above quantity is greater than or equal to 0, proving
+  the thesis.
+  Since
+  $\exp[\tilde\betw(w)]=\exp[\tilde\betw_\mathsf{BF}(w)]=\betw(w)$
+  and using the definition of variance, we only need to show 
+  \begin{equation}\label{eq:inequal}
+    \exp[(\tilde\betw(w))^2]-\exp[(\tilde\betw_\mathsf{BF}(w))^2]\ge
+    0\enspace.
+  \end{equation}
+
+  Let start from computing $\exp[(\tilde\betw_\mathsf{BF}(w))^2]$. For every
+  vertex $v$, we define $\alpha_v$ as
+  \[
+  \alpha_v=\frac{1}{n-1}\sum_{\substack{u\in V
+  \\u\neq
+  v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{\sigma_{vu}}\enspace.
+  \]
+  Note that 
+  \begin{equation}\label{eq:betwalpha}
+    \betw(w)=\frac{1}{n}\sum_{v\in V}\alpha(v)\enspace.
+  \end{equation}
+  Consider, for $1\le i \le r$, the contribution $X_i$ to $\tilde\betw_\mathsf{BP}(w)$
+  of the paths computed from the $i$\textsuperscript{th} sampled vertex. $X_i$
+  is a random variable that takes value $\alpha_v$ with probability $1/n$, for
+  all $v\in V$. We have
+  \begin{equation}\label{eq:xiexpvar}
+    \exp[X_i]=\sum_{v\in V}\frac{1}{n}\alpha_v=\betw(w) \mbox{ and }
+    \exp[X_i^2]=\frac{1}{n}\sum_{v\in V}\alpha_v^2, \forall 1\le i\le r\enspace.
+  \end{equation}
+  Clearly
+  \[
+  \tilde\betw_\mathsf{BP}(w)=\frac{1}{r}\sum_{i=1}^r X_i\enspace.
+  \]
+  The variables $X_i$'s are independent and identically distributed so
+  \begin{align}\label{eq:expxisquared}
+    \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)=\frac{1}{r}\frac{1}{n}\sum_{v\in
+    V}\alpha_v^2+\frac{r-1}{r}(\betw(w))^2,
+\end{align}
+where we used~\eqref{eq:xiexpvar}.
+
+We now compute $\exp[(\tilde\betw(w))^2]$. 
+Consider the contribution $Y_i$ to $\tilde\betw(w)$ of the
+$i$\textsuperscript{th} sampled path by Algorithm 1, for $1\le i\le r$. $Y_i$ is a random variable that takes value
+$\mathds{1}_{\mathsf{Int}(p)}(w)$ with probability $\pi(p)$, for every shortest
+path $p\in\mathbb{S}_G$. We have
+\begin{equation}\label{eq:yiexpvar}
+  \exp[Y_i]=\exp[Y_i^2]=\betw(w), \forall 1\le i \le r\enspace.
+\end{equation}
+By definition, 
+\[
+\tilde\betw(w)=\frac{1}{r}\sum_{i=1}^rY_i\enspace.
+\]
+The random variables $Y_i$ are independent and identically distributed so
+\begin{align}\label{eq:expyisquared}
+  \exp[(\tilde\betw(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^r
+  Y_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[Y_i^2]+\sum_{j=i+1}^r\exp[Y_i]\exp[Y_j]\right)=\frac{1}{r}\betw(w)+\frac{r-1}{r}(\betw(w))^2,
+\end{align}
+where we used~\eqref{eq:yiexpvar}.
+
+We can now rewrite the left side of~\eqref{eq:inequal} using
+~\eqref{eq:betwalpha},~\eqref{eq:expxisquared},~and~\eqref{eq:expyisquared}:
+\begin{align*}
+  \exp[(\tilde\betw(w))^2]-\exp[(\tilde\betw_\mathsf{BF}(w))^2] &=
+  \frac{1}{r}\betw(w)+\frac{r-1}{r}(\betw(w))^2 - \frac{1}{r}\frac{1}{n}\sum_{v\in
+    V}\alpha_v^2
+   -\frac{r-1}{r}(\betw(w))^2 =
+    \frac{1}{r}\frac{1}{n}\sum_{v\in V}(\alpha_v - \alpha_v^2)\enspace. 
+\end{align*}
+Since $\alpha_v\in[0,1]$, we have $\alpha_v-\alpha_v^2\ge 0$ for all $v$, and our proof
+is complete.
+\end{proof}
+
+The following lemma is an easy consequence of the above.
+
+\begin{lemma}\label{lem:MSE}
+  \textsf{BP} has lower expected Mean Squared Error than Algorithm~1:
+  \[
+  \exp[\mse_\mathsf{BP}]\le \exp[\mse]\enspace.
+  \]
+\end{lemma}
+
+\begin{proof}
+  We have
+  \[ 
+  \exp[\mse_\mathsf{BP}] = \exp\left[\frac{1}{n}\sum_{v\in
+  V}\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
+  V}\exp\left[\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
+  V}\var[\tilde\betw_\mathsf{BP}(w)],
+  \]
+  where we used the linearity of expectation and the fact that the estimator
+  $\tilde\betw_\mathsf{BP}(w)$ is unbiased for $\betw(w)$ ($\exp[\tilde\betw_\mathsf{BP}(w)]=\betw(w)]$).
+  Analogously for Algorithm~1:
+  \[
+  \exp[\mse] = \frac{1}{n}\sum_{v\in V}\var[\tilde\betw(w)]\enspace.
+  \]
+  Hence
+  \[
+  \exp[\mse]-\exp[\mse_\mathsf{BP}]=\frac{1}{n}\sum_{v\in
+  V}\left(\var[\tilde\betw(w)]-\var[\tilde\betw_\mathsf{BP}(w)]\right),
+  \]
+  and from Lemma~\ref{lem:variance} we have that each addend of the sum is
+  non-negative and so is the above expression, concluding our proof.
+\end{proof}
+
+%\begin{lemma}
+%  Let $G=(V,E)$ be a graph, and $\varepsilon,\delta\in(0,1)$. Let
+%  \[
+%  r =
+%  \frac{c}{\varepsilon^2}\left(\lfloor\log_2(\mathsf{VD}(G)-2\rfloor+1+\ln\frac{1}{\delta}\right)\enspace.
+%  \]
+%  and let $S$ be a set of vertices of $G$ sampled uniformly at random with
+%  replacement from $V$. Let $\tilde\betw_{\mathsf{BP}}(w)$ be the estimated
+%  value for $\betw(w)$ computed by \textsf{BP} using $S$. Then
+%  \[
+%  \Pr(\exists w\in V \mbox{ s.t. }
+%  |\tilde\betw_{\mathsf{BP}}(w)-\betw(w)|>\varepsilon)<\delta\enspace.
+%  \]
+%  %If Algorithm 1 computes an $(\varepsilon,\delta)$-approximation with $r$
+%  %samples, then the algorithm by~\citet{BrandesP07} does the same with the same
+%  %number of samples.
+%\end{lemma}
+%
+%\begin{proof}
+%  Consider a simple coupling of the executions of Algorithm 1 and \textsf{BP}
+%  for $r$ samples: when Algorithm 1 samples a shortest path from a vertex $v$ to a vertex $u$,
+%  \textsf{BP} samples the vertex $v$. 
+%
+%Consider an execution of the algorithms and let $X_v$ be the number of times
+%that vertex $v$ is the starting point of a sampled path. 
+%
+%The estimation for the betweenness of vertex $w$ computed by \textsf{BP} is
+%\[
+%\tilde\betw_{\mathsf{BP}}(w)=\frac{1}{r}\sum_{v\in V}
+%X_v\underbrace{\left(\frac{1}{n-1}\sum_{\substack{u\in V \\u\neq
+%v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{vu}|}\right)}_{Y_v(w)}\enspace.
+%\]
+%The estimation for the betweenness of vertex $w$ computed by Algorithm 1
+%is
+%\[
+%\tilde\betw_{\mathrm{A1}}(w)=\frac{1}{r}Z_w,
+%\]
+%where $Z_w$ is the number of times that a path containing the vertex $w$ gets
+%sampled. Now, for each $v$ and for $1\le i\le X_v$, let $p_v^{(i)}$ be the path
+%sampled the $i$\textsuperscript{th} time that the sampled path had $v$ as
+%starting vertex, and let $A_v^{(i)}(w)=1$ if $w\in\mathsf{Int}(p_v^{(i)}$, and
+%$A_v^{(i)}(w)=0$ otherwise. Then it is clear that 
+%\[
+%\tilde\betw_{\mathrm{A1}}(w)=\frac{1}{r}\sum_{v\in V}
+%X_v\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\enspace.
+%\]
+%We claim that
+%\[
+%\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right]=Y_v(w),\]
+%where the expectation is taken over the choice of the paths, which are sampled
+%according to the distribution $\pi$.
+%To see this, consider $\mathbb{E}[A_v^{(i)}(w) ~|~ X_v]$. It
+%is clear that $A^{(i)}(w)$ and $X_v$ are independent, for $1\le i\le X_v$. From
+%this and the definition of expectation we have 
+%\[
+%\mathbb{E}\left[\left.A_v^{(i)}(w)\right|X_v\right] =
+%\mathbb{E}\left[A_v^{(i)}(w)\right]=\frac{1}{n-1}\sum_{\substack{u\in V
+%\\u\neq
+%v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{|\mathcal{S}_{vu}|}
+%=Y_v(w)\enspace.
+%\]
+%This expression does not depend on $i$.
+%
+%The claim then follows easily from the linearity of expectation:
+%\[
+%\mathbb{E}\left[\left.\frac{\sum_{i=1}^{X_v}A^{(i)}_v(w)}{X_v}\right|X_v\right] =
+%\sum_{i=1}^{X_v}\mathbb{E}\left[\left.\frac{A^{(i)}_v(w)}{X_v}\right|X_v\right]=\sum_{i=1}^{X_v}\frac{1}{X_v}\mathbb{E}\left[A_v^{(i)}(w)\right]=\mathbb{E}\left[A_v^{(1)}(w)\right]=Y_v(w)\enspace.
+%\]
+%Recall from Lemma~\ref{lem:variance} that the estimator
+%$\tilde\betw_{\mathsf{BP}}(w)$ has lower variance than the estimator
+%$\tilde\betw(w)$, for all vertices $w$. 
+%
+%\XXX: The following is not actually true \MR. Since both estimators have
+%the same expectation $\betw(w)$, this means that for any $a\in[0,1]$ we have
+%\[
+%\Pr\left(|\tilde\betw_{\mathsf{BP}}(w)-\betw(w)|>a\right)\le\Pr(\left(|\tilde\betw(w)-\betw(w)|>a\right)\enspace.
+%\]
+%
+%This means that for every collection of $r$ samples for which Algorithm 1 computes estimates
+%$\tilde\betw(w)$ such that
+%\begin{equation}\label{eq:edapprox}
+%|\tilde\betw(w)-\betw(w)|\le\varepsilon, \forall w\in W,
+%\end{equation}
+%so would \textsf{BP} using the $r$ samples according to the coupling. For
+%Algorithm $1$ the event in~\eqref{eq:edapprox} occurs with probability at least
+%$1-\delta$ over the choice of samples, and so would be for \textsf{BP},
+%concluding our proof.
+%\end{proof}
+%
+
+The estimator $\tilde\betw_{\mathsf{BP}}(w)$ has lower variance and MSE than
+$\tilde\betw(w)$, which means that it can give better estimations of the
+betweenness values in practice using the same number of samples. Before always
+opting for \textsf{BP} (or for the algorithm by~\citet{GeisbergerSS08}, whose
+estimators have even lower variance than those of \textsf{BP}) with a number of
+samples equal to the one in~\eqref{eq:samplesize}, one should
+nevertheless take into account two facts. Firstly, we do not currently have a
+proof that \textsf{BP} (or the algorithm from~\citep{GeisbergerSS08}) can
+compute, with a number of samples as in~\eqref{eq:samplesize},
+a good (within $\pm\varepsilon$) approximation of the betweenness of all
+vertices with probability at least $1-\delta$.\footnote{We conjecture that this
+is true and are currently working on a proof.}
+Secondly we already argued that per sample, the computation of
+$\tilde\betw_{\mathsf{BP}}(w)$ requires more time than the one for
+$\tilde\betw_{\mathrm{A1}}(w)$. The difference is even larger if
+Algorithm~\ref{alg:algorithm} uses bidirectional
+search~\citep{KaindlK97,Pohl69}. 
+
+We can conclude this discussion stating that Algorithm~\ref{alg:algorithm},
+\textsf{BP}, and the algorithm by~\citet{GeisbergerSS08} share the same design
+principles, but choose different trade-offs between accuracy and speed.  
+\fi
 
