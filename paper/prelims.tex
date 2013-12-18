@@ -74,6 +74,40 @@ vertices of a graph.
   \]
 \end{definition} 
 
+\ifproof
+Figure~\ref{fig:example-betw} shows an example of betweenness values for the
+vertices of a (undirected, unweighted) graph. It is intuitive, by looking at the
+graph, that vertices $\mathrm{b}$ and $\mathrm{g}$ should have higher
+betweenness than the others, given that they somehow act as bridges between two
+sides of the network, and indeed that is the case.
+\begin{figure}[ht]
+  \centering
+  \subfloat[Example graph]{
+  \includegraphics{figures/eps/example-betw}
+  }
+  \qquad
+  %\hfill
+  \subfloat[Betweenness values]{
+  \begin{tabular}{cl}
+    \toprule
+    Vertex & Betweenness \\
+    \midrule
+    a & 0 \\
+    b & 0.286 \\
+    c & 0.125 \\
+    d & 0.018 \\
+    e & 0.054 \\
+    f & 0.080 \\
+    g & 0.304 \\
+    h & 0 \\
+    \bottomrule
+  \end{tabular}
+  }
+  \caption{Example of betweenness values}
+  \label{fig:example-betw}
+\end{figure}
+\fi
+
 It is easy to see that $\betw(v)\in[0,1]$. \citet{Brandes01} presented an
 algorithm to compute the betweenness centrality for all $v\in V$ in time
 $O(nm)$ for unweighted graphs and $O(nm + n^2 \log n)$ for weighted graphs. 
