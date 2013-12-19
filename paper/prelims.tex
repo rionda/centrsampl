@@ -83,23 +83,64 @@ sides of the network, and indeed that is the case.
 \begin{figure}[ht]
   \centering
   \subfloat[Example graph]{
-  \includegraphics{figures/eps/example-betw}
+  \includegraphics[width=0.2\textwidth,keepaspectratio]{figures/eps/example-betw}
   }
   \qquad
   %\hfill
+ % \subfloat[Shortest paths]{
+ % \begin{tabular}{ccl}
+ %   \toprule
+ %   From & To & Shortest Path(s) \\
+ %   \midrule
+ %   \multirow{6}{*}{$\mathrm{a}$} & $\mathrm{c}$ & $(\mathrm{a,b,g,c})$ \\
+ %   &  $\mathrm{d}$ & $(\mathrm{a,b,g,c,d})$ \\
+ %   &  $\mathrm{e}$ & $(\mathrm{a,b,f,e})$ \\
+ %   &  $\mathrm{f}$ & $(\mathrm{a,b,f})$ \\
+ %   &  $\mathrm{g}$ & $(\mathrm{a,b,g})$ \\
+ %   &  $\mathrm{h}$ & $(\mathrm{a,b,h})$  \\
+ %   \midrule
+ %   \multirow{3}{*}{$\mathrm{b}$} & $\mathrm{c}$ & $(\mathrm{b,g,c})$ \\
+ %   & $\mathrm{d}$ & $(\mathrm{b,g,c,d})$, $(\mathrm{b,f,e,d})$ \\
+ %   & $\mathrm{e}$ & $(\mathrm{b,f,e})$ \\
+ %   \midrule
+ %   \multirow{3}{*}{$\mathrm{c}$} & $\mathrm{e}$ & $(\mathrm{c,d,e})$ \\
+ %   & $\mathrm{f}$ & $(\mathrm{c,g,f})$ \\
+ %   & $\mathrm{h}$ & $(\mathrm{c,g,h})$ \\
+ %   \midrule
+ %   \multirow{3}{*}{$\mathrm{d}$} & $\mathrm{f}$ & $(\mathrm{d,e,f})$ \\
+ %   & $\mathrm{g}$ & $(\mathrm{d,c,g})$ \\
+ %   & $\mathrm{h}$ & $(\mathrm{d,c,g,h})$ \\
+ %   \midrule
+ %   \multirow{2}{*}{$\mathrm{e}$} & $\mathrm{g}$ & $(\mathrm{e,f,g})$ \\
+ %   & $\mathrm{h}$ & $(\mathrm{e,f,g,h})$, $(\mathrm{e,f,b,h})$ \\
+ %   \midrule
+ %   $\mathrm{f}$ & $\mathrm{h}$ & $(\mathrm{f,g,h})$, $(\mathrm{f,b,h})$ \\
+ %   \bottomrule
+ % \end{tabular}
+ % }
+  %\qquad
+  %\subfloat[Betweenness values]{
+  %\begin{tabular}{cl}
+  %  \toprule
+  %  Vertex & Betweenness \\
+  %  \midrule
+  %  a & 0 \\
+  %  b & 0.250 \\
+  %  c & 0.125 \\
+  %  d & 0.036 \\
+  %  e & 0.054 \\
+  %  f & 0.080 \\
+  %  g & 0.268 \\
+  %  h & 0 \\
+  %  \bottomrule
+  %\end{tabular}
+  %}
   \subfloat[Betweenness values]{
-  \begin{tabular}{cl}
+  \begin{tabular}{ccccccccc}
     \toprule
-    Vertex & Betweenness \\
+    Vertex & $\mathrm{a}$ & $\mathrm{b}$ &$\mathrm{c}$ &$\mathrm{d}$ &$\mathrm{e}$ &$\mathrm{f}$ &$\mathrm{g}$ &$\mathrm{h}$ \\
     \midrule
-    a & 0 \\
-    b & 0.286 \\
-    c & 0.125 \\
-    d & 0.018 \\
-    e & 0.054 \\
-    f & 0.080 \\
-    g & 0.304 \\
-    h & 0 \\
+    $\betw(v)$ & 0 & 0.250 & 0.125 & 0.036 & 0.054 & 0.080 & 0.268 & 0 \\
     \bottomrule
   \end{tabular}
   }
