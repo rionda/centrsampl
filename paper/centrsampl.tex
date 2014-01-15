@@ -1,4 +1,18 @@
 \documentclass{sig-alternate}
+\newfont{\mycrnotice}{ptmr8t at 7pt}
+\newfont{\myconfname}{ptmri8t at 7pt}
+\let\crnotice\mycrnotice%
+\let\confname\myconfname%
+
+\permission{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than ACM must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.}
+\conferenceinfo{WSDM'14,}{February 24--28, 2014, New York, New York, USA.}
+\copyrightetc{Copyright 2014 ACM \the\acmcopyr}
+\crdata{978-1-4503-2351-2/14/02\ ...\$15.00.\\
+http://dx.doi.org/10.1145/2556195.2556224}
+
+\clubpenalty=10000
+\widowpenalty = 10000
+
 \usepackage[T1]{fontenc} 
 \usepackage{textcomp}
 
@@ -68,13 +82,8 @@
 \prooffalse
 
 \begin{document}
-\conferenceinfo{WSDM} {'14, February 24--28, 2014, New York, NY, USA.}
-\CopyrightYear{2014}
-%\crdata{978-1-4503-1156-4/12/10}
-%\clubpenalty=10000
-%\widowpenalty = 10000
 
-\title{Fast Approximation of Betweenness Centrality Through Sampling}
+\title{Fast Approximation of Betweenness Centrality \\through Sampling}
 \numberofauthors{2} 
 \author{
 \alignauthor
