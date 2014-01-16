@@ -1,6 +1,6 @@
 \begin{figure*}
   \centering
-  \subfloat[Undirected graphs]{
+  \begin{subtable}[b]{0.47\textwidth}
   \begin{small}
     \begin{tabular}{cccccc}
       \toprule
@@ -19,13 +19,15 @@
       \bottomrule
     \end{tabular}
   \end{small}
+  \caption{Undirected graphs}
   \label{tab:expUndir}
-  }
+  \end{subtable}
 \ifproof
- %
-
+\\
+\else
+\hspace{-5pt}
 \fi
-  \subfloat[Directed graphs]{
+  \begin{subtable}[b]{0.47\textwidth}
   \begin{small}
     \begin{tabular}{cccccccc}
       \toprule
@@ -45,8 +47,9 @@
       \bottomrule
     \end{tabular} 
   \end{small}
+  \caption{Directed graphs}
   \label{tab:expDir}
-  }
+  \end{subtable}
   \caption{Graph properties and running time ratios.}
   \label{fig:tables}
 \end{figure*}
@@ -218,8 +221,18 @@ V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm and taking
 the average and the standard deviation of this measure, for different values of
 $\varepsilon$. We also compute the maximum error $|\betw(v)-\tilde\betw(v)|$
 overall. The results are reported in Fig.~\ref{fig:gnutella:error} for the directed
-graph p2p-Gnutella30, and in Fig.~\ref{fig:email:error} for the undirected graph
-email-Enron. Results for other graphs are similar~\citep{RiondatoK13}. It is
+graph p2p-Gnutella30, %
+\ifproof
+in Fig.~\ref{fig:HepPh:error} for the directed graph ca-HepPh, in
+Fig.~\ref{fig:Epinions:error} for the undirected graph soc-Epinions1, %
+\fi
+and in Fig.~\ref{fig:email:error} for the undirected graph
+email-Enron. %
+\ifproof
+\else
+Results for other graphs are similar~\citep{RiondatoK13}. %
+\fi
+It is
 evident that the maximum error is an error of magnitude smaller than the
 guaranteed value of $\varepsilon$ and that the average error is almost two
 orders of magnitude smaller than the guarantees, and the \texttt{Avg+Stddev}
@@ -232,11 +245,31 @@ fact that we use an \emph{upper bound} to the VC-dimension of the range set.
 
 \begin{figure*}[ht]
   \centering
-  \subfloat[p2p-Gnutella30
-  (directed)]{\label{fig:gnutella:error}\includegraphics[width=0.45\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-error}}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-error}
+    \caption{p2p-Gnutella30 (directed)}
+    \label{fig:gnutella:error}
+  \end{subfigure}
+  \ifproof
   \hfill
-  \subfloat[email-Enron
-  (undirected)]{\label{fig:email:error}\includegraphics[width=0.45\textwidth,keepaspectratio]{figures/eps/email-Enron-error}}
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/soc-Epinions1-error}
+    \caption{soc-Epinions1 (directed)}
+    \label{fig:Epinions:error}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/ca-HepPh-error}
+    \caption{ca-HepPh (directed)}
+    \label{fig:HepPh:error}
+  \end{subfigure}
+  \fi
+  \hfill
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/email-Enron-error}
+    \caption{email-Enron (undirected)}
+    \label{fig:email:error}
+  \end{subfigure}
   \caption{Betweenness estimation error $|\tilde\betw(v)-\betw(v)|$ evaluation
   for directed and undirected graphs} 
   \label{fig:error}
@@ -254,11 +287,31 @@ fact that we use an \emph{upper bound} to the VC-dimension of the range set.
 
 \begin{figure*}[ht]
   \centering
-  \subfloat[p2p-Gnutella30
-  (directed)]{\label{fig:gnutella:time}\includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-time}}
+  \begin{subfigure}[b]{0.46\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-time}
+    \caption{p2p-Gnutella30 (directed)}
+    \label{fig:gnutella:time}
+  \end{subfigure}
+  \ifproof
   \hfill
-  \subfloat[email-Enron
-  (undirected)]{\label{fig:email:time}\includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/email-Enron-time}}
+  \begin{subfigure}[b]{0.46\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/soc-Epinions1-time}
+    \caption{soc-Epinions1 (directed)}
+    \label{fig:Epinions:time}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{0.46\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/ca-HepPh-time}
+    \caption{ca-HepPh (directed)}
+    \label{fig:HepPh:time}
+  \end{subfigure}
+  \fi
+  \hfill
+  \begin{subfigure}[b]{0.46\textwidth}
+    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/email-Enron-time}
+    \caption{email-Enron (undirected)}
+    \label{fig:email:time}
+  \end{subfigure}
   \caption{Running time (seconds) comparison between $\mathsf{VC}$, $\mathsf{BP}$, and the
   exact algorithm.}
   \label{fig:time}
@@ -422,7 +475,7 @@ and algorithms to mine them must scale well with graph size.
 \begin{figure}[ht]
   \centering
   \includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/random-time}
-  \caption{Scalability on random~\citet{BarabasiA99} graphs.}
+  \caption{Scalability on random Barab\'asi-Albert~\citep{BarabasiA99} graphs.}
   \label{fig:random:time}
 \end{figure}
 

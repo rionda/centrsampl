@@ -82,10 +82,12 @@ betweenness than the others, given that they somehow act as bridges between two
 sides of the network, and indeed that is the case.
 \begin{figure}[ht]
   \centering
-  \subfloat[Example graph]{
-  \includegraphics[width=0.2\textwidth,keepaspectratio]{figures/eps/example-betw}
-  }
-  \qquad
+  \begin{subfigure}[c]{0.2\textwidth}
+  \centering
+    \includegraphics[width=1.0\textwidth,keepaspectratio]{figures/eps/example-betw}
+    \caption{Example graph}
+  \end{subfigure}
+  \hfill
   %\hfill
  % \subfloat[Shortest paths]{
  % \begin{tabular}{ccl}
@@ -135,15 +137,17 @@ sides of the network, and indeed that is the case.
   %  \bottomrule
   %\end{tabular}
   %}
-  \subfloat[Betweenness values]{
-  \begin{tabular}{ccccccccc}
-    \toprule
-    Vertex & $\mathrm{a}$ & $\mathrm{b}$ &$\mathrm{c}$ &$\mathrm{d}$ &$\mathrm{e}$ &$\mathrm{f}$ &$\mathrm{g}$ &$\mathrm{h}$ \\
-    \midrule
-    $\betw(v)$ & 0 & 0.250 & 0.125 & 0.036 & 0.054 & 0.080 & 0.268 & 0 \\
-    \bottomrule
-  \end{tabular}
-  }
+  \begin{subtable}[c]{0.7\textwidth}
+  \centering
+    \begin{tabular}{ccccccccc}
+      \toprule
+      Vertex & $\mathrm{a}$ & $\mathrm{b}$ &$\mathrm{c}$ &$\mathrm{d}$ &$\mathrm{e}$ &$\mathrm{f}$ &$\mathrm{g}$ &$\mathrm{h}$ \\
+      \midrule
+      $\betw(v)$ & 0 & 0.250 & 0.125 & 0.036 & 0.054 & 0.080 & 0.268 & 0 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Betweenness values}
+  \end{subtable}
   \caption{Example of betweenness values}
   \label{fig:example-betw}
 \end{figure}
