@@ -4,8 +4,8 @@ py-igraph-0.6.5 source files. They can be downloaded from http://igraph.sf.net
 In the following, IGRAPH_DIR is the location of the igraph original sources,
 and PY_IGRAPH_DIR is the location of the python-igraph original sources.
 
-1) Copy igraph/src/centrality.c to $IGRAPH_DIR/src/
-2) Copy igraph/include/igraph_centrality.h to $IGRAPH_DIR/include
+1) Copy igraph/src/centrality.c and igraph/src/structural_properties.c to $IGRAPH_DIR/src/
+2) Copy igraph/include/igraph_centrality.h and igraph/include/igraph_paths.h to $IGRAPH_DIR/include
 3) Copy python-igraph/src/graphobject.c to $PY_IGRAPH_DIR/src
 4) cd $IGRAPH_DIR
 5) ./configure
