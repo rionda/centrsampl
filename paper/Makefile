@@ -1,5 +1,5 @@
 LATEX = pdflatex
-MAINFILE = centrsampl
+MAINFILE = centrsampl-nostyle
 UPLOADURI = ssh.cs.brown.edu:public_html/
 
 .PHONY: all archive check clean osx pdf upload view
