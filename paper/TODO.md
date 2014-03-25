@@ -3,15 +3,13 @@ TODO LIST FOR THE PAPER
 
 # TOP PRIORITY
 
-* Extend Lemma 2 to directed graphs.
+* Add counterexample for Lemma 2 to directed graphs (it's in notebook).
 
 * Experiments for Topk 
 
 
 
 ## Low Hanging
-
-* Mention empirical VC-dimension (not sure about this?) 
 
 * Discuss JACM variant (booringggg)
 
@@ -22,8 +20,6 @@ TODO LIST FOR THE PAPER
 * Choose journal
 
 * Implement Bidirectional / A* search
-
-* Check Kleinberg's dispersion. Can we do anything about it?
 
 
 
