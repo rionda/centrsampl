@@ -1,10 +1,11 @@
 LATEX = pdflatex
 MAINFILE = centrsampl-nostyle
-UPLOADURI = ssh.cs.brown.edu:public_html/
+UPLOADHOST = ssh.cs.brown.edu
+UPLOADURI = public_html/papers/RiondatoKornarop-BetweennessSampling.pdf
 
 .PHONY: all archive check clean osx pdf upload view
 
-all : archive
+all : upload
 
 $(MAINFILE).aux: *.tex
 	$(LATEX) $(MAINFILE).tex
@@ -40,7 +41,8 @@ osx: pdf
 	open $(MAINFILE).pdf
 
 upload: pdf
-	scp $(MAINFILE).pdf $(UPLOADURI)
+	scp $(MAINFILE).pdf $(UPLOADHOST):$(UPLOADURI)
+	ssh $(UPLOADHOST) chmod o+r $(UPLOADURI)
 
 view: pdf
 	acroread  -geometry 1000x1000 $(MAINFILE).pdf
