@@ -136,8 +136,97 @@ the paper~\citep{RiondatoK13}.
 \end{proof}
 
 It is natural to ask whether the above lemma or a similar result also holds for
-\emph{directed} graphs. This is an open problem. Notice that fact $\mathsf{F}$
-does not hold for directed graphs.
+\emph{directed} graphs. Fact $\mathsf{F}$ does not hold for directed graphs so
+the above proof does not extend immediately. In Fig.~\ref{fig:counterexample} we show
+a directed graph. For any pair of vertices in the graph, there is at most a
+unique shortest path connecting them. Consider now the
+following four directed shortest paths:
+\begin{itemize}
+  \item $p_A=\{1,2,4,6,7,12,13,14,16,17,18,22,21\}$
+  \item $p_B=\{8,9,10,5,12,13,14,16,17,18,23,26,27\}$
+  \item $p_C=\{25,24,26,18,19,15,14,7,6,5,4,3\}$
+  \item $p_D=\{23,20,22,17,16,15,14,7,6,5,10,11\}$
+\end{itemize}
+It is easy to check that the set $\{p_A,p_B,p_C,p_D\}$ is shattered, so the
+above lemma is not true for directed graphs. It is an open problem whether it is
+true for a different constant.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\GraphInit[vstyle=Normal]
+\SetUpEdge[style={->}]
+\Vertex{1}
+\WE(1){2}
+\SO(2){4}
+\EA(4){3}
+\SO(4){5}
+\WE(5){10}
+\NO(10){9}
+\NO(9){8}
+\SO(10){11}
+\SO(4){5}
+\EA(5){6}
+\SO(6){12}
+\EA(6){7}
+\SO(7){13}
+\EA(7){14}
+\EA(14){16}
+\SO(16){15}
+\EA(16){17}
+\EA(17){18}
+\SO(17){19}
+\EA(18){26}
+\NO(18){22}
+\WE(22){21}
+\NO(22){20}
+\WE(20){23}
+\SO(26){27}
+\NO(26){24}
+\NO(24){25}
+\Edge(1)(2)
+\Edge(2)(4)
+\Edge(4)(3)
+\Edge(8)(9)
+\Edge(9)(10)
+\Edge(10)(11)
+\Edge(5)(4)
+\Edge[style={->,bend left}](5)(10)
+\Edge[style={->,bend left}](10)(5)
+\Edge(5)(12)
+\Edge(12)(13)
+\Edge(4)(6)
+\Edge(6)(5)
+\Edge[style={->,bend left}](6)(7)
+\Edge[style={->,bend left}](7)(6)
+\Edge(7)(13)
+\Edge(13)(14)
+\Edge(14)(7)
+\Edge(15)(14)
+\Edge(14)(16)
+\Edge(16)(15)
+\Edge[style={->,bend left}](16)(17)
+\Edge[style={->,bend left}](17)(16)
+\Edge(18)(19)
+\Edge(19)(15)
+\Edge(17)(18)
+\Edge(18)(22)
+\Edge(22)(17)
+\Edge(22)(21)
+\Edge(20)(22)
+\Edge(23)(20)
+\Edge[style={->,bend left}](18)(26)
+\Edge[style={->,bend left}](26)(18)
+\Edge(26)(27)
+\Edge(24)(26)
+\Edge(25)(24)
+\end{tikzpicture}
+\caption{Directed graph $G=(V,E)$ with $|\mathcal{S}_{uv}|\le1$ for all pairs
+$(u,v)\in V\times V$ and such that it is possible to shatter a set of four
+paths.}
+\label{fig:counterexample}
+\end{figure}
+
 \fi
 
 \ifproof

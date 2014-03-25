@@ -3,8 +3,6 @@ TODO LIST FOR THE PAPER
 
 # TOP PRIORITY
 
-* Add counterexample for Lemma 2 to directed graphs (it's in notebook).
-
 * Experiments for Topk 
 
 
@@ -28,16 +26,16 @@ TODO LIST FOR THE PAPER
 * Report analysis 1st reviewer WSDM to motivate top-k algo. I'm not sure about
 this. Would look like we're shooting in our own foot.
 
-* Compare the two algorithms in terms of how many updates they do. This
-would highlight that BrandesPich do a great amount of unnecessary updates and that is
+* Compare the two algorithms in terms of how many updates they do. This would
+highlight that BrandesPich do a great amount of unnecessary updates and that is
 why they achieve better approximation that the user asked for.
 
-* New definition of Betweenness for sets of nodes. This time the ranges
-are the shortest paths that pass through at least one of the nodes. Paths that
-pass through more nodes are still counted as one. Proof to me sounds like usual
-lemma on unions/intersections or range spaces. Eli in his note does something
-but IMHO is wrong (I don't get the last passage). Question is how to find those.
-Eli suggests something, but IMHO is again wrong (the sum of nodes' betweennesses
+* New definition of Betweenness for sets of nodes. This time the ranges are the
+shortest paths that pass through at least one of the nodes. Paths that pass
+through more nodes are still counted as one. Proof to me sounds like usual lemma
+on unions/intersections or range spaces. Eli in his note does something but IMHO
+is wrong (I don't get the last passage). Question is how to find those.  Eli
+suggests something, but IMHO is again wrong (the sum of nodes' betweennesses
 only give an upper bound, which doesn't seem to help much, imho)
 
 * Can we use s-t connectivity for BP? (I no longer know what that meant)
