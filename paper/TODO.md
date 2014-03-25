@@ -9,6 +9,8 @@ TODO LIST FOR THE PAPER
 
 ## Low Hanging
 
+* Convert other figures to use tkz-graph
+
 * Discuss JACM variant (booringggg)
 
 
