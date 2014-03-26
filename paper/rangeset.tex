@@ -154,33 +154,34 @@ true for a different constant.
 \begin{figure}
 \centering
 \begin{tikzpicture}
-\GraphInit[vstyle=Normal]
+\GraphInit[vstyle=Classic]
+\tikzset{VertexStyle/.append style = { minimum size = 2 pt }}
 \SetUpEdge[style={->}]
 \Vertex{1}
-\WE(1){2}
-\SO(2){4}
+\WE[Lpos=-180](1){2}
+\SO[Lpos=-180](2){4}
 \EA(4){3}
-\SO(4){5}
-\WE(5){10}
-\NO(10){9}
-\NO(9){8}
-\SO(10){11}
-\SO(4){5}
-\EA(5){6}
-\SO(6){12}
-\EA(6){7}
+\SO[Lpos=45](4){5}
+\WE[Lpos=-180](5){10}
+\NO[Lpos=-180](10){9}
+\NO[Lpos=-180](9){8}
+\SO[Lpos=-180](10){11}
+%\SO(4){5}
+\EA[Lpos=90](5){6}
+\SO[Lpos=-180](6){12}
+\EA[Lpos=90](6){7}
 \SO(7){13}
-\EA(7){14}
-\EA(14){16}
-\SO(16){15}
-\EA(16){17}
-\EA(17){18}
+\EA[Lpos=90](7){14}
+\EA[Lpos=90](14){16}
+\SO[Lpos=180](16){15}
+\EA[Lpos=90](16){17}
+\EA[Lpos=135](17){18}
 \SO(17){19}
 \EA(18){26}
 \NO(18){22}
-\WE(22){21}
+\WE[Lpos=180](22){21}
 \NO(22){20}
-\WE(20){23}
+\WE[Lpos=180](20){23}
 \SO(26){27}
 \NO(26){24}
 \NO(24){25}
@@ -375,7 +376,36 @@ paper~\citep{RiondatoK13}.
 \ifproof
 \begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.35]{figures/eps/uniqueshortestpathtight}
+  \begin{tikzpicture}
+    \GraphInit[vstyle=Classic]
+    \tikzset{VertexStyle/.append style = { minimum size = 2 pt }}
+    \Vertex[Lpos=135]{a}
+    \EA[Lpos=135](a){b}
+    \EA[Lpos=135](b){c}
+    \NO[Lpos=135](c){d}
+    \EA[Lpos=135](c){e}
+    \NO[Lpos=135](e){f}
+    \NO[Lpos=135](f){g}
+    \NOEA[Lpos=45](f){m}
+    \NO[Lpos=135](g){h}
+    \EA[Lpos=45](e){i}
+    \NO[Lpos=45](i){j}
+    \EA[Lpos=45](i){k}
+    \EA[Lpos=45](k){l}
+    \Edge(a)(b)
+    \Edge(b)(c)
+    \Edge(c)(d)
+    \Edge(c)(e)
+    \Edge(e)(f)
+    \Edge(f)(g)
+    \Edge(f)(m)
+    \Edge(g)(h)
+    \Edge(e)(i)
+    \Edge(i)(j)
+    \Edge(i)(k)
+    \Edge(k)(l)
+  \end{tikzpicture}
+  %\includegraphics[scale=0.35]{figures/eps/uniqueshortestpathtight}
   \caption{Graph $G$ with $\VC(\range_G)= 3$.}
   \label{fig:uniquetight}
 \end{figure}

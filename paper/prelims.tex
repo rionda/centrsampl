@@ -83,8 +83,30 @@ sides of the network, and indeed that is the case.
 \begin{figure}[ht]
   \centering
   \begin{subfigure}[c]{0.2\textwidth}
-  \centering
-    \includegraphics[width=1.0\textwidth,keepaspectratio]{figures/eps/example-betw}
+    \centering
+      %\includegraphics[width=1.0\textwidth,keepaspectratio]{figures/eps/example-betw}
+    \begin{tikzpicture}
+      \GraphInit[vstyle=Classic]
+      \tikzset{VertexStyle/.append style = { minimum size = 2 pt }}
+      \Vertex[Lpos=-90]{a}
+      \NO[Lpos=90](a){h}
+      \EA[Lpos=-90](a){b}
+      \EA[Lpos=90](h){g}
+      \EA[Lpos=90](g){f}
+      \EA[Lpos=90](f){e}
+      \EA[Lpos=-90](b){c}
+      \EA[Lpos=-90](c){d}
+      \Edge(a)(b)
+      \Edge(b)(h)
+      \Edge(h)(g)
+      \Edge(b)(g)
+      \Edge(b)(f)
+      \Edge(g)(f)
+      \Edge(g)(c)
+      \Edge(c)(d)
+      \Edge(d)(e)
+      \Edge(e)(f)
+    \end{tikzpicture}
     \caption{Example graph}
   \end{subfigure}
   \hfill
