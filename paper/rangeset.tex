@@ -283,7 +283,16 @@ $G_d\in\mathcal{G}$ the \emph{$d$-th concertina graph}.
 Figure~\ref{fig:tightgraphs} shows $G_1$, $G_2$, $G_3$, and $G_4$. The
 generalization to higher values of $d$ should be straightforward. Each graph
 $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
+
 \fi
+
+\begin{figure}[th]
+  \centering
+  \includegraphics[scale=0.3]{figures/eps/tight}
+  \caption{Examples of concertina graphs $G_d$ for $d=1,2,3,4$.}
+  \label{fig:tightgraphs}
+\end{figure}
+
 \begin{lemma}\label{lem:vcdimlowbound}
   $\VC(\range_{G_d})=d$.
 \end{lemma}
@@ -323,7 +332,37 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
 
   \begin{figure}[ht]
     \centering
-    \includegraphics[scale=0.4]{figures/eps/tight-mapexample}
+    \begin{tikzpicture}
+      \GraphInit[vstyle=Classic]
+      \tikzset{VertexStyle/.append style = { minimum size = 2 pt }}
+      \Vertex[Lpos=180,L=$v_\ell$]{vl}
+      \EA[NoLabel](vl){no1}
+      \NOEA[Lpos=90,L={$\{ a\}$}](no1){a}
+      \SOEA[Lpos=-90,L={$\{b,c\}$}](no1){bc}
+      \SOEA[NoLabel](a){no2}
+      \NOEA[Lpos=90,L={$\{b\}$}](no2){b}
+      \SOEA[Lpos=-90,L={$\{a,c\}$}](no2){ac}
+      \SOEA[NoLabel](b){no3}
+      \NOEA[Lpos=90,L={$\{c\}$}](no3){c}
+      \SOEA[Lpos=-90,L={$\{a,b\}$}](no3){ab}
+      \SOEA[NoLabel](c){no4}
+      \EA[L={$v_\mathrm{r}$}](no4){vr}
+      \Edge(vl)(no1)
+      \Edge(no1)(a)
+      \Edge(no1)(bc)
+      \Edge(a)(no2)
+      \Edge(bc)(no2)
+      \Edge(no2)(b)
+      \Edge(no2)(ac)
+      \Edge(b)(no3)
+      \Edge(ac)(no3)
+      \Edge(no3)(c)
+      \Edge(no3)(ab)
+      \Edge(c)(no4)
+      \Edge(ab)(no4)
+      \Edge(no4)(vr)
+    \end{tikzpicture}
+    %\includegraphics[scale=0.4]{figures/eps/tight-mapexample}
     \caption{An example of the $\mathsf{r}$ map for $G_3$. The set next to
     each top and bottom vertex $u$ is the set $s$ such that $\mathsf{r}(s)=u$.}
     \label{fig:mapexample}
@@ -351,13 +390,6 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
 Due to space constraints, we defer the proof to the extended online version of
 the paper~\citep{RiondatoK13}.
 \fi
-
-\begin{figure}[th]
-  \centering
-  \includegraphics[scale=0.3]{figures/eps/tight}
-  \caption{Examples of concertina graphs $G_d$ for $d=1,2,3,4$.}
-  \label{fig:tightgraphs}
-\end{figure}
 
 The upper bound presented in Lemma~\ref{lem:vcdimuppboundunique}  for the case
 of unique shortest paths is also strict in the same sense.
