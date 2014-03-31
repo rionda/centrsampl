@@ -29,7 +29,7 @@ $(MAINFILE).tar.bz2: *tex $(MAINFILE).pdf
 archive: $(MAINFILE).tar.bz2
 
 check: *.tex
-	$(LATEX) $(MAINFILE).tex | grep -s -e "multiply" -e "undefined"
+	($(LATEX) $(MAINFILE).tex | grep -s -e "multiply" -e "undefined") || echo "all OK"
 
 clean:
 	-/bin/rm -f $(MAINFILE).pdf $(MAINFILE).tar.bz2 *.dvi *.aux *.ps *~
