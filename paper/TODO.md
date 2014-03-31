@@ -5,6 +5,10 @@ TODO LIST FOR THE PAPER
 
 * Experiments for Topk 
 
+* We have a better characterization of the VC-dimension, but in practice it will
+be the same. We should present it in the paper, although that would mean a big
+overhaul.
+
 
 
 ## Low Hanging
