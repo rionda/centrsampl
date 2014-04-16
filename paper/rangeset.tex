@@ -11,18 +11,30 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
 \range_G = \{\mathcal{T}_v ~:~ v\in V\}\enspace.
 \]
 
+Given a graph $G$ let $\mathsf{H}(G)$ be the maximum integer $d$ such that there
+are $h=\lfloor\log_2(d-2)\rfloor+1$ shortest paths $\{p_1,\dotsc,p_h\}$ in
+$\mathbb{S}_G$ of size at least $d$ and such that the collection
+$\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an anti-chain.
+
 \begin{lemma}\label{lem:vcdimuppbound}
   %Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
   %$\range_G$ associated to the shortest paths in $G$ has VC-dimension
-  $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.
+  %$\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.
+  $\VC(\range_G)\le\lfloor\log_2(\mathsf{H}(G)-2)\rfloor+1$.
 \end{lemma}
 
 \begin{proof}
-%\begin{IEEEproof}
-Let $\ell>\lfloor\log_2(\VD(G)-2)\rfloor+1$ and assume for the sake of contradiction
-that $\VC(\range_G)=\ell$. From the definition of the VC-dimension there is a set
-$Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$. Let $p$ be
-an element of $Q$. There are  $2^{\ell-1}$ non-empty subsets of
+Let $\ell>\lfloor\log_2(\mathsf{H}(G)-2)\rfloor+1$ and assume for the sake of contradiction
+that $\VC(\range_G)=\ell$. From the definition of VC-dimension there is a set
+$Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$. 
+For any two shortest paths $p',p''$ in $Q$ we must have neither
+$\mathsf{Int}(p')\subseteq\mathsf{Int}(p'')$ nor
+$\mathsf{Int}(p'')\subseteq\mathsf{Int}(p')$, otherwise one of the two paths
+would appear in all ranges where the other one appears, and so it would be
+impossible to shatter $Q$. Then $Q$ must be such that the collection of the
+sets of internal vertices of the paths in $Q$ form an anti-chain. From this and
+from the definition of $\mathsf{H}(G)$ we have that $Q$ must contain a path $p$ of
+size $|p|\le\mathsf{H}(G)$. There are  $2^{\ell-1}$ non-empty subsets of
 $Q$ containing the path $p$. Let us label these non-empty subsets of $Q$ containing $p$ as
 $S_1,\dotsc,S_{2^{\ell-1}}$, where the labelling is arbitrary.
 Given that $Q$ is shattered, for each set $S_i$ there must be a range $R_i$ in
@@ -32,15 +44,44 @@ other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
 $R_i$, that is, there are $2^{\ell-1}$ distinct ranges in $\range_G$ containing
 $p$. But $p$ belongs only to the ranges corresponding to internal vertices of
 $p$, i.e., to vertices in $\mathsf{Int}(p)$. This means that the number of ranges
-in $\range_G$ that $p$ belongs to is equal to $|p|-2$. But $|p|\le\VD(G)$, by
-definition of $\VD(G)$, so $p$
-can belong to at most $\VD(G)-2$ ranges from $\range_G$. Given that
-$2^{\ell-1}>\VD(G)-2$, we reached a contradiction and there cannot be $2^{\ell-1}$
+in $\range_G$ that $p$ belongs to is equal to $|p|-2$. But $|p|\le\mathsf{H}(G)$ by
+definition of $\mathsf{H}(G)$, so $p$
+can belong to at most $\mathsf{H}(G)-2$ ranges from $\range_G$. Given that
+$2^{\ell-1}>\mathsf{H}(G)-2$, we reached a contradiction and there cannot be $2^{\ell-1}$
 distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
 $Q\cap R_i$ for some $R_i\in\range_G$. Then $Q$ cannot be shattered and
-$\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
+$\VC(\range_G)\le\lfloor\log_2(\mathsf{H}(G)-2)\rfloor+1$.
 \end{proof}
-%\end{IEEEproof}
+
+Computing $\mathsf{H}(G)$ is not a viable option, but given that
+$\mathsf{H}(G)\le\VD(G)$, we have the following corollary.
+
+\begin{corollary}\label{corol:vcdimuppbound}
+  $\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.
+\end{corollary}
+
+%\begin{proof}
+%Let $\ell>\lfloor\log_2(\VD(G)-2)\rfloor+1$ and assume for the sake of contradiction
+%that $\VC(\range_G)=\ell$. From the definition of the VC-dimension there is a set
+%$Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$. Let $p$ be
+%an element of $Q$. There are  $2^{\ell-1}$ non-empty subsets of
+%$Q$ containing the path $p$. Let us label these non-empty subsets of $Q$ containing $p$ as
+%$S_1,\dotsc,S_{2^{\ell-1}}$, where the labelling is arbitrary.
+%Given that $Q$ is shattered, for each set $S_i$ there must be a range $R_i$ in
+%$\range_G$ such that $S_i=Q\cap R_i$. Since all the $S_i$'s are
+%different from each other, then all the $R_i$'s must be different from each
+%other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
+%$R_i$, that is, there are $2^{\ell-1}$ distinct ranges in $\range_G$ containing
+%$p$. But $p$ belongs only to the ranges corresponding to internal vertices of
+%$p$, i.e., to vertices in $\mathsf{Int}(p)$. This means that the number of ranges
+%in $\range_G$ that $p$ belongs to is equal to $|p|-2$. But $|p|\le\VD(G)$, by
+%definition of $\VD(G)$, so $p$
+%can belong to at most $\VD(G)-2$ ranges from $\range_G$. Given that
+%$2^{\ell-1}>\VD(G)-2$, we reached a contradiction and there cannot be $2^{\ell-1}$
+%distinct ranges containing $p$, hence not all the sets $S_i$ can be expressed as
+%$Q\cap R_i$ for some $R_i\in\range_G$. Then $Q$ cannot be shattered and
+%$\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
+%\end{proof}
 
 \paragraph{Unique shortest paths}\label{sec:rangeunique}
 In the restricted case when the graph is undirected and
@@ -148,7 +189,7 @@ following four directed shortest paths:
   \item $p_D=\{23,20,22,17,16,15,14,7,6,5,10,11\}$
 \end{itemize}
 It is easy to check that the set $\{p_A,p_B,p_C,p_D\}$ is shattered, so the
-above lemma is not true for directed graphs. It is an open problem whether it is
+above lemma is not true for directed graphs. It is an open question whether it is
 true for a different constant.
 
 \begin{figure}
@@ -244,7 +285,8 @@ $\VC(\range_G^{(k)})\le\lfloor\log_2(k-1)\rfloor+1$.
 \fi
 
 \subsection{Tightness}\label{sec:tightness}
-The bound presented in Lemma~\ref{lem:vcdimuppbound} is strict in the sense that
+The bound presented in Corol.~\ref{corol:vcdimuppbound} (and therefore
+Lemma~\ref{lem:vcdimuppbound}) is strict in the sense that
 for each $d\ge 1$ we can build a graph $G_d$ with vertex-diameter
 $\VD(G_d)=2^d+1$ and such that the range set $\range_{G_d}$ associated to the set of
 shortest paths of $G_d$ has VC-dimension exactly
@@ -273,7 +315,7 @@ vertices} of $G_d$ and denoted as $v_\ell$ and $v_\mathrm{r}$, where the
 labels can be arbitrarily assigned. We now build a set $Q$ of $d$
 shortest paths from $v_\ell$ to $v_\mathrm{r}$ and show that it is
 shattered by $\range_{G_d}$, therefore proving that $\VC(\range_{G_d})\ge d$.
-This fact, together with Lemma~\ref{lem:vcdimuppbound}, allows us to conclude
+This fact, together with Coroll.~\ref{corol:vcdimuppbound}, allows us to conclude
 that $\VC(\range_{G_d})=d$. 
 \else
 There is a class $\mathcal{G}=(G_d)_{d\ge 1}$ of graphs indexed by d, such that
@@ -382,7 +424,7 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   from $\range_{G_d}$, which means that $Q$ can be shattered and therefore
   $\VC(\range_{G_d})\ge d$.
 
-  From Lemma~\ref{lem:vcdimuppbound} we know that $\VC(\range_{G_d})\le d$, so
+  From Corol~\ref{corol:vcdimuppbound} we know that $\VC(\range_{G_d})\le d$, so
   it must be $\VC(\range_{G_d})=d$.
 %\end{IEEEproof} 
 \end{proof}
