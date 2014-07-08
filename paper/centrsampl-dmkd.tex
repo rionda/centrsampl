@@ -1,0 +1,132 @@
+\RequirePackage{fix-cm}
+%\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+%\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+\usepackage[T1]{fontenc} 
+\usepackage{textcomp}
+\usepackage[utf8x]{inputenc}
+%\usepackage{mathptmx}      % use Times fonts if available on your TeX system
+\usepackage{caption}
+\usepackage[numbers,sort&compress,square]{natbib}
+\usepackage{ctable}
+%\makeatletter
+%\renewcommand\bibsection%
+%{
+%  \section*{\refname
+%    \@mkboth{\MakeUppercase{\refname}}{\MakeUppercase{\refname}}}
+%}
+%\makeatother
+
+%\usepackage{times}
+%\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{bigstrut}
+\usepackage{url}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{mdwlist}
+\usepackage{tkz-graph}
+\usepackage[pdftex,bookmarks=true,pdfstartview={FitH},pdfauthor={Matteo Riondato
+and Evgenios M. Kornaropoulos},pdftitle={Fast Approximation of Betweenness
+Centrality through Sampling},pdfsubject={Social Network Analysis}]{hyperref}
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n} % Use standard fonts for calligraphic
+
+\def\XXX{{\bf XXX}}
+\def\MR{{\bf MR}}
+\def\EK{{\bf EK}}
+
+\def\betw{\mathsf{b}}
+\def\kboundbetw{\mathsf{bb}}
+\def\kpathbetw{\mathsf{pb}}
+\def\prob{\pi}
+\def\range{\mathcal{R}}
+\def\TOPK{\mathsf{TOP}}
+\def\VC{\mathsf{VC}}
+\def\VD{\mathsf{VD}}
+\def\exp{\mathbb{E}}
+\def\var{\mathrm{Var}}
+\def\mse{\mathrm{MSE}}
+
+\newif\ifproof
+\prooftrue
+\newif\ifdmkd
+\dmkdtrue
+
+\journalname{Data Mining and Knowledge Discovery}
+
+\begin{document}
+
+\title{Fast approximation of betweenness centrality through sampling\thanks{This work is supported in part by the National Science Foundation under
+award IIS-1247581. A preliminary version of this work appeared in the
+proceedings of ACM WSDM'14\citep{RiondatoK14WSDM}.}}
+
+%\titlerunning{Short form of title}        % if too long for running head
+
+\author{Matteo Riondato \and Evgenios M.~Kornaropoulos}
+
+%\authorrunning{Short form of author list} % if too long for running head
+
+\institute{M. Riondato and E.~M.~Kornaropoulos \at
+Department of Computer Science, Brown University, Providence, RI, USA\\
+\email{\{matteo,evgenios\}@cs.brown.edu}           %  \\
+}
+
+\date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+
+\maketitle
+
+\begin{abstract}
+  \input{abstract}
+\keywords{First keyword \and Second keyword \and More}
+% \PACS{PACS code1 \and PACS code2 \and more}
+% \subclass{MSC code1 \and MSC code2 \and more}
+\end{abstract}
+
+\input{intro}
+\input{prevwork}
+\input{prelims}
+\input{rangeset}
+\input{algo}
+\input{variants}
+\input{exper}
+\input{concl}
+
+% For tables use
+\begin{table}
+% table caption is above the table
+\caption{Please write your table caption here}
+\label{tab:1}       % Give a unique label
+% For LaTeX tables use
+\begin{tabular}{lll}
+\hline\noalign{\smallskip}
+first & second & third  \\
+\noalign{\smallskip}\hline\noalign{\smallskip}
+number & number & number \\
+number & number & number \\
+\noalign{\smallskip}\hline
+\end{tabular}
+\end{table}
+
+\begin{acknowledgements}
+This project was supported, in part, by the National Science Foundation under
+award IIS-1247581. We are thankful to Eli Upfal for his guidance and to the
+anonymous reviewers whose comments helped us improving this work.
+\end{acknowledgements}
+
+%\bibliographystyle{spbasic}      % basic style, author-year citations
+%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+\bibliographystyle{spbasic}
+\bibliography{bidirectionalsearch,diamapprox,vcmine,vcgraph,centrality,various}
+
+
+\end{document}
+

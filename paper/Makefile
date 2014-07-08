@@ -1,11 +1,11 @@
 LATEX = pdflatex
-MAINFILE = centrsampl-nostyle
+MAINFILE = centrsampl-dmkd
 UPLOADHOST = ssh.cs.brown.edu
 UPLOADURI = public_html/papers/RiondatoKornarop-BetweennessSampling.pdf
 
 .PHONY: all archive check clean osx pdf upload view
 
-all : upload
+all : pdf 
 
 $(MAINFILE).aux: *.tex
 	$(LATEX) $(MAINFILE).tex
