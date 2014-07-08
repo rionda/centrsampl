@@ -1,6 +1,10 @@
 \begin{figure*}
   \centering
   \begin{subtable}[b]{0.47\textwidth}
+	\ifdmkd
+	  \caption{Undirected graphs}
+	  \label{tab:expUndir}
+	\fi
   \begin{small}
     \begin{tabular}{cccccc}
       \toprule
@@ -19,8 +23,11 @@
       \bottomrule
     \end{tabular}
   \end{small}
+  \ifdmkd
+  \else
   \caption{Undirected graphs}
   \label{tab:expUndir}
+  \fi
   \end{subtable}
 \ifproof
 \\
@@ -28,6 +35,10 @@
 \hspace{-5pt}
 \fi
   \begin{subtable}[b]{0.47\textwidth}
+	\ifdmkd
+	\caption{Directed graphs}
+	\label{tab:expDir}
+	\fi
   \begin{small}
     \begin{tabular}{cccccccc}
       \toprule
@@ -47,8 +58,11 @@
       \bottomrule
     \end{tabular} 
   \end{small}
+  \ifdmkd
+  \else
   \caption{Directed graphs}
   \label{tab:expDir}
+  \fi
   \end{subtable}
   \caption{Graph properties and running time ratios.}
   \label{fig:tables}
