@@ -1,6 +1,7 @@
-\begin{figure*}
+\begin{figure}
   \centering
-  \begin{subtable}[b]{0.47\textwidth}
+  \begin{subtable}{\textwidth}
+	\centering
 	\ifdmkd
 	  \caption{Undirected graphs}
 	  \label{tab:expUndir}
@@ -34,7 +35,8 @@
 \else
 \hspace{-5pt}
 \fi
-  \begin{subtable}[b]{0.47\textwidth}
+  \begin{subtable}{\textwidth}
+	\centering
 	\ifdmkd
 	\caption{Directed graphs}
 	\label{tab:expDir}
@@ -66,7 +68,7 @@
   \end{subtable}
   \caption{Graph properties and running time ratios.}
   \label{fig:tables}
-\end{figure*}
+\end{figure}
 
 \section{Experimental evaluation}\label{sec:exper}
 We conducted an experimental evaluation of our algorithms, with two major

@@ -635,8 +635,8 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
   \]
   The variables $X_i$'s are independent and identically distributed so
   \begin{align}\label{eq:expxisquared}
-    \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)=\frac{1}{r}\frac{1}{n}\sum_{v\in
-    V}\alpha_v^2+\frac{r-1}{r}(\betw(w))^2,
+    \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)\nonumber\\
+	&=\frac{1}{r}\frac{1}{n}\sum_{v\in V}\alpha_v^2+\frac{r-1}{r}(\betw(w))^2,
 \end{align}
 where we used~\eqref{eq:xiexpvar}.
 
@@ -655,7 +655,8 @@ By definition,
 The random variables $Y_i$ are independent and identically distributed so
 \begin{align}\label{eq:expyisquared}
   \exp[(\tilde\betw(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^r
-  Y_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[Y_i^2]+\sum_{j=i+1}^r\exp[Y_i]\exp[Y_j]\right)=\frac{1}{r}\betw(w)+\frac{r-1}{r}(\betw(w))^2,
+  Y_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[Y_i^2]+\sum_{j=i+1}^r\exp[Y_i]\exp[Y_j]\right)\nonumber\\
+  &=\frac{1}{r}\betw(w)+\frac{r-1}{r}(\betw(w))^2,
 \end{align}
 where we used~\eqref{eq:yiexpvar}.
 
@@ -665,8 +666,8 @@ We can now rewrite the left side of~\eqref{eq:inequal} using
   \exp[(\tilde\betw(w))^2]-\exp[(\tilde\betw_\mathsf{BF}(w))^2] &=
   \frac{1}{r}\betw(w)+\frac{r-1}{r}(\betw(w))^2 - \frac{1}{r}\frac{1}{n}\sum_{v\in
     V}\alpha_v^2
-   -\frac{r-1}{r}(\betw(w))^2 =
-    \frac{1}{r}\frac{1}{n}\sum_{v\in V}(\alpha_v - \alpha_v^2)\enspace. 
+   -\frac{r-1}{r}(\betw(w))^2\\
+   &= \frac{1}{r}\frac{1}{n}\sum_{v\in V}(\alpha_v - \alpha_v^2)\enspace. 
 \end{align*}
 Since $\alpha_v\in[0,1]$, we have $\alpha_v-\alpha_v^2\ge 0$ for all $v$, and our proof
 is complete.
@@ -683,12 +684,12 @@ The following lemma is an easy consequence of the above.
 
 \begin{proof}
   We have
-  \[ 
-  \exp[\mse_\mathsf{BP}] = \exp\left[\frac{1}{n}\sum_{v\in
+  \begin{align*}
+  \exp[\mse_\mathsf{BP}] &= \exp\left[\frac{1}{n}\sum_{v\in
   V}\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
-  V}\exp\left[\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
-  V}\var[\tilde\betw_\mathsf{BP}(w)],
-  \]
+  V}\exp\left[\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]\\
+  &=\frac{1}{n}\sum_{v\in V}\var[\tilde\betw_\mathsf{BP}(w)],
+  \end{align*}
   where we used the linearity of expectation and the fact that the estimator
   $\tilde\betw_\mathsf{BP}(w)$ is unbiased for $\betw(w)$ ($\exp[\tilde\betw_\mathsf{BP}(w)]=\betw(w)]$).
   Analogously for Algorithm~1:

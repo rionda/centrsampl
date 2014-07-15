@@ -23,10 +23,10 @@
   %One algorithm computes an $(\varepsilon,\delta)$-approximation of the vector
   %of betweenness centrality of all the vertices in the graph.
   The first algorithm estimates the betweenness of all vertices: all
-  approximated values are within an additive factor $\varepsilon$ from the real
+  approximate values are within an additive factor $\varepsilon\in(0,1)$ from the real
   values, with probability at least $1-\delta$. The second algorithm focuses on
-  the top-K vertices with highest betweenness and approximate their betweenness
-  within a multiplicative factor $\varepsilon$, with probability at least
+  the top-K vertices with highest betweenness and estimate their betweenness
+  value to within a multiplicative factor $\varepsilon$, with probability at least
   $1-\delta$. This is the first algorithm that can compute such approximation for
   the top-K vertices. We use results from the VC-dimension theory to develop
   bounds to the sample size needed to achieve the desired approximations. By

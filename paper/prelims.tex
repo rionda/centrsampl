@@ -1,11 +1,11 @@
 \section{Preliminaries}\label{sec:prelims}
-In this section we introduce the definitions and lemmas that we will use to
-develop and analyze our results throughout the paper.
+In this section we introduce the definitions and lemmas that we use throughout
+the paper to develop and analyze our results.
 
 \subsection{Graphs and betweenness centrality}\label{sec:graphprelims}
 Let $G=(V,E)$ be a graph, where $E\subseteq V\times V$, with $n=|V|$ vertices
 and $m=|E|$ edges. The graph $G$ can be directed or undirected. We assume that
-there are no self-loops from one vertex to itself and no multiple edges between
+there are no self-loops from any vertex to itself and no multiple edges between
 a pair of vertices. Each edge $e\in E$ has a non-negative weight
 $\mathsf{w}(e)$. Given a pair of distinct vertices $(u,v)\in V\times V$,
 $u\neq v$, a \emph{path $p_{uv}\subseteq V$ from $u$ to $v$} is an ordered sequence of
@@ -161,6 +161,7 @@ sides of the network, and indeed that is the case.
   %}
   \begin{subtable}[c]{0.7\textwidth}
   \centering
+    \caption{Betweenness values}
     \begin{tabular}{ccccccccc}
       \toprule
       Vertex & $\mathrm{a}$ & $\mathrm{b}$ &$\mathrm{c}$ &$\mathrm{d}$ &$\mathrm{e}$ &$\mathrm{f}$ &$\mathrm{g}$ &$\mathrm{h}$ \\
@@ -168,7 +169,6 @@ sides of the network, and indeed that is the case.
       $\betw(v)$ & 0 & 0.250 & 0.125 & 0.036 & 0.054 & 0.080 & 0.268 & 0 \\
       \bottomrule
     \end{tabular}
-    \caption{Betweenness values}
   \end{subtable}
   \caption{Example of betweenness values}
   \label{fig:example-betw}
