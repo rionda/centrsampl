@@ -1,6 +1,9 @@
 \section{A range set of shortest paths}\label{sec:rangeset}
-We now define a range set of the shortest paths of a graph $G=(V,E)$, and present 
-a strict upper bound to its VC-dimension. %We show that this upper bound is strict. 
+[EK: This holds for the entire section, in lemmas and theorems we have to specify if they refer to undirected graphs,
+directed graphs or both. ]
+We now define [a range set of the shortest paths][ EK: in the definition of range set you use the proposition on, thus i think it is more suitable to say
+a range set ON the domain of shortest paths] of a graph $G=(V,E)$, and present 
+a [strict][ EK: What's the difference between a strict and a tight?] upper bound to its VC-dimension. %We show that this upper bound is strict. 
 We use the range set and the bound in the analysis of our algorithms for estimating
 the betweenness centrality of vertices of $G$.
 
@@ -14,7 +17,12 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
 Given a graph $G$ let $\mathsf{H}(G)$ be the maximum integer $d$ such that there
 are $h=\lfloor\log_2(d-2)\rfloor+1$ shortest paths $\{p_1,\dotsc,p_h\}$ in
 $\mathbb{S}_G$ of size at least $d$ and such that the collection
-$\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an anti-chain.
+$\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an [anti-chain][ EK: You need to define anti-chains. This is about both undirected and directed graphs.].
+
+[ EK: I can not right now why it is better to use the H(G) formulation instead of working directly with VD(G). 
+The above sentence is a bit confusing to me. The way that $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$  is written describes a set of sets
+and not a set of paths. Maybe you want to use the union of Int()s. Furthermore I can not see why d can not be less or equal to 2. 
+If that is the case, it throws the h formula off. Overall, what is the benefit of using this H(G) formulation?]
 
 \begin{lemma}\label{lem:vcdimuppbound}
   %Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
@@ -40,7 +48,7 @@ $S_1,\dotsc,S_{2^{\ell-1}}$, where the labelling is arbitrary.
 Given that $Q$ is shattered, for each set $S_i$ there must be a range $R_i$ in
 $\range_G$ such that $S_i=Q\cap R_i$. Since all the $S_i$'s are
 different from each other, then all the $R_i$'s must be different from each
-other. Given that $p$ belongs to each $S_i$, then $p$ must also belong to each
+other. Given that $p$ [belongs to each $S_i$][ EK: "is a member of every $S_i$"], [then][ EK: unnecessary] $p$ must also belong to each
 $R_i$, that is, there are $2^{\ell-1}$ distinct ranges in $\range_G$ containing
 $p$. But $p$ belongs only to the ranges corresponding to internal vertices of
 $p$, i.e., to vertices in $\mathsf{Int}(p)$. This means that the number of ranges
@@ -83,8 +91,9 @@ $\mathsf{H}(G)\le\VD(G)$, we have the following corollary.
 %$\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{proof}
 
+[ EK: Maybe we should make more clear visually, that we only talk about unique shortes paths here. Subsection? ]
 \paragraph{Unique shortest paths}\label{sec:rangeunique}
-In the restricted case when the graph is undirected and
+In the [restricted][ EK: restricted doesn't seem to be the right word] case when the graph is undirected and
 every pair of distinct vertices has either none or a unique shortest path
 between them, the VC-dimension of $\range_G$ reduces %collapses 
 to a \emph{constant}. This is a
@@ -93,7 +102,7 @@ point of view, it suggests that there should be other characteristic
 quantities of the graph different from the vertex diameter that control the
 VC-dimension of the range set of shortest paths, and these quantities are
 constant on graph with unique shortest paths between vertices. From a more
-practical point of view, we will see in Sect.~\ref{sec:algo} that this result has an
+practical point of view, we [will][ EK: remove?] see in Sect.~\ref{sec:algo} that this result has an
 impact on the sample size needed to approximate %for approximating 
 the betweenness centrality of
 networks where the unique-shortest-path property is satisfied or even enforced,
@@ -120,55 +129,64 @@ the paper~\citep{RiondatoK13}.
 \begin{proof}
 %\begin{IEEEproof}
   First of all, notice that in this restricted setting, if two different
-  shortest paths $p_1$ and $p_2$ meet at a vertex $u$, then they either go on
-  together or %at a certain point 
-  they separate never to meet again at any other
-  vertex $v\neq u$. This is easy to see: if they could separate at $u$ and then
+  shortest paths $p_1$ and $p_2$ meet at a vertex $u$, then they either [go on
+  together][ EK: up to where?] or %at a certain point 
+  [they separate never to meet again at any other
+  vertex $v\neq u$.][ EK: They can do both, they can meet once go on, and then separate never to meet again. 
+  It might be clearer if we presented it as \~"their interection is a single path with size >=1".
+  Basically what we want to say is that they can overlap only once and this can be either a node or a path.] This is easy to see: if they could separate at $u$ and then
   meet again at some $v$, then there would be two distinct shortest paths
   between $u$ and $v$, which is a contradiction of the hypothesis. Let us denote
   this fact as $\mathsf{F}$.
 
-  Assume now that $\VC(\range_G)>3$, then there must be a set
+  Assume now that $\VC(\range_G)>3$, then there must be [a set][ EK: "a graph such that, there exists a set"] 
   $Q=\{p_1,p_2,p_3,p_4\}$ of four shortest paths that can be shattered by
   $\range_G$. Then there is a vertex $w$ such that $\mathcal{T}_w\cap Q=Q$, i.e.,
   all paths in $Q$ go through $w$. Let $x$ be the farthest predecessor of $w$
   along $p_1$ that $p_1$ shares with some other path from $Q$, and let $y$ be
   the farthest successor of $w$ along $p_1$ that $p_1$ shares with some other
   path from $Q$. It is easy to see that if either $x$ or $y$ (or both) do not
-  exist, then $Q$ cannot be shattered, as we would incur in a contradiction of
-  fact $\mathsf{F}$. 
+  exist, then $Q$ cannot be shattered[, as we would incur in a contradiction of
+  fact $\mathsf{F}$. ][ EK: How is this related? ]
   
   Let us then assume that both $x$ and $y$ exist.
   Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
-  Because of fact $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
+  [Because of fact][ EK: Due to fact ] $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
   between $x$ and $w$ and all paths in $Q_y$ must go through the same vertices
   between $w$ and $y$. This also means that all paths in $Q_x\cap Q_y$ must go
-  through the same vertices between $x$ and $y$. If $Q_x\cup Q_y\neq Q$, let
-  $p^*\in Q\setminus(Q_x\cup Q_y)$. Then from the definition of $x$ and $y$ and
+  through the same vertices between $x$ and $y$. If [$Q_x\cup Q_y\neq Q$][ EK: Maybe it is better to use $\subset$ instead of $\neq$], let
+  $p^*\in Q\setminus(Q_x\cup Q_y)$. [Then from the definition of $x$ and $y$ and
   from fact $\mathsf{F}$ we have that there is no vertex $v$ such that
   $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, which implies that $Q$ can not be
-  shattered. 
+  shattered. ][ EK: Needs a bit more explanation. "Notice that $p^*$ and $p_1$ are distinct. Therefore if there was vertex 
+   $v$ such that $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, the paths $p_1$ and $p^*$ would meet in $w$ and $v$; which contradicts fact $F$."]
+   
   
-  Suppose from now on that $Q_x\cup Q_y=Q$.  If $Q_x\cap Q_y=Q$, then
+  [Suppose from now on that $Q_x\cup Q_y=Q$][ EK: "Suppose" looks like another case analysis go for "Therefore from now on we can assume that $Q_x\cup Q_y=Q$". I would write in the beginning of the proof that
+  we will do a case analysis, and then use a "In case" phrase to mark clearly where is what. ]. 
+  [ EK: "We proceed with a case analysis on the intersection of $Q_x$ and $Q_y$. In case..."]
+  If $Q_x\cap Q_y=Q$, then
   all the paths in $Q$ go through the same vertices between $x$ and $y$. From
   this and the definition of $x$ and $y$ we have that there is no vertex $v$
   such that, for example, $\mathcal{T}_v\cap Q=\{p_1,p_2\}$, hence $Q$ cannot be
-  shattered. Suppose instead that $Q_x\cap Q_y\neq Q$ and let $S=(Q_x\cap
+  shattered. [Suppose instead][ EK: "Therefore it must be..."] that [$Q_x\cap Q_y\neq Q$][ EK: again $\subset$ instead of $\neq$] and let $S=(Q_x\cap
   Q_y)\setminus\{p_1\}$. If $S\neq\emptyset$ then there is at least a path
   $p'\in S$ which, from the definition of $S$ and fact $\mathsf{F}$, must go
   through all the same vertices as $p_1$ between $x$ and $y$. Moreover, given
-  that $Q_x\cap Q_y\neq Q$, there must be a path $p^*\in Q\setminus\{p_1\}$
+  that $Q_x\cap Q_y\neq Q$, there must be a path [$p^*\in Q\setminus\{p_1\}$][ EK: go for double prime $p''$, you used $p^*$ already]
   different from $p_1$ such that $p^*\notin S$. Then, from the definition of
   $x$, $y$, and $S$, and from the existence of $p'$, there can be no vertex $v$
-  such that $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, hence $Q$ cannot be shattered.
-  Assume now that $S=\emptyset$ and consider the case $Q_x=\{p_1,p_2,p_3\}$,
-  $Q_y=\{p_1,p_4\}$ (all other cases follow by symmetry with this case).
-  Consider the set $\{p_1,p_3\}$. From the definition of $x$ and $Q_x$, and from
+  such that $\mathcal{T}_v\cap Q=\{p_1,p^*\}$, hence $Q$ cannot be shattered. [ EK: I feel there is a better way to describe the previous case, the current description is a bit confusing]
+  [Assume][ EK: Therefore we can assume that] now that $S=\emptyset$ and consider the case $Q_x=\{p_1,p_2,p_3\}$,
+  $Q_y=\{p_1,p_4\}$ (all other cases follow by symmetry with this case ).
+  Consider the set $\{p_1,p_3\}$. [From the definition of $x$ and $Q_x$, and from
   fact $\mathsf{F}$ we have that there can not be a vertex $v$ between the end
   point of $p_1$ before $x$ and $w$ such that $\mathcal{T}_v\cap Q=\{p_1,p_3\}$.
   At the same time, from the definition of $y$ and from fact $\mathsf{F}$, we
   have that such a $v$ can not be between $w$ and the end point of $p_1$ after
-  $y$. This implies that $Q$ can not be shattered.
+  $y$.][ EK: Not clear. Maybe substitute "there can not be a vertex $v$  between the end point of $p_1$ before $x$ and $w$"
+  with \~"there can not be a vertex $v$ in the sub-path that starts from the predecessor of $x$(according to $p_1$) and $w$". 
+  Let's do something similar for the next sentence too.] This implies that $Q$ can not be shattered.
 
   We showed that in all possible cases we reached a contradiction and $Q$,
   which has size $4$, can not be shattered by $\range_G$. Hence $\VC(\range_G)\le
@@ -179,7 +197,7 @@ the paper~\citep{RiondatoK13}.
 It is natural to ask whether the above lemma or a similar result also holds for
 \emph{directed} graphs. Fact $\mathsf{F}$ does not hold for directed graphs so
 the above proof does not extend immediately. In Fig.~\ref{fig:counterexample} we show
-a directed graph. For any pair of vertices in the graph, there is at most a
+a directed graph [ EK: "for which there is a set of four unique shortest paths, that can be shattered"]. For any pair of vertices in the graph, there is at most a
 unique shortest path connecting them. Consider now the
 following four directed shortest paths:
 \begin{itemize}
@@ -302,14 +320,15 @@ the bound to the VC-dimension of the associated range set.
 We call the graph $G_d\in\mathcal{G}$ the \emph{$d$\textsuperscript{th} concertina graph}.
 Figure~\ref{fig:tightgraphs} shows $G_1$, $G_2$, $G_3$, and $G_4$. The
 generalization to higher values of $d$ is be straightforward.
+[ EK: Maybe we should right formally the connectivity cause it is not obvious ]
 By construction, $\VD(G_d)=2^d+1$, so that
-$\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The $3(2^{d-1})$ vertices of $G_d$ can
+$\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The [$3(2^{d-1})$][ EK: "The $G_d$ concertina graph has total $3(2^{d-1})$ vertices, that can be partitioned in..."] vertices of $G_d$ can
 be partitioned into three classes, \emph{top}, \emph{bottom}, and \emph{middle},
 according to their location in a drawing of the graph similar to those in
 Fig.~\ref{fig:tightgraphs}. $G_d$ has $2^{d-1}-1$ top vertices, $2^{d-1}-1$ bottom vertices, and
 $2^{d-1}+2$ middle vertices. For each top vertex $v$, let $\mathsf{f}(v)$ be the
-\emph{corresponding bottom vertex}, i.e., the bottom vertex $u$ whose neighbors
-are the same middle vertices that are neighbors of $v$. Among the middle
+\emph{corresponding bottom vertex}, i.e., the bottom vertex $u$ whose [ EK: "two" ] neighbors
+are the same [ EK: "two" ] middle vertices that are neighbors of $v$. Among the middle
 vertices, the two with degree 1 are special and are called the \emph{end
 vertices} of $G_d$ and denoted as $v_\ell$ and $v_\mathrm{r}$, where the
 labels can be arbitrarily assigned. We now build a set $Q$ of $d$
@@ -341,10 +360,15 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
 \ifproof
 \begin{proof}
 %\begin{IEEEproof}
-  As we said, the $d$ paths in $Q$  go from $v_\ell$ to $v_\mathrm{r}$.
+  As we said, the $d$ paths in $Q$ [ EK: "will" we haven't constructed them yet] go from $v_\ell$ to $v_\mathrm{r}$.
   From this and the definition of $G_d$ it should be clear that they must go through
   all the middle vertices of $G_d$. Consider now the set
-  $S=2^Q\setminus\{Q,\emptyset\}$. We now build a map $\mathsf{r}$
+  [$S=2^Q\setminus\{Q,\emptyset\}$][ EK: We haven't defined Q yet. 
+  This definition looks like a number rather than set. It might be useful to do a sketch of the proof in three sentences and then
+  proceed formally. 
+  It seems like you want to relabel the elements according to the power-set without the two extremes.
+  I understood your argument but it took a while. Maybe we can work on a simplified presentation.].
+  We now build a map $\mathsf{r}$
   from the elements of $S$ to the set of top and bottom vertices of $G_d$. We can
   partition $S$ in two sets $A$ and $B$ as follows: %such that $A\cap
   %B=\emptyset$ and $A\cup B=Q$ in the following way: 
@@ -493,7 +517,7 @@ paper~\citep{RiondatoK13}.
   $\{p_1\}=Q\cap\mathcal{T}_b$, $\{p_2\}=Q\cap\mathcal{T}_k$,
   $\{p_3\}=Q\cap\mathcal{T}_g$, $\{p_1,p_2\}=Q\cap\mathcal{T}_i$,
   $\{p_1,p_3\}=Q\cap\mathcal{T}_c$, $\{p_2,p_3\}=Q\cap\mathcal{T}_f$,
-  $\{p_1,p_2,p_3\}=Q\cap\mathcal{T}_e$,  
+  $\{p_1,p_2,p_3\}=Q\cap\mathcal{T}_e$.  
   Hence all subsets of $Q$ can be expressed as the intersection between $Q$ and
   some range in $\range_G$ which means that $Q$ can be shattered and
   $\VC(\range_G)\ge 3$. Lemma~\ref{lem:vcdimuppboundunique} gives us an upper
