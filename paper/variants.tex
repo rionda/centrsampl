@@ -1,7 +1,7 @@
 \ifproof
 %\section{Edge Betweenness and Variants of Vertex Betweenness}\label{sec:variants}
 \section{Variants of betweenness centrality}\label{sec:variants}
-In this section we discuss how to extends our results to some variants of
+In this section we discuss how to extend our results to some variants of
 betweenness centrality.
 
 \subsection{$k$-bounded-distance betweenness}
@@ -47,7 +47,7 @@ of Alg.~\ref{alg:algorithm} can be reduced to
   r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
 \]
 and the computation of the shortest paths on line~\ref{algline:shortestpaths}
-can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$.
+can be stopped after [we reached][ EK: "reaching] the vertices that are $k$ ``hops'' far from $u$.
 
 \subsection{$\alpha$-weighted betweenness}
 \citet{OpsahlAS10} defined a parametric variant of betweenness centrality for
@@ -97,16 +97,17 @@ out'' after having touched at most a fixed number of vertices.
  by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
  $[0,1]$. This has no consequences on the results.}, over all possible source
  vertices $s$, of the probability that a simple random walk originating from
- $s$ and extinguishing after having touched (at most) $k+1$ vertices ($s$
+ $s$ and [extinguishing][ EK: Why not "stopping"? :P] after having touched (at most) $k+1$ vertices ($s$
  included) goes through $v$.
 \end{definition}
 
 We can define another range set $\range_G^{\mathrm{p},k}$ if we are interested
 in $k$-path betweenness. The domain $B$ of the range set now is the set of all
 simple random walks starting from any vertex of and of size up to $k+1$. For
-each vertex $v\in V$, the range $R_v$ is the subset of $B$ containing all and
+each vertex $v\in V$, the range $R_v$ is the subset of $B$ containing [all and][ EK: remove?]
 only the random walks from $B$ that have $v$ as internal vertex. It is easy to
-see that $\VC(\range_G^{\mathrm{p},k})$ is at most $\lfloor\log_2(k-1)+1$
+see that $\VC(\range_G^{\mathrm{p},k})$ is at most $\lfloor\log_2(k-1)+1$ [ EK: you need the right floor. 
+The one that matches the carpet :P ]
 following the same reasoning as in Lemma~\ref{lem:vcdimuppbound} and
 Lemma~\ref{lem:vcdimuppboundk}.
 
@@ -118,7 +119,8 @@ for
 iterations, rather than sampling a pair of vertices $(uv)$, computing
 $\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
 single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-sample a simple random walk touching $\ell$ vertices, while updating the estimated
+sample a simple random walk touching $\ell$ vertices[ EK: So you consider the sampled-source as touched? If not then 
+the previous range should be $[1,k+1]$], while updating the estimated
 betweenness of each touched vertex by adding $1/r$ to its estimation. The method
 to sample a simple random walk is described in~\citep{KourtellisASIT12}.
 
@@ -126,15 +128,17 @@ to sample a simple random walk is described in~\citep{KourtellisASIT12}.
 at least $1-1/n^2$, all the $k$-path betweenness values to within an additive
 error $n^{-1/2+\alpha}/(n-1)$ using $2n^{1-2\alpha}k^2\ln n$ samples, for
 $\alpha\in[-1/2,1/2]$. We can obtain the same guarantees with a \emph{much
-lower} number $r$ of samples, precisely
+lower} number $r$ of samples, [precisely][ EK: specifically]
 \[
 r=2n^{1-2\alpha}\left(\ln n+\frac{\lfloor\log_2(k-1)\rfloor+1}{2}\right)\enspace.
 \]
-In conclusion, we presented a tighter analysis of the algorithm
+[In conclusion,][ EK: When i read that I scrolled down to the conclusion. "In summary". Maybe we should also remove
+the "will" words that are here and there. Irrelevant but I can not find the right place to add this comment.] we presented a tighter analysis of the algorithm
 by~\citet{KourtellisASIT12}.
 
 \subsection{Edge betweenness}
-Until now we focused on computing the betweenness centrality of vertices. It is
+Until now we focused on computing the betweenness centrality of vertices.
+[ EK: Maybe we should mention that in the introduction/preliminaries too.]It is
 also possible to define a betweenness centrality index for \emph{edges} of a
 graph $G=(V,E)$~\citep{Anthonisse71,Brandes08}. Edge betweenness is useful, for
 example, to develop heuristics for community detection~\citep{NewmanG04}. Given
