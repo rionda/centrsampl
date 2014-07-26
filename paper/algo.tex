@@ -622,10 +622,11 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
 
 \begin{lemma}\label{lem:variance}
   Fix $r>0$ and let $w\in V$. Let $\tilde\betw_\mathsf{BP}(w)$ be the estimation
-  of the betweenness $\betw(w)$ computed by \textsf{BP} using $r$ samples, and
+  [of the betweenness $\betw(w)$ computed by \textsf{BP}][ EK: "computed by \textsf{BP} of the betweenness $\betw(w)$ "] using $r$ samples, and
   let $\tilde\betw(w)$ be the estimation computed by
   Algorithm~\ref{alg:algorithm} using $r$ samples. The estimator
-  $\tilde\betw_\mathsf{BP}(w)$ is \emph{uniformly better} than the estimator
+  $\tilde\betw_\mathsf{BP}(w)$ is [\emph{uniformly better}][ EK: Can we just proceed to the variance 
+  relation] than the estimator
   $\tilde\betw(w)$. I.e., for any value of $\betw(w)$ and $r$, we have
   \[
   \var[\tilde\betw_\mathsf{BP}(w)]\le\var[\tilde\betw(w)]\enspace.
@@ -654,10 +655,12 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
   v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{\sigma_{vu}}\enspace.
   \]
   Note that 
+  [ EK: Is it $\alpha(v)$ or $\alpha_v$ ]
   \begin{equation}\label{eq:betwalpha}
     \betw(w)=\frac{1}{n}\sum_{v\in V}\alpha(v)\enspace.
   \end{equation}
-  Consider, for $1\le i \le r$, the contribution $X_i$ to $\tilde\betw_\mathsf{BP}(w)$
+  [Consider, for $1\le i \le r$, the contribution $X_i$] [ EK:
+  Let $X_i$, for $1\le i \le r$, be the contribution ] to $\tilde\betw_\mathsf{BP}(w)$
   of the paths computed from the $i$\textsuperscript{th} sampled vertex. $X_i$
   is a random variable that takes value $\alpha_v$ with probability $1/n$, for
   all $v\in V$. We have
@@ -669,7 +672,11 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
   \[
   \tilde\betw_\mathsf{BP}(w)=\frac{1}{r}\sum_{i=1}^r X_i\enspace.
   \]
-  The variables $X_i$'s are independent and identically distributed so
+  The variables $X_i$'s are independent and identically distributed[EK: Is it sampling with replacement?] so
+  [ EK: If in the equation below you used the square of multinomial, then you forgot the multiplicative terms(at least in the 
+  first expansion). If my math is correct then you get the $\fac{r(r-1)}{2}$ term from the double sum, and 
+  the twos of the expansion can be deleted due to the denominator of the fraction.Also I don't see 
+  how $r$ got in the denominator]
   \begin{align}\label{eq:expxisquared}
     \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)\nonumber\\
 	&=\frac{1}{r}\frac{1}{n}\sum_{v\in V}\alpha_v^2+\frac{r-1}{r}(\betw(w))^2,
@@ -705,6 +712,7 @@ We can now rewrite the left side of~\eqref{eq:inequal} using
    -\frac{r-1}{r}(\betw(w))^2\\
    &= \frac{1}{r}\frac{1}{n}\sum_{v\in V}(\alpha_v - \alpha_v^2)\enspace. 
 \end{align*}
+[ EK: Say that you used the (5) to get the last equality]
 Since $\alpha_v\in[0,1]$, we have $\alpha_v-\alpha_v^2\ge 0$ for all $v$, and our proof
 is complete.
 \end{proof}
@@ -720,6 +728,8 @@ The following lemma is an easy consequence of the above.
 
 \begin{proof}
   We have
+  [ EK: How did you get the variance in the last equation? If you used the Bienaymé formula, I think
+  you forgot to multiply with 1/n.]
   \begin{align*}
   \exp[\mse_\mathsf{BP}] &= \exp\left[\frac{1}{n}\sum_{v\in
   V}\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
