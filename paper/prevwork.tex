@@ -2,6 +2,7 @@
 Over the years, a number of centrality measures have been defined~\citep{Newman10}. In this work
 we focus on betweenness centrality and some of its variants. 
 
+[ EK: Need to work a bit on the flow of the next paragraph.]
 Betweenness centrality was introduced in the sociology
 literature~\citep{Anthonisse71,Freeman77}. \citet{Brandes08} presents a number
 of minor variants. A particularly interesting one, $k$-bounded-distance
@@ -42,12 +43,15 @@ and the union bound~\citep{MitzenmacherU05}.
 to an overestimation of the betweenness of vertices that are close to the
 sampled ones and introduced different unbiased estimators that are
 experimentally shown to have smaller variance and do not suffer from this
-overshooting. Our algorithm is different from these because we sample, each
+[overshooting][ EK: seems like an informal term, but I don't have a better suggestion].
+Our algorithm [is different from these because we sample][ EK: "takes a different approach from the above algorithms. Specifically"], each
 time, a single random shortest path. %between two randomly chosen nodes. 
 This leads to a much smaller sample size and less work done for each sample,
 resulting in a much faster way to compute approximations of the betweenness with
 the same probabilistic guarantees. 
 \ifproof
+[ EK: Need a better bridge with the previous sentence. "For certain applications it is crucial/enough to 
+have a good centrality approximation of the top-K vertices."]
 Although existing algorithms \citep{BrandesP07,JacobKLPT05,GeisbergerSS08} can be extended to return a
 superset of the top-$K$ vertices with highest betweenness, they only offer an
 \emph{additive} approximation guarantee, while our algorithm for the top-$K$
@@ -73,8 +77,9 @@ in~\citep{LimMRTB11}. The algorithm does not offer any guarantee on the quality
 of the approximations. Compared to these adaptive sampling approaches, our
 methods ensure that the betweenness of all (or top-$K$) vertices is well
 approximated, while using a fixed, predetermined amount of samples.
-\citet{SaryuceSKC13} present an algorithm that pre-processes the network in
-multiple ways by removing degree-1 vertices and identical vertices, and splits it
+\citet{SaryuceSKC13} present an algorithm that pre-processes the network [in
+multiple ways][ EK: "multiple times," or on multiple rounds] by removing degree-1 vertices and identical vertices, and [splits it][ EK: "proceeds
+by splitting the network"]
 in separate components where the computation of betweenness can be performed
 independently and then aggregated. They do not present an analysis of the
 complexity of the algorithm. 
@@ -84,7 +89,7 @@ theory~\citep{VapnikC71}, a key component of statistical learning theory. We
 compute an upper bound to the VC-dimension of a range set defined on shortest
 paths. \citet{KranakisKRUW97} present a number of results on the VC-dimension of
 various range sets for graphs (stars, connected sets of vertices, sets of
-edges), but do not deal with shortest paths. \citet{AbrahamDFGW11} use
+edges), but do not [deal with][ EK: "analyze/study the case of"]  shortest paths. \citet{AbrahamDFGW11} use
 VC-dimension to speed up shortest path computation but their range set is
 different from the one we use: their ground set is the set of vertices while
 ours is defined on shortest paths.
@@ -94,7 +99,7 @@ The present work extends substantially the preliminary
 version~\citep{RiondatoK14WSDM}. The proof of all the theorems and lemmas are
 presented here for the first time. Examples of betweenness centrality and of the
 concept of VC-dimension have been added to Sect.~\ref{sec:prelims}. A major new
-contribution is a tighter analysis of the algorithm from~\citep{BrandesP07},
+contribution is a tighter analysis [ EK: "and a (thorough) comparison"?] of the algorithm from~\citep{BrandesP07},
 presented in Sect.~\ref{sec:discussion}. We also discuss many other variants of
 betweenness, including edge betweenness in Sect.~\ref{sec:variants}, where we
 also present a new tighter analysis of the algorithm for $k$-path betweenness
