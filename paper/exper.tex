@@ -66,7 +66,7 @@
   \label{tab:expDir}
   \fi
   \end{subtable}
-  \caption{Graph properties and running time ratios.}
+  \caption{Graph properties and running time ratios. [ EK: What about graph invariants instead of graph properties? http://en.wikipedia.org/wiki/Category:Graph_invariants]}
   \label{fig:tables}
 \end{figure}
 
@@ -237,7 +237,7 @@ V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm and taking
 the average and the standard deviation of this measure, for different values of
 $\varepsilon$. We also compute the maximum error $|\betw(v)-\tilde\betw(v)|$
 overall. The results are reported in Fig.~\ref{fig:gnutella:error} for the directed
-graph p2p-Gnutella30, %
+graph [p2p-Gnutella30][ EK: Maybe use \texttt{p2p-Gnutella30} fonts instead of p2p-Gnutella30 fonts for the graphs], %
 \ifproof
 in Fig.~\ref{fig:HepPh:error} for the directed graph ca-HepPh, in
 Fig.~\ref{fig:Epinions:error} for the undirected graph soc-Epinions1, %
@@ -255,8 +255,8 @@ orders of magnitude smaller than the guarantees, and the \texttt{Avg+Stddev}
 points show that the estimation are quite concentrated around the
 average. We can conclude that in practice the algorithm performs even \emph{better
 than guaranteed}, achieving higher accuracy and confidence than what the
-theoretical analysis indicates. This is due to a number of factors, like the
-fact that we use an \emph{upper bound} to the VC-dimension of the range set. 
+theoretical analysis indicates. [This is due to a number of factors, like the
+fact that we use an \emph{upper bound} to the VC-dimension of the range set. ][ EK: This seems a bit vague. How can we add more info here?]
 %Morev the inherent looseness of the formula of the sample size~\eqref{eq:vceapprox}.
 
 \begin{figure*}[ht]
@@ -440,7 +440,8 @@ case. Indeed our algorithm needs only to find the shortest path between a
 sampled pair of vertices, whereas the algorithms
 from~\citep{GeisbergerSS08,BrandesP07} need to compute the shortest paths
 between a sampled source and all the other vertices. In our experimental
-evaluation we found out that the running time of the algorithms is directly
+evaluation we [found out ][ EK: Don't like the past tense, neither the verb. Overall, can we argue about this given the figures and numbers?
+If it is just a logical/intuitive conclusion, you don't have to base it on the experimental evaluation.] that the running time of the algorithms is directly
 proportional to the number of edges touched during the shortest path
 computation. The use of bidirectional A\textsuperscript{*}
 search~\citep{Pohl69,KaindlK97} can help in lowering the number of touched edges
@@ -488,7 +489,7 @@ The most-scalable algorithm would be completely independent from the size
 (number of vertices) of the graph, corresponding to a flat (horizontal) line in
 the plot. Therefore, the less steep the line, the more independent from the
 network size would be the corresponding algorithm. From the figure, we can
-appreciate that this is the case for $\mathsf{VC}$, which is much more scalable
+[appreciate][ EK: confirm/verify?] that this is the case for $\mathsf{VC}$, which is much more scalable
 and independent from the size of the sample than $\mathsf{BP}$. This is very
 important, as today's networks are not only huge, but they also grow rapidly,
 and algorithms to mine them must scale well with graph size.
