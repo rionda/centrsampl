@@ -4,7 +4,7 @@ the paper to develop and analyze our results.
 
 \subsection{Graphs and betweenness centrality}\label{sec:graphprelims}
 Let $G=(V,E)$ be a graph, where $E\subseteq V\times V$, with $n=|V|$ vertices
-and $m=|E|$ edges. The graph $G$ can be directed or undirected. We assume that
+and $m=|E|$ edges. The graph $G$ can be directed or undirected. [ EK: "For this work," ] We assume that
 there are no self-loops from any vertex to itself and no multiple edges between
 a pair of vertices. Each edge $e\in E$ has a non-negative weight
 $\mathsf{w}(e)$. Given a pair of distinct vertices $(u,v)\in V\times V$,
@@ -13,7 +13,8 @@ vertices $p_{uv}=(w_1,\dotsc,w_{|p_{uv}|})$ such that $w_1=u$, $w_{|p_{uv}|}=v$ 
 for each $1\le i < |p_{uv}|$, $(w_i,w_{i+1})\in E$. The vertices $u$ and $v$ are
 called the \emph{end points} of $p_{uv}$ and the vertices in
 $\mathsf{Int}(p_{uv})=p_{uv}\setminus\{u,v\}$ are the \emph{internal vertices of
-$p_{uv}$}. The \emph{weight}
+$p_{uv}$}. The [ EK: "edge" ? and maybe mention that from that point and on we wil refer to 
+the term as just weight.] \emph{weight}
 $\mathsf{w}(p_{uv})$ of a path $p_{uv}=(u=w_1,w_2,\cdots,w_{p_{|uv|}}=v)$ from
 $u$ to $v$ is the sum of the weights of the edges composing the path:
 $\mathsf{w}(p_{uv})=\sum_{i=1}^{|p_{uv}|-1}\mathsf{w}((w_i,w_{i+1}))$. We denote with
@@ -48,8 +49,9 @@ the paper.
   \[
   \VD(G) = \max\left\{|p| ~:~ p\in \mathbb{S}_G\right\}\enspace.\]
 \end{definition}
-The vertex-diameter is the maximum number of vertices among all shortest paths
-in $G$. If all the edge weights are unitary, then $\VD(G)$ is equal to
+The vertex-diameter [is the maximum number of vertices among all shortest paths
+in $G$][ EK: "is the number of vertices of the shortest path with the maximum size." We defined
+size before]. If all the edge weights are unitary, then $\VD(G)$ is equal to
 $\mathsf{diam}(G)+1$, where $\mathsf{diam}(G)$ is the number of edges composing
 the longest shortest path in $G$. 
 %\XXX Shall we make an example with a figure?
@@ -76,8 +78,9 @@ vertices of a graph.
 
 \ifproof
 Figure~\ref{fig:example-betw} shows an example of betweenness values for the
-vertices of a (undirected, unweighted) graph. It is intuitive, by looking at the
-graph, that vertices $\mathrm{b}$ and $\mathrm{g}$ should have higher
+vertices of a (undirected, unweighted) graph.[ It is intuitive, by looking at the
+graph,][ EK: "Just by looking at the graph, one expects" don't think intuitive is the right word]
+that vertices $\mathrm{b}$ and $\mathrm{g}$ should have higher
 betweenness than the others, given that they somehow act as bridges between two
 sides of the network, and indeed that is the case.
 \begin{figure}[ht]
@@ -159,6 +162,9 @@ sides of the network, and indeed that is the case.
   %  \bottomrule
   %\end{tabular}
   %}
+  
+  [ EK: One expects to see a $v$ according to the notation $\betw(v)$. Maybe
+  if we write "Vertex $v=$" in the first row of the table?]
   \begin{subtable}[c]{0.7\textwidth}
   \centering
     \caption{Betweenness values}
@@ -233,7 +239,11 @@ Let $D$ be a domain and $\range$ be a collection of subsets from $D$. We call
 $\range$ a \emph{range set on $D$}.
 Given $B\subseteq D$, the \emph{projection of $\range$ on $B$} is the set 
 $P_\range(B)=\{ B\cap A ~:~ A\in\range\}$. We say that the set $B$ is
-\emph{shattered} by $\range$ if $P_\range(B)=2^B$.
+\emph{shattered} by $\range$ if [ EK: I know that this notation $P_\range(B)=2^B$ is used for the definition of
+of a shattered set, but it is a bit confusing. My problem is that even though it is clear that
+$B$ is a set, it is not clear (at least to me) what is the $2^B$ term. Maybe if we add an explanatory sentence
+on that...
+]$P_\range(B)=2^B$.
 
 \begin{definition}\label{def:vcdim}
   The \emph{Vapnik-Chervonenkis (VC) dimension of $\range$}, denoted as
@@ -275,6 +285,9 @@ sampled according to some distribution $\phi$ defined on the elements of $D$.
 For a set $A\subseteq D$, let $\phi(A)$ be the probability that a sample from
 $\phi$ belongs to the set $A$, and let the \emph{empirical average} of $\phi(A)$
 on $X_1^k$ be 
+
+[ EK: Is it possible to add a sentence on what is \mathds{1}_A(X_j)? some people might not be familiar with 
+the notation. It is easy to infer, but ....]
 \[
 \phi_{X_1^k}(A)=\frac{1}{k}\sum_{j=1}^k\mathds{1}_A(X_j)\enspace.%, 
 \]
@@ -285,7 +298,8 @@ for $\phi(A)$.
 \begin{definition}\label{def:eapprox}
   Let $\range$ be a range set on %a domain
   $D$ and $\phi$ be a probability distribution on $D$. For $\varepsilon\in(0,1)$,
-  an \emph{$\varepsilon$-approximation to $(\range,\phi)$} is a bag $S$ of
+  an \emph{$\varepsilon$-approximation to $(\range,\phi)$} is a [ EK: By bag you mean unordered set?
+  If yes, then whay not say a collection?] bag $S$ of
   elements of $D$ such that 
   \[
   \sup_{A\in\range}|\phi(A)-\phi_S(A)|\le\varepsilon\enspace.\]
@@ -308,7 +322,7 @@ the domain according to the distribution $\phi$.
   $1-\delta$.
 \end{theorem}
 %\XXX This is always a weird sentence that reviewers don't get. We should phrase it differently.
-The constant $c$ is approximately $0.5$~\citep{LofflerP09}.
+The constant $c$ is [approximately][ EK: "estimated to be (approximately)" 0.5 "according to"...] $0.5$~\citep{LofflerP09}.
 %\citet{LofflerP09} showed experimentally that the constant $c$ is approximately
 %$0.5$. We used this value in our experiments.
 %A similar definition offers relative guarantees on the approximation.
