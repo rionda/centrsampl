@@ -1,11 +1,8 @@
-\section{A range set of shortest paths}\label{sec:rangeset}
-[EK: This holds for the entire section, in lemmas and theorems we have to specify if they refer to undirected graphs,
-directed graphs or both. ]
-We now define [a range set of the shortest paths][ EK: in the definition of range set you use the proposition on, thus i think it is more suitable to say
-a range set ON the domain of shortest paths] of a graph $G=(V,E)$, and present 
-a [strict][ EK: What's the difference between a strict and a tight?] upper bound to its VC-dimension. %We show that this upper bound is strict. 
-We use the range set and the bound in the analysis of our algorithms for estimating
-the betweenness centrality of vertices of $G$.
+\section{A range set on shortest paths}\label{sec:rangeset}
+We now define a range set on the set of shortest paths of a graph $G=(V,E)$, and present 
+a tight upper bound to its VC-dimension. We use the range set and the bound in
+the analysis of our algorithms for estimating the betweenness centrality of
+vertices of $G$.
 
 The range set $\range_G$ is defined on the set $\mathbb{S}_G$ of all shortest
 paths between vertices of $G$. It contains, for each vertex $v\in V$, the set
@@ -14,15 +11,34 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
 \range_G = \{\mathcal{T}_v ~:~ v\in V\}\enspace.
 \]
 
-Given a graph $G$ let $\mathsf{H}(G)$ be the maximum integer $d$ such that there
-are $h=\lfloor\log_2(d-2)\rfloor+1$ shortest paths $\{p_1,\dotsc,p_h\}$ in
-$\mathbb{S}_G$ of size at least $d$ and such that the collection
-$\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an [anti-chain][ EK: You need to define anti-chains. This is about both undirected and directed graphs.].
+Given a graph $G=(V,E)$, assume, for technical reasons, that $|E|\ge 2$ (the
+case $|E|=1$ is trivial), and let $\mathsf{H}(G)$ be the maximum integer $d$
+such that there are $h=\lfloor\log_2(d-2)\rfloor+1$ shortest paths
+$\{p_1,\dotsc,p_h\}$ in $\mathbb{S}_G$ of size at least $d$ and such that the
+collection $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an anti-chain,
+i.e., a collection of sets such that for no two sets in it one is a subset of
+the other. Not that since $|E|\ge 2$ and the size of a path is always at least
+$2$, then the formula for $h$ is always well defined.
 
-[ EK: I can not right now why it is better to use the H(G) formulation instead of working directly with VD(G). 
-The above sentence is a bit confusing to me. The way that $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$  is written describes a set of sets
-and not a set of paths. Maybe you want to use the union of Int()s. Furthermore I can not see why d can not be less or equal to 2. 
-If that is the case, it throws the h formula off. Overall, what is the benefit of using this H(G) formulation?]
+[ EK: I can not right now why it is better to use the H(G) formulation instead
+of working directly with VD(G).]
+
+[ MR: It allows for a (theoretically) tighter bound, or at least a better
+characterization ]
+
+[EK: The above sentence is a bit confusing to me. The way that $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$  is written describes a set of sets
+and not a set of paths. Maybe you want to use the union of Int()s.]
+
+[MR: No, it's correct. A set of sets.]
+
+[EK: Furthermore I can not see why d can not be less or equal to 2. 
+If that is the case, it throws the h formula off.]
+
+[MR: $d$ is the size of the path. The size of a path is always at least 2,
+because it includes the extremes. E.g., if $(u,v) \in E$, the path from $u$ to
+$v$ is $\{u,v\}$ and has size $2$. The only case when $H(G)$ may be less than 2
+is that there is a single edge in the graph. I added clarification in the
+paragraph.]
 
 \begin{lemma}\label{lem:vcdimuppbound}
   %Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
@@ -48,7 +64,7 @@ $S_1,\dotsc,S_{2^{\ell-1}}$, where the labelling is arbitrary.
 Given that $Q$ is shattered, for each set $S_i$ there must be a range $R_i$ in
 $\range_G$ such that $S_i=Q\cap R_i$. Since all the $S_i$'s are
 different from each other, then all the $R_i$'s must be different from each
-other. Given that $p$ [belongs to each $S_i$][ EK: "is a member of every $S_i$"], [then][ EK: unnecessary] $p$ must also belong to each
+other. Given that $p$ is a member of every $S_i$, $p$ must also belong to each
 $R_i$, that is, there are $2^{\ell-1}$ distinct ranges in $\range_G$ containing
 $p$. But $p$ belongs only to the ranges corresponding to internal vertices of
 $p$, i.e., to vertices in $\mathsf{Int}(p)$. This means that the number of ranges
@@ -91,9 +107,8 @@ $\mathsf{H}(G)\le\VD(G)$, we have the following corollary.
 %$\VC(\range_G)\le\lfloor\log_2(\VD(G)-2)\rfloor+1$.%\qed
 %\end{proof}
 
-[ EK: Maybe we should make more clear visually, that we only talk about unique shortes paths here. Subsection? ]
-\paragraph{Unique shortest paths}\label{sec:rangeunique}
-In the [restricted][ EK: restricted doesn't seem to be the right word] case when the graph is undirected and
+\subsection{Unique shortest paths}\label{sec:rangeunique}
+In the restricted case when the graph is undirected and
 every pair of distinct vertices has either none or a unique shortest path
 between them, the VC-dimension of $\range_G$ reduces %collapses 
 to a \emph{constant}. This is a
@@ -102,7 +117,7 @@ point of view, it suggests that there should be other characteristic
 quantities of the graph different from the vertex diameter that control the
 VC-dimension of the range set of shortest paths, and these quantities are
 constant on graph with unique shortest paths between vertices. From a more
-practical point of view, we [will][ EK: remove?] see in Sect.~\ref{sec:algo} that this result has an
+practical point of view, we show in Sect.~\ref{sec:algo} that this result has an
 impact on the sample size needed to approximate %for approximating 
 the betweenness centrality of
 networks where the unique-shortest-path property is satisfied or even enforced,
@@ -151,7 +166,7 @@ the paper~\citep{RiondatoK13}.
   
   Let us then assume that both $x$ and $y$ exist.
   Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
-  [Because of fact][ EK: Due to fact ] $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
+  Due to fact $\mathsf{F}$, all paths in $Q_x$ must go through the same vertices
   between $x$ and $w$ and all paths in $Q_y$ must go through the same vertices
   between $w$ and $y$. This also means that all paths in $Q_x\cap Q_y$ must go
   through the same vertices between $x$ and $y$. If [$Q_x\cup Q_y\neq Q$][ EK: Maybe it is better to use $\subset$ instead of $\neq$], let
@@ -197,8 +212,9 @@ the paper~\citep{RiondatoK13}.
 It is natural to ask whether the above lemma or a similar result also holds for
 \emph{directed} graphs. Fact $\mathsf{F}$ does not hold for directed graphs so
 the above proof does not extend immediately. In Fig.~\ref{fig:counterexample} we show
-a directed graph [ EK: "for which there is a set of four unique shortest paths, that can be shattered"]. For any pair of vertices in the graph, there is at most a
-unique shortest path connecting them. Consider now the
+a directed graph for which there is a set of four shortest paths that can
+be shattered. For any pair of vertices in the graph, there is at most one
+shortest path connecting them. Consider now the
 following four directed shortest paths:
 \begin{itemize}
   \item $p_A=\{1,2,4,6,7,13,14,16,17,18,22,21\}$
@@ -319,16 +335,17 @@ The graphs in $\mathcal{G}$ are the ones for which we can show the tightness of
 the bound to the VC-dimension of the associated range set.
 We call the graph $G_d\in\mathcal{G}$ the \emph{$d$\textsuperscript{th} concertina graph}.
 Figure~\ref{fig:tightgraphs} shows $G_1$, $G_2$, $G_3$, and $G_4$. The
-generalization to higher values of $d$ is be straightforward.
-[ EK: Maybe we should right formally the connectivity cause it is not obvious ]
+generalization to higher values of $d$ is straightforward.
+[ EK: Maybe we should write formally the connectivity 'cause it is not obvious. ]
 By construction, $\VD(G_d)=2^d+1$, so that
-$\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The [$3(2^{d-1})$][ EK: "The $G_d$ concertina graph has total $3(2^{d-1})$ vertices, that can be partitioned in..."] vertices of $G_d$ can
-be partitioned into three classes, \emph{top}, \emph{bottom}, and \emph{middle},
+$\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The $G_d$ concertina graph has total
+$3(2^{d-1})$ vertices, that can be partitioned into three classes, \emph{top},
+\emph{bottom}, and \emph{middle},
 according to their location in a drawing of the graph similar to those in
 Fig.~\ref{fig:tightgraphs}. $G_d$ has $2^{d-1}-1$ top vertices, $2^{d-1}-1$ bottom vertices, and
 $2^{d-1}+2$ middle vertices. For each top vertex $v$, let $\mathsf{f}(v)$ be the
-\emph{corresponding bottom vertex}, i.e., the bottom vertex $u$ whose [ EK: "two" ] neighbors
-are the same [ EK: "two" ] middle vertices that are neighbors of $v$. Among the middle
+\emph{corresponding bottom vertex}, i.e., the bottom vertex $u$ whose two neighbors
+are the same two middle vertices that are neighbors of $v$. Among the middle
 vertices, the two with degree 1 are special and are called the \emph{end
 vertices} of $G_d$ and denoted as $v_\ell$ and $v_\mathrm{r}$, where the
 labels can be arbitrarily assigned. We now build a set $Q$ of $d$
@@ -360,14 +377,11 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
 \ifproof
 \begin{proof}
 %\begin{IEEEproof}
-  As we said, the $d$ paths in $Q$ [ EK: "will" we haven't constructed them yet] go from $v_\ell$ to $v_\mathrm{r}$.
+  As we said, the $d$ paths in $Q$ that we will construct will go from $v_\ell$ to $v_\mathrm{r}$.
   From this and the definition of $G_d$ it should be clear that they must go through
   all the middle vertices of $G_d$. Consider now the set
-  [$S=2^Q\setminus\{Q,\emptyset\}$][ EK: We haven't defined Q yet. 
-  This definition looks like a number rather than set. It might be useful to do a sketch of the proof in three sentences and then
-  proceed formally. 
-  It seems like you want to relabel the elements according to the power-set without the two extremes.
-  I understood your argument but it took a while. Maybe we can work on a simplified presentation.].
+  [$S=2^Q\setminus\{Q,\emptyset\}$]
+  
   We now build a map $\mathsf{r}$
   from the elements of $S$ to the set of top and bottom vertices of $G_d$. We can
   partition $S$ in two sets $A$ and $B$ as follows: %such that $A\cap
@@ -448,7 +462,7 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   from $\range_{G_d}$, which means that $Q$ can be shattered and therefore
   $\VC(\range_{G_d})\ge d$.
 
-  From Corol~\ref{corol:vcdimuppbound} we know that $\VC(\range_{G_d})\le d$, so
+  From Corol.~\ref{corol:vcdimuppbound} we know that $\VC(\range_{G_d})\le d$, so
   it must be $\VC(\range_{G_d})=d$.
 %\end{IEEEproof} 
 \end{proof}

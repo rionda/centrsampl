@@ -47,7 +47,7 @@ of Alg.~\ref{alg:algorithm} can be reduced to
   r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
 \]
 and the computation of the shortest paths on line~\ref{algline:shortestpaths}
-can be stopped after [we reached][ EK: "reaching] the vertices that are $k$ ``hops'' far from $u$.
+can be stopped after having reached the vertices that are $k$ ``hops'' far from $u$.
 
 \subsection{$\alpha$-weighted betweenness}
 \citet{OpsahlAS10} defined a parametric variant of betweenness centrality for
@@ -97,17 +97,17 @@ out'' after having touched at most a fixed number of vertices.
  by~\citet{KourtellisASIT12}, to normalize the value so that it belongs to the interval
  $[0,1]$. This has no consequences on the results.}, over all possible source
  vertices $s$, of the probability that a simple random walk originating from
- $s$ and [extinguishing][ EK: Why not "stopping"? :P] after having touched (at most) $k+1$ vertices ($s$
+ $s$ and stopping after having touched (at most) $k+1$ vertices ($s$
  included) goes through $v$.
 \end{definition}
 
 We can define another range set $\range_G^{\mathrm{p},k}$ if we are interested
 in $k$-path betweenness. The domain $B$ of the range set now is the set of all
 simple random walks starting from any vertex of and of size up to $k+1$. For
-each vertex $v\in V$, the range $R_v$ is the subset of $B$ containing [all and][ EK: remove?]
-only the random walks from $B$ that have $v$ as internal vertex. It is easy to
-see that $\VC(\range_G^{\mathrm{p},k})$ is at most $\lfloor\log_2(k-1)+1$ [ EK: you need the right floor. 
-The one that matches the carpet :P ]
+each vertex $v\in V$, the range $R_v$ is the subset of $B$ containing only the
+random walks from $B$ that have $v$ as internal vertex. It is easy to
+see that $\VC(\range_G^{\mathrm{p},k})$ is at most
+$\lfloor\log_2(k-1)\rfloor+1$, 
 following the same reasoning as in Lemma~\ref{lem:vcdimuppbound} and
 Lemma~\ref{lem:vcdimuppboundk}.
 
@@ -128,11 +128,11 @@ to sample a simple random walk is described in~\citep{KourtellisASIT12}.
 at least $1-1/n^2$, all the $k$-path betweenness values to within an additive
 error $n^{-1/2+\alpha}/(n-1)$ using $2n^{1-2\alpha}k^2\ln n$ samples, for
 $\alpha\in[-1/2,1/2]$. We can obtain the same guarantees with a \emph{much
-lower} number $r$ of samples, [precisely][ EK: specifically]
+lower} number $r$ of samples, specifically
 \[
 r=2n^{1-2\alpha}\left(\ln n+\frac{\lfloor\log_2(k-1)\rfloor+1}{2}\right)\enspace.
 \]
-[In conclusion,][ EK: When i read that I scrolled down to the conclusion. "In summary". Maybe we should also remove
+In  summary [EK: Maybe we should also remove
 the "will" words that are here and there. Irrelevant but I can not find the right place to add this comment.] we presented a tighter analysis of the algorithm
 by~\citet{KourtellisASIT12}.
 

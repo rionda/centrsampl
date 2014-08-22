@@ -77,7 +77,7 @@ of Alg.~\ref{alg:algorithm} can be reduced to
   r= \frac{c}{\varepsilon^2}\left(\lfloor\log_2(k-1)\rfloor + 1 +\ln\frac{1}{\delta}\right)
 \]
 and the computation of the shortest paths on line~\ref{algline:shortestpaths}
-can be stopped after we reached the vertices that are $k$ ``hops'' far from $u$.
+can be stopped after having reached the vertices that are $k$ ``hops'' far from $u$.
 \fi
 
 \paragraph{Sampling a shortest path}
@@ -123,8 +123,8 @@ $p^*$.
   \Pr(p^*)=\frac{\sigma_{uz_{|p^*|-2}}}{\sigma_{uv}}\frac{\sigma_{uz_{|p^*|-3}}}{\sigma_{uz_{|p^*|-2}}}\dotsb
   \frac{1}{\sigma_{uz_2}}=\frac{1}{\sigma_{uv}}
   \]
-  where we used \citep[Lemma3]{Brandes01} which [tells us that for][ EK: "Which gives us the following expression 
-  about the number of shortes paths for"] $w\neq u$,
+  where we used~\citep[Lemma3]{Brandes01} which gives us the following expression 
+  about the number of shortest paths for $w\neq u$,
   \[
   \sigma_{uw}=\sum_{j\in P_u(w)}\sigma_{uj}
   \]
@@ -278,7 +278,7 @@ a new vertex $u\neq v$ and then choose with uniform probability one of the
 (already computed) shortest paths between $v$ and $u$.
 
 If the graph is directed and/or not all edge weights are equal, the computation
-of a good approximation to $\VD(G)$ becomes more [problematic][ EK: "invloved"]. In particular,
+of a good approximation to $\VD(G)$ becomes more involved. In particular,
 notice that there is no relationship between $\VD(G)$ and $\mathsf{diam}(G)$
 when $G$ is weighted, as the shortest path with maximum size may not be the
 shortest path with maximum weight. In these cases, one can use the size (number
@@ -310,8 +310,7 @@ centrality.
 
 \begin{proof}
 %\begin{IEEEproof}
-  [For each $p_{uv}\in\mathbb{S}_G$ let][ EK: "for each $p_{uv}\in\mathbb{S}_G$ we define the quantity $pi_G(p_{uv})$ as:"
-  Is the G subindex necessary?]
+  For each $p_{uv}\in\mathbb{S}_G$ let
   \[
   \pi_G(p_{uv})=\frac{1}{n(n-1)}\frac{1}{\sigma_{uv}}\enspace.
   \]
@@ -395,8 +394,9 @@ that $(1-\delta')(1-\delta'')\ge(1-\delta)$. Let
 \[
 r'=\frac{c}{\varepsilon^2}\left(\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1+\log\frac{1}{\delta'}\right)\enspace.
 \]
-[Let $\tilde\betw'_k$ be ][ EK: "Specifically during the first phase we compute $\tilde\betw'_k$ which is..."] the $K$-th highest estimated betweenness obtained using
-Algorithm~\ref{alg:algorithm} where $r=r'$, and let
+In the first phase we compute $\tilde\betw'_k$, which is the $K$-th highest
+estimated betweenness obtained using Algorithm~\ref{alg:algorithm} where $r=r'$,
+and let
 %\[
   $\ell'=\tilde\betw_K-\varepsilon$, %.
 %\]
@@ -405,7 +405,7 @@ and
 \[
 r''=\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)\enspace.
 \]
-[ EK: "For the second phase, "] We run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $\tilde\betw''_K$ be
+In the second phase, we run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $\tilde\betw''_K$ be
 the so-obtained $K$-th highest estimated betweenness. Let
 $\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon) ~:~ v\in V \mbox{ s.t. }
 \tilde\betw''(v)\ge\tilde\betw''_K\}$. We
@@ -496,17 +496,15 @@ the paper~\citep{RiondatoK13}.
 \fi
 
 The advantage of using our algorithm to approximate the collection of top-$K$
-betweenness vertices [consists in][ EK: "is"] the very high-quality approximation of the
-betweenness values for the returned set of vertices: they are all within a
-multiplicative factor $\varepsilon$ from their exact values. By [reverse-sorting][ EK: sorting in descending order? Why do 
-you have to specify how to sort?]
+betweenness vertices is the very high-quality of the approximation of the
+betweenness values for the returned set of vertices: all estimations within a
+multiplicative factor $\varepsilon$ from their exact values. By sorting 
 them according to the approximated betweenness, one can obtain a ranking that is
-very similar to the original exact one. Previous algorithms could not achieve such a
-[good ranking][ EK: How do you define good? Maybe if we present it in terms of relative difference?]
-as they were only able to approximate the betweenness values to
-within an additive error $\varepsilon$. The cost of computing the high quality
-approximation for the top-$K$ vertices is the cost of an additional run of our
-algorithm to compute good approximations for all the vertices.
+very similar to the original exact one. Previous algorithms were only able to
+approximate the betweenness values to within an additive error $\varepsilon$.
+The cost of computing the high quality approximation for the top-$K$ vertices is
+the cost of an additional run of our algorithm to compute good approximations
+for all the vertices.
 
 [ EK: we should find a better title for this subsection]
 \subsection{Discussion}\label{sec:discussion}
@@ -515,7 +513,7 @@ sampling-based algorithm to approximate the betweenness centrality of all the
 vertices of the graph. The algorithm (which we call \textsf{BP}) creates a
 sample $S=\{v_1,\dotsc,v_r\}$ of $r$ vertices drawn uniformly at random and
 computes all the shortest paths between each $v_i$ to all other vertices in the
-graph. Their [estimation][ EK: approximation?estimator?] $\tilde\betw_\mathsf{BP}(u)$ for $\betw(u)$ is
+graph. Their estimator $\tilde\betw_\mathsf{BP}(u)$ for $\betw(u)$ is
 \[ 
 \tilde\betw_\mathsf{BP}(u)= \frac{1}{(n-1)r}\sum_{v_i\in S}\sum_{\substack{w\neq
 v_i\\w\neq
@@ -577,7 +575,7 @@ size $r$. Inspired by the work of~\citet{EppsteinW04}, \citet{BrandesP07}
 %\]
 %We want this probability to be at most $\delta/n$, so we need a sample of size
 %They
-prove that, to obtain good [ EK: additive? ](within $\varepsilon$) estimations for the
+prove that, to obtain good additive (within $\varepsilon$) estimations for the
 betweenness of all vertices with probability at least $1-\delta$, it must be
 \[
 r\geq \frac{1}{2\varepsilon^2}\left(\ln n + \ln 2 +\ln\frac{1}{\delta}\right)\enspace.
@@ -593,29 +591,28 @@ Sect.~\ref{sec:exper}).
 [EK: Do you think it would be useful to summarize in the first sentence of this subsection
 the two points that our algorithms differ, and then explain.]
 
-Another [interesting aspect][ EK: point?] in which our algorithm and \textsf{BP} differ is the
+Another interesting aspect in which our algorithm and \textsf{BP} differ is the
 \emph{amount of work done per sample}. Our algorithm computes a single set
 $\mathcal{S}_{uv}$ for the sampled pair of vertices $(u,v)$: it performs a run
 of Dijkstra's algorithm (or of BFS) from $u$, stopping when $v$ is reached.
-\textsf{BP} instead computes [all][ EK: "for every $w\in V$"] the sets $\mathcal{S}_{uw}$ from the sampled
-vertices $u$ to all other vertices, again with a single run of Dijkstra or BFS,
-but without the ``early-stopping condition'' [that we have when we reach $v$][ EK: "approach that our algorithm follows"].
-Although in the worst case the two computations have the same time
+\textsf{BP} instead computes \emph{all} sets $\mathcal{S}_{uw}$ from the sampled
+vertex $u$ to \emph{all} other vertices $w\in V$, again with a single run of Dijkstra or BFS,
+but without the ``early-stopping condition'' approach that our algorithm takes
+when reaching $v$. Although in the worst case the two computations have the same time
 complexity\footnote{It is a well-known open problem whether there is an
 algorithm to perform a single $s,t$-shortest path computation between a pair of
 vertices with smaller worst-case time complexity than the Single Source Shortest
 Path computation.}, in practice we perform many fewer operations, as we can
 expect $v$ not to always be very far from $u$ and therefore we can terminate
 early. This fact has a huge impact on the running time. Our algorithm also
-touches \emph{many fewer} edges than \textsf{BP}. The latter [can touch][ EK: "touches"] all the
-edges in the graph \emph{at every sample} [ EK: "given that the graph is connected"], while our computation exhibits a much
+touches \emph{many fewer} edges than \textsf{BP}. The latter may touch all the
+edges in the graph \emph{at every sample}, while our computation exhibits a much
 higher \emph{locality}, exploring only a neighborhood of $u$ until $v$ is
 reached. The results of our experimental evaluation presented in
 Sect.~\ref{sec:exper} highlights this and other advantages of our method over
-the one from~\citep{JacobKLPT05,BrandesP07}. [In the future, we plan to
-investigate the possibility of using \emph{bidirectional A$^*$
-search}~\citep{Pohl69,KaindlK97} to further speed up the computation for each
-sample of our algorithms.][ EK: Maybe we can pose that as an open question]
+the one from~\citep{JacobKLPT05,BrandesP07}. Using \emph{bidirectional A$^*$
+search}~\citep{Pohl69,KaindlK97} can further speed up the computation for each
+sample of our algorithms.
 
 \ifproof
 The analysis of Algorithm 1 allow us to obtain a tighter analysis for the
@@ -623,12 +620,13 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
 
 \begin{lemma}\label{lem:variance}
   Fix $r>0$ and let $w\in V$. Let $\tilde\betw_\mathsf{BP}(w)$ be the estimation
-  [of the betweenness $\betw(w)$ computed by \textsf{BP}][ EK: "computed by \textsf{BP} of the betweenness $\betw(w)$ "] using $r$ samples, and
+  of the betweenness $\betw(w)$ as computed by \textsf{BP} using $r$ samples, and
   let $\tilde\betw(w)$ be the estimation computed by
-  Algorithm~\ref{alg:algorithm} using $r$ samples. The estimator
-  $\tilde\betw_\mathsf{BP}(w)$ is [\emph{uniformly better}][ EK: Can we just proceed to the variance 
-  relation] than the estimator
-  $\tilde\betw(w)$. I.e., for any value of $\betw(w)$ and $r$, we have
+  Algorithm~\ref{alg:algorithm} using $r$ samples. %
+  %The estimator
+  %$\tilde\betw_\mathsf{BP}(w)$ is \emph{uniformly better} than the estimator
+  %$\tilde\betw(w)$. I.e., 
+  For any value of $\betw(w)$ and $r$, we have
   \[
   \var[\tilde\betw_\mathsf{BP}(w)]\le\var[\tilde\betw(w)]\enspace.
   \]
@@ -656,9 +654,8 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
   v}}\sum_{p\in\mathcal{S}_{vu}}\frac{\mathds{1}_{\mathsf{Int}(p)}(w)}{\sigma_{vu}}\enspace.
   \]
   Note that 
-  [ EK: Is it $\alpha(v)$ or $\alpha_v$ ]
   \begin{equation}\label{eq:betwalpha}
-    \betw(w)=\frac{1}{n}\sum_{v\in V}\alpha(v)\enspace.
+    \betw(w)=\frac{1}{n}\sum_{v\in V}\alpha_v\enspace.
   \end{equation}
   [Consider, for $1\le i \le r$, the contribution $X_i$] [ EK:
   Let $X_i$, for $1\le i \le r$, be the contribution ] to $\tilde\betw_\mathsf{BP}(w)$
@@ -666,7 +663,7 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
   is a random variable that takes value $\alpha_v$ with probability $1/n$, for
   all $v\in V$. We have
   \begin{equation}\label{eq:xiexpvar}
-    \exp[X_i]=\sum_{v\in V}\frac{1}{n}\alpha_v=\betw(w) \mbox{ and }
+	\exp[X_i]=\frac{1}{n}\sum_{v\in V}\alpha_v=\betw(w) \mbox{ and }
     \exp[X_i^2]=\frac{1}{n}\sum_{v\in V}\alpha_v^2, \forall 1\le i\le r\enspace.
   \end{equation}
   Clearly
@@ -678,8 +675,14 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
   first expansion). If my math is correct then you get the $\frac{r(r-1)}{2}$ term from the double sum, and 
   the twos of the expansion can be deleted due to the denominator of the fraction.Also I don't see 
   how $r$ got in the denominator]
+
+  [ MR: I don't know where you got the square of the multinomial. I added a missing
+  2 multiplicative factor in the third equation. To me, everything looks
+  correct. We use linearity expectation first, then expand the squared sum, and
+  then use (6) as needed.]
+
   \begin{align}\label{eq:expxisquared}
-    \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)\nonumber\\
+    \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+2\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)\nonumber\\
 	&=\frac{1}{r}\frac{1}{n}\sum_{v\in V}\alpha_v^2+\frac{r-1}{r}(\betw(w))^2,
 \end{align}
 where we used~\eqref{eq:xiexpvar}.
@@ -713,7 +716,7 @@ We can now rewrite the left side of~\eqref{eq:inequal} using
    -\frac{r-1}{r}(\betw(w))^2\\
    &= \frac{1}{r}\frac{1}{n}\sum_{v\in V}(\alpha_v - \alpha_v^2)\enspace. 
 \end{align*}
-[ EK: Say that you used the (5) to get the last equality]
+
 Since $\alpha_v\in[0,1]$, we have $\alpha_v-\alpha_v^2\ge 0$ for all $v$, and our proof
 is complete.
 \end{proof}
@@ -731,10 +734,11 @@ The following lemma is an easy consequence of the above.
   We have
   [ EK: How did you get the variance in the last equation? If you used the Bienaymé formula, I think
   you forgot to multiply with 1/n.]
+  [ MR: There was a number of typos where I had $v$ instead of $w$.]
   \begin{align*}
-  \exp[\mse_\mathsf{BP}] &= \exp\left[\frac{1}{n}\sum_{v\in
-  V}\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]=\frac{1}{n}\sum_{v\in
-  V}\exp\left[\left(\tilde\betw_\mathsf{BP}(w)-\betw(v)\right)^2\right]\\
+  \exp[\mse_\mathsf{BP}] &= \exp\left[\frac{1}{n}\sum_{w\in
+  V}\left(\tilde\betw_\mathsf{BP}(w)-\betw(w)\right)^2\right]=\frac{1}{n}\sum_{w\in
+  V}\exp\left[\left(\tilde\betw_\mathsf{BP}(w)-\betw(w)\right)^2\right]\\
   &=\frac{1}{n}\sum_{v\in V}\var[\tilde\betw_\mathsf{BP}(w)],
   \end{align*}
   where we used the linearity of expectation and the fact that the estimator
