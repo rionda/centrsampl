@@ -237,7 +237,7 @@ V}|\betw(v)-\tilde\betw(v)|)/|V|$ across five runs of our algorithm and taking
 the average and the standard deviation of this measure, for different values of
 $\varepsilon$. We also compute the maximum error $|\betw(v)-\tilde\betw(v)|$
 overall. The results are reported in Fig.~\ref{fig:gnutella:error} for the directed
-graph [p2p-Gnutella30][ EK: Maybe use \texttt{p2p-Gnutella30} fonts instead of p2p-Gnutella30 fonts for the graphs], %
+graph p2p-Gnutella30, %
 \ifproof
 in Fig.~\ref{fig:HepPh:error} for the directed graph ca-HepPh, in
 Fig.~\ref{fig:Epinions:error} for the undirected graph soc-Epinions1, %
@@ -255,8 +255,10 @@ orders of magnitude smaller than the guarantees, and the \texttt{Avg+Stddev}
 points show that the estimation are quite concentrated around the
 average. We can conclude that in practice the algorithm performs even \emph{better
 than guaranteed}, achieving higher accuracy and confidence than what the
-theoretical analysis indicates. [This is due to a number of factors, like the
-fact that we use an \emph{upper bound} to the VC-dimension of the range set. ][ EK: This seems a bit vague. How can we add more info here?]
+theoretical analysis indicates. This is due to a number of factors, for example the
+fact that we use an \emph{upper bound} to the VC-dimension of the range set and
+that the sample size is therefore an upper bound to the one \emph{necessary} to
+obtain the desired approximation guarantees.
 %Morev the inherent looseness of the formula of the sample size~\eqref{eq:vceapprox}.
 
 \begin{figure*}[ht]
@@ -439,11 +441,9 @@ same amount of computations \emph{per sample} as $\mathsf{BP}$ only in the worst
 case. Indeed our algorithm needs only to find the shortest path between a
 sampled pair of vertices, whereas the algorithms
 from~\citep{GeisbergerSS08,BrandesP07} need to compute the shortest paths
-between a sampled source and all the other vertices. In our experimental
-evaluation we [found out ][ EK: Don't like the past tense, neither the verb. Overall, can we argue about this given the figures and numbers?
-If it is just a logical/intuitive conclusion, you don't have to base it on the experimental evaluation.] that the running time of the algorithms is directly
-proportional to the number of edges touched during the shortest path
-computation. The use of bidirectional A\textsuperscript{*}
+between a sampled source and all the other vertices. Since the running time of
+the algorithms is directly proportional to the number of edges touched during
+the shortest path computation, the use of bidirectional A\textsuperscript{*}
 search~\citep{Pohl69,KaindlK97} can help in lowering the number of touched edges
 for $\mathsf{VC}$ and therefore the runtime of our algorithm ($\mathsf{BP}$
 would not benefit from this improvement). %

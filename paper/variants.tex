@@ -119,8 +119,7 @@ for
 iterations, rather than sampling a pair of vertices $(uv)$, computing
 $\mathcal{S}_{uv}$, and then sampling a shortest path between them, we first sample a
 single vertex and an integer $\ell$ uniformly at random from $[1,k+1]$. We then
-sample a simple random walk touching $\ell$ vertices[ EK: So you consider the sampled-source as touched? If not then 
-the previous range should be $[1,k+1]$], while updating the estimated
+sample a simple random walk touching $\ell$ vertices, while updating the estimated
 betweenness of each touched vertex by adding $1/r$ to its estimation. The method
 to sample a simple random walk is described in~\citep{KourtellisASIT12}.
 
@@ -132,17 +131,15 @@ lower} number $r$ of samples, specifically
 \[
 r=2n^{1-2\alpha}\left(\ln n+\frac{\lfloor\log_2(k-1)\rfloor+1}{2}\right)\enspace.
 \]
-In  summary [EK: Maybe we should also remove
-the "will" words that are here and there. Irrelevant but I can not find the right place to add this comment.] we presented a tighter analysis of the algorithm
+In summary we presented a tighter analysis of the algorithm
 by~\citet{KourtellisASIT12}.
 
 \subsection{Edge betweenness}
 Until now we focused on computing the betweenness centrality of vertices.
-[ EK: Maybe we should mention that in the introduction/preliminaries too.]It is
-also possible to define a betweenness centrality index for \emph{edges} of a
-graph $G=(V,E)$~\citep{Anthonisse71,Brandes08}. Edge betweenness is useful, for
-example, to develop heuristics for community detection~\citep{NewmanG04}. Given
-$e\in E$, the edge betweenness $\mathsf{eb}(e)$ of $e$ is defined as the
+It is also possible to define a betweenness centrality index for \emph{edges} of
+a graph $G=(V,E)$~\citep{Anthonisse71,Brandes08}. Edge betweenness is useful,
+for example, to develop heuristics for community detection~\citep{NewmanG04}.
+Given $e\in E$, the edge betweenness $\mathsf{eb}(e)$ of $e$ is defined as the
 fraction of shortest paths that \emph{contain} $e$, meaning that if $e=(u,v)$,
 then a path $p$ contains $e$ if $u$ and $v$ appear consecutively in $p$.
 Formally,
