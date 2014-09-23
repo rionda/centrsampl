@@ -17,28 +17,10 @@ such that there are $h=\lfloor\log_2(d-2)\rfloor+1$ shortest paths
 $\{p_1,\dotsc,p_h\}$ in $\mathbb{S}_G$ of size at least $d$ and such that the
 collection $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an anti-chain,
 i.e., a collection of sets such that for no two sets in it one is a subset of
-the other. Not that since $|E|\ge 2$ and the size of a path is always at least
+the other. Note that since $|E|\ge 2$ and the size of a path is always at least
 $2$, then the formula for $h$ is always well defined.
 
-[ EK: I can not right now why it is better to use the H(G) formulation instead
-of working directly with VD(G).]
 
-[ MR: It allows for a (theoretically) tighter bound, or at least a better
-characterization ]
-
-[EK: The above sentence is a bit confusing to me. The way that $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$  is written describes a set of sets
-and not a set of paths. Maybe you want to use the union of Int()s.]
-
-[MR: No, it's correct. A set of sets.]
-
-[EK: Furthermore I can not see why d can not be less or equal to 2.
-If that is the case, it throws the h formula off.]
-
-[MR: $d$ is the size of the path. The size of a path is always at least 2,
-because it includes the extremes. E.g., if $(u,v) \in E$, the path from $u$ to
-$v$ is $\{u,v\}$ and has size $2$. The only case when $H(G)$ may be less than 2
-is that there is a single edge in the graph. I added clarification in the
-paragraph.]
 
 \begin{lemma}\label{lem:vcdimuppbound}
   %Given a graph $G=(V,E)$ with vertex-diameter $\Delta_G$, the range set
@@ -366,6 +348,16 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   \caption{Examples of concertina graphs $G_d$ for $d=1,2,3,4$.}
   \label{fig:tightgraphs}
 \end{figure}
+
+[EK2: Even though it is in a much better shape, I think the next proof still looks uneccesary complicated. I would try to give some intuition before we delve into the details and all the definitions.
+For instance we can say: "We build mappings that take as an input a vertex of the concertina graph and return a set that contain the pats of Q that pass through that vertex.
+In order to route a path of Q we just have to choose the top/bottom vertex that contain the label of the corresponding path."]
+
+[EK2: In an effort to simplify the notation: Can we just use $r_A$ and $r_B$ instead of $r$. In my understanding $r$ calls $r_A$ when
+it deals with a vertex from $A$ otherwise it calls $r_B$. Also we can skip the defintion of $c$ and just describe it as a property of the 
+mapping $r_B$. Then we can just refer to the mapping of $r_B$ instead of $c$. Finally the flow is much smoother if we add a few 
+more words in the description. For instance: On the other end no path from "set of paths" c(s) goes through "vertex" r(s)...
+]
 
 \begin{lemma}\label{lem:vcdimlowbound}
   $\VC(\range_{G_d})=d$.
