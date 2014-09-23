@@ -43,14 +43,7 @@ line~\ref{algline:shortestpaths} is a call to a modified Dijkstra's (or BFS)
 algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
 as~\citep{Brandes01}. The \texttt{getDiameterApprox()} procedure computes an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
 
-[ EK: The above paragraph starts with highlighting the two crucial steps of the algorithm. Then we proceed with 
-the case of unique shortest paths and then then one of the two steps(sampling). Structurally it makes more sense to 
-move the "unique" part up or further down. Overall the previous paragraph gives intution about the algorithm and then
-the algorithm is presented two pages later. I think it is common in algorithms-bibliography to have the algorithm first and 
-then explain why it works. So maybe we can "shuffle" the paragraphs here a bit.]
 
-[ MR: I moved the unique shortest path case at the end of the section. I think
-it works better now. ]
 
 \ifproof
 \else
@@ -143,9 +136,6 @@ $p^*$ (the only ones for which the estimation is updated) as we compute $p^*$.
   \Comment{Random path sampling and estimation update}
   $t\leftarrow v$\;
   \While{$t \neq u$} {
-  [ EK: In the "sample" part I would expect one of s,t to be fixed. Like the description before Lemma 5, 
-  where the subscript of P is always u. What am I missing?]
-  [ MR: There were too many variables. I wrote it again, please check]
   sample $z\in P_u(t)$ with probability $\sigma_{uz}/\sigma_{ut}$\;
   \If{$z\neq u$} {
   $\tilde\betw(z) \leftarrow \tilde\betw(z)+1/r$\;
@@ -292,6 +282,7 @@ centrality.
   selected and Lemma~\ref{lem:samplpath}. Given a set $A$ of shortest paths in
   $G$, we slightly abuse the notation and denote $\pi_G(A)=\sum_{\pi\in A}
   \pi_G(p)$.
+  [EK2: Shouldn't that be: $\pi_G(A)=\sum_{p\in A}\pi_G(p)$ ?]
   
   Consider the range set $\range_G$ and the probability distribution $\prob_G$.
   Let $S$ be the set of paths sampled during the execution of the algorithm.
@@ -657,15 +648,6 @@ algorithm by~\citet{BrandesP07} and~\citet{JacobKLPT05}.
   \]
   The variables $X_i$'s are independent and identically distributed so
 
-  [ EK: If in the equation below you used the square of multinomial, then you forgot the multiplicative terms(at least in the 
-  first expansion). If my math is correct then you get the $\frac{r(r-1)}{2}$ term from the double sum, and 
-  the twos of the expansion can be deleted due to the denominator of the fraction.Also I don't see 
-  how $r$ got in the denominator]
-
-  [ MR: I don't know where you got the square of the multinomial. I added a missing
-  2 multiplicative factor in the third equation. To me, everything looks
-  correct. We use linearity expectation first, then expand the squared sum, and
-  then use (6) as needed.]
 
   \begin{align}\label{eq:expxisquared}
     \exp[(\tilde\betw_\mathsf{BP}(w))^2]&=\frac{1}{r^2}\exp\left[\left(\sum_{i=1}^rX_i\right)^2\right]=\frac{1}{r^2}\sum_{i=1}^r\left(\exp[X_i^2]+2\sum_{j=i+1}^r(\exp[X_i]\exp[X_j])\right)\nonumber\\
@@ -718,11 +700,6 @@ The following lemma is an easy consequence of the above.
 
 \begin{proof}
   We have
-
-  [ EK: How did you get the variance in the last equation? If you used the Bienaymé formula, I think
-  you forgot to multiply with 1/n.]
-
-  [ MR: There was a number of typos where I had $v$ instead of $w$.]
 
   \begin{align*}
   \exp[\mse_\mathsf{BP}] &= \exp\left[\frac{1}{n}\sum_{w\in
@@ -842,8 +819,8 @@ opting for \textsf{BP} (or for the algorithm by~\citet{GeisbergerSS08}, whose
 estimators have even lower variance than those of \textsf{BP}) with a number of
 samples equal to the one in~\eqref{eq:samplesize}, one should
 nevertheless take into account two facts. Firstly, we do not currently have a
-proof that "for a number of samples as in ~\eqref{eq:samplesize}, algorithm
-\textsf{BP} (or the algorithm from~\citep{GeisbergerSS08}) compute an
+proof that [EK2: Close the "] "for a number of samples as in ~\eqref{eq:samplesize}, algorithm
+\textsf{BP} (or the algorithm from~\citep{GeisbergerSS08}) compute [EK2: computes ?] an
 high-quality (within $\pm\varepsilon$) approximation of the betweenness of all
 vertices with probability at least $1-\delta$. We conjecture this fact could be
 proven using pseudodimension~\citep[Chap.~11]{AnthonyB99}. Secondly we already
