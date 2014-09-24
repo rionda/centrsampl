@@ -66,12 +66,11 @@ vertices of a graph.
   version of betweenness as we believe it to be more suitable for presenting
   approximation results.}
   \[
-  \betw(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{\sigma_{uv}}%=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}
+  \betw(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{\sigma_{uw}}%=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}
   \enspace.
   \]
 \end{definition} 
 It is easy to see that $\betw(v)\in[0,1]$. 
-[EK2: Shouldn't that be $\sigma_{uw}$ instead of $\sigma_{uv}$ ?]
 
 \ifproof
 Figure~\ref{fig:example-betw} shows an example of betweenness values for the

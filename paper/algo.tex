@@ -280,9 +280,8 @@ centrality.
   execution of the loop on line~\ref{algline:forloop} in
   Alg.~\ref{alg:algorithm}, given the way that the vertices $u$ and $v$ are
   selected and Lemma~\ref{lem:samplpath}. Given a set $A$ of shortest paths in
-  $G$, we slightly abuse the notation and denote $\pi_G(A)=\sum_{\pi\in A}
+  $G$, we slightly abuse the notation and denote $\pi_G(A)=\sum_{p\in A}
   \pi_G(p)$.
-  [EK2: Shouldn't that be: $\pi_G(A)=\sum_{p\in A}\pi_G(p)$ ?]
   
   Consider the range set $\range_G$ and the probability distribution $\prob_G$.
   Let $S$ be the set of paths sampled during the execution of the algorithm.
@@ -819,8 +818,8 @@ opting for \textsf{BP} (or for the algorithm by~\citet{GeisbergerSS08}, whose
 estimators have even lower variance than those of \textsf{BP}) with a number of
 samples equal to the one in~\eqref{eq:samplesize}, one should
 nevertheless take into account two facts. Firstly, we do not currently have a
-proof that [EK2: Close the "] "for a number of samples as in ~\eqref{eq:samplesize}, algorithm
-\textsf{BP} (or the algorithm from~\citep{GeisbergerSS08}) compute [EK2: computes ?] an
+proof that for a number of samples as in~\eqref{eq:samplesize}, algorithm
+\textsf{BP} (or the algorithm from~\citep{GeisbergerSS08}) computes an
 high-quality (within $\pm\varepsilon$) approximation of the betweenness of all
 vertices with probability at least $1-\delta$. We conjecture this fact could be
 proven using pseudodimension~\citep[Chap.~11]{AnthonyB99}. Secondly we already
