@@ -201,7 +201,9 @@ following four directed shortest paths:
   \item $p_C=\{25,24,26,18,19,15,14,7,6,5,4,3\}$
   \item $p_D=\{23,20,22,17,16,15,14,7,6,5,10,11\}$
 \end{itemize}
-It is easy to check that the set $\{p_A,p_B,p_C,p_D\}$ is shattered, so
+It is easy to check that the set $Q=\{p_A,p_B,p_C,p_D\}$ is shattered and
+Table~\ref{tab:counterexampleshatter} shows, for each subset $R\subseteq Q$, the
+vertex $v$ such that $R=Q\cap\mathcal{T}_v$. This means that
 Lemma~\ref{lem:vcdimuppboundunique} is not true for directed graphs. It is an
 open question whether it is true for a different constant.
 
@@ -281,6 +283,36 @@ $(u,v)\in V\times V$ and such that it is possible to shatter a set of four
 paths.}
 \label{fig:counterexample}
 \end{figure}
+
+\begin{table}[htb]
+  \centering
+  \begin{small}
+    \begin{tabular}{cc}
+	  \toprule
+	  $P\subseteq Q$ & Vertex $v$ such that $P=Q\cap\mathcal{T}_v$ \\
+	  \midrule
+	  $\emptyset$ & 1\\
+	  $\{p_A\}$ & 2\\
+	  $\{p_B\}$ & 9\\
+	  $\{p_C\}$ & 24\\
+	  $\{p_D\}$ & 20\\
+	  $\{p_A,p_B\}$ & 13 \\
+	  $\{p_A,p_C\}$ & 4\\
+	  $\{p_A,p_D\}$ & 22 \\
+	  $\{p_B,p_C\}$ & 26 \\
+	  $\{p_B,p_D\}$ & 10 \\
+	  $\{p_C,p_D\}$ & 15 \\
+	  $\{p_A,p_B,p_C\}$ & 18 \\
+	  $\{p_A,p_B,p_D\}$ & 16\\
+	  $\{p_A,p_C,p_D\}$ & 7\\
+	  $\{p_B,p_C,p_D\}$ & 5\\
+	  $\{p_A,p_B,p_C,p_D\}$ & 14\\
+	  \bottomrule
+	\end{tabular}
+  \end{small}
+  \caption{How to shatter $Q=\{p_A,p_B,p_C,p_D\}$.}
+  \label{tab:counterexampleshatter}
+\end{table}
 
 \fi
 
