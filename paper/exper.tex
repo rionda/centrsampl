@@ -217,6 +217,88 @@ $|V|-2$ (indicated as diam-UB).
 %}
 %\label{tab:expDir} % is used to refer this table in the text
 %\end{table*}
+\begin{figure*}[htbp]
+  \centering
+  \begin{subfigure}[b]{1\textwidth}
+  \centering
+    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/p2p-Gnutella30-error}
+    \caption{p2p-Gnutella30 (directed)}
+    \label{fig:gnutella:error}
+  \end{subfigure}
+  %\ifproof
+  %\hfill
+
+  \begin{subfigure}[b]{1\textwidth}
+	\centering
+    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/soc-Epinions1-error}
+    \caption{soc-Epinions1 (directed)}
+    \label{fig:Epinions:error}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{1\textwidth}
+	\centering
+    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/ca-HepPh-error}
+    \caption{ca-HepPh (directed)}
+    \label{fig:HepPh:error}
+  \end{subfigure}
+  %\fi
+  %\hfill
+
+  \begin{subfigure}[b]{1\textwidth}
+  \centering
+    %\includegraphics[width=0.7\textwidth,keepaspectratio]{figures/eps/email-Enron-error}
+    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/email-Enron-error}
+    \caption{email-Enron (undirected)}
+    \label{fig:email:error}
+  \end{subfigure}
+  \caption{Betweenness estimation error $|\tilde\betw(v)-\betw(v)|$ evaluation
+  for directed and undirected graphs} 
+  \label{fig:error}
+\end{figure*}
+
+\begin{figure*}[htbp]
+  \centering
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/p2p-Gnutella30-time}
+    \caption{p2p-Gnutella30 (directed)}
+    \label{fig:gnutella:time}
+  \end{subfigure}
+  %\ifproof
+  %\hfill
+
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/soc-Epinions1-time}
+    \caption{soc-Epinions1 (directed)}
+    \label{fig:Epinions:time}
+  \end{subfigure}
+
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/ca-HepPh-time}
+    \caption{ca-HepPh (directed)}
+    \label{fig:HepPh:time}
+  \end{subfigure}
+  %\fi
+  %\hfill
+
+  \begin{subfigure}[b]{1\textwidth}
+    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/email-Enron-time}
+    \caption{email-Enron (undirected)}
+    \label{fig:email:time}
+  \end{subfigure}
+  \caption{Running time (seconds) comparison between $\mathsf{VC}$, $\mathsf{BP}$, and the
+  exact algorithm.}
+  \label{fig:time}
+%\begin{minipage}[b]{0.5\linewidth}
+%\flushleft
+%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
+%\caption{Running time comparison on p2p-Gnutella30} \label{fig:gnutella:time}
+%\end{minipage}%
+%\begin{minipage}[b]{0.5\linewidth}
+%\centering
+%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
+%\caption{Running time comparison on email-Enron} \label{fig:email:time}
+%\end{minipage}
+\end{figure*}
 \subsection{Accuracy}\label{sec:accuracy}
 Our theoretical results from Sect.~\ref{sec:algo} guarantee that, with probability
 at least $1-\delta$, all estimations of the betweenness values for all vertices
@@ -261,89 +343,7 @@ that the sample size is therefore an upper bound to the one \emph{necessary} to
 obtain the desired approximation guarantees.
 %Morev the inherent looseness of the formula of the sample size~\eqref{eq:vceapprox}.
 
-\begin{figure*}[ht]
-  \centering
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-error}
-    \caption{p2p-Gnutella30 (directed)}
-    \label{fig:gnutella:error}
-  \end{subfigure}
-  \ifproof
-  \hfill
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/soc-Epinions1-error}
-    \caption{soc-Epinions1 (directed)}
-    \label{fig:Epinions:error}
-  \end{subfigure}
 
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/ca-HepPh-error}
-    \caption{ca-HepPh (directed)}
-    \label{fig:HepPh:error}
-  \end{subfigure}
-  \fi
-  \hfill
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/email-Enron-error}
-    \caption{email-Enron (undirected)}
-    \label{fig:email:error}
-  \end{subfigure}
-  \caption{Betweenness estimation error $|\tilde\betw(v)-\betw(v)|$ evaluation
-  for directed and undirected graphs} 
-  \label{fig:error}
-%\begin{minipage}[b]{0.5\linewidth}
-%\flushleft
-%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-error.eps}
-%\caption{Error evaluation on p2p-Gnutella30} \label{fig:gnutella:error}
-%\end{minipage}%
-%\begin{minipage}[b]{0.5\linewidth}
-%\centering
-%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-error.eps}
-%\caption{Error evaluation on email-Enron} \label{fig:email:error}
-%\end{minipage}
-\end{figure*}
-
-\begin{figure*}[ht]
-  \centering
-  \begin{subfigure}[b]{0.46\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/p2p-Gnutella30-time}
-    \caption{p2p-Gnutella30 (directed)}
-    \label{fig:gnutella:time}
-  \end{subfigure}
-  \ifproof
-  \hfill
-  \begin{subfigure}[b]{0.46\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/soc-Epinions1-time}
-    \caption{soc-Epinions1 (directed)}
-    \label{fig:Epinions:time}
-  \end{subfigure}
-
-  \begin{subfigure}[b]{0.46\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/ca-HepPh-time}
-    \caption{ca-HepPh (directed)}
-    \label{fig:HepPh:time}
-  \end{subfigure}
-  \fi
-  \hfill
-  \begin{subfigure}[b]{0.46\textwidth}
-    \includegraphics[width=0.99\textwidth,keepaspectratio]{figures/eps/email-Enron-time}
-    \caption{email-Enron (undirected)}
-    \label{fig:email:time}
-  \end{subfigure}
-  \caption{Running time (seconds) comparison between $\mathsf{VC}$, $\mathsf{BP}$, and the
-  exact algorithm.}
-  \label{fig:time}
-%\begin{minipage}[b]{0.5\linewidth}
-%\flushleft
-%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-time.eps}
-%\caption{Running time comparison on p2p-Gnutella30} \label{fig:gnutella:time}
-%\end{minipage}%
-%\begin{minipage}[b]{0.5\linewidth}
-%\centering
-%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-time.eps}
-%\caption{Running time comparison on email-Enron} \label{fig:email:time}
-%\end{minipage}
-\end{figure*}
 
 \subsection{Runtime}\label{sec:runtime}
 We compared the running time of Algorithm~\ref{alg:algorithm} (denoted in the
@@ -435,11 +435,11 @@ that for the undirected case. %In this case our
 %$\varepsilon$, the proposed algorithm is faster (at least 3x speedup in case of
 %exact diameter on the tested graphs). 
  Algorithm~\ref{alg:algorithm} is faster than $\mathsf{BP}$ for two reasons, both
-originating from from our use of results from the VC-dimension theory: 1) we use
-a significantly smaller amount of samples and 2) $\mathsf{VC}$ performs the
-same amount of computations \emph{per sample} as $\mathsf{BP}$ only in the worst
-case. Indeed our algorithm needs only to find the shortest path between a
-sampled pair of vertices, whereas the algorithms
+ originating from from our use of results from the VC-dimension theory:
+ \emph{1)} we use a significantly smaller amount of samples anda \emph{2)}
+ $\mathsf{VC}$ performs the same amount of computations \emph{per sample} as
+ $\mathsf{BP}$ only in the worst case. Indeed our algorithm needs only to find
+ the shortest path between a sampled pair of vertices, whereas the algorithms
 from~\citep{GeisbergerSS08,BrandesP07} need to compute the shortest paths
 between a sampled source and all the other vertices. Since the running time of
 the algorithms is directly proportional to the number of edges touched during
@@ -452,33 +452,13 @@ would not benefit from this improvement). %
 We plan to explore this in future work.
 \fi
 
-
-%\begin{figure*}[ht]
-%  \centering
-%  \hfill
-%  \subfloat[p2p-Gnutella30
-%  (directed)]{\label{fig:gnutella:edges}\includegraphics[width=.45\textwidth,keepaspectratio]{p2p-Gnutella30-edges}}
-%  \hfil
-%  \subfloat[email-Enron
-%  (undirected)]{\label{fig:email:edges}\includegraphics[width=.45\textwidth,keepaspectratio]{email-Enron-edges}}
-%  \hfill
-%  \label{fig:edges}
-%  \caption{Touched edges comparison between $\mathsf{VC}$, $\mathsf{BP}$, and
-%  the exact algorithm.}
-%\begin{minipage}[b]{0.5\linewidth}
-%\flushleft
-%\includegraphics[width=3.8in, keepaspectratio]{p2p-Gnutella30-edges.eps}
-%\caption{Touched edges comparison on p2p-Gnutella30} \label{fig:gnutella:edges}
-%\end{minipage}%
-%\begin{minipage}[b]{0.5\linewidth}
-%\centering
-%\includegraphics[width=3.8in, keepaspectratio]{email-Enron-edges.eps}
-%\caption{Touched edges comparison on email-Enron}\label{fig:email:edges}
-%\end{minipage}
-%\end{figure*}
-
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=1\textwidth,keepaspectratio]{figures/eps/random-time}
+  \caption{Scalability on random Barab\'asi-Albert~\citep{BarabasiA99} graphs.}
+  \label{fig:random:time}
+\end{figure}
 \subsection{Scalability}\label{sec:scalability}
-
 In Sect.~\ref{sec:discussion} we argued about the reasons why
 Algorithm~\ref{alg:algorithm} is more scalable than $\mathsf{BP}$, while still
 offering the same approximation guarantees. To evaluate our argument in practice, we
@@ -493,34 +473,4 @@ confirm that this is the case for $\mathsf{VC}$, which is much more scalable
 and independent from the size of the sample than $\mathsf{BP}$. This is very
 important, as today's networks are not only huge, but they also grow rapidly,
 and algorithms to mine them must scale well with graph size.
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=.45\textwidth,keepaspectratio]{figures/eps/random-time}
-  \caption{Scalability on random Barab\'asi-Albert~\citep{BarabasiA99} graphs.}
-  \label{fig:random:time}
-\end{figure}
-
-%\begin{figure*}
-%  \centering
-%  \hfill
-%  \subfloat[Time]{\label{fig:random:time}\includegraphics[width=.45\textwidth,keepaspectratio]{random-time}}
-%  \hfill
-%  \subfloat[Edges]{\label{fig:random:edges}\includegraphics[width=.45\textwidth,keepaspectratio]{random-edges}}
-%  \hfill
-%  \label{fig:random}
-%  \caption{Scalability comparison on random~\citep{BarabasiA99} graphs}
-%\end{figure*}
-%\begin{minipage}[b]{0.5\linewidth}
-%\flushleft
-%\includegraphics[width=3.8in, keepaspectratio]{random-time.eps}
-%\caption{Scalability on random~\citep{BarabasiA99} graphs (time)}
-%\label{fig:random:time}
-%\end{minipage}%
-%\begin{minipage}[b]{0.5\linewidth}
-%\centering
-%\includegraphics[width=3.8in, keepaspectratio]{random-edges.eps}
-%\caption{Scalability on random~\citep{BarabasiA99} graphs (touched edges)}
-%\label{fig:random:edges}
-%\end{minipage}
-%\end{figure*}
 
