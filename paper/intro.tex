@@ -1,13 +1,13 @@
 \section{Introduction}\label{sec:intro}
 Centrality indices are fundamental metrics for network analysis. They express the
-relative importance of a vertex in the network. Some of them, e.g., degree
+relative importance of a vertex or an edge in the network. Some of them, e.g., degree
 centrality, reflect local properties of the underlying graph, while others,
 like betweenness centrality, give information about the global network
 structure, as they are based on counting shortest paths~\citep{Newman10}. In
 this work we are interested in \emph{betweenness
-centrality}~\citep{Anthonisse71,Freeman77}, that is, for every vertex in the
-graph, the fraction of shortest paths that goes through that vertex (see
-Section~\ref{sec:prelims} for formal definitions)
+centrality}~\citep{Anthonisse71,Freeman77}, that is, for every vertex or edge in
+the graph, the fraction of shortest paths that goes through that vertex or edge
+(see Section~\ref{sec:prelims} for formal definitions)
 \ifproof
 , and on some variants of it~\citep{OpsahlAS10,BorgattiE06,Brandes08}. %
 \else
@@ -26,56 +26,57 @@ are usually sufficient, especially if the approximation error is guaranteed to
 be within user-specified limits. In practice, the user is interested in the
 relative ranking of the vertices according to their betweenness, rather than the
 actual value of the betweenness, so a very good estimation of the value of each
-vertex is sufficiently informative for most purposes. It is therefore natural to
-develop algorithms that trade off accuracy for speed and efficiently compute
-high-quality approximations of the betweenness of the vertices.  Nevertheless,
-in order for these algorithms to be practical it is extremely important that
-they scale well and have a low runtime dependency on the size of the network
-(number of vertices and/or edges).
+vertex (or edge) is sufficiently informative for most purposes. It is therefore
+natural to develop algorithms that trade off accuracy for speed and efficiently
+compute high-quality approximations of the betweenness values. Nevertheless,
+in order for these algorithms to be practical, they must scale well and have a
+low runtime dependency on the size of the network (number of vertices and/or
+edges).
 
 \paragraph*{Our contributions\ifdmkd.\fi} 
  We present two randomized algorithms to approximate the betweenness centrality
-(and some of its variants) of the vertices of a graph. The first algorithm
-guarantees that the estimated betweenness values for all vertices are within an
-\emph{additive} factor $\varepsilon$ from the real values, with probability at
-least $1-\delta$. The second algorithm focuses on the top-$K$ vertices with
-highest betweenness and returns a \emph{superset} of the top-$K$,
+(and some of its variants) of the vertices (or edges) of a graph. The first
+algorithm guarantees that the estimated betweenness values for all
+vertices (or edges) are within an \emph{additive} factor $\varepsilon$ from the
+real values, with probability at
+least $1-\delta$. The second algorithm focuses on the top-$K$ vertices (or
+edges) with highest betweenness and returns a \emph{superset} of the top-$K$,
 while ensuring that the estimated betweenness for all returned vertices is
 within a \emph{multiplicative} factor $\varepsilon$ from the real value, with
 probability at least $1-\delta$. This is the first algorithm to reach such a
-high-quality approximation for the set of top-$K$ vertices. The algorithms are
-based on random sampling of shortest paths. The analysis to derive the
-sufficient sample size is novel and uses notions and results from VC-dimension
-theory. We define a range set associated with the problem at hand and prove strict
-bounds to its VC-dimension. The resulting sample size \emph{does not
-depend on the size of the graph}, but only on the maximum number of vertices
-in a shortest path, a \emph{characteristic quantity} of the graph that we call
-the \emph{vertex-diameter}. For some networks, we show that the VC-dimension is
-actually
-at most a constant and so the sample size depends \emph{only on the approximation
-parameters} and not on any property of the graph, a somewhat surprising fact
-that points out interesting insights. Thanks to the lower runtime dependency on
-the size of the network, our algorithms are \emph{much faster and more scalable}
-than previous contributions~\citep{JacobKLPT05,BrandesP07,GeisbergerSS08}, while
-offering the same approximation guarantees. Moreover, the amount of work
-performed by our algorithms per sample is also less than that of others algorithms.
-We extensively evaluated our methods on real graphs and compared their
-performances to the exact algorithm for betweenness centrality~\citep{Brandes01}
-and to other sampling-based approximation
+high-quality approximation for the set of top-$K$ vertices (or edges). The
+algorithms are based on random sampling of shortest paths. The analysis to
+derive the sufficient sample size is novel and uses notions and results from
+VC-dimension theory. We define a range set associated with the problem at hand
+and prove strict bounds to its VC-dimension. The resulting sample size
+\emph{does not depend on the size of the graph}, but only on the maximum number
+of vertices in a shortest path, a \emph{characteristic quantity} of the graph
+that we call the \emph{vertex-diameter}. For some networks, we show that the
+VC-dimension is actually at most a constant and so the sample size depends
+\emph{only on the approximation parameters} and not on any quantitative property
+of the graph, a somewhat surprising fact that points out interesting insights.
+Thanks to the lower runtime dependency on the size of the network, our
+algorithms are \emph{much faster and more scalable} than previous
+contributions~\citep{JacobKLPT05,BrandesP07,GeisbergerSS08}, while offering the
+same approximation guarantees. Moreover, the amount of work performed by our
+algorithms per sample is also less than that of others algorithms.  We
+extensively evaluated our methods on real graphs and compared their performances
+to the exact algorithm for betweenness centrality~\citep{Brandes01} and to other
+sampling-based approximation
 algorithms~\citep{JacobKLPT05,BrandesP07,GeisbergerSS08}, showing that our
 methods achieve a huge speedup (3 to 4 times faster) and scale much better as
 the number of vertices in the network grows.
 
 \paragraph*{Outline\ifdmkd.~\fi} 
  We present related work in Sect.~\ref{sec:prevwork}. Section~\ref{sec:prelims}
-introduces all the basic definitions and results that we will use throughout the
+introduces all the basic definitions and results that we use throughout the
 paper. A range set for the problem at hand and the bounds to its VC-dimension
 are presented in Sect.~\ref{sec:rangeset}. Based on these results we develop and
 analyze algorithms for betweenness estimation that we present in
 Sect.~\ref{sec:algo}. % 
 \ifproof
-Extensions of our methods to various variants of the problem are presented in
-Sect.~\ref{sec:variants}. %
+Extensions of our methods to various variants of the problem (including edge
+betweenness) are presented in Sect.~\ref{sec:variants}. %
 \fi 
 Section~\ref{sec:exper} reports the methodology and
 the results of our extensive experimental evaluation.
