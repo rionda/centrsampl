@@ -32,7 +32,7 @@ $2$, then the formula for $h$ is always well defined.
 \begin{proof}
 Let $\ell>\lfloor\log_2(\mathsf{H}(G)-2)\rfloor+1$ and assume for the sake of contradiction
 that $\VC(\range_G)=\ell$. From the definition of VC-dimension there is a set
-$Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$. 
+$Q\subseteq\mathbb{S}_G$ of size $\ell$ that is shattered by $\range_G$.
 For any two shortest paths $p',p''$ in $Q$ we must have neither
 $\mathsf{Int}(p')\subseteq\mathsf{Int}(p'')$ nor
 $\mathsf{Int}(p'')\subseteq\mathsf{Int}(p')$, otherwise one of the two paths
@@ -92,7 +92,7 @@ $\mathsf{H}(G)\le\VD(G)$, we have the following corollary.
 \subsection{Unique shortest paths}\label{sec:rangeunique}
 In the restricted case when the graph is undirected and
 every pair of distinct vertices has either none or a unique shortest path
-between them, the VC-dimension of $\range_G$ reduces %collapses 
+between them, the VC-dimension of $\range_G$ reduces %collapses
 to a \emph{constant}. This is a
 somewhat surprising result with interesting consequences. From a theoretical
 point of view, it suggests that there should be other characteristic
@@ -100,13 +100,13 @@ quantities of the graph different from the vertex diameter that control the
 VC-dimension of the range set of shortest paths, and these quantities are
 constant on graph with unique shortest paths between vertices. From a more
 practical point of view, we show in Sect.~\ref{sec:algo} that this result has an
-impact on the sample size needed to approximate %for approximating 
+impact on the sample size needed to approximate %for approximating
 the betweenness centrality of
 networks where the unique-shortest-path property is satisfied or even enforced,
 like road networks~\citep{GeisbergerSS08}. In particular, the resulting sample
 size will be \emph{completely independent} from any characteristic of the
 network, and will only be a function of the parameters controlling the desired
-approximation guarantees. 
+approximation guarantees.
 \ifproof
 \else
 Due to space constraints, we defer the proof to the extended online version of
@@ -134,7 +134,7 @@ the paper~\citep{RiondatoK13}.
   This is easy to see: if they could separate at $u$ and then meet again at some
   $v$, then there would be two distinct shortest paths between $u$ and $v$,
   which is a contradiction of the hypothesis. Let us denote this fact as
-  $\mathsf{F}$.  
+  $\mathsf{F}$.
 
   Assume now that $\VC(\range_G)>3$, then there must be a set
   $Q=\{p_1,p_2,p_3,p_4\}$ of four shortest paths that can be shattered by
@@ -145,7 +145,7 @@ the paper~\citep{RiondatoK13}.
   path from $Q$. It is easy to see that if either $x$ or $y$ (or both) do not
   exist, then $Q$ cannot be shattered, as we would incur in a contradiction of
   fact $\mathsf{F}$.
-  
+
   Let us then assume that both $x$ and $y$ exist.
   Let $Q_x=\mathcal{T}_x\cap Q$ and $Q_y=\mathcal{T}_y\cap Q$.
   From fact $\mathsf{F}$, we have that all paths in $Q_x$ must go through the
@@ -159,8 +159,8 @@ the paper~\citep{RiondatoK13}.
   shattered. Indeed if there was a vertex $v$ such that $\mathcal{T}_v\cap
   Q=\{p_1,p^*\}$, the paths $p_1$ and $p^*$ would meet in $w$ and $v$; which
   contradicts fact $F$.
-   
-  
+
+
   From now we can therefore consider only the case $Q_x\cup Q_y=Q$. If $Q_x\cap
   Q_y=Q$, then all the paths in $Q$ go through the same vertices between $x$ and
   $y$. From this and the definition of $x$ and $y$ we have that there is no
@@ -320,17 +320,20 @@ $\lfloor\log_2(\VD(G_d)-2)\rfloor+1=d$. The $G_d$ concertina graph has
 $3(2^{d-1})$ vertices and they can be partitioned into three classes,
 \emph{top}, \emph{bottom}, and \emph{middle},
 according to their location in a drawing of the graph similar to those in
-Fig.~\ref{fig:tightgraphs}. $G_d$ has $2^{d-1}-1$ top vertices, $2^{d-1}-1$ bottom vertices, and
-$2^{d-1}+2$ middle vertices. For each top vertex $v$, let $\mathsf{f}(v)$ be the
-\emph{corresponding bottom vertex}, i.e., the bottom vertex $u$ whose two neighbors
-are the same two middle vertices that are neighbors of $v$. Among the middle
+Fig.~\ref{fig:tightgraphs}. $G_d$ has $2^{d-1}-1$ top vertices, $2^{d-1}-1$
+bottom vertices, and $2^{d-1}+2$ middle vertices. For each top vertex $v$, let
+$\mathsf{f}(v)$ be the \emph{corresponding bottom vertex}, i.e., the bottom
+vertex $u$ whose two neighbors are the same two middle vertices that are
+neighbors of $v$. Analogously, the \emph{corresponding top vertex} of a bottom
+vertex $w$ is the top vertex $v$ such that $\mathsf(v)=w$. Among the middle
 vertices, the two with degree 1 are special and are called the \emph{end
-vertices} of $G_d$ and denoted as $v_\ell$ and $v_\mathrm{r}$, where the
-labels can be arbitrarily assigned. We now build a set $Q$ of $d$
-shortest paths from $v_\ell$ to $v_\mathrm{r}$ and show that it is
-shattered by $\range_{G_d}$, therefore proving that $\VC(\range_{G_d})\ge d$.
-This fact, together with Coroll.~\ref{corol:vcdimuppbound}, allows us to conclude
-that $\VC(\range_{G_d})=d$. 
+vertices} of $G_d$ and denoted as $v_\ell$ and $v_\mathrm{r}$, where the labels
+can be arbitrarily assigned. 
+
+In Lemma~\ref{lem:vcdimlowbound} we build a set $Q$ of $d$ shortest paths from
+$v_\ell$ to $v_\mathrm{r}$ and show that it is shattered by $\range_{G_d}$,
+therefore proving that $\VC(\range_{G_d})\ge d$. This fact, together with
+Coroll.~\ref{corol:vcdimuppbound}, allows us to conclude that $\VC(\range_{G_d})=d$. 
 \else
 There is a class $\mathcal{G}=(G_d)_{d\ge 1}$ of graphs indexed by d, such that
 the graphs in $\mathcal{G}$ are the ones for which we can show the tightness of
@@ -349,62 +352,72 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   \label{fig:tightgraphs}
 \end{figure}
 
-[EK2: Even though it is in a much better shape, I think the next proof still looks uneccesary complicated. I would try to give some intuition before we delve into the details and all the definitions.
-For instance we can say: "We build mappings that take as an input a vertex of the concertina graph and return a set that contain the pats of Q that pass through that vertex.
-In order to route a path of Q we just have to choose the top/bottom vertex that contain the label of the corresponding path."]
-
-[EK2: In an effort to simplify the notation: Can we just use $r_A$ and $r_B$ instead of $r$. In my understanding $r$ calls $r_A$ when
-it deals with a vertex from $A$ otherwise it calls $r_B$. Also we can skip the defintion of $c$ and just describe it as a property of the 
-mapping $r_B$. Then we can just refer to the mapping of $r_B$ instead of $c$. Finally the flow is much smoother if we add a few 
-more words in the description. For instance: On the other end no path from "set of paths" c(s) goes through "vertex" r(s)...
-]
-
-[MR: Yes, ok, I'll try to streamline it when I find some time.]
-
 \begin{lemma}\label{lem:vcdimlowbound}
   $\VC(\range_{G_d})=d$.
 \end{lemma}
 \ifproof
 \begin{proof}
 %\begin{IEEEproof}
-  As we said, the $d$ paths in $Q$ that we will construct will go from $v_\ell$ to $v_\mathrm{r}$.
-  From this and the definition of $G_d$ it should be clear that they must go through
-  all the middle vertices of $G_d$. Consider now the set
-  $S=2^Q\setminus\{Q,\emptyset\}$. We can
-  partition $S$ in two sets $A$ and $B$ as follows: %such that $A\cap
-  %B=\emptyset$ and $A\cup B=Q$ in the following way: 
-  for each unordered pair $(s',s'')$ of
-  elements in $S$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=Q$
-  we arbitrarily put $s'$ in $A$ and $s''$ in $B$. It is
-  easy to see that $|A|=2^{d-1}-1$, which is the number of top
-  vertices of $G_d$, and analogously for $|B|$ and the number of bottom vertices.
+  Let $D=\{1,2,3,\dotsc,d\}$. The proof proceeds as follows: 
+  \begin{enumerate}
+	  \item Define a map $\mathsf{r}$ from
+		  $\mathcal{S}=2^D\setminus\{\emptyset,D\}$ to set of of top and bottom
+		  vertices of $G_d$.
+	  \item Use the map $\mathsf{r}$ to build the set $Q$ of $d$ shortest paths
+		  from $v_\ell$ to $v_\mathrm{r}$.
+	  \item Show that $Q$ is shattered by $\range_{G_d}$, implying
+		  $\VC(\range_{G_d}\ge d$.
+	  \item Conclude from the above and from Corol.~\ref{corol:vcdimuppbound}
+	  	  that $\VC(\range_{G_d}=d$.
+  \end{enumerate}
 
-  We now build a map $\mathsf{r}$
-  from the elements of $S$ to the set of top and bottom vertices of $G_d$.
-  The bijection $\mathsf{r}$ will map the
-  elements of $A$ to the top vertices of $G_d$ and the elements of $B$ to the
-  bottom vertices. For each $s'\in A$, let $\mathsf{c}(s')$ be the unique element $s''$
-  of $B$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=Q$ (i.e.,
-  $\mathsf{c}(s')=Q\setminus s'$). 
-  Let $\mathsf{r}_A$ be an arbitrary one-to-one map from the elements of $A$ to
-  the top vertices of $G_d$. Consider now the inverse map $\mathsf{r}^{-1}_A$
-  from the top vertices to the elements of $A$. We can create another map
-  $\mathsf{r}_B$ from $B$ to the
-  bottom vertices of $G_d$ that maps the element
-  $\mathsf{c}(\mathsf{r}^{-1}_A(v))$ of $B$ to the bottom vertex $\mathsf{f}(v)$
-  corresponding to $v$, for each top vertex $v$. A path $p\in Q$ goes through
-  a top vertex $v$ if and only if $p\in\mathsf{r}^{-1}_A(v)$. Analogously, $p$
-  goes through a bottom vertex $u$ if and only if $p\in\mathsf{r}^{-1}_B(u)$.
-  It is easy to see that, if we combine $\mathsf{r}_A$ and
-  $\mathsf{r}_B$, we obtain a map $\mathsf{r}$ from $S$ to the set of
-  top and bottom vertices of $G_d$. An example of a possible $\mathsf{r}$ for
-  $G_3$ is presented in Fig.~\ref{fig:mapexample}.
+  \paragraph{1.~Defining the map $\mathsf{r}$.} For any set (of subsets of
+  $D$) $s'\in\mathcal{S}$, let $\mathsf{c}(s')=D\setminus s'$. The set (of
+  subsets of $D$) $\mathsf{c}(s')$ is the \emph{unique} set (of subsets of $D$)
+  $s''\in\mathcal{S}$ such that $s'\cap s''=\emptyset$ and $s'\cup s''=D$.
+  
+  We can partition $\mathcal{S}$ in two sets $\mathcal{A}$ and $\mathcal{B}$
+  ($\mathcal{A}\cup\mathcal{B}=\mathcal{S}$, $\mathcal{A}\cap
+  \mathcal{B}=\emptyset$) as follows: for any \emph{unordered pair}
+  $(s',\mathsf{c}(s'))$, we arbitrarily put $s'$ in $\mathcal{A}$ and
+  $\mathsf{c}(s')$ in $\mathcal{B}$. It is easy to see that
+  $|\mathcal{A}|=|\mathcal{B}|=2^{d-1}-1$, which is the number of top vertices
+  of $G_d$ (and the number of bottom vertices of $G_d$)
+
+  We now build a mapping $\mathsf{r}_\mathcal{A}$
+  (resp.~$\mathsf{r}_\mathcal{B}$) that will map each element of $\mathcal{A}$
+  (resp.~of $\mathcal{B}$) to a \emph{top} (resp.~\emph{bottom})
+  vertex of $G_d$. We will then use these mappings to build the set of paths to
+  be shattered.
+  
+  Let $\mathsf{r}_\mathcal{A}$ be an arbitrary one-to-one map from each element
+  of $\mathcal{A}$ to a top vertex of $G_d$ (i.e., it maps a set of subsets of
+  $D$ to a top vertex). We now build the one-to-one map $\mathsf{r}_\mathcal{B}$
+  from each element of $\mathcal{B}$ to a bottom vertex of $G_d$. Consider the
+  inverse map $\mathsf{r}^{-1}_\mathcal{A}$ from the top vertices of $G_d$ to
+  the elements of $\mathcal{A}$ and let $v$ be any top vertex of $G_d$. For any
+  top vertex $v$, $\mathsf{r}^{-1}_\mathcal{A}(v)$ is a set of subsets of $D$,
+  and a element of $\mathcal{A}$ (and of $\mathcal{S}$), and therefore there is
+  an element $s''$ of $\mathcal{B}$ such that
+  $s''=\mathsf{c}(\mathsf{r}^{-1}_\mathcal{A}(v))$.
+  
+  The bijection $\mathsf{r}_\mathcal{B}$ maps the element
+  $\mathsf{c}(\mathsf{r}^{-1}_\mathcal{A}(v))$ of $\mathcal{B}$ to the bottom
+  vertex $\mathsf{f}(v)$ corresponding to $v$. In other words, if a set $s'$ of
+  subsets of $D$ is mapped by $r_\mathcal{A}$ to a top vertex $v$, then
+  $r_\mathcal{B}$ maps to the bottom vertex $\mathsf{f}(v)$ the unique set $s''$
+  of subsets of $D$ such that $s''=\mathsf{c}(s')$.
+  
+  It is easy to see that, if we take the union of $\mathsf{r}_\mathcal{A}$ and
+  $\mathsf{r}_\mathcal{B}$, we obtain a map $\mathsf{r}$ from $\mathcal{S}$ to
+  the set of top and bottom vertices of $G_d$. An example of a possible
+  $\mathsf{r}$ for $G_3$ is presented in Fig.~\ref{fig:mapexample}.
 
   \begin{figure}[ht]
     \centering
     \begin{tikzpicture}[scale=0.7]
       \GraphInit[vstyle=Classic]
-      \tikzset{VertexStyle/.append style = { minimum size = 2 pt }}
+      \tikzset{VertexStyle/.append style={minimum size = 2 pt}}
       \Vertex[Lpos=180,L=$v_\ell$]{vl}
       \EA[NoLabel](vl){no1}
       \NOEA[Lpos=90,L={$\{ a\}$}](no1){a}
@@ -437,23 +450,54 @@ more words in the description. For instance: On the other end no path from "set 
     each top and bottom vertex $u$ is the set $s$ such that $\mathsf{r}(s)=u$.}
     \label{fig:mapexample}
   \end{figure}
-  
-  We now show that for each $s\in S$, $s=Q\cap\mathcal{T}_{\mathsf{r}(s)}$. This
-  is easy to see as $\mathsf{r}(s)$ is internal to all paths in $s$, by
-  definition of $\mathsf{r}(s)$ and of the paths in $Q$. On the other end, no
-  path from $\mathsf{c}(s)$ goes through $\mathsf{r}(s)$ because it goes through
-  the corresponding vertex of $\mathsf{r}(s)$ (top if $\mathsf{r}(s)$ is a
-  bottom vertex, bottom otherwise). It is also straightforward to see that,
-  if we let $v_Q$ be any arbitrary middle vertex different from $v_\ell$
-  or $v_\mathrm{r}$, we have $Q=Q\cap\mathcal{T}_{v_Q}$, given that all paths in
-  $Q$ go through all the middle vertices. Also, given that $v_\ell$ is not
-  internal to any path, we have $\emptyset=Q\cap\mathcal{T}_{v_\ell}$. Then all
-  subsets of $Q$ can be expressed as the intersection between $Q$ and a range
-  from $\range_{G_d}$, which means that $Q$ can be shattered and therefore
-  $\VC(\range_{G_d})\ge d$.
 
-  From Corol.~\ref{corol:vcdimuppbound} we know that $\VC(\range_{G_d})\le d$, so
-  it must be $\VC(\range_{G_d})=d$.
+  \paragraph{2.~Building the set $Q$ of shortest paths.} We now build the set
+  $Q=\{p_1,\dotsc,p_d\}$ which contains $d$ shortest paths from $v_\ell$ to
+  $v_\mathrm{r}$. Given the definition of $G_d$, it should be clear that all
+  these shortest paths must go through all other middle vertices of $G_d$. Let
+  $M$ be the set of all middle vertices in $G_d$, and consider the set
+  $E=V\setminus M$ (i.e., $E$ is the set containing all the top and bottom
+  vertices of $G_d$. For any $i\in D$, the \emph{set} of vertices that the path
+  $p_i\in Q$ goes through is the set $P_i=M\cup\{v\in E ~:~ i \in r^{-1}(v)\}$.
+  We build the path $p_i$ by sorting the vertices in $P_i$ in increasing order
+  by their shortest path distance from $v_\ell$. There is a unique such ordering
+  of the vertices in $P_i$, as they all have different shortest path distances
+  from $v_\ell$. It is easy to see that $p_i$ is a shortest path. Note that a
+  path $p_i\in Q$ goes through a top vertex $v$ if and only if
+  $i\in\mathsf{r}^{-1}_A(v)$. Analogously, $p_i$ goes through a bottom vertex
+  $u$ if and only if $i\in\mathsf{r}^{-1}_B(u)$. 
+
+  \paragraph{3.~Showing that $Q$ is shattered by $\range_{G_d}$.} We now show
+  that the set $Q$ of shortest paths is shattered by $\range_{G_d}$. We want to
+  show that each subset $s$ of $Q$ can be expressed as the intersection between
+  $Q$ and a range $\mathcal{T}_v\in\range_{G_d}$, for some vertex $v$ in $G_d$.
+  Consider first the case $s=Q$ (as $Q$ is a subset of itself). All paths in $Q$
+  go through all the middle vertices that are not $v_\ell$ or $v_\mathrm{r}$, so
+  if we let $v_Q$ be any arbitrary middle vertex different from $v_\ell$ or
+  $v_\mathrm{r}$, we have $Q=Q\cap\mathcal{T}_{v_Q}$. Also, given that $v_\ell$
+  is not \emph{internal} to any path in $Q$, we have
+  $\emptyset=Q\cap\mathcal{T}_{v_\ell}$.
+  
+  Let now $\mathcal{Q}=2^{Q}\setminus\{\emptyset,Q\}$ and denote with $I_s$
+  the set of indexes $i\in D$ such that $p_i\in s$. We want to show that
+  $s=Q\cap\mathcal{T}_{\mathsf{r}(I_s)}$. It is easy to see that $s\subseteq
+  Q\cap\mathcal{T}_{\mathsf{r}(I_s)}$, as the vertex $\mathsf{r}(I_s)$ is
+  internal to all paths in $s$, by definition of $\mathsf{r}(I_s)$ and of the
+  paths in $Q$. On the other end, no path in $Q\setminus s$ belongs to
+  $Q\cap\mathcal{T}_{\mathsf{r}(I_s)}$ as no path in $Q\setminus s$ goes through
+  $\mathsf{r}(I_s)$ because it goes through the corresponding vertex of
+  $\mathsf{r}(I_s)$ (this corresponding vertex is a top vertex if
+  $\mathsf{r}(I_s)$ is a bottom vertex, and a bottom vertex otherwise). Hence we
+  showed that $s=Q\cap\mathcal{T}_{\mathsf{r}(I_s)}$
+  for any $s\in\mathcal{Q}$.
+  
+  We showed that all subsets of $Q$ can be expressed as the intersection between
+  $Q$ and a range from $\range_{G_d}$, which means that $Q$ is shattered and
+  therefore $\VC(\range_{G_d})\ge d$.
+  
+  \paragraph{4.~Concluding the proof.} From Corol.~\ref{corol:vcdimuppbound} we
+  know that $\VC(\range_{G_d})\le d$, so it must be $\VC(\range_{G_d})=d$, which
+  concludes our proof.
 %\end{IEEEproof} 
 \end{proof}
 \else
