@@ -445,42 +445,42 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   the set of top and bottom vertices of $G_d$. An example of a possible
   $\mathsf{r}$ for $G_3$ is presented in Fig.~\ref{fig:mapexample}.
 
-  \begin{figure}[ht]
-    \centering
-    \begin{tikzpicture}[scale=0.7]
-      \GraphInit[vstyle=Classic]
-      \tikzset{VertexStyle/.append style={minimum size = 2 pt}}
-      \Vertex[Lpos=180,L=$v_\ell$]{vl}
-      \EA[NoLabel](vl){no1}
-      \NOEA[Lpos=90,L={$\{ a\}$}](no1){a}
-      \SOEA[Lpos=-90,L={$\{b,c\}$}](no1){bc}
-      \SOEA[NoLabel](a){no2}
-      \NOEA[Lpos=90,L={$\{b\}$}](no2){b}
-      \SOEA[Lpos=-90,L={$\{a,c\}$}](no2){ac}
-      \SOEA[NoLabel](b){no3}
-      \NOEA[Lpos=90,L={$\{c\}$}](no3){c}
-      \SOEA[Lpos=-90,L={$\{a,b\}$}](no3){ab}
-      \SOEA[NoLabel](c){no4}
-      \EA[L={$v_\mathrm{r}$}](no4){vr}
-      \Edge(vl)(no1)
-      \Edge(no1)(a)
-      \Edge(no1)(bc)
-      \Edge(a)(no2)
-      \Edge(bc)(no2)
-      \Edge(no2)(b)
-      \Edge(no2)(ac)
-      \Edge(b)(no3)
-      \Edge(ac)(no3)
-      \Edge(no3)(c)
-      \Edge(no3)(ab)
-      \Edge(c)(no4)
-      \Edge(ab)(no4)
-      \Edge(no4)(vr)
-    \end{tikzpicture}
-    %\includegraphics[scale=0.4]{figures/eps/tight-mapexample}
-    \caption{An example of the $\mathsf{r}$ map for $G_3$. The set next to
-    each top and bottom vertex $u$ is the set $s$ such that $\mathsf{r}(s)=u$.}
-    \label{fig:mapexample}
+  \begin{figure}[htb]
+	  \centering
+	  \begin{tikzpicture}[scale=0.7]
+		  \GraphInit[vstyle=Classic]
+		  \tikzset{VertexStyle/.append style={minimum size = 2 pt}}
+		  \Vertex[Lpos=180,L=$v_\ell$]{vl}
+		  \EA[Lpos=90,L=$m_1$](vl){no1}
+		  \NOEA[Lpos=90,L={$t_1$, $\{ 1\}$}](no1){a}
+		  \SOEA[Lpos=-90,L={$b_1$, $\{2,3\}$}](no1){bc}
+		  \SOEA[Lpos=90,L=$m_2$](a){no2}
+		  \NOEA[Lpos=90,L={$t_2$, $\{2\}$}](no2){b}
+		  \SOEA[Lpos=-90,L={$b_2$, $\{1,3\}$}](no2){ac}
+		  \SOEA[Lpos=90,L=$m_3$](b){no3}
+		  \NOEA[Lpos=90,L={$t_3$, $\{3\}$}](no3){c}
+		  \SOEA[Lpos=-90,L={$b_3$, $\{1,2\}$}](no3){ab}
+		  \SOEA[Lpos=90,L=$m_4$](c){no4}
+		  \EA[L={$v_\mathrm{r}$}](no4){vr}
+		  \Edge(vl)(no1)
+		  \Edge(no1)(a)
+		  \Edge(no1)(bc)
+		  \Edge(a)(no2)
+		  \Edge(bc)(no2)
+		  \Edge(no2)(b)
+		  \Edge(no2)(ac)
+		  \Edge(b)(no3)
+		  \Edge(ac)(no3)
+		  \Edge(no3)(c)
+		  \Edge(no3)(ab)
+		  \Edge(c)(no4)
+		  \Edge(ab)(no4)
+		  \Edge(no4)(vr)
+	  \end{tikzpicture}
+	%\includegraphics[scale=0.4]{figures/eps/tight-mapexample}
+	  \caption{An example of the $\mathsf{r}$ map for $G_3$. The set next to
+	  each top and bottom vertex $u$ is the set $s$ such that $\mathsf{r}(s)=u$.}
+	  \label{fig:mapexample}
   \end{figure}
 
   \paragraph{2.~Building the set $Q$ of shortest paths.} We now build the set
@@ -496,8 +496,15 @@ $G_d$ has $3(2^{d-1}$ vertices and vertex-diameter $d$.
   of the vertices in $P_i$, as they all have different shortest path distances
   from $v_\ell$. It is easy to see that $p_i$ is a shortest path. Note that a
   path $p_i\in Q$ goes through a top vertex $v$ if and only if
-  $i\in\mathsf{r}^{-1}_A(v)$. Analogously, $p_i$ goes through a bottom vertex
-  $u$ if and only if $i\in\mathsf{r}^{-1}_B(u)$. 
+  $i\in\mathsf{r}^{-1}_\mathcal{A}(v)$. Analogously, $p_i$ goes through a bottom
+  vertex $u$ if and only if $i\in\mathsf{r}^{-1}_\mathcal{B}(u)$. Taking the
+  map $\mathsf{r}$ from Fig.~\ref{fig:mapexample} as an example, the set
+  $Q=\{p_1,p_2,p_3\}$ contains the following shortest paths:
+	\begin{itemize}
+		\item $p_1=\{v_\ell,m_1,t_1,m_2,b_2,m_3,b_3,m_4,v_\mathrm{r}\}$
+		\item $p_2=\{v_\ell,m_1,b_1,m_2,t_2,m_3,b_3,m_4,v_\mathrm{r}\}$
+		\item $p_3=\{v_\ell,m_1,b_1,m_2,b_2,m_3,t_3,m_4,v_\mathrm{r}\}$
+	\end{itemize}
 
   \paragraph{3.~Showing that $Q$ is shattered by $\range_{G_d}$.} We now show
   that the set $Q$ of shortest paths is shattered by $\range_{G_d}$. We want to
