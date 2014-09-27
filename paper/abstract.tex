@@ -13,10 +13,10 @@
   %compute the exact betweenness of all vertices in a graph $G=(V,E)$ in
   %$O(|V|\cdot|E|)$ steps in the unweighted case and in
   %$O(|V|\cdot|E|+|V|^2\log|V|)$ steps in weighted graphs. 
-  Exact computation in large networks %with millions of vertices and hundred of millions of edges 
-  is prohibitively expensive and fast approximation algorithms are required in
-  these cases. 
-  We present two efficient randomized %approximation 
+  Since exact computation in large networks %with millions of vertices and hundred of millions of edges 
+  is prohibitively expensive, % and fast approximation algorithms are required in
+  %these cases. 
+  we present two efficient randomized %approximation 
   algorithms for betweenness
   estimation. The algorithms are based on random sampling of shortest paths and
   offer probabilistic guarantees on the quality of the approximation. 
@@ -35,14 +35,14 @@
   number of vertices in the network and only depends on a characteristic
   quantity that we call the vertex-diameter, that is the maximum number of
   vertices in a shortest path. In some cases, the sample size is completely
-  independent from any property of the graph.
+  independent from any quantitative property of the graph.
   %Extensive experimental evaluation on real and artificial networks demonstrate
   %the practicality of our methods and their performances compared to exact and
   %approximated approximated algorithms.
-  The extensive experimental evaluation that we performed using real and
-  artificial networks shows that our algorithms are significantly faster and
-  much more scalable as the number of vertices in the network grows than
-  previously presented algorithms with similar approximation guarantees.
+  The extensive experimental evaluation on real and artificial networks shows
+  that our algorithms are significantly faster and much more scalable as the
+  number of vertices in the network grows than previously presented algorithms
+  with similar approximation guarantees.
 \ifdmkd
 \else
 \end{abstract}
