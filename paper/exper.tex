@@ -85,17 +85,19 @@ paper~\citep{RiondatoK13}.
 \fi
 
 \paragraph{Implementation and environment}
-We implemented our algorithms, the one presented in~\citep{BrandesP07,JacobKLPT05}
-and the linear scaling version from~\citep{GeisbergerSS08} in C, by extending
-the implementation of the exact algorithm~\citep{Brandes01} contained in
-igraph~\citep{igraph}\footnote{The implementations are available at
-\url{http://cs.brown.edu/~matteo/centrsampl.tar.bz2}.}. The implementations are similarly engineered, given that
-they are based on the same subroutines for the computation of the shortest path
-(Dijkstra's algorithm for weighted graphs, BFS for unweighted ones), and they
-received similar amounts of optimization. We exposed our implementations through
-Python 3.3.1, which was used for running the simulations. We run the experiments
-on a quad-core AMD Phenom\texttrademark II X4 955 Processor with 16GB of RAM,
-running Debian \emph{wheezy} with a Linux kernel version 3.2.0.
+We implemented our algorithms\footnote{The implementations are available at
+\url{http://cs.brown.edu/~matteo/centrsampl.tar.bz2}. An independent
+implementation of our algorithms is available in NetworKit~\citep{StaudtSM14}.},
+the one presented in~\citep{BrandesP07,JacobKLPT05} and the linear scaling
+version from~\citep{GeisbergerSS08} in C, by extending the implementation of the
+exact algorithm~\citep{Brandes01} contained in igraph~\citep{igraph}.
+The implementations are similarly engineered, given that they are based on the
+same subroutines for the computation of the shortest path (Dijkstra's algorithm
+for weighted graphs, BFS for unweighted ones), and they received similar amounts
+of optimization. We exposed our implementations through Python 3.3.1, which was
+used for running the simulations. We run the experiments on a quad-core AMD
+Phenom\texttrademark II X4 955 Processor with 16GB of RAM, running Debian
+\emph{wheezy} with a Linux kernel version 3.2.0.
 
 \paragraph{Datasets} In our evaluation we used a number of graphs from the
 Stanford Large Network Dataset
