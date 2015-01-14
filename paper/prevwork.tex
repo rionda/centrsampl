@@ -8,7 +8,7 @@ developed over the year~\citet{Brandes08}. A particularly interesting variant
 called ``$k$-bounded-distance betweenness'' limits the length of the shortest
 paths considered when computing the
 centrality~\citep{BorgattiE06,Brandes08,PfefferC12}. This is not to be confused
-with ``$k$-path betweenness centrality''~\citet{KourtellisASIT12}, which
+with ``$k$-path betweenness centrality''~\citep{KourtellisASIT12}, which
 considers simple random walks that are not necessarily shortest paths.
 \citet{DolevEP10} present a generalization of betweenness centrality which takes
 into account routing policies in the network. \citet{OpsahlAS10} define a new
@@ -69,17 +69,17 @@ computation to all other vertices. \citet{MaiyaBW10} use concepts from expander
 graphs to select a connected sample of vertices. They estimate the betweenness
 from the sample, which includes the vertices with high centrality. They build
 the connected sample by adding the vertex which maximizes the number of
-connections with vertices not already in the sample. Modified versions
-of this algorithm and an extensive experimental evaluation appeared
-in~\citep{LimMRTB11}. The algorithm does not offer any guarantee on the quality
-of the approximations. Compared to these adaptive sampling approaches, our
-methods ensure that the betweenness of all (or top-$K$) vertices is well
-approximated, while using a fixed, predetermined amount of samples.
-\citet{SaryuceSKC13} present an algorithm that pre-processes the network in
-multiple ways by removing degree-1 vertices and identical vertices and splitting
-the network" in separate components where the computation of betweenness can be
-performed independently and then aggregated. They do not present an analysis of
-the complexity of the algorithm. 
+connections with vertices not already in the sample. \citet{LimMRTB11} present
+modified versions of this algorithm and an extensive experimental evaluation.
+The algorithm does not offer any guarantee on the quality of the approximations.
+Compared to these adaptive sampling approaches, our methods ensure that the
+betweenness of all (or top-$K$) vertices is well approximated, while using a
+fixed, predetermined amount of samples.  \citet{SaryuceSKC13} present an
+algorithm that pre-processes the network in multiple ways by removing degree-1
+vertices and identical vertices and splitting the network" in separate
+components where the computation of betweenness can be performed independently
+and then aggregated. They do not present an analysis of the complexity of the
+algorithm. 
 
 In the analysis of our algorithm we use results from VC-dimension
 theory~\citep{VapnikC71}, a key component of statistical learning theory. We
@@ -96,11 +96,11 @@ The present work extends substantially the preliminary
 version~\citep{RiondatoK14WSDM}. The proof of all the theorems and lemmas are
 presented here for the first time. Examples of betweenness centrality and of the
 concept of VC-dimension have been added to Sect.~\ref{sec:prelims}. A major new
-contribution is a tighter analysis of the algorithm from~\citep{BrandesP07} and
+contribution is a tighter analysis of the algorithm by~\citet{BrandesP07} and
 a thorough comparison with it, presented in Sect.~\ref{sec:discussion}. We also
 discuss many other variants of betweenness, including edge betweenness in
 Sect.~\ref{sec:variants}, where we also present a new tighter analysis of the
-algorithm for $k$-path betweenness centrality by~\citep{KourtellisASIT12}.  %An expanded
+algorithm for $k$-path betweenness centrality by~\citet{KourtellisASIT12}.  %An expanded
 %motivation for the top-$k$ algorithm opens Sect.~\ref{sec:topk}. 
 %Finally, we report many additional
 %results of our experimental evaluation, including results on the top-$k$

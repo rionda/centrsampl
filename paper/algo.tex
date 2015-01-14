@@ -41,7 +41,7 @@ including the steps to select a random path.  The
 \texttt{computeAllShortestPaths(}$u,v$\texttt{)}  on
 line~\ref{algline:shortestpaths} is a call to a modified Dijkstra's (or BFS)
 algorithm to compute the set $\mathcal{S}_{uv}$, with the same modifications
-as~\citep{Brandes01}. The \texttt{getDiameterApprox()} procedure computes an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
+as the exact betweenness algorithm by~\citet{Brandes01}. The \texttt{getDiameterApprox()} procedure computes an approximation for $\VD(G)$. % (see Sect.~\ref{sec:diam} for details).
 
 
 
@@ -99,7 +99,7 @@ $p^*$ (the only ones for which the estimation is updated) as we compute $p^*$.
   \Pr(p^*)=\frac{\sigma_{uz_{|p^*|-2}}}{\sigma_{uv}}\frac{\sigma_{uz_{|p^*|-3}}}{\sigma_{uz_{|p^*|-2}}}\dotsb
   \frac{1}{\sigma_{uz_2}}=\frac{1}{\sigma_{uv}}
   \]
-  where we used~\citep[Lemma3]{Brandes01} which gives us the following expression 
+  where we used a result by~\citet[Lemma 3]{Brandes01} which gives us the following expression 
   about the number of shortest paths for $w\neq u$,
   \[
   \sigma_{uw}=\sum_{j\in P_u(w)}\sigma_{uj}
@@ -586,7 +586,7 @@ edges in the graph \emph{at every sample}, while our computation exhibits a much
 higher \emph{locality}, exploring only a neighborhood of $u$ until $v$ is
 reached. The results of our experimental evaluation presented in
 Sect.~\ref{sec:exper} highlights this and other advantages of our method over
-the one from~\citep{JacobKLPT05,BrandesP07}. Using \emph{bidirectional A$^*$
+the one by~\citet{JacobKLPT05} and~\citet{BrandesP07}. Using \emph{bidirectional A$^*$
 search}~\citep{Pohl69,KaindlK97} can further speed up the computation for each
 sample of our algorithms.
 
@@ -819,7 +819,7 @@ estimators have even lower variance than those of \textsf{BP}) with a number of
 samples equal to the one in~\eqref{eq:samplesize}, one should
 nevertheless take into account two facts. Firstly, we do not currently have a
 proof that for a number of samples as in~\eqref{eq:samplesize}, algorithm
-\textsf{BP} (or the algorithm from~\citep{GeisbergerSS08}) computes an
+\textsf{BP} (or the algorithm by~\citet{GeisbergerSS08}) computes an
 high-quality (within $\pm\varepsilon$) approximation of the betweenness of all
 vertices with probability at least $1-\delta$. We conjecture this fact could be
 proven using pseudodimension~\citep[Chap.~11]{AnthonyB99}. Secondly we already

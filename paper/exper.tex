@@ -88,8 +88,8 @@ paper~\citep{RiondatoK13}.
 We implemented our algorithms\footnote{The implementations are available at
 \url{http://cs.brown.edu/~matteo/centrsampl.tar.bz2}. An independent
 implementation of our algorithms is available in NetworKit~\citep{StaudtSM14}.},
-the one presented in~\citep{BrandesP07,JacobKLPT05} and the linear scaling
-version from~\citep{GeisbergerSS08} in C, by extending the implementation of the
+the one presented by~\citet{BrandesP07} and~\citet{JacobKLPT05} and the linear scaling
+version by~\citet{GeisbergerSS08} in C, by extending the implementation of the
 exact algorithm~\citep{Brandes01} contained in igraph~\citep{igraph}.
 The implementations are similarly engineered, given that they are based on the
 same subroutines for the computation of the shortest path (Dijkstra's algorithm
@@ -349,13 +349,13 @@ obtain the desired approximation guarantees.
 
 \subsection{Runtime}\label{sec:runtime}
 We compared the running time of Algorithm~\ref{alg:algorithm} (denoted in the
-following as $\mathsf{VC}$ to that of the algorithm
-from~\citep{JacobKLPT05,BrandesP07,GeisbergerSS08}
+following as $\mathsf{VC}$ to that of the algorithm presented
+by~\citet{JacobKLPT05,BrandesP07,GeisbergerSS08}
 (denoted as $\mathsf{BP}$), and to that of the exact
-algorithm~\citep{Brandes01}. As $\mathsf{VC}$ and $\mathsf{BP}$ give the same
+algorithm by~\citet{Brandes01}. As $\mathsf{VC}$ and $\mathsf{BP}$ give the same
 guarantees on the accuracy and confidence of the computed estimations, it makes
 sense to compare their running times to evaluate which is faster in achieving
-the goal. The performances of the algorithm proposed in~\citep{GeisbergerSS08}
+the goal. The algorithm proposed by~\citet{GeisbergerSS08}
 takes the same time as $\mathsf{BP}$, because it follows the same sampling
 approach and only differs in the definiton of the estimator for the betweenness,
 so we do not report those.
@@ -414,7 +414,7 @@ faster} than~$\mathsf{BP}$.
  In Fig.~\ref{fig:gnutella:time} we study
 the directed graph p2p-Gnutella30 and we present the measurements of
 the average running time of the algorithms for different values of
-$\varepsilon$, using the exact algorithm from~\citep{Brandes01} as baseline. The
+$\varepsilon$, using the exact algorithm by~\citet{Brandes01} as baseline. The
 $\mathsf{VC}$ algorithm requires significantly less time than the $\mathsf{BP}$
 algorithm. The figure also shows that there are values of $\varepsilon$ for
 which $\mathsf{BP}$ takes more time than the exact algorithm, because the
