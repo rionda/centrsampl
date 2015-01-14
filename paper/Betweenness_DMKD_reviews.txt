@@ -1,0 +1,314 @@
+COMMENTS FOR THE AUTHOR:
+
+Dear Matteo Riondato and Evgenios M Kornaropoulos,
+
+Thank you for your submission to Data Mining and Knowledge Discovery.  I have received three reviews of your manuscript.  I am delighted to accept it for publication, subject to completion of the following revisions:
+
+1. Add the references mentioned by Reviewer #1 and include a discussion of these works.
+
+2. Make the stylistic modifications mentioned by Reviewer #2.
+
+3. Run and report on BP and top-k experiments mentioned by Reviewer #2.
+
+4. Make your code publicly available (as mentioned by Reviewer #2).
+
+5. Elaborate on the definition of k-bounded-distance betweenness (as mentioned by Reviewer #3).
+
+6. Make the writeup in Section 6 less redundant (as mentioned by Reviewer #3).
+
+7. Elaborate on the definition of antichains (as mentioned by Reviewer #3).
+
+8. Elaborate on the captions for Figures 8, 9, and 10 (as mentioned by Reviewer #3).
+
+I look forward to receiving your revised manuscript within the next month.
+
+Yours sincerely,
+Tina Eliassi-Rad
+Action Editor
+
+======================================================================
+Reviewer #1: DATA MINING AND KNOWLEDGE DISCOVERY REVIEW FORM:
+
+DATA MINING AND KNOWLEDGE DISCOVERY IS A LEADING VENUE FOR ARCHIVAL PUBLICATION OF RESEARCH IN THE DISCIPLINES OF DATA MINING AND KNOWLEDGE DISCOVERY.  PAPERS SHOULD BE ASSESSED AGAINST HIGH STANDARDS OF SCHOLARSHIP, PRESENTATION AND EXPECTED IMPACT.
+
+
+
+SUMMARY. PROVIDE A BRIEF SUMMARY OF THE REASONS FOR YOUR RECOMMENDATION. WHAT ARE THE MAJOR STRENGTHS AND WEAKNESSES OF THE MANUSCRIPT?
+
+-- This paper proposes a random sampling method to calculate betweenness centrality approximately.
+
+
+RELEVANCE. HOW RELEVANT IS THE PAPER TO THE DISCIPLINES OF DATA MINING AND KNOWLEDGE DISCOVERY?
+
+-- The paper discussed an important issue in social network mining. This is very relevant to data mining and knowledge discovery.
+
+SIGNIFICANCE [NOT APPLICABLE TO SURVEY PAPERS]. HOW SIGNIFICANTLY DOES THE PAPER ADVANCE THE CURRENT STATE-OF-THE-ART? HOW BIG AN IMPACT WILL THE PAPER HAVE, ON WHAT AREAS, AND WHY?  WILL THE PAPER STIMULATE FURTHER RESEARCH?
+
+-- Both theoretical and empirical results are promising. The paper should have a big impact in the DM field.
+
+RELATED RESEARCH.  IS ALL RELEVANT PRIOR WORK DISCUSSED? IS THE CURRENT WORK A DISTINCT AND NEW CONTRIBUTION RELATIVE TO THE AUTHOR(S)' PREVIOUS WORK?  [NOTE, DMKD ENCOURAGES SUBMISSION OF EXPANDED VERSIONS OF SIGNIFICANT WORK PREVIOUSLY PUBLISHED IN CONFERENCES, SO LONG AS THE RELATIONSHIP TO THE EARLIER WORK IS ACKNOWLEDGED, BUT STRONGLY CONDEMNS BOTH PLAGIARISM AND SELF-PLAGIARISM.  SEE INSTRUCTIONS FOR AUTHORS FOR MORE DETAILS.]
+[NOTE ALSO THAT DMKD CLOSELY SCRUTINIZES ANY SUGGESTION BY A REVIEWER THAT THEIR OWN WORK SHOULD BE REFERENCED AND RESERVES THE RIGHT TO DELETE ANY SUCH COMMENTS FROM A REVIEW. WHERE A REVIEWER BELIEVES THEIR OWN WORK SHOULD BE CITED,WE ADVISE WRITING A COMMENT TO THE EDITORS UNDER CONFIDENTIAL COMMENTS TO THE EDITOR.]
+
+-- Sampling is a very important topic in data mining, in particular in the big data era. The authors may want to refer to the following tutorials/papers.
+1       Sampling for Big Data: A Tutorial (Page 1975)
+Graham Cormode (University of Warwick)
+Nick Duffield (Texas A&M)
+2       Papagelis, M.; Das, G.; and Koudas, N. 2013. Sampling online social networks. IEEE TKDE 25(3):662-676.
+3       J. Tang, C. Zhang, K. Cai, L. Zhang, and Z. Su. Sampling Representative Users from Large Social Networks. AAAI'15.
+4       Ugander, J.; Karrer, B.; Backstrom, L.; and Kleinberg, J. 2013. Graph cluster randomization: Network exposure to multiple universes. In KDD'13, 329-337.
+
+
+RELATIONSHIP TO PREVIOUS RESEARCH [NOT APPLICABLE TO SURVEY PAPERS]. IS THE NOVEL CONTRIBUTION OF THE NEW WORK MADE EXPLICIT TOGETHER WITH ITS RELATIONSHIP TO PRIOR WORK?  IS THE NEED FOR THE NEW CONTRIBUTION SUBSTANTIATED?  DOES THE PAPER MAKE CLEAR NOT ONLY
+THE STRENGTH BUT ALSO THE LIMITATIONS OF THE NEW CONTRIBUTION?
+
+-- The idea (in this paper) of connecting sampling with VC-dimension is interesting and has not been previously studied in existing literature.
+
+THEORETICAL AND EXPERIMENTAL EVALUATION. IS THE THEORETICAL AND EXPERIMENTAL EVALUATION SOUND AND APPROPRIATE. ARE ALL CLAIMS THAT ARE MADE BACKED BY SUFFICIENT THEORETICAL OR EXPERIMENTAL SUPPORT? IS APPROPRIATE STATISTICAL ANALYSIS PROVIDED OF EXPERIMENTAL
+RESULTS AND ARE APPROPRIATE CONCLUSIONS DRAWN?
+
+-- theoretical analysis sounds interesting and correct to me. The authors also conducted experiments on multiple datasets, which validates the effectiveness of the proposed methods.
+
+EXPRESSION. IS THE PAPER CLEARLY WRITTEN AND ACCESSIBLE TO A WIDE AUDIENCE OF DATA MINING RESEARCHERS?  IF NOT, WHAT TYPES OF CHANGES ARE REQUIRED? IS THE ENGLISH EXPRESSION OF A SUITABLE STANDARD FOR PUBLICATION?  IS THE PAPER OF APPROPRIATE LENGTH? IF NOT, WHAT SHOULD BE ADDED, EXPANDED, DELETED OR COMPRESSED? DO THE TITLE AND ABSTRACT APPROPRIATELY REFLECT THE CONTENTS?
+
+-- all sounds good to me.
+
+TECHNICAL DETAIL.  IS SUFFICIENT DETAIL PROVIDED ABOUT ALGORITHMS AND TECHNIQUES, INCLUDING EXPERIMENTAL TECHNIQUES?  IS THERE SUFFICIENT DETAIL TO ALLOW REPLICATION OF THE WORK?
+
+-- The most significant contribution is that the authors connect the sampling problem of betweenness calculation to VC dimension and offer probabilistic guarantees on the quality of the approximation. Specifically, they formalize a range set on the set of shortest paths of a graph and present a tight upper bound of its VC-dimension. Then based on the sample theory of VC dimension, they obtain sample sizes that are independent from the number of vertices in the network and only depend on vertex-diameter.
+
+
+FIGURES AND TABLES.  ARE THE FIGURES AND TABLES NECESSARY AND SUFFICIENT?
+
+--yes.
+
+REFERENCES.  ARE THE REFERENCES ACCURATE AND COMPLETE?
+
+-- almost.
+The authors may want to refer to the following tutorials/papers.
+1       Sampling for Big Data: A Tutorial (Page 1975)
+Graham Cormode (University of Warwick)
+Nick Duffield (Texas A&M)
+2       Papagelis, M.; Das, G.; and Koudas, N. 2013. Sampling online social networks. IEEE TKDE 25(3):662-676.
+3       J. Tang, C. Zhang, K. Cai, L. Zhang, and Z. Su. Sampling Representative Users from Large Social Networks. AAAI'15.
+4       Ugander, J.; Karrer, B.; Backstrom, L.; and Kleinberg, J. 2013. Graph cluster randomization: Network exposure to multiple universes. In KDD'13, 329-337.
+
+
+FOR SURVEY PAPERS ONLY:
+- IS A SURVEY IN THIS AREA TIMELY?    [IS THE AREA OF INTEREST TO
+  THE DATA MINING COMMUNITY AND IS THERE NO RECENT AND COMPREHENSIVE
+  REVIEW ALREADY AVAILABLE?]
+- IS THE COVERAGE OF THE AREA BALANCED, COMPLETE AND UP-TO-DATE?
+- DOES THE SURVEY PROVIDE A SUITABLE FRAMEWORK FOR UNDERSTANDING THE AREA?
+
+
+
+
+ANY OTHER COMMENTS NOT COVERED ABOVE.
+
+
+
+SUMMARIZE ANY CHANGES THAT MUST BE MADE FOR A REVISED VERSION OF THIS PAPER TO BE ACCEPTABLE FOR PUBLICATION.
+
+-- just wonder the same technology can be applied to other network metrics rather than betweenness centrality, for example shortest path, node similarity and others? More discussion about this would be helpful.
+
+SUMMARIZE ANY FURTHER CHANGES THAT YOU RECOMMEND THE AUTHOR(S) CONSIDER.
+
+-- personally, I really like this paper and would like to see it accepted as it is.
+
+
+======================================================================
+Reviewer #2: DATA MINING AND KNOWLEDGE DISCOVERY REVIEW FORM:
+
+DATA MINING AND KNOWLEDGE DISCOVERY IS A LEADING VENUE FOR ARCHIVAL PUBLICATION OF RESEARCH IN THE DISCIPLINES OF DATA MINING AND KNOWLEDGE DISCOVERY.  PAPERS SHOULD BE ASSESSED AGAINST HIGH STANDARDS OF SCHOLARSHIP, PRESENTATION AND EXPECTED IMPACT.
+
+SUMMARY. PROVIDE A BRIEF SUMMARY OF THE REASONS FOR YOUR RECOMMENDATION. WHAT ARE THE MAJOR STRENGTHS AND WEAKNESSES OF THE MANUSCRIPT?
+
+The paper presents new sampling algorithms for approximating the betweenness centrality in graphs. The main technical contribution is to provide an upper bound for the VC dimension of an appropriately defined sample space and then using known sampling results for approximating distributions of range sets with bounded VC dimensions.
+
+A number of interesting bounds of the VC-dim and nice proofs are given, such as (1) a bound by a quantity that is in turn bounded by the diameter of the graph (2) matching lower bounds (3) a constant bound for graphs with unique shortest paths.
+
+Two different problems are studied: approximating the betweenness centrality of all nodes and finding the k nodes with the highest betweenness centrality.
+
+A number of extensions are discussed, edge betweenness centrality, k-path betweenness, etc., as well as the case of directed graphs.
+
+Overall, the improvement of the estimation bounds is not very dramatic: from log(n) to log(VD). On the other hand the theory is nicely developed and it is very interesting to see the use of VC dimension in a graph problem. Thus, I recommend that the paper is accepted, subject to some minor changes listed below.
+
+
+RELEVANCE. HOW RELEVANT IS THE PAPER TO THE DISCIPLINES OF DATA MINING AND KNOWLEDGE DISCOVERY?
+
+Very relevant.
+
+SIGNIFICANCE [NOT APPLICABLE TO SURVEY PAPERS]. HOW SIGNIFICANTLY DOES THE PAPER ADVANCE THE CURRENT STATE-OF-THE-ART? HOW BIG AN IMPACT WILL THE PAPER HAVE, ON WHAT AREAS, AND WHY?  WILL THE PAPER STIMULATE FURTHER RESEARCH?
+
+Theoretical improvement and practical improvement validated with experimentation. Nice theoretical treatment.
+
+
+RELATED RESEARCH.  IS ALL RELEVANT PRIOR WORK DISCUSSED? IS THE CURRENT WORK A DISTINCT AND NEW CONTRIBUTION RELATIVE TO THE AUTHOR(S)' PREVIOUS WORK?  [NOTE, DMKD ENCOURAGES SUBMISSION OF EXPANDED VERSIONS OF SIGNIFICANT WORK PREVIOUSLY PUBLISHED IN CONFERENCES, SO LONG AS THE RELATIONSHIP TO THE EARLIER WORK IS ACKNOWLEDGED, BUT STRONGLY CONDEMNS BOTH PLAGIARISM AND SELF-PLAGIARISM.  SEE INSTRUCTIONS FOR AUTHORS FOR MORE DETAILS.]
+[NOTE ALSO THAT DMKD CLOSELY SCRUTINIZES ANY SUGGESTION BY A REVIEWER THAT THEIR OWN WORK SHOULD BE REFERENCED AND RESERVES THE RIGHT TO DELETE ANY SUCH COMMENTS FROM A REVIEW. WHERE A REVIEWER BELIEVES THEIR OWN WORK SHOULD BE CITED,WE ADVISE WRITING A COMMENT TO THE EDITORS UNDER CONFIDENTIAL COMMENTS TO THE EDITOR.]
+
+As far as I can tell relevant work is discussed in an appropriate and fair manner. Note however that I am knowledgeable in the area but not an expert.
+
+
+RELATIONSHIP TO PREVIOUS RESEARCH [NOT APPLICABLE TO SURVEY PAPERS]. IS THE NOVEL CONTRIBUTION OF THE NEW WORK MADE EXPLICIT TOGETHER WITH ITS RELATIONSHIP TO PRIOR WORK?  IS THE NEED FOR THE NEW CONTRIBUTION SUBSTANTIATED?  DOES THE PAPER MAKE CLEAR NOT ONLY
+THE STRENGTH BUT ALSO THE LIMITATIONS OF THE NEW CONTRIBUTION?
+
+
+
+THEORETICAL AND EXPERIMENTAL EVALUATION. IS THE THEORETICAL AND EXPERIMENTAL EVALUATION SOUND AND APPROPRIATE. ARE ALL CLAIMS THAT ARE MADE BACKED BY SUFFICIENT THEORETICAL OR EXPERIMENTAL SUPPORT? IS APPROPRIATE STATISTICAL ANALYSIS PROVIDED OF EXPERIMENTAL
+RESULTS AND ARE APPROPRIATE CONCLUSIONS DRAWN?
+
+Theoretical treatment and experimental evaluation are sufficient.
+
+EXPRESSION. IS THE PAPER CLEARLY WRITTEN AND ACCESSIBLE TO A WIDE AUDIENCE OF DATA MINING RESEARCHERS?  IF NOT, WHAT TYPES OF CHANGES ARE REQUIRED? IS THE ENGLISH EXPRESSION OF A SUITABLE STANDARD FOR PUBLICATION?  IS THE PAPER OF APPROPRIATE LENGTH? IF NOT, WHAT SHOULD BE ADDED, EXPANDED, DELETED OR COMPRESSED? DO THE TITLE AND ABSTRACT APPROPRIATELY REFLECT THE CONTENTS?
+
+The paper is fairly well written.
+
+
+TECHNICAL DETAIL.  IS SUFFICIENT DETAIL PROVIDED ABOUT ALGORITHMS AND TECHNIQUES, INCLUDING EXPERIMENTAL TECHNIQUES?  IS THERE SUFFICIENT DETAIL TO ALLOW REPLICATION OF THE WORK?
+
+Yes, there is sufficient detail.
+
+
+FIGURES AND TABLES.  ARE THE FIGURES AND TABLES NECESSARY AND SUFFICIENT?
+
+They are OK.
+
+REFERENCES.  ARE THE REFERENCES ACCURATE AND COMPLETE?
+
+
+They are OK.
+
+
+FOR SURVEY PAPERS ONLY:
+- IS A SURVEY IN THIS AREA TIMELY?    [IS THE AREA OF INTEREST TO
+  THE DATA MINING COMMUNITY AND IS THERE NO RECENT AND COMPREHENSIVE
+  REVIEW ALREADY AVAILABLE?]
+- IS THE COVERAGE OF THE AREA BALANCED, COMPLETE AND UP-TO-DATE?
+- DOES THE SURVEY PROVIDE A SUITABLE FRAMEWORK FOR UNDERSTANDING THE AREA?
+
+
+ANY OTHER COMMENTS NOT COVERED ABOVE.
+
+Two stylistic comments:
+
+1. Please do not use citations as proper words. Lazy text like "from [12, 17]" or "by [22]" is not acceptable.
+
+2. Figures look very amateurish. Fonts look bad and the choice of shapes and colors makes the figures very hard to read. For showing the error distribution I would recommend boxplots.
+
+SUMMARIZE ANY CHANGES THAT MUST BE MADE FOR A REVISED VERSION OF THIS PAPER TO BE ACCEPTABLE FOR PUBLICATION.
+
+1. The BP algorithm is not evaluated for accuracy. I would like to see the accuracy vs. efficiency trade-off for both VC and BP algorithms. I think that a nice way to do this is to show curves of running time (or/and number of samples) vs. actual error (not epsilon) for the two algorithms.
+
+2. The top-k algorithm is not evaluated! I would like to see an experiment demonstrating the merits (or trade offs) of the top-k algorithm.
+
+SUMMARIZE ANY FURTHER CHANGES THAT YOU RECOMMEND THE AUTHOR(S) CONSIDER.
+
+Consider make your code publicly available.
+
+
+======================================================================
+Reviewer #3: DATA MINING AND KNOWLEDGE DISCOVERY REVIEW FORM:
+
+DATA MINING AND KNOWLEDGE DISCOVERY IS A LEADING VENUE FOR ARCHIVAL PUBLICATION OF RESEARCH IN THE DISCIPLINES OF DATA MINING AND KNOWLEDGE DISCOVERY.  PAPERS SHOULD BE ASSESSED AGAINST HIGH STANDARDS OF SCHOLARSHIP, PRESENTATION AND EXPECTED IMPACT.
+
+
+
+SUMMARY. PROVIDE A BRIEF SUMMARY OF THE REASONS FOR YOUR RECOMMENDATION. WHAT ARE THE MAJOR STRENGTHS AND WEAKNESSES OF THE MANUSCRIPT?
+
+This paper provides a novel approach and analysis for approximating the betweenness centrality of nodes as well as an algorithm to return the nodes with K-highest centrality.
+I think that the paper is very well written and both contributions (i.e., the sampling algorithm and the analysis technique) are novel and substantially different from known approaches. The algorithm to compute top-k nodes actually returns a superset of the true solution but with performance guarantees. I think that the idea behind choosing this superset is also very nice, but I consider the basic sampling algorithm and its analysis the major contributions of this paper.
+
+The paper contains detailed proofs to every claim. As far as I could check the proofs seem correct to me.
+
+To detail the strengths of this paper:
+
+Previous sampling strategies (that I am familiar with) use similar ideas to the ones in the seminal paper of Brandes and Pich; which is to pick a pivot node s at random and use ALL shortest paths starting from s to estimate node centralities. In this paper the authors take a different approach; they sample two nodes u and v and then pick ONE shortest paths between them at random. The efficient implementation of this uniform paths sampling is also discussed in detail. It follows the idea behind Brandes algorithm to compute betweenness but performs the appropriate bookkeeping on the way.
+
+For the analysis of the approximation properties of the algorithm the authors suggest to use the VC-dimension of the set of shortest paths in the graph. I consider this to be the least trivial and most interesting contribution of this paper. The idea behind it is, that by taking a sufficiently large sample of shortest paths with high probability a shattered subset of paths is selected. The shattered property ensures that the probability (which corresponds to its size) of each subset of shortest paths that contain a given node   is approximated well.
+
+In section 5.3 the authors give tighter approximations for previous sampling algorithms and also give a fair comparison on the trade-off between approximation accuracy and running time of each method.
+
+Minor concerns:
+
+In section 6.1 I had trouble understanding the exact definition of k-bounded-distance betweenness. What are the k-bounded-distance paths? It says the set of SHORtEST PATHS (which in my interpretation has a given size) between nodes u and v of size AT MOST k+1. Please clarify this definition.
+
+Overall, while I think that section 6 contains valid variants of betweenness centrality, these can be figured out easily if someone is familiar with the common variants of betweenness. While I have no objection to this section being in the paper, I think that it is  redundant and for conciseness and clarity it may be a better idea to omit.
+
+
+ In section 4 (page 8, lines 17-19) the definition of antichains is a little bit confusing, I suggest you clarify a little. It would be more clear if you say that the proper-subset relation between sets defines a partial ordering on the sets and that you can consider the antichains in this partial order.
+
+
+RELEVANCE. HOW RELEVANT IS THE PAPER TO THE DISCIPLINES OF DATA MINING AND KNOWLEDGE DISCOVERY?
+
+Very relevant. Research in betweenness centrality has a huge history but is still a hot topic with many applications.
+
+SIGNIFICANCE [NOT APPLICABLE TO SURVEY PAPERS]. HOW SIGNIFICANTLY DOES THE PAPER ADVANCE THE CURRENT STATE-OF-THE-ART? HOW BIG AN IMPACT WILL THE PAPER HAVE, ON WHAT AREAS, AND WHY?  WILL THE PAPER STIMULATE FURTHER RESEARCH?
+
+This paper has significant contributions. The proposed algorithm is novel, the analysis technique is novel and significantly different from previous approaches I know of.
+
+RELATED RESEARCH.  IS ALL RELEVANT PRIOR WORK DISCUSSED? IS THE CURRENT WORK A DISTINCT AND NEW CONTRIBUTION RELATIVE TO THE AUTHOR(S)' PREVIOUS WORK?  [NOTE, DMKD ENCOURAGES SUBMISSION OF EXPANDED VERSIONS OF SIGNIFICANT WORK PREVIOUSLY PUBLISHED IN CONFERENCES, SO LONG AS THE RELATIONSHIP TO THE EARLIER WORK IS ACKNOWLEDGED, BUT STRONGLY CONDEMNS BOTH PLAGIARISM AND SELF-PLAGIARISM.  SEE INSTRUCTIONS FOR AUTHORS FOR MORE DETAILS.]
+[NOTE ALSO THAT DMKD CLOSELY SCRUTINIZES ANY SUGGESTION BY A REVIEWER THAT THEIR OWN WORK SHOULD BE REFERENCED AND RESERVES THE RIGHT TO DELETE ANY SUCH COMMENTS FROM A REVIEW. WHERE A REVIEWER BELIEVES THEIR OWN WORK SHOULD BE CITED,WE ADVISE WRITING A COMMENT TO THE EDITORS UNDER CONFIDENTIAL COMMENTS TO THE EDITOR.]
+
+I believe all relevant related work is discussed. In my opinion the paper is sufficiently new from the original version.
+
+
+
+RELATIONSHIP TO PREVIOUS RESEARCH [NOT APPLICABLE TO SURVEY PAPERS]. IS THE NOVEL CONTRIBUTION OF THE NEW WORK MADE EXPLICIT TOGETHER WITH ITS RELATIONSHIP TO PRIOR WORK?  IS THE NEED FOR THE NEW CONTRIBUTION SUBSTANTIATED?  DOES THE PAPER MAKE CLEAR NOT ONLY
+THE STRENGTH BUT ALSO THE LIMITATIONS OF THE NEW CONTRIBUTION?
+
+There is a whole section with detailed (theoretical) analysis that compares the most used algorithms in this area with the one proposed in this paper.
+
+
+THEORETICAL AND EXPERIMENTAL EVALUATION. IS THE THEORETICAL AND EXPERIMENTAL EVALUATION SOUND AND APPROPRIATE. ARE ALL CLAIMS THAT ARE MADE BACKED BY SUFFICIENT THEORETICAL OR EXPERIMENTAL SUPPORT? IS APPROPRIATE STATISTICAL ANALYSIS PROVIDED OF EXPERIMENTAL
+RESULTS AND ARE APPROPRIATE CONCLUSIONS DRAWN?
+
+The theoretical proofs as far as I could check are correct. The experiments are sufficient, though not very extensive.
+
+EXPRESSION. IS THE PAPER CLEARLY WRITTEN AND ACCESSIBLE TO A WIDE AUDIENCE OF DATA MINING RESEARCHERS?  IF NOT, WHAT TYPES OF CHANGES ARE REQUIRED? IS THE ENGLISH EXPRESSION OF A SUITABLE STANDARD FOR PUBLICATION?  IS THE PAPER OF APPROPRIATE LENGTH? IF NOT, WHAT SHOULD BE ADDED, EXPANDED, DELETED OR COMPRESSED? DO THE TITLE AND ABSTRACT APPROPRIATELY REFLECT THE CONTENTS?
+
+Overall the paper is very clear written. The authors did a very good job in introducing the notions related to VC-dimension (I believe this is the part that lies furthest away from the knowledge of the expected audience). Section 6 on the variants of betweenness centrality are probably difficult to follow for people, who are not familiar with betweenness centrality.
+
+
+TECHNICAL DETAIL.  IS SUFFICIENT DETAIL PROVIDED ABOUT ALGORITHMS AND TECHNIQUES, INCLUDING EXPERIMENTAL TECHNIQUES?  IS THERE SUFFICIENT DETAIL TO ALLOW REPLICATION OF THE WORK?
+
+Yes, the description is sufficiently detailed and the code is made available.
+
+FIGURES AND TABLES.  ARE THE FIGURES AND TABLES NECESSARY AND SUFFICIENT?
+
+Some more extensive captions on figures 8, 9 and 10 would be nice.
+
+REFERENCES.  ARE THE REFERENCES ACCURATE AND COMPLETE?
+
+References are complete as far as I can tell.
+
+FOR SURVEY PAPERS ONLY:
+- IS A SURVEY IN THIS AREA TIMELY?    [IS THE AREA OF INTEREST TO
+  THE DATA MINING COMMUNITY AND IS THERE NO RECENT AND COMPREHENSIVE
+  REVIEW ALREADY AVAILABLE?]
+- IS THE COVERAGE OF THE AREA BALANCED, COMPLETE AND UP-TO-DATE?
+- DOES THE SURVEY PROVIDE A SUITABLE FRAMEWORK FOR UNDERSTANDING THE AREA?
+
+
+
+
+ANY OTHER COMMENTS NOT COVERED ABOVE.
+
+
+
+SUMMARIZE ANY CHANGES THAT MUST BE MADE FOR A REVISED VERSION OF THIS PAPER TO BE ACCEPTABLE FOR PUBLICATION.
+
+
+
+SUMMARIZE ANY FURTHER CHANGES THAT YOU RECOMMEND THE AUTHOR(S)
+CONSIDER.
+
+In section 6.1 I had trouble understanding the exact definition of k-bounded-distance betweenness. What are the k-bounded-distance paths? It says the set of SHORtEST PATHS (which in my interpretation has a given size) between nodes u and v of size AT MOST k+1. Please clarify this definition.
+
+Overall, while I think that section 6 contains valid variants of betweenness centrality, these can be figured out easily if someone is familiar with the common variants of betweenness. While I have no objection to this section being in the paper, I think that it is  redundant and for conciseness and clarity it may be a better idea to omit.
+
+
+ In section 4 (page 8, lines 17-19) the definition of antichains is a little bit confusing, I suggest you clarify a little. It would be more clear if you say that the proper-subset relation between sets defines a partial ordering on the sets and that you can consider the antichains in this partial order.
+
+
+___________________________________________________________
+
