@@ -8,15 +8,23 @@ betweenness centrality.
 A ``local'' variant of betweenness, called \emph{$k$-bounded-distance
 betweenness}\footnote{Bounded-distance betweenness is also known as
 $k$-betweenness. We prefer the former denomination to avoid confusion with
-$k$-path betweenness from~\citep{KourtellisASIT12}.} only considers
-the contribution of shortest paths of size up to $k+1$~\citep{BorgattiE06,Brandes08}.
+$k$-path betweenness as defined by~\citet{KourtellisASIT12}.} considers
+the contribution only of the shortest paths that have size up to $k+1$~\citep{BorgattiE06,Brandes08}.
 For $k>1$ and any pair of distinct vertices $u,v\in V$, $u\neq V$, let
 $\mathcal{S}^{(k)}_{uv}\subseteq\mathcal{S}_{uv}$ be the set of shortest paths
-from $u$ to $v$ of size at most $k+1$, with
-$\sigma^{(k)}_{uv}=|\mathcal{S}^{(k)}_{uv}|$, and let $\mathbb{S}^{(k)}_G$ be the
-union of all the $\mathcal{S}^{(k)}_{uv}$. Let
+from $u$ to $v$ that have size at most $k+1$:
+\[
+	\mathcal{S}^{(k)}_{uv}=\{p\in\mathcal{S}_{uv} ~:~ |p|\le k+1 \mbox{ and $p$
+	goes from $u$ to $v$}\}\enspace.
+\]
+Let $\sigma^{(k)}_{uv}=|\mathcal{S}^{(k)}_{uv}|$, and let $\mathbb{S}^{(k)}_G$
+be the union of all the $\mathcal{S}^{(k)}_{uv}$. Let
 $\mathcal{T}^{(k)}_v\subseteq\mathcal{T}_v$ be the set of all shortest paths
-\emph{of size up to $k$} that $v$ is internal to, for each $v\in V$.
+\emph{that have size up to $k$} and that $v$ is internal to, for each $v\in V$:
+\[
+	\mathcal{T}^{(k)}_v=\{p\in\mathcal{T}_v ~:~ |p|\le k \mbox{ and }
+	v\in\mathsf{Int}(p)\}\enspace.
+\]
 
 %\begin{definition}[\citep{BorgattiE06,Brandes08}]\label{def:kboundbetweenness}
 \begin{definition}\label{def:kboundbetweenness}
