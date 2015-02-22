@@ -223,7 +223,7 @@ $|V|-2$ (indicated as diam-UB).
   \centering
   \begin{subfigure}[b]{1\textwidth}
   \centering
-    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/p2p-Gnutella30-error}
+    \includegraphics[width=\textwidth,height=0.18\textheight]{figures/eps/p2p-Gnutella30-error}
     \caption{p2p-Gnutella30 (directed)}
     \label{fig:gnutella:error}
   \end{subfigure}
@@ -232,14 +232,14 @@ $|V|-2$ (indicated as diam-UB).
 
   \begin{subfigure}[b]{1\textwidth}
 	\centering
-    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/soc-Epinions1-error}
+    \includegraphics[width=\textwidth,height=0.18\textheight]{figures/eps/soc-Epinions1-error}
     \caption{soc-Epinions1 (directed)}
     \label{fig:Epinions:error}
   \end{subfigure}
 
   \begin{subfigure}[b]{1\textwidth}
 	\centering
-    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/ca-HepPh-error}
+    \includegraphics[width=\textwidth,height=0.18\textheight]{figures/eps/ca-HepPh-error}
     \caption{ca-HepPh (directed)}
     \label{fig:HepPh:error}
   \end{subfigure}
@@ -249,19 +249,23 @@ $|V|-2$ (indicated as diam-UB).
   \begin{subfigure}[b]{1\textwidth}
   \centering
     %\includegraphics[width=0.7\textwidth,keepaspectratio]{figures/eps/email-Enron-error}
-    \includegraphics[width=\textwidth,height=0.2\textheight]{figures/eps/email-Enron-error}
+    \includegraphics[width=\textwidth,height=0.18\textheight]{figures/eps/email-Enron-error}
     \caption{email-Enron (undirected)}
     \label{fig:email:error}
   \end{subfigure}
   \caption{Betweenness estimation error $|\tilde\betw(v)-\betw(v)|$ evaluation
-  for directed and undirected graphs} 
-  \label{fig:error}
+  for directed and undirected graphs as function of $\varepsilon$. The reported
+  quantities are: average error, maximum error, and the sum between average and
+  standard deviation. For directed graphs, two versions of these quantities are
+  reported, one for runs of the algorithm using the exact vertex diameter, and
+  one for runs using an upper bound to it. For undirected graph we report the
+  quantities for runs that used the 2-approximation to the vertex diameter.}\label{fig:error}
 \end{figure*}
 
 \begin{figure*}[htbp]
   \centering
   \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/p2p-Gnutella30-time}
+    \includegraphics[width=1\textwidth,height=0.19\textheight]{figures/eps/p2p-Gnutella30-time}
     \caption{p2p-Gnutella30 (directed)}
     \label{fig:gnutella:time}
   \end{subfigure}
@@ -269,13 +273,13 @@ $|V|-2$ (indicated as diam-UB).
   %\hfill
 
   \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/soc-Epinions1-time}
+    \includegraphics[width=1\textwidth,height=0.19\textheight]{figures/eps/soc-Epinions1-time}
     \caption{soc-Epinions1 (directed)}
     \label{fig:Epinions:time}
   \end{subfigure}
 
   \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/ca-HepPh-time}
+    \includegraphics[width=1\textwidth,height=0.19\textheight]{figures/eps/ca-HepPh-time}
     \caption{ca-HepPh (directed)}
     \label{fig:HepPh:time}
   \end{subfigure}
@@ -283,12 +287,16 @@ $|V|-2$ (indicated as diam-UB).
   %\hfill
 
   \begin{subfigure}[b]{1\textwidth}
-    \includegraphics[width=1\textwidth,height=0.2\textheight]{figures/eps/email-Enron-time}
+    \includegraphics[width=1\textwidth,height=0.19\textheight]{figures/eps/email-Enron-time}
     \caption{email-Enron (undirected)}
     \label{fig:email:time}
   \end{subfigure}
-  \caption{Running time (seconds) comparison between $\mathsf{VC}$, $\mathsf{BP}$, and the
-  exact algorithm.}
+  \caption{Comparison of the running time (in seconds) between $\mathsf{VC}$,
+  $\mathsf{BP}$, and the exact algorithm, as functino of $\varepsilon$. For
+  directed graphs, the running time of $\mathsf{VC}$ is reported twice: one for
+  runs using the exact vertex diameter, and one for runs using an upper bound to
+  this quantity. For undirected graphs we report the running time of
+  $\mathsf{VC}$ using the 2-approximation to the diameter.}
   \label{fig:time}
 %\begin{minipage}[b]{0.5\linewidth}
 %\flushleft
@@ -457,7 +465,11 @@ We plan to explore this in future work.
 \begin{figure}[htb]
   \centering
   \includegraphics[width=1\textwidth,keepaspectratio]{figures/eps/random-time}
-  \caption{Scalability on random Barab\'asi-Albert~\citep{BarabasiA99} graphs.}
+  \caption{Comparison of scalability (running time in seconds) between
+  	  $\mathsf{VC}$ and $\mathsf{BP}$ on random undirected
+  	  Barab\'asi-Albert~\citep{BarabasiA99} graphs, as function of the number of
+	  vertices in the graph. We report the running time for runs of $\mathsf{VC}$ using
+	  the 2-approximation to the vertex diameter.}
   \label{fig:random:time}
 \end{figure}
 \subsection{Scalability}\label{sec:scalability}
