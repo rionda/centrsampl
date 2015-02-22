@@ -12,13 +12,24 @@ $\mathcal{T}_v$ of shortest paths that $v$ is internal to:
 \]
 
 Given a graph $G=(V,E)$, assume, for technical reasons, that $|E|\ge 2$ (the
-case $|E|=1$ is trivial), and let $\mathsf{H}(G)$ be the maximum integer $d$
-such that there are $h=\lfloor\log_2(d-2)\rfloor+1$ shortest paths
-$\{p_1,\dotsc,p_h\}$ in $\mathbb{S}_G$ of size at least $d$ and such that the
-collection $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an anti-chain,
-i.e., a collection of sets such that for no two sets in it one is a subset of
-the other. Note that since $|E|\ge 2$ and the size of a path is always at least
-$2$, then the formula for $h$ is always well defined.
+case $|E|=1$ is trivial). Consider the set 
+\[
+	I=\{\mathsf{Int}(p) ~:~ p\in\mathbb{S}_G\}\enspace.
+\]
+The proper-subset relation between sets defines a partial order on $I$. Let
+$AI$ be the collection of \emph{anti-chains} in $I$ according to this partial
+order ($AI$ is a set of subsets of $I$). Let $\mathsf{H}(G)$ be the maximum
+integer $h$ such that there is an anti-chain $A\in AI$,
+$A=\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_d)\}$ of size
+$d=\lfloor\log_2(h-2)\rfloor+1$ such that $|p_i|\ge h$, for each $1\le i\le d$. %spacesaver
+%, and let $\mathsf{H}(G)$ be the maximum integer $d$
+%such that there are $h=\lfloor\log_2(d-2)\rfloor+1$ shortest paths
+%$\{p_1,\dotsc,p_h\}$ in $\mathbb{S}_G$ that have size at least $d$ and such that the
+%collection $\{\mathsf{Int}(p_1),\dotsc,\mathsf{Int}(p_h)\}$ is an
+%\emph{anti-chain}, i.e., a collection of sets such that for no two sets in it one is a subset of
+%the other.
+Note that since $|E|\ge 2$ and the size of a path is always at least $2$, then
+the formula for $d$ is always well defined.
 
 
 
