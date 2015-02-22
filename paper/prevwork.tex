@@ -91,18 +91,19 @@ VC-dimension to speed up shortest path computation but their range set is
 different from the one we use: their ground set is the set of vertices while
 ours is defined on shortest paths.
 
-The use of sampling in algorithms for social network analysis is widespread.
-
-\citet{PapagelisDK13}.
-
-\citet{TangZCZS15}.
-
-\citet{UganderKBK13}.
-
-For additional information, both basic and advanced, on the use of sampling in
-Big Data algorithm, we refer the reader to the tutorial by~\citet{CormodeD14},
-with the caveat that it does not cover VC-dimension and related techniques that
-we use in this work.
+The use of sampling in algorithms for social network analysis is widespread,
+although the word may assume different meanings. For example, \citet{TangZCZS15}
+are interested in \emph{extracting} (``sampling'') sets of users (vertices) that
+are statistically representative of entire set of vertices. This concept of
+``sampling'' is different from ours. \citet{PapagelisDK13} focus on algorithms
+to obtain random samples of the neighborhood of a vertex as fast as possible.
+This is a different setting than ours, as we assume that the entire network is
+accessible. For additional information, both basic and advanced, on the use of
+sampling in graph analysis algorithms, we refer the reader to the tutorial
+by~\citet{CormodeD14}, with the caveat that it does not cover VC-dimension and
+related techniques that we use in this work.
+% Rev. 1 suggested to cite \citet{UganderKBK13}, but I fail to see how this is
+% relevant.
 
 \ifproof
 The present work extends substantially the preliminary
