@@ -1,12 +1,11 @@
-TODO 
+TODO
 ====
 
-- [ ] Experiments for Topk 
-
-- [ ] Discuss JACM variant (booringggg)
-
-- [ ] Implement Bidirectional / A* search
-
-- [ ] Report analysis 1st reviewer WSDM to motivate top-k algo. I'm not sure
-  about this. Would look like we're shooting in our own foot.
-
+- [ ] Experiments for Topk
+- [ ] Improve section 6, make less redundant (Rev 3)
+- [ ] Improve figures (fonts look bad, shapes and colors too)
+- [ ] Improve captions of Figures 8, 9, and 10. (Rev 3)
+- [ ] Discuss references (Rev 1)
+- [ ] Improve definition of antichains (Rev. 3)
+- [ ] Elaborate definition k-bounded-distance betweenness (Rev 3)
+- [X] Make code publicly available.
