@@ -1,6 +1,7 @@
 TODO
 ====
 
+- [ ] Write response
 - [ ] Experiments for Topk / BP
 - [ ] Improve figures (fonts look bad, shapes and colors too)
 - [X] Discuss references (Rev 1)
