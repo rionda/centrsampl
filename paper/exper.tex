@@ -344,8 +344,7 @@ email-Enron. %
 \else
 Results for other graphs are similar~\citep{RiondatoK13}. %
 \fi
-It is
-evident that the maximum error is an error of magnitude smaller than the
+It is evident that the maximum error is an error of magnitude smaller than the
 guaranteed value of $\varepsilon$ and that the average error is almost two
 orders of magnitude smaller than the guarantees, and the \texttt{Avg+Stddev}
 points show that the estimation are quite concentrated around the
@@ -355,15 +354,20 @@ theoretical analysis indicates. This is due to a number of factors, for example 
 fact that we use an \emph{upper bound} to the VC-dimension of the range set and
 that the sample size is therefore an upper bound to the one \emph{necessary} to
 obtain the desired approximation guarantees.
-%Morev the inherent looseness of the formula of the sample size~\eqref{eq:vceapprox}.
 
+We also report in the figures the error for the algorithm
+by~\citet{JacobKLPT05,BrandesP07,GeisbergerSS08} (denoted as $\mathsf{BP}$). We
+report this results for the original version of the algorithm, using a sample
+size that depends on the number of nodes in the graph. As expected, the error is
+much lower than that for our algorithm, but that is because $\mathsf{BP}$ uses
+an unnecessary large number of samples because its analysis is extremely loose.
+Moreover, as we explain in the following section, its runtime is also much
+higher than that of our algorithm.
 
 
 \subsection{Runtime}\label{sec:runtime}
 We compared the running time of Algorithm~\ref{alg:algorithm} (denoted in the
-following as $\mathsf{VC}$ to that of the algorithm presented
-by~\citet{JacobKLPT05,BrandesP07,GeisbergerSS08}
-(denoted as $\mathsf{BP}$), and to that of the exact
+following as $\mathsf{VC}$ to that of $\mathsf{BP}$, and to that of the exact
 algorithm by~\citet{Brandes01}. As $\mathsf{VC}$ and $\mathsf{BP}$ give the same
 guarantees on the accuracy and confidence of the computed estimations, it makes
 sense to compare their running times to evaluate which is faster in achieving
