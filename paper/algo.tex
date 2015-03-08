@@ -439,7 +439,7 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
 The following lemma shows the properties of the collection $\widetilde\TOPK(K,G)$.
 \fi
 
-\begin{lemma}
+\begin{lemma}\label{lem:topk}
   With probability at least $1-\delta$, 
   \begin{enumerate*}
     \item $\TOPK(K,G)\subseteq \widetilde\TOPK(K,G)$, and
@@ -478,13 +478,14 @@ the paper~\citep{RiondatoK13}.
 The advantage of using our algorithm to approximate the collection of top-$K$
 betweenness vertices is the very high-quality of the approximation of the
 betweenness values for the returned set of vertices: all estimations within a
-multiplicative factor $\varepsilon$ from their exact values. By sorting 
-them according to the approximated betweenness, one can obtain a ranking that is
-very similar to the original exact one. Previous algorithms were only able to
-approximate the betweenness values to within an additive error $\varepsilon$.
-The cost of computing the high quality approximation for the top-$K$ vertices is
-the cost of an additional run of our algorithm to compute good approximations
-for all the vertices.
+multiplicative factor $\varepsilon$ from their exact values. 
+%By sorting 
+%them according to the approximated betweenness, one can obtain a ranking that is
+%similar to the original exact one. 
+Previous algorithms were only able to approximate the betweenness values to
+within an additive error $\varepsilon$.  The cost of computing the high quality
+approximation for the top-$K$ vertices is the cost of an additional run of our
+algorithm to compute good approximations for all the vertices.
 
 \subsection{Discussion}\label{sec:discussion}
 \citet{JacobKLPT05} and independently~\citet{BrandesP07} present a

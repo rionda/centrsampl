@@ -259,7 +259,8 @@ $|V|-2$ (indicated as diam-UB).
   standard deviation. For directed graphs, two versions of these quantities are
   reported, one for runs of the algorithm using the exact vertex diameter, and
   one for runs using an upper bound to it. For undirected graph we report the
-  quantities for runs that used the 2-approximation to the vertex diameter.}\label{fig:error}
+  quantities for runs that used the 2-approximation to the vertex diameter. For
+  the $\mathsf{BP}$ algorithm, we only report the average.}\label{fig:error}
 \end{figure*}
 
 \begin{figure*}[htbp]
@@ -364,24 +365,38 @@ an unnecessary large number of samples because its analysis is extremely loose.
 Moreover, as we explain in the following section, its runtime is also much
 higher than that of our algorithm.
 
-\paragraph{Accuracy for the Top-$k$ algorithm.} In Fig.~\ref{fig:topk} we report
-the accuracy results for the graph  as function of $k$. We measured the
-\emph{relative} confidence error, defined as \ldots
+\paragraph{Accuracy for the top-$K$ algorithm.} We also evaluated our algorithm
+for a higher-quality approximation of $\TOPK(K,G)$ (Sect.~\ref{sec:topk}). In
+Fig.~\ref{fig:topk} we report the accuracy results for the graph as function of
+$k$ for the graph ca-HepTh and fixed values of $\varepsilon=0.05$ and
+$\delta=0.1$ (the behavior for other values of $\varepsilon$ is similar to that
+we already discussed for the absolute approximation algorithm). We measured the
+\emph{relative} confidence error, defined as
+$|\tilde\betw(v)-\betw(v)|/\betw(v)$. While the average of this quantity is
+almost an order of magnitude smaller than $\varepsilon$, the maximum is quite
+close to the maximum allowed error $0.05$, meaning that our sample size is not
+excessively large, but rather quite close to the smallest sufficient size.
+Nevertheless, in all our runs, the output always respected the requirements of
+Lemma~\ref{lem:topk}, not just with probability $1-\delta$, for reasons similar
+to those mentioned for the absolute case. The size of the output set was always
+at most one error of magnitude greater than $k$. Notice that we can not give
+guarantees neither on the size of the output, nor on the ranking of the
+vertices, as these properties depend on the distribution of the betweenness
+values: if many vertices have betweenness value close to each other and/or close
+to the value of the top-$k$-th, then their relative order may be inverted and/or
+they may be included in the output set. Indeed it is for this reason that the
+behavior of the error showed in Fig.~\ref{fig:topk} does not behave
+monotonically, as the aggregates are computed on different sets for different
+values of $k$.
 
-In all our runs, the output was a \ldots approximation \ldots
-
-We can not compare the accuracy with that of other algorithms since no other
-existing method offers the same guarantees as our top-k algorithm.
-
-\begin{figure}[htb]
+\begin{figure}[thb]
   \centering
-  \includegraphics[width=1\textwidth,keepaspectratio]{figures_dmkd/eps/ca_HepTh_topk}
+  \includegraphics[width=0.8\textwidth,keepaspectratio]{figures_dmkd/eps/ca_HepTh_topk}
   \caption{Betweenness estimation relative error
 	  $|\tilde\betw(v)-\betw(v)|/\betw(v)$ evaluation for the top-k algorithm as
 	  function of $k$. The reported quantities are: average error, maximum
 	  error, and the sum between average and standard deviation. We report the
-	  quantities for runs that used the 2-approximation to the vertex
-  diameter.}\label{fig:topk}
+	  quantities for runs that used the exact vertex diameter.}\label{fig:topk}
 \end{figure}
 
 \subsection{Runtime}\label{sec:runtime}
@@ -491,7 +506,7 @@ We plan to explore this in future work.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=1\textwidth,keepaspectratio]{figures_dmkd/eps/random-time}
+  \includegraphics[width=0.8\textwidth,keepaspectratio]{figures_dmkd/eps/random-time}
   \caption{Comparison of scalability (running time in seconds) between
   	  $\mathsf{VC}$ and $\mathsf{BP}$ on random undirected
   	  Barab\'asi-Albert~\citep{BarabasiA99} graphs, as function of the number of
