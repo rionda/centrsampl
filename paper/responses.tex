@@ -2,6 +2,7 @@
 \nofiles
 \usepackage{hyperref}
 \usepackage{fullpage}
+\usepackage{mdwlist}
 \signature{\vspace{-40pt}
 Matteo Riondato and\\Evgenios M. Kornaropoulos}
 \address{Department of Computer Science \\ Brown University \\ Providence, RI 02912} %\\ USA}
@@ -11,26 +12,34 @@ Matteo Riondato and\\Evgenios M. Kornaropoulos}
 \opening{Dear Action Editor and Reviewers,}
 We thank you for your service to the community, for the time you took to review
 our paper, and for the insightful comments in your reviews: they have been very
-valuable for improving our paper. In the following, we list how we addressed all
-the suggested changes in our revised submission. 
+valuable for improving our manuscript. In the following, we list how we
+addressed all the suggested changes in our revised submission. 
 
-\begin{enumerate}
+\begin{enumerate*}
 	\item {\bf Add the references mentioned by Reviewer \#1 and include a discussion
 		of these works.}\\
 		We added a paragraph to Section 2, discussing the suggested references,
-		except for the one by Ugander et al, as we fail to see the connection
+		except for the one by Ugander et al., as we fail to see the connection
 		with our work.
 	\item {\bf Make the stylistic modifications mentioned by Reviewer \#2.}\\
-		We modify the text to avoid the use of ``lazy'' citations.
-		XXX FIGURES XXX
+		We modified the text to avoid the use of ``lazy'' citations. 
+
+		We improved the style of the figures where we report the experimental
+		results.
 	\item {\bf Run and report on BP and top-k experiments mentioned by Reviewer
 		\#2.} \\
-		XXX
+		We run experiments for the accuracy of BP (experiments for the runtime
+		were already presented) and added comments about them.
+
+		We also run experiments to test the top-k algorithms, adding a
+		subsection in the Experimental evaluation section.
 	\item {\bf Make your code publicly available (as mentioned by Reviewer
 		\#2).}\\
 		Our code is available from
 		\url{http://cs.brown.edu/~matteo/centrsampl.tar.bz2}. This URL is
-		mentioned in the footnote 6.
+		mentioned in the footnote 6. An independent implementation of our
+		algorithms is also available as part of graphKIT
+		(\url{https://networkit.iti.kit.edu/}).
 	\item {\bf Elaborate on the definition of k-bounded-distance betweenness (as
 		mentioned by Reviewer \#3).}\\
 		We clarified the definition by making it more explicit and by
@@ -39,11 +48,11 @@ the suggested changes in our revised submission.
 		\#3).}\\
 		We rewrote the introduction to Section 6, and removed one of the
 		presented variants. We believe that the variants included in the revised
-		versions should stay, as the extension may either not be
-		straightforward, as is the case for $k$-path betweenness, or the variant
-		is particularly interesting and worth mentioning, as is the case for
-		edge betweenness (indeed an anonymous reviewer of the conference version
-		asked us to explicitly mention edge betweenness).
+		submission should stay, as they may either not be
+		straightforward, as is the case for $k$-path betweenness, or are
+		particularly interesting, as is the case for edge betweenness (an
+		anonymous reviewer of the conference version asked us to explicitly
+		mention edge betweenness).
 	\item {\bf Elaborate on the definition of antichains (as mentioned by Reviewer
 		\#3).}\\
 		We rewrote the paragraph using the definition suggested by the Reviewer.
@@ -51,7 +60,7 @@ the suggested changes in our revised submission.
 		Reviewer \#3).}\\
 		We expanded the captions, including additional details regarding the
 		reported quantities.
-\end{enumerate}
+\end{enumerate*}
 
 We hope to have addressed your comments to your satisfaction, and we thank you
 in advance for any additional comment.
