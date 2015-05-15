@@ -23,7 +23,7 @@ definition has weight $\mathsf{w}(p_\emptyset)=\infty$, no end points, and
 $\mathsf{Int}(p_\emptyset)=\emptyset$.
 
 Given two distinct vertices $(u,v)\in V\times V$, the \emph{shortest path distance}
-$d_{uv}$ between $u$ and $v$ is the weight of a path with minimum weight 
+$d_{uv}$ between $u$ and $v$ is the weight of a path with minimum weight
 between $u$ and $v$ among all paths between $u$ and $v$. If there is no path
 between $u$ and $v$, $d_{uv}=\infty$. We call a path between $u$ and $v$ with
 weight $d_{uv}$ a \emph{shortest path between $u$ and $v$}. There can be
@@ -35,7 +35,7 @@ $p_\emptyset=\emptyset$, the set $\{p_\emptyset\}$ is not empty. It contains
 one element.}.
 %By definition, $\mathcal{S}_{vv}=\emptyset$.
 We denote with $\mathbb{S}_G$ the union of all the $\mathcal{S}_{uv}$'s, for all
-pairs $(u,v)\in V\times V$ of distinct nodes $u\neq v$: 
+pairs $(u,v)\in V\times V$ of distinct nodes $u\neq v$:
 \[ \mathbb{S}_G=\bigcup_{\substack{(u,v)\in V\times V \\ u\neq v}}\mathcal{S}_{uv}\enspace.\]
 
 We now define a characteristic quantity of a graph that we will use throughout
@@ -48,7 +48,7 @@ the paper.
 \end{definition}
 If all the edge weights are unitary, then $\VD(G)$ is equal to
 $\mathsf{diam}(G)+1$, where $\mathsf{diam}(G)$ is the number of edges composing
-the longest shortest path in $G$. 
+the longest shortest path in $G$.
 %\XXX Shall we make an example with a figure?
 
 Given a vertex $v$, let $\mathcal{T}_v\subseteq\mathbb{S}_G$ be the set of all
@@ -71,8 +71,8 @@ Sect.~\ref{sec:edgebetw}.
   \betw(v)=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathbb{S}_G}\frac{\mathds{1}_{\mathcal{T}_v}(p)}{\sigma_{uw}}%=\frac{1}{n(n-1)}\sum_{p_{uw}\in\mathcal{T}_v}\frac{1}{|\mathcal{S}_{uw}|}
   \enspace.
   \]
-\end{definition} 
-It is easy to see that $\betw(v)\in[0,1]$. 
+\end{definition}
+It is easy to see that $\betw(v)\in[0,1]$.
 
 \ifproof
 Figure~\ref{fig:example-betw} shows an example of betweenness values for the
@@ -159,7 +159,7 @@ sides of the network, and indeed that is the case.
   %  \bottomrule
   %\end{tabular}
   %}
-  
+
   \begin{subtable}[c]{0.7\textwidth}
   \centering
     \caption{Betweenness values}
@@ -178,7 +178,7 @@ sides of the network, and indeed that is the case.
 
 \citet{Brandes01} presented an
 algorithm to compute the betweenness centrality for all $v\in V$ in time
-$O(nm)$ for unweighted graphs and $O(nm + n^2 \log n)$ for weighted graphs. 
+$O(nm)$ for unweighted graphs and $O(nm + n^2 \log n)$ for weighted graphs.
 
 \ifproof
 We present many variants of betweenness in Sect.~\ref{sec:variants}.
@@ -232,7 +232,7 @@ for an in-depth presentation.
 
 Let $D$ be a domain and $\range$ be a collection of subsets from $D$. We call
 $\range$ a \emph{range set on $D$}.
-Given $B\subseteq D$, the \emph{projection of $\range$ on $B$} is the set 
+Given $B\subseteq D$, the \emph{projection of $\range$ on $B$} is the set
 $P_\range(B)=\{ B\cap A ~:~ A\in\range\}$. We say that the set $B$ is
 \emph{shattered} by $\range$ if $P_\range(B)=2^B$, where $2^B$ denotes the
 powerset of $B$, i.e., all subsets of $B$.
@@ -250,7 +250,7 @@ example is the family of intervals in $[0,1]$ (i.e. $X$ is all the points in
 $[0,1]$ and $R$ all the intervals $[a,b]$, such that $0\leq a\leq b\leq 1$). Let
 $A=\{x,y,z\}$ be the set of three points $0<x<y<z<1$. No interval in $R$ can
 define the subset $\{x,z\}$ so the VC-dimension of this range space is less than
-3~\citep[Lemma 10.3.1]{Matousek02}. Another example is shown in
+three~\citep[Lemma 10.3.1]{Matousek02}. Another example is shown in
 Fig.~\ref{fig:rectangles}.
 \begin{figure}[ht]
   \centering
@@ -263,7 +263,8 @@ Fig.~\ref{fig:rectangles}.
   for any choice of the five points, there will always be one (the red point in
   the figure) that is internal to the convex hull of the other four, so it would
   be impossible to find an axis-aligned rectangle containing the four points
-  but not the internal one. Hence $\VC((\mathbb{R}^2,R))=4$.}
+  but not the internal one. Hence $\VC((\mathbb{R}^2,R))=4$. This figure and
+  this caption are taken from~\citep[Fig.~1]{RiondatoU14}.}
   \label{fig:rectangles}
 \end{figure}
 \fi
@@ -276,10 +277,9 @@ independent identically distributed random variables taking values in $D$,
 sampled according to some distribution $\phi$ defined on the elements of $D$.
 For a set $A\subseteq D$, let $\phi(A)$ be the probability that a sample from
 $\phi$ belongs to the set $A$, and let the \emph{empirical average} of $\phi(A)$
-on $X_1^k$ be 
-
+on $X_1^k$ be
 \[
-\phi_{X_1^k}(A)=\frac{1}{k}\sum_{j=1}^k\mathds{1}_A(X_j)\enspace.%, 
+\phi_{X_1^k}(A)=\frac{1}{k}\sum_{j=1}^k\mathds{1}_A(X_j)\enspace.%,
 \]
 where $\mathds{1}_A$ is the indicator function for the set $A$
 ($\mathds{1}_A(X)$ is $1$ if $X\in A$, and 0 otherwise).  The empirical average
@@ -290,7 +290,7 @@ for $\phi(A)$.
   Let $\range$ be a range set on %a domain
   $D$ and $\phi$ be a probability distribution on $D$. For $\varepsilon\in(0,1)$,
   an \emph{$\varepsilon$-approximation to $(\range,\phi)$} is a multiset (i.e.,
-  a bag) $S$ of elements of $D$ such that 
+  a bag) $S$ of elements of $D$ such that
   \[
   \sup_{A\in\range}|\phi(A)-\phi_S(A)|\le\varepsilon\enspace.\]
 \end{definition}
@@ -321,9 +321,9 @@ It is possible to obtain \emph{relative} guarantees on the approximation.
   Let $\range$ be a range set on $D$ and $\phi$ be a probability distribution on
   $D$. For $p,\varepsilon\in (0,1)$, a \emph{relative
   $(p,\varepsilon)$-approximation to $(\range,\phi)$} is a bag $S$ of elements
-  from $D$ such that 
+  from $D$ such that
   \begin{itemize}
-    \item For any $A\in\range$ such that $\phi(A)\ge p$, we have 
+    \item For any $A\in\range$ such that $\phi(A)\ge p$, we have
       \[ |\phi(A) - \phi_S(A)|\le \varepsilon\phi(A)\enspace.\]
     \item For any $B\in\range$ such that $\phi(B)< p$, we have $\phi_S(B)\le
       (1+\varepsilon)p$.
@@ -334,7 +334,7 @@ It is possible to obtain \emph{relative} guarantees on the approximation.
   Let $\range$ be a range set on a domain $D$ with
   $\VC(\range)\le d$, and let $\phi$ be a distribution on $D$. Given
   $\varepsilon,\delta,p\in(0,1)$ let $S$ be a collection of $|S|$ points from $D$
-  sampled according to $\phi$, with 
+  sampled according to $\phi$, with
   \begin{equation}\label{eq:releapprox}
     |S|\ge\frac{c'}{\varepsilon^2p}\left(d\log\frac{1}{p}+\log\frac{1}{\delta}\right)
   \end{equation}
