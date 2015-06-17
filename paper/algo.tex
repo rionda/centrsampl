@@ -243,10 +243,12 @@ notice that there is no relationship between $\VD(G)$ and $\mathsf{diam}(G)$
 when $G$ is weighted, as the shortest path with maximum size may not be the
 shortest path with maximum weight. In these cases, one can use the size (number
 of vertices) of the largest Weakly Connected Component (WCC), as a loose upper
-bound to $\VD(G)$. The WCC's can again be computed in $O(n+m)$ using BFS.  This
+bound to $\VD(G)$. The WCC's can again be computed in $O(n+m)$ using BFS. This
 quantity can be as high as $n$ but for the computation of the sample size we use
 its logarithm, mitigating the crudeness of the bound. In this case our sample
-size is comparable to that proposed by~\citet{BrandesP07}. %when there is a
+size is comparable to that proposed by~\citet{BrandesP07}.\footnote{After this
+work was accepted for publication, \citet{BergaminiM15} presented an improved
+upper bound for $\VD(G)$ for undirected weighted graphs.} %when there is a
 %single WCC, as it would depend on $\log n$,
 Nevertheless the amount of work done per sample by our algorithm is still much
 smaller (see Sect.~\ref{sec:discussion} and~\ref{sec:exper} for more
