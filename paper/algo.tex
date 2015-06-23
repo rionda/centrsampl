@@ -386,15 +386,12 @@ and
 \[
 r''=\frac{c'}{\varepsilon^2\ell'}\left((\lfloor\log_2(\widetilde\VD(G)-2)\rfloor+1)\log\frac{1}{\ell'}+\log\frac{1}{\delta''}\right)\enspace.
 \]
-In the second phase, we run Algorithm~\ref{alg:algorithm} with $r=r''$ and let $\tilde\betw''_K$ be
-the so-obtained $K$-th highest estimated betweenness. Let
-$\ell''=\min\{\tilde\betw''(v) / (1+\varepsilon) ~:~ v\in V \mbox{ s.t. }
-\tilde\betw''(v)\ge\tilde\betw''_K\}$. We
-return the collection $\widetilde\TOPK(K,G)$ of vertices $v$ such that
-$\tilde\betw''(v)*(1+\varepsilon)/(1-\varepsilon)\ge\ell''$:
+In the second phase, we run Algorithm~\ref{alg:algorithm} with $r=r''$. Let
+$\tilde\betw''_K$ be the so-obtained $K$-th highest estimated betweenness and
+let $\ell''= \tilde\betw''_K / (1+\varepsilon)$. We return the collection
 \[
-\widetilde\TOPK(K,G)= \left\{v\in V ~:~
-\tilde\betw''(v)\frac{1+\varepsilon}{1-\varepsilon}\ge\ell''\right\}\enspace.
+	\widetilde\TOPK(K,G)= \left\{v\in V ~:~
+\frac{\tilde\betw''(v)}{1-\varepsilon}\ge\ell''\right\}\enspace.
 \]
 \ifproof
 The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
@@ -428,10 +425,9 @@ The pseudocode of the algorithm is presented in Algorithm~\ref{alg:topk}.
   Algorithm~\ref{alg:algorithm} with $r=r''$\;
   $\tilde\betw_K''\leftarrow$ $K$-th highest betweenness value from $B''$, ties
   broken arbitrarily\;
-  $\ell''\leftarrow\min\{\tilde\betw''(v)/(1+\varepsilon) ~:~ v \mbox{ s.t. }
-  \tilde\betw''(v)\ge\tilde\betw_K''\}$\;
+  $\ell''\leftarrow\betw_K''/(1+\varepsilon)$\;
   \Return $\{(v,\tilde\betw''(v)) ~:~ v\in V \mbox{ s.t. }
-  \tilde\betw''(v)\frac{1+\varepsilon}{1-\varepsilon}\ge\ell''\}$\;
+  \frac{\tilde\betw''(v)}{1-\varepsilon}\ge\ell''\}$\;
   \caption{High-quality approximation of the top-$K$ betweenness vertices}
   \label{alg:topk}
 \end{algorithm}
